@@ -53,7 +53,7 @@ spec:
       volumes:
         - name: config-volume
           configMap:
-            name: user-config
+            name: {{ include "riak.fullname" . }}-user-config
     {{- with .Values.affinity }}
       affinity:
           {{- toYaml . | nindent 8 }}

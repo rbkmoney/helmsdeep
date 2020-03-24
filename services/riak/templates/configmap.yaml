@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: user-config
+  name: {{ include "riak.fullname" . }}-user-config
 data:
   user.conf: |
     ## Config should be configured in values   
