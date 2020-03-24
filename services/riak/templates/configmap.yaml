@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-config
+data:
+  user.conf: |
+    ## Config should be configured in values   
+{{- with .Values.config.user }}    
+    {{- toYaml . | nindent 4 }}
+{{- end }}

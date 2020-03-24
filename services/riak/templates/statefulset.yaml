@@ -1,0 +1,67 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "riak.fullname" . }}
+  labels:
+    {{- include "riak.labels" . | nindent 4 }}  
+spec:
+  serviceName: {{ include "riak.fullname" . }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      serviceAccountName: {{ include "riak.serviceAccountName" . }}
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: CLUSTER_NAME
+              value: "riak"
+          ports:
+            - name: http 
+              protocol: TCP
+              containerPort: 8098
+            - name: protobuf
+              protocol: TCP
+              containerPort: 8087
+          livenessProbe:
+            exec:
+              command: ["riak", "ping"]
+            initialDelaySeconds: 60
+            periodSeconds: 60
+            timeoutSeconds: 15
+          readinessProbe:
+            exec:
+              command: ["riak-admin", "test"]
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            timeoutSeconds: 10
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/riak/user.conf
+              subPath: user.conf
+            - name: data
+              mountPath: /var/lib/riak
+      volumes:
+        - name: config-volume
+          configMap:
+            name: user-config
+    {{- with .Values.affinity }}
+      affinity:
+          {{- toYaml . | nindent 8 }}
+    {{- end }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+    {{- with .Values.storage }}
+      spec:
+       {{- toYaml . | nindent 10 }}
+    {{- end }}
