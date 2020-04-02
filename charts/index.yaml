@@ -3,12 +3,12 @@ entries:
   riak:
   - apiVersion: v2
     appVersion: d9dec1c4a69482f5c013bb155f6ccd18cd9d4653
-    created: "2020-04-02T20:46:35.065883+03:00"
+    created: "2020-04-02T21:00:15.22732+03:00"
     description: A simple riak cluster for Kubernetes
     digest: 541939ab62d1b3fa291c9777a161e77ee0c17289c0937a97db8040c434697471
     name: riak
     type: application
     urls:
-    - https://rbkmoney.github.io/riak-0.1.0.tgz
+    - https://rbkmoney.github.io/helm/charts/riak-0.1.0.tgz
     version: 0.1.0
-generated: "2020-04-02T20:46:35.064424+03:00"
+generated: "2020-04-02T21:00:15.223946+03:00"
