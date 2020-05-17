@@ -19,3 +19,8 @@ releases:
 - name: mg-riak
   <<: *default
   chart: ./services/riak
+- name: machinegun
+  <<: *default
+  set:
+  - name: appConfig
+    file: config/machinegun/config.yaml
