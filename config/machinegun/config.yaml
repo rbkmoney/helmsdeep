@@ -1,12 +1,16 @@
 service_name: machinegun
+
 erlang:
   secret_cookie_file: /opt/machinegun/etc/cookie
+
 snowflake_machine_id: hostname_hash
+
 woody_server:
     ip: "0.0.0.0"
     port: 8022
     max_concurrent_connections: 8000
     http_keep_alive_timeout: 3000ms
+
 storage:
     type: riak
     host: riak
@@ -18,10 +22,30 @@ storage:
     connect_timeout: 500ms
     request_timeout: 10s
     index_query_timeout: 60s
+
+consuela:
+    presence:
+        check_interval: 5s
+    registry:
+        nodename: consul-0
+        session_ttl: 30s
+        session_renewal_interval: 10s
+    discovery:
+        tags:
+            - production
+
+# Consul client settings.
+# Required when distributed machine registry is enabled.
+consul:
+    url: http://consul:8500
+    connect_timeout: 200ms
+    recv_timeout: 1s
+
 namespaces:
   mg_test_ns:
     processor:
         url: http://localhost:8022/processor
+
 kafka:
     default_kafka_client:
         endpoints:
