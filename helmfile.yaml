@@ -1,0 +1,38 @@
+repositories:
+- name: stable
+  url: https://kubernetes-charts.storage.googleapis.com
+- name: incubator
+  url: https://kubernetes-charts-incubator.storage.googleapis.com
+
+templates:
+  default: &default
+    chart: ./services/{{`{{ .Release.Name }}`}}
+    namespace: default
+    # This prevents helmfile exiting when it encounters a missing file
+    # Valid values are "Error", "Warn", "Info", "Debug". The default is "Error"
+    # Use "Debug" to make missing files errors invisible at the default log level(--log-level=INFO)
+    missingFileHandler: Warn
+    values:
+    - config/{{`{{ .Release.Name }}`}}/values.yaml
+
+releases:
+- name: zookeeper
+  <<: *default
+  chart: incubator/zookeeper
+  version: 2.1.3
+- name: kafka
+  <<: *default
+  chart: incubator/kafka
+  version: 0.21.2
+- name: consul
+  <<: *default
+  chart: stable/consul
+  version: 3.9.5
+- name: mg-riak
+  <<: *default
+  chart: ./services/riak
+- name: machinegun
+  <<: *default
+  set:
+  - name: appConfig
+    file: config/machinegun/config.yaml

@@ -1,0 +1,1 @@
+You can use {{ template "machinegun.fullname" . }}:{{ .Values.service.port }} to connect to the machinegun woody interface.

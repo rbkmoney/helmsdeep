@@ -4,7 +4,7 @@ kind: StatefulSet
 metadata:
   name: {{ include "riak.fullname" . }}
   labels:
-    {{- include "riak.labels" . | nindent 4 }}  
+    {{- include "riak.labels" . | nindent 4 }}
 spec:
   serviceName: {{ include "riak.fullname" . }}
   replicas: {{ .Values.replicaCount }}
@@ -26,7 +26,7 @@ spec:
             - name: CLUSTER_NAME
               value: "riak"
           ports:
-            - name: http 
+            - name: http
               protocol: TCP
               containerPort: 8098
             - name: protobuf
@@ -48,6 +48,7 @@ spec:
             - name: config-volume
               mountPath: /etc/riak/user.conf
               subPath: user.conf
+              readOnly: true
             - name: data
               mountPath: /var/lib/riak
       volumes:
