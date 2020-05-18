@@ -13,6 +13,8 @@ spec:
       app: {{ .Chart.Name }}
   template:
     metadata:
+      annotations:
+        riak/properties-hash: {{ include "riak.propertiesHash" . }}
       labels:
         app: {{ .Chart.Name }}
     spec:
