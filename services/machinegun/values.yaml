@@ -76,3 +76,8 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+podDisruptionBudget: {}
+  # Limits how many machinegun instances may be unavailable due to voluntary disruptions.
+  # maxUnavailable: 1
+  # minAvailable: 2
