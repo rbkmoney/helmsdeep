@@ -12,7 +12,7 @@ Helm Charts Repo
 Требования
 ----------
 
-Для работы с сервисами требуется Helm 3.x и [Helmfile](https://github.com/roboll/helmfile).
+Для работы с сервисами требуется Helm 3.2.1 и [Helmfile v0.116.0](https://github.com/roboll/helmfile).
 
 Запуск
 ------
