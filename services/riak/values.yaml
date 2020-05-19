@@ -54,7 +54,7 @@ tolerations: []
 affinity: {}
 
 config:
-  user: {}
+  user: ""
 
 storage:
   accessModes: ["ReadWriteOnce"]
