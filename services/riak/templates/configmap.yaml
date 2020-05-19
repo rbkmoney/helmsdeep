@@ -6,4 +6,4 @@ metadata:
 data:
   user.conf: |
     ## Config should be configured in values
-{{ .Values.config.user | indent 4 }}
+    {{ .Values.config.user | nindent 4 }}
