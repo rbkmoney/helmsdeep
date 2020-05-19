@@ -13,7 +13,7 @@ woody_server:
 
 storage:
   type: riak
-  host: riak
+  host: mg-riak
   port: 8087
   pool:
     size: 10
