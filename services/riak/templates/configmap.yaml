@@ -5,7 +5,5 @@ metadata:
   name: {{ include "riak.fullname" . }}-user-config
 data:
   user.conf: |
-    ## Config should be configured in values   
-{{- with .Values.config.user }}    
-    {{- toYaml . | nindent 4 }}
-{{- end }}
+    ## Config should be configured in values
+    {{ .Values.config.user | nindent 4 }}

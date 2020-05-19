@@ -17,6 +17,7 @@ spec:
         riak/properties-hash: {{ include "riak.propertiesHash" . }}
       labels:
         app: {{ .Chart.Name }}
+        {{- include "riak.selectorLabels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ include "riak.serviceAccountName" . }}
       terminationGracePeriodSeconds: 10

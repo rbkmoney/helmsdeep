@@ -13,7 +13,7 @@ woody_server:
 
 storage:
   type: riak
-  host: riak
+  host: mg-riak
   port: 8087
   pool:
     size: 10
@@ -31,8 +31,7 @@ consuela:
     session_ttl: 30s
     session_renewal_interval: 10s
   discovery:
-    tags:
-    - production
+    tags: []
 
 # Consul client settings.
 # Required when distributed machine registry is enabled.

@@ -31,6 +31,9 @@ releases:
 - name: mg-riak
   <<: *default
   chart: ./services/riak
+  set:
+  - name: config.user
+    file: config/mg-riak/user.yaml
 - name: machinegun
   <<: *default
   set:
