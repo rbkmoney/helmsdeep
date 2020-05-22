@@ -16,7 +16,12 @@ Helm Charts Repo
 
 Запуск
 ------
+Для доступа к приватному docker registry необходимо создать secret:
 
+```shell
+$ kubectl create secret docker-registry dr2reg --docker-server=dr2.rbkmoney.com --docker-username=$USERNAME --docker-password=$PASSWORD
+
+```
 Пример запуска сервисов:
 
 ```shell

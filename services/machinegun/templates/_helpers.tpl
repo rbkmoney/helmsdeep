@@ -70,3 +70,4 @@ Create the configs hash
 {{- $config := include (print $.Template.BasePath "/configmap.yaml") . | sha256sum -}}
 {{ print $cookie $config | sha256sum }}
 {{- end -}}
+
