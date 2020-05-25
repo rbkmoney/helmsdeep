@@ -8,7 +8,9 @@ image:
   repository: dr2.rbkmoney.com/rbkmoney/machinegun
   pullPolicy: IfNotPresent
 
-imagePullSecrets: []
+imagePullSecrets:
+  name: dr2reg
+
 nameOverride: ""
 fullnameOverride: ""
 

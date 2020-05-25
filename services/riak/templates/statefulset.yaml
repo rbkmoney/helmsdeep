@@ -54,6 +54,8 @@ spec:
               readOnly: true
             - name: data
               mountPath: /var/lib/riak
+      imagePullSecrets:
+        - name: "{{ .Values.imagePullSecrets.name }}"
       volumes:
         - name: config-volume
           configMap:

@@ -12,11 +12,16 @@ Helm Charts Repo
 Требования
 ----------
 
-Для работы с сервисами требуется Helm 3.x и [Helmfile](https://github.com/roboll/helmfile).
+Для работы с сервисами требуется Helm 3.2.1 и [Helmfile v0.116.0](https://github.com/roboll/helmfile).
 
 Запуск
 ------
+Для доступа к приватному docker registry необходимо создать secret:
 
+```shell
+$ kubectl create secret docker-registry dr2reg --docker-server=dr2.rbkmoney.com --docker-username=$USERNAME --docker-password=$PASSWORD
+
+```
 Пример запуска сервисов:
 
 ```shell
