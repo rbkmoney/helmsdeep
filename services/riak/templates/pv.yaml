@@ -1,0 +1,16 @@
+{{- if .Values.state.need -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: riak-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: {{ .Values.state.localpath | quote }}
+{{- end -}}

@@ -23,7 +23,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: CLUSTER_NAME
@@ -56,8 +56,8 @@ spec:
               mountPath: /etc/riak/user.conf
               subPath: user.conf
               readOnly: true
-            # - name: data
-            #   mountPath: /var/lib/riak
+            - name: data
+              mountPath: /var/lib/riak
       imagePullSecrets:
         - name: "{{ .Values.imagePullSecrets.name }}"
       volumes:
@@ -66,12 +66,14 @@ spec:
             name: {{ include "riak.fullname" . }}-user-config
     {{- with .Values.affinity }}
       affinity:
-          {{- toYaml . | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
     {{- end }}
-  # volumeClaimTemplates:
-  #   - metadata:
-  #       name: data
-  #   {{- with .Values.storage }}
-  #     spec:
-  #      {{- toYaml . | nindent 10 }}
-  #   {{- end }}
+  {{ if .Values.state.need -}}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+    {{- with .Values.storage }}
+      spec:
+       {{- toYaml . | nindent 10 }}
+    {{- end }}
+  {{- end -}}

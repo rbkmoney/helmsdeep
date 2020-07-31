@@ -6,6 +6,7 @@ replicaCount: 1
 
 image:
   repository: dr2.rbkmoney.com/rbkmoney/riak-base
+  tag: kubernetes
   pullPolicy: IfNotPresent
 
 imagePullSecrets:
@@ -58,8 +59,13 @@ affinity: {}
 config:
   user: ""
 
+state:
+  need: true
+  localpath: /Users/d.skokov/rbkmoney/datadir
+
 storage:
   accessModes: ["ReadWriteOnce"]
+  storageClassName: "manual"
   resources:
      requests:
-       storage: 1Gi
+       storage: 3Gi
