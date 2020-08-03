@@ -11,6 +11,9 @@ data:
   vm.args: |
     -sname {{ include "kds.fullname" . }}
     -setcookie {{ include "kds.fullname" . }}_cookie
+    {{- if .Values.beam.disableSBWT }}
+    +sbwt none
+    {{- end }}
     -kernel inetrc '"./erl_inetrc"''
   erl_inetrc: |
     {{- .Values.vmConfig | nindent 4 }}

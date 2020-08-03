@@ -1,9 +1,0 @@
-  -sname {{ service_name.replace('-', '_') }}
-  -setcookie {{ service_name.replace('-', '_') }}_cookie
-  -proto_dist inet6_tcp
-
-  {% if disable_sbwt %}
-  +sbwt none
-  {% endif %}
-
-  -kernel inetrc '"./erl_inetrc"'

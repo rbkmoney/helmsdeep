@@ -9,6 +9,9 @@ image:
 imagePullSecrets:
   name: dr2reg
 
+beam:
+  disableSBWT: false
+
 nameOverride: ""
 fullnameOverride: ""
 
