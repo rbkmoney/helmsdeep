@@ -2,13 +2,13 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
-
 image:
-  repository: nginx
+  repository: dr2.rbkmoney.com/rbkmoney/kds
   pullPolicy: IfNotPresent
 
-imagePullSecrets: []
+imagePullSecrets:
+  name: dr2reg
+
 nameOverride: ""
 fullnameOverride: ""
 
@@ -34,7 +34,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 80
+  port: 8022
 
 ingress:
   enabled: false
