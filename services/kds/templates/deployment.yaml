@@ -30,17 +30,20 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: woody
-              containerPort: 8022
+            - name: management
+              containerPort: {{ .Values.service.ports.managementPort }}
+              protocol: TCP
+            - name: storage
+              containerPort: {{ .Values.service.ports.storagePort }}
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /health
-              port: woody
+              port: management
           readinessProbe:
             httpGet:
               path: /health
-              port: woody
+              port: management
           volumeMounts:
             - name: config-volume
               mountPath: /opt/kds/releases/0.1.0/sys.config

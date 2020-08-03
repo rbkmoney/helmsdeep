@@ -7,9 +7,13 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - port: {{ .Values.service.ports.managementPort }}
+      targetPort: management
       protocol: TCP
-      name: http
+      name: management
+    - port: {{ .Values.service.ports.storagePort }}
+      targetPort: storage
+      protocol: TCP
+      name: storage
   selector:
     {{- include "kds.selectorLabels" . | nindent 4 }}
