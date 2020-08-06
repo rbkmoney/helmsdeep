@@ -5,8 +5,6 @@ metadata:
   labels:
     {{- include "url-shortener.labels" . | nindent 4 }}
 spec:
-  # Strong requirement only one instance at any time.
-  # Use "Recreate" deployment strategy to avoid several instances.
   replicas: 1
   strategy:
     type: Recreate
