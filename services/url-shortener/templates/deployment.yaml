@@ -13,6 +13,8 @@ spec:
     metadata:
       labels:
         {{- include "url-shortener.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets.name }}
