@@ -5,9 +5,7 @@ metadata:
   labels:
     {{- include "url-shortener.labels" . | nindent 4 }}
 spec:
-  replicas: 1
-  strategy:
-    type: Recreate
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       {{- include "url-shortener.selectorLabels" . | nindent 6 }}
@@ -32,6 +30,10 @@ spec:
               containerPort: 8022
               protocol: TCP
           livenessProbe:
+            httpGet:
+              path: /health
+              port: api
+          readinessProbe:
             httpGet:
               path: /health
               port: api
