@@ -56,6 +56,6 @@ releases:
   <<: *default
   set:
   - name: appConfig
-    file: config/kds/sys.config
+    file: config/bender/sys.config
   - name: vmConfig
     file: config/vm/erl_inetrc

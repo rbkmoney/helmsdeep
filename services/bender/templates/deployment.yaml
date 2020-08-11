@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "bender.labels" . | nindent 4 }}
 spec:
-  replicas: 3
+  replicas: {{ .Values.replicaCount }}
   strategy:
     type: RollingUpdate
   selector:
@@ -65,10 +65,10 @@ spec:
               path: vm.args
             - key: erl_inetrc
               path: erl_inetrc
-      {{- with .Values.nodeSelector }}
+    {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+    {{- end }}
     {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
