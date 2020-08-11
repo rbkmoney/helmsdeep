@@ -14,7 +14,7 @@ spec:
       labels:
         {{- include "url-shortener.selectorLabels" . | nindent 8 }}
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        url-shortener/properties-hash: {{ include "url-shortener.propertiesHash" . }}
     spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets.name }}
