@@ -1,13 +1,14 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "bender.fullname" . }}
   labels:
     {{- include "bender.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
-  strategy:
+  updateStrategy:
     type: RollingUpdate
+  serviceName: {{ include "bender.fullname" . }}
   selector:
     matchLabels:
       {{- include "bender.selectorLabels" . | nindent 6 }}
@@ -41,11 +42,11 @@ spec:
               port: bender
           volumeMounts:
             - name: config-volume
-              mountPath: /opt/bender/releases/0.1.0/sys.config
+              mountPath: /opt/bender/releases/1.0.0/sys.config
               subPath: sys.config
               readOnly: true
             - name: config-volume
-              mountPath: /opt/bender/releases/0.1.0/vm.args
+              mountPath: /opt/bender/releases/1.0.0/vm.args
               subPath: vm.args
               readOnly: true
             - name: config-volume
