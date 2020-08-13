@@ -13,6 +13,8 @@ spec:
     metadata:
       labels:
         {{- include "cds.selectorLabels" . | nindent 8 }}
+      annotations:
+        cds/properties-hash: {{ include "cds.propertiesHash" . }}
     spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets.name }}

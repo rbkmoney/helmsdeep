@@ -61,3 +61,12 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Create the configs hash
+*/}}
+{{- define "cds.propertiesHash" -}}
+{{- $config := include (print $.Template.BasePath "/configmap.yaml") . | sha256sum -}}
+{{- $secret := include (print $.Template.BasePath "/secret.yaml") . | sha256sum -}}
+{{ print $config $secret | sha256sum }}
+{{- end -}}
