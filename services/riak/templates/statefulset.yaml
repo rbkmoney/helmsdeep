@@ -21,6 +21,12 @@ spec:
     spec:
       serviceAccountName: {{ include "riak.serviceAccountName" . }}
       terminationGracePeriodSeconds: 10
+{{- if .Values.podSecurityContext.enabled }}
+      securityContext:
+        fsGroup: {{ .Values.podSecurityContext.fsGroup | int64 }}
+        runAsUser: {{ .Values.podSecurityContext.fsGroup | int64 }}
+        runAsGroup: {{ .Values.podSecurityContext.fsGroup | int64 }}
+{{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -68,7 +74,6 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-  {{ if .Values.state.need -}}
   volumeClaimTemplates:
     - metadata:
         name: data
@@ -76,4 +81,3 @@ spec:
       spec:
        {{- toYaml . | nindent 10 }}
     {{- end }}
-  {{- end -}}
