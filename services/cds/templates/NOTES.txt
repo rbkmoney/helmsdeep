@@ -1,0 +1,2 @@
+You can use {{ template "cds.fullname" . }}:{{ .Values.service.port }} to connect to the cds woody interface.
+
