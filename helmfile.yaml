@@ -59,3 +59,10 @@ releases:
     file: config/bender/sys.config
   - name: vmConfig
     file: config/vm/erl_inetrc
+- name: url-shortener
+  <<: *default
+  set:
+  - name: appConfig
+    file: config/url-shortener/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc

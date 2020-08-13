@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "url-shortener.fullname" . }}
+  labels:
+    {{- include "url-shortener.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "url-shortener.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "url-shortener.selectorLabels" . | nindent 8 }}
+      annotations:
+        url-shortener/properties-hash: {{ include "url-shortener.propertiesHash" . }}
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecrets.name }}
+      serviceAccountName: {{ include "url-shortener.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: api
+              containerPort: 8022
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: api
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: api
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/shortener/releases/0.1.0/sys.config
+              subPath: sys.config
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/shortener/releases/0.1.0/vm.args
+              subPath: vm.args
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/shortener/erl_inetrc
+              subPath: erl_inetrc
+              readOnly: true
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "url-shortener.fullname" . }}
+            items:
+            - key: sys.config
+              path: sys.config
+            - key: vm.args
+              path: vm.args
+            - key: erl_inetrc
+              path: erl_inetrc
+        - name: state
+          configMap:
+            name: {{ include "url-shortener.fullname" . }}-state
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
