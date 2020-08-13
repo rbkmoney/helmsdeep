@@ -3,6 +3,8 @@ repositories:
   url: https://kubernetes-charts.storage.googleapis.com
 - name: incubator
   url: https://kubernetes-charts-incubator.storage.googleapis.com
+- name: postgres
+  url : https://charts.bitnami.com/bitnami 
 
 templates:
   default: &default
@@ -39,3 +41,6 @@ releases:
   set:
   - name: appConfig
     file: config/machinegun/config.yaml
+- name: postgres
+  <<: *default
+  chart: bitnami/postgres
