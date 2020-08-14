@@ -59,6 +59,17 @@ releases:
     file: config/bender/sys.config
   - name: vmConfig
     file: config/vm/erl_inetrc
+- name: cds
+  <<: *default
+  set:
+  - name: appConfig
+    file: config/cds/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+  - name: caCrt
+    file: config/cds/ca.crt
+  - name: clientCrt
+    file: config/cds/client.pem
 - name: url-shortener
   <<: *default
   set:
