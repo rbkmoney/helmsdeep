@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 2
+replicaCount: 1
 
 image:
   repository: dmitryrbk/riak
@@ -61,13 +61,13 @@ config:
   user: ""
 
 state:
-  need: false
+  enabled: false
   localpath: /data/
 
 storage:
   accessModes: ["ReadWriteOnce"]
-# uncomment storageClassName at real cluster.
-#  storageClassName: "manual"
+# set right storageClassName at real cluster.
+#  storageClassName: ""
   resources:
      requests:
        storage: 3Gi

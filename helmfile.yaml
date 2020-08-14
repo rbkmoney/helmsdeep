@@ -43,4 +43,5 @@ releases:
     file: config/machinegun/config.yaml
 - name: postgres
   <<: *default
-  chart: bitnami/postgres
+  chart: bitnami/postgresql
+  version: 9.2.0

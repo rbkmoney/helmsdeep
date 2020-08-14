@@ -1,4 +1,4 @@
-{{- if .Values.state.need -}}
+{{- if .Values.state.enabled -}}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -14,3 +14,4 @@ spec:
   hostPath:
     path: {{ .Values.state.localpath | quote }}
 {{- end -}}
+
