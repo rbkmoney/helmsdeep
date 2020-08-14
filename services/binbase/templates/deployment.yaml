@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "binbase.fullname" . }}
+  labels:
+    {{- include "binbase.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "binbase.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "binbase.selectorLabels" . | nindent 8 }}
+      annotations:
+        binbase/properties-hash: {{ include "binbase.propertiesHash" . }}
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecrets.name }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: api
+              containerPort: 8022
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: api
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: api
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/binbase/entrypoint.sh
+              subPath: entrypoint.sh
+              readOnly: true
+          command: ["/opt/binbase/entrypoint.sh"]
+          args:
+            - -jar
+            - /opt/binbase/binbase.jar
+            - --management.security.enabled=false
+            - --spring.batch.job.enabled=false
+            - --client.cds.url={{ .Values.cdsUrl }}
+            - --spring.flyway.enabled=false
+            - --spring.batch.initialize-schema=never
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "binbase.fullname" . }}
+            items:
+            - key: entrypoint.sh
+              path: entrypoint.sh
+              mode: 0755
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
