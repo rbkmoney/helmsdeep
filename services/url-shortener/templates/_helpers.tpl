@@ -67,5 +67,6 @@ Create the configs hash
 */}}
 {{- define "url-shortener.propertiesHash" -}}
 {{- $config := include (print $.Template.BasePath "/configmap.yaml") . | sha256sum -}}
+{{- print $config -}}
 {{- end -}}
 
