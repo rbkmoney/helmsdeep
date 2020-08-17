@@ -1,0 +1,7 @@
+{
+    "use": "enc",
+    "kty": "oct",
+    "kid": "2",
+    "alg": "dir",
+    "k": "a0J4Tm5YR09yajdqV3NQVG9xZTZjck5uTFZEd3ZrdUQ"
+}
