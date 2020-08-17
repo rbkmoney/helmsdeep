@@ -77,3 +77,8 @@ releases:
     file: config/url-shortener/sys.config
   - name: vmConfig
     file: config/vm/erl_inetrc
+- name: binbase
+  <<: *default
+  set:
+  - name: entrypoint
+    file: config/binbase/entrypoint.sh
