@@ -61,3 +61,11 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Create the configs hash
+*/}}
+{{- define "bender.propertiesHash" -}}
+{{- $config := include (print $.Template.BasePath "/configmap.yaml") . | sha256sum -}}
+{{- print $config -}}
+{{- end -}}

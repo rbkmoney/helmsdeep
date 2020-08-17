@@ -16,6 +16,8 @@ spec:
     metadata:
       labels:
         {{- include "bender.selectorLabels" . | nindent 8 }}
+      annotations:
+        bender/properties-hash: {{ include "bender.propertiesHash" . }}
     spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets.name }}
