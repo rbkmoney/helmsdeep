@@ -1,0 +1,7 @@
+hosts:
+- host: api.rbk.money
+  paths:
+    - path: /v2
+      backend:
+        serviceName: capi-v2
+        servicePort: 8080
