@@ -4,8 +4,6 @@ metadata:
   name:  {{ include "ingress.fullname" . }}
   labels:
     {{- include "ingress.labels" . | nindent 4 }}
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
   {{- range .Values.hosts }}

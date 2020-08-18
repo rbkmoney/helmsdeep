@@ -28,7 +28,7 @@ releases:
   <<: *default
   chart: stable/consul
   version: 3.9.5
-- name: ingress
+- name: api-ingress
   <<: *default
 - name: mg-riak
   <<: *default

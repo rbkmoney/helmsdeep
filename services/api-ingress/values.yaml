@@ -1,5 +1,5 @@
 hosts:
-- host: api.rbk.money
+- host: api.rbk.dev
   paths:
     - path: /v2
       backend:
