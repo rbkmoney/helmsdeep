@@ -28,11 +28,7 @@ releases:
   <<: *default
   chart: stable/consul
   version: 3.9.5
-- name: ingress-backend
-  <<: *default
-  chart: stable/nginx-ingress
-  version: 1.41.2
-- name: ingress-controller
+- name: ingress
   <<: *default
 - name: mg-riak
   <<: *default
