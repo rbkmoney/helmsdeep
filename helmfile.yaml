@@ -52,6 +52,13 @@ releases:
     file: config/kds/server.pem
   - name: keyring
     file: config/kds/keyring
+- name: bender
+  <<: *default
+  set:
+  - name: appConfig
+    file: config/bender/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
 - name: cds
   <<: *default
   set:
