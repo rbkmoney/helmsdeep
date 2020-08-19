@@ -82,3 +82,10 @@ releases:
   set:
   - name: entrypoint
     file: config/binbase/entrypoint.sh
+- name: identification
+  <<: *default
+  set:
+  - name: appConfig
+    file: config/identification/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
