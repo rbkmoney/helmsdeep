@@ -22,8 +22,8 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
-      - name: busybox
-        image: busybox
+      - name: fetch-keycloack-pubkey
+        image: busybox:1.32
         env:
         - name: TARGET
           value: "/var/lib/capi/keycloak/keycloak.pubkey.pem"
