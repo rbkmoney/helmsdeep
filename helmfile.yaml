@@ -28,8 +28,6 @@ releases:
   <<: *default
   chart: stable/consul
   version: 3.9.5
-- name: api-ingress
-  <<: *default
 - name: mg-riak
   <<: *default
   chart: ./services/riak
@@ -80,6 +78,10 @@ releases:
 - name: capi-v2
   <<: *default
   set:
+  - name: ingressHost
+    value: api.rbk.dev
+  - name: ingressPath
+    value: /v2
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
   - name: appConfig
@@ -92,7 +94,5 @@ releases:
     file: config/capi-v2/oops-bodies/sad-kitty2
   - name: tokenEnctyptionKey1
     file: config/capi-v2/keys/token-encryption-keys/1.jwk
-  - name: tokenEnctyptionKey2
-    file: config/capi-v2/keys/token-encryption-keys/2.jwk
   - name: capiPrivkey
     file: config/capi-v2/keys/capi.privkey.pem

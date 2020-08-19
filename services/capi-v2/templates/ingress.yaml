@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name:  {{ include "capi-v2.fullname" . }}
+  labels:
+    {{- include "capi-v2.labels" . | nindent 4 }}
+spec:
+  rules:
+  - host: {{ .Values.ingressHost }}
+    http:
+      paths:
+      - path: {{ .Values.ingressPath }}
+        backend:
+          serviceName: {{ include "capi-v2.fullname" . }}
+          servicePort: 8080

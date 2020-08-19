@@ -1,7 +1,0 @@
-hosts:
-- host: api.rbk.dev
-  paths:
-    - path: /v2
-      backend:
-        serviceName: capi-v2
-        servicePort: 8080

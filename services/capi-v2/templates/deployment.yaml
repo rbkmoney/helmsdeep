@@ -15,12 +15,29 @@ spec:
         {{- include "capi-v2.selectorLabels" . | nindent 8 }}
       annotations:
         capi-v2/properties-hash: {{ include "capi-v2.propertiesHash" . }}
+        capi-v2/secrets-hash: {{ include "capi-v2.secretsHash" . }}
     spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets.name }}
-      serviceAccountName: {{ include "capi-v2.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+      - name: busybox
+        image: busybox
+        env:
+        - name: TARGET
+          value: "/var/lib/capi/keycloak/keycloak.pubkey.pem"
+        command:
+          - /bin/sh
+          - -c
+          - /opt/capi/bin/fetch-keycloak-pubkey.sh
+        volumeMounts:
+          - name: config-volume
+            mountPath: /opt/capi/bin/fetch-keycloak-pubkey.sh
+            subPath: fetch-keycloak-pubkey.sh
+            readOnly: true
+          - name: keycloak-pubkey
+            mountPath: /var/lib/capi/keycloak
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -41,10 +58,6 @@ spec:
               port: api
           volumeMounts:
             - name: config-volume
-              mountPath: /opt/capi/bin/fetch-keycloak-pubkey.sh
-              subPath: fetch-keycloak-pubkey.sh
-              readOnly: true
-            - name: config-volume
               mountPath: /opt/capi/releases/0.1.0/sys.config
               subPath: sys.config
               readOnly: true
@@ -62,12 +75,9 @@ spec:
             - name: secret
               mountPath: /var/lib/capi/keys
               readOnly: true
-          command:
-            - /bin/sh
-            - -c
-            - |
-                /opt/capi/bin/fetch-keycloak-pubkey.sh &&
-                /opt/capi/bin/capi foreground
+            - name: keycloak-pubkey
+              mountPath: /var/lib/capi/keycloak
+              readOnly: true
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -90,6 +100,8 @@ spec:
         - name: secret
           secret:
             secretName: {{ include "capi-v2.fullname" . }}
+        - name: keycloak-pubkey
+          emptyDir: {}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
