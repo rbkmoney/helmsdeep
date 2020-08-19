@@ -67,7 +67,5 @@ Create the configs hash
 */}}
 {{- define "dominant.propertiesHash" -}}
 {{- $config := include (print $.Template.BasePath "/configmap.yaml") . | sha256sum -}}
-{{- $secret := include (print $.Template.BasePath "/secret.yaml") . | sha256sum -}}
-{{ print $config $secret | sha256sum }}
+{{- print $config -}}
 {{- end -}}
-
