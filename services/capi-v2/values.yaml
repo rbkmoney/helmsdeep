@@ -58,3 +58,7 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+ingress:
+  host: api.rbk.dev
+  path: /v2

@@ -78,10 +78,6 @@ releases:
 - name: capi-v2
   <<: *default
   set:
-  - name: ingressHost
-    value: api.rbk.dev
-  - name: ingressPath
-    value: /v2
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
   - name: appConfig
