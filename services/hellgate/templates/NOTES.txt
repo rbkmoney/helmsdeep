@@ -1,0 +1,2 @@
+You can use {{ template "hellgate.fullname" . }}:{{ .Values.service.port }} to connect to the hellgate woody interface.
+
