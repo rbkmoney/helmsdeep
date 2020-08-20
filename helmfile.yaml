@@ -85,10 +85,10 @@ releases:
   - name: vmConfig
     file: config/vm/erl_inetrc
   - name: oopsBody1
-    file: config/capi-v2/oops-bodies/sad-kitty1
+    file: config/api-common/oops-bodies/sad-kitty1
   - name: oopsBody2
-    file: config/capi-v2/oops-bodies/sad-kitty2
+    file: config/api-common/oops-bodies/sad-kitty2
   - name: tokenEnctyptionKey1
-    file: config/capi-v2/keys/token-encryption-keys/1.jwk
+    file: config/api-common/keys/token-encryption-keys/1.jwk
   - name: capiPrivkey
-    file: config/capi-v2/keys/capi.privkey.pem
+    file: config/api-common/keys/capi.privkey.pem

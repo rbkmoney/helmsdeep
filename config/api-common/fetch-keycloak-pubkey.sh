@@ -60,4 +60,3 @@ echo "${REALM_DATA}" | \
 echo "-----END PUBLIC KEY-----" >> ${TARGET}
 
 log INFO "Everything is ok"
-
