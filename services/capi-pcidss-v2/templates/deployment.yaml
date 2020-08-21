@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "capi-pcidss-v2.fullname" . }}
+  labels:
+    {{- include "capi-pcidss-v2.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "capi-pcidss-v2.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "capi-pcidss-v2.selectorLabels" . | nindent 8 }}
+      annotations:
+        capi-pcidss-v2/properties-hash: {{ include "capi-pcidss-v2.propertiesHash" . }}
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecrets.name }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.services.http.port }}
+              protocol: TCP
+            - name: woody
+              containerPort: {{ .Values.services.woody.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/capi_pcidss/releases/0.1.0/sys.config
+              subPath: sys.config
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/capi_pcidss/releases/0.1.0/vm.args
+              subPath: vm.args
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/capi_pcidss/erl_inetrc
+              subPath: erl_inetrc
+              readOnly: true
+            - name: secret
+              mountPath: /var/lib/capi/
+              readOnly: true
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "capi-pcidss-v2.fullname" . }}
+            items:
+            - key: sys.config
+              path: sys.config
+            - key: vm.args
+              path: vm.args
+            - key: erl_inetrc
+              path: erl_inetrc
+        - name: secret
+          secret:
+            secretName: {{ include "capi-pcidss-v2.fullname" . }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

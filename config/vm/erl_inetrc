@@ -1,3 +1,2 @@
-{inet6     , true     }.
-{tcp       , inet6_tcp}.
+
 {cache_size, 0        }.

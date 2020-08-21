@@ -63,6 +63,17 @@ releases:
     file: config/cds/ca.crt
   - name: clientCrt
     file: config/cds/client.pem
+- name: capi-pcidss-v2
+  <<: *default
+  set:
+  - name: appConfig
+    file: config/capi-pcidss-v2/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+  - name: privatePem
+    file: config/capi-pcidss-v2/private.pem
+  - name: jwk
+    file: config/capi-pcidss-v2/jwk.json
 - name: url-shortener
   <<: *default
   set:

@@ -1,0 +1,14 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ include "capi-pcidss-v2.fullname" . }}
+  namespace: default
+spec:
+  rules:
+    - host: {{ include "capi-pcidss-v2.fullname" . }}
+      http:
+        paths:
+          - backend:
+              serviceName: {{ include "capi-pcidss-v2.fullname" . }}
+              servicePort: 8080
