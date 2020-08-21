@@ -3,12 +3,14 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ include "capi-pcidss-v2.fullname" . }}
-  namespace: default
+  labels:
+    {{- include "capi-pcidss-v2.labels" . | nindent 4 }}
 spec:
   rules:
-    - host: {{ include "capi-pcidss-v2.fullname" . }}
+    - host: {{ .Values.ingress.host }}
       http:
         paths:
-          - backend:
+          - path: {{ .Values.ingress.path }}
+            backend:
               serviceName: {{ include "capi-pcidss-v2.fullname" . }}
-              servicePort: 8080
+              servicePort: {{ .Values.service.port }}

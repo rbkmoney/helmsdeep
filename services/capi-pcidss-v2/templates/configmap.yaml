@@ -6,6 +6,8 @@ metadata:
   labels:
     {{- include "capi-pcidss-v2.labels" . | nindent 4 }}
 data:
+  fetch-keycloak-pubkey.sh: |
+    {{- .Values.fetchKeycloakPubkey | nindent 4 }}
   sys.config: |
     {{- .Values.appConfig | nindent 4 }}
   vm.args: |

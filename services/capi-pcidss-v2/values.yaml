@@ -23,13 +23,9 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
-services:
-  http:
-    type: ClusterIP
-    port: 8080
-  woody:
-    type: ClusterIP
-    port: 8022
+service:
+  type: ClusterIP
+  port: 8080
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -48,3 +44,7 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+ingress:
+  host: api.rbk.dev.pcidss
+  path: /v2

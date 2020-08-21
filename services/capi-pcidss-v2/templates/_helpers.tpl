@@ -55,5 +55,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Configs hash
 */}}
 {{- define "capi-pcidss-v2.propertiesHash" -}}
-{{- include (print $.Template.BasePath "/configmap.yaml") . | sha256sum -}}
+{{- $config := include (print $.Template.BasePath "/configmap.yaml") . | sha256sum -}}
+{{- $secret := include (print $.Template.BasePath "/secret.yaml") . | sha256sum -}}
+{{ print $secret $config | sha256sum }}
 {{- end -}}

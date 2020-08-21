@@ -5,13 +5,11 @@ metadata:
   labels:
     {{- include "capi-pcidss-v2.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.services.woody.type }}
+  type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.services.woody.port }}
-      targetPort: 8022
-      protocol: TCP
-      name: woody
-    - port: {{ .Values.services.http.port }}
+    - port: {{ .Values.service.port }}
       targetPort: 8080
       protocol: TCP
-      name: http
+      name: api
+  selector:
+    {{- include "capi-pcidss-v2.selectorLabels" . | nindent 4 }}
