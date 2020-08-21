@@ -93,6 +93,8 @@ spec:
         - name: secret
           secret:
             secretName: {{ include "capi-pcidss-v2.fullname" . }}
+        - name: keycloak-pubkey
+          emptyDir: {}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

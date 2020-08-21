@@ -73,14 +73,16 @@ releases:
 - name: capi-pcidss-v2
   <<: *default
   set:
+  - name: fetchKeycloakPubkey
+    file: config/api-common/fetch-keycloak-pubkey.sh
   - name: appConfig
     file: config/capi-pcidss-v2/sys.config
   - name: vmConfig
     file: config/vm/erl_inetrc
   - name: privatePem
-    file: config/capi-pcidss-v2/private.pem
-  - name: jwk
-    file: config/capi-pcidss-v2/jwk.json
+    file: config/api-common/keys/capi.privkey.pem
+  - name: tokenEnctyptionKey1
+    file: config/api-common/keys/token-encryption-keys/1.jwk
 - name: url-shortener
   <<: *default
   set:

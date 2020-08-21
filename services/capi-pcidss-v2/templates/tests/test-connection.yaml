@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "capi-pcidss-v2.fullname" . }}:{{ .Values.services.http.port }}/health']
+      args: ['{{ include "capi-pcidss-v2.fullname" . }}:{{ .Values.service.port }}/health']
   restartPolicy: Never
