@@ -11,7 +11,9 @@ data:
   vm.args: |
     -sname {{ include "hellgate.fullname" . }}
     -setcookie {{ include "hellgate.fullname" . }}_cookie
+    {{- if .Values.beam.disableSBWT }}
     +sbwt none
+    {{- end }}
     -kernel inetrc '"./erl_inetrc"''
   erl_inetrc: |
     {{- .Values.vmConfig | nindent 4 }}

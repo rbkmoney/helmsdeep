@@ -9,6 +9,8 @@ image:
 imagePullSecrets:
   name: dr2reg
 
+replicaCount: 1
+
 beam:
   disableSBWT: false
 
