@@ -1,0 +1,2 @@
+You can use {{ template "bender.fullname" . }}:{{ .Values.service.port }} to connect to the bender woody interface.
+

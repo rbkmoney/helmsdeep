@@ -1,0 +1,6 @@
+apiVersion: v2
+name: bender
+description: Service for binding external IDs to internal IDs
+type: application
+version: 0.1.0
+appVersion: eadd87e750ee771d512a9bf90d3dbbe083e42175
