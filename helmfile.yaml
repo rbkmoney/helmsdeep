@@ -82,6 +82,23 @@ releases:
   set:
   - name: entrypoint
     file: config/binbase/entrypoint.sh
+- name: capi-v2
+  <<: *default
+  set:
+  - name: fetchKeycloakPubkey
+    file: config/api-common/fetch-keycloak-pubkey.sh
+  - name: appConfig
+    file: config/capi-v2/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+  - name: oopsBody1
+    file: config/api-common/oops-bodies/sad-kitty1
+  - name: oopsBody2
+    file: config/api-common/oops-bodies/sad-kitty2
+  - name: tokenEnctyptionKey1
+    file: config/api-common/keys/token-encryption-keys/1.jwk
+  - name: capiPrivkey
+    file: config/api-common/keys/capi.privkey.pem
 - name: capi-v1
   <<: *default
   set:
