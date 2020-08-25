@@ -11,6 +11,5 @@ data:
   vm.args: |
     -sname {{ include "dominant.fullname" . }}
     -setcookie {{ include "dominant.fullname" . }}_cookie
-    # -kernel inetrc '"./erl_inetrc"''
   erl_inetrc: |
     {{- .Values.vmConfig | nindent 4 }}
