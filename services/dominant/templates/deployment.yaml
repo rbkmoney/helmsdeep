@@ -64,9 +64,6 @@ spec:
               path: vm.args
             - key: erl_inetrc
               path: erl_inetrc
-        - name: state
-          configMap:
-            name: {{ include "dominant.fullname" . }}-state
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
