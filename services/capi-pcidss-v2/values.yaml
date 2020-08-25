@@ -46,5 +46,6 @@ tolerations: []
 affinity: {}
 
 ingress:
-  host: api.rbk.dev.pcidss
-  path: /v2
+  host: api.rbk.dev
+  path: /v2/processing/payment-resources
+
