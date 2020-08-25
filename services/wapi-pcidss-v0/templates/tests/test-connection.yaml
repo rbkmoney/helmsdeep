@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "wapi-pcidss-v0.fullname" . }}-test-connection"
+  labels:
+    {{- include "wapi-pcidss-v0.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "wapi-pcidss-v0.fullname" . }}:{{ .Values.service.port }}/health']
+  restartPolicy: Never
