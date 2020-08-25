@@ -52,17 +52,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
-Create the name of the service account to use
-*/}}
-{{- define "dominant.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create -}}
-    {{ default (include "dominant.fullname" .) .Values.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Create the configs hash
 */}}
 {{- define "dominant.propertiesHash" -}}
