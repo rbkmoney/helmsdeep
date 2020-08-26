@@ -15,12 +15,29 @@ spec:
         {{- include "wapi.selectorLabels" . | nindent 8 }}
       annotations:
         wapi/properties-hash: {{ include "wapi.propertiesHash" . }}
+        wapi/secrets-hash: {{ include "wapi.secretsHash" . }}
     spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets.name }}
-      serviceAccountName: {{ include "wapi.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+      - name: fetch-keycloack-pubkey
+        image: busybox:1.32
+        env:
+        - name: TARGET
+          value: "/var/keycloak/keycloak.pubkey.pem"
+        command:
+          - /bin/sh
+          - -c
+          - /opt/keycloak/fetch-keycloak-pubkey.sh
+        volumeMounts:
+          - name: config-volume
+            mountPath: /opt/keycloak/fetch-keycloak-pubkey.sh
+            subPath: fetch-keycloak-pubkey.sh
+            readOnly: true
+          - name: keycloak-pubkey
+            mountPath: /var/keycloak
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -52,6 +69,15 @@ spec:
               mountPath: /opt/wapi/erl_inetrc
               subPath: erl_inetrc
               readOnly: true
+            - name: oops-bodies
+              mountPath: /var/lib/wapi/oops-bodies
+              readOnly: true
+            - name: secret
+              mountPath: /var/lib/wapi/keys
+              readOnly: true
+            - name: keycloak-pubkey
+              mountPath: /var/lib/wapi/keys/keycloak
+              readOnly: true
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -59,12 +85,23 @@ spec:
           configMap:
             name: {{ include "wapi.fullname" . }}
             items:
+            - key: fetch-keycloak-pubkey.sh
+              path: fetch-keycloak-pubkey.sh
+              mode: 0755
             - key: sys.config
               path: sys.config
             - key: vm.args
               path: vm.args
             - key: erl_inetrc
               path: erl_inetrc
+        - name: oops-bodies
+          configMap:
+            name: {{ include "wapi.fullname" . }}-oops-bodies
+        - name: secret
+          secret:
+            secretName: {{ include "wapi.fullname" . }}
+        - name: keycloak-pubkey
+          emptyDir: {}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

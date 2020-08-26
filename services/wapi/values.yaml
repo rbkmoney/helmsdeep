@@ -7,6 +7,9 @@ replicaCount: 1
 imagePullSecrets:
   name: dr2reg
 
+beam:
+  disableSBWT: false
+
 nameOverride: ""
 fullnameOverride: ""
 
@@ -32,7 +35,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 8022
+  port: 8080
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -51,3 +54,7 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+ingress:
+  host: api.rbk.dev
+  path: /wapi

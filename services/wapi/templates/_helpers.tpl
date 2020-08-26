@@ -52,21 +52,20 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Create the name of the service account to use
-*/}}
-{{- define "wapi.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "wapi.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
-
-{{/*
 Create the configs hash
 */}}
 {{- define "wapi.propertiesHash" -}}
-{{- $config := include (print $.Template.BasePath "/configmap.yaml") . | sha256sum -}}
+{{- $configmap_path := print $.Template.BasePath "/configmap.yaml" -}}
+{{- $oopsbodies_path := print $.Template.BasePath "/oops-bodies.yaml" -}}
+{{- $config := cat (include $configmap_path .) (include $oopsbodies_path .) | sha256sum -}}
+{{- print $config -}}
+{{- end -}}
+
+{{/*
+Create the secrets hash
+*/}}
+{{- define "wapi.secretsHash" -}}
+{{- $config := include (print $.Template.BasePath "/secret.yaml") . | sha256sum -}}
 {{- print $config -}}
 {{- end -}}
 

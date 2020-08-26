@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name:  {{ include "wapi.fullname" . }}
+  labels:
+    {{- include "wapi.labels" . | nindent 4 }}
+spec:
+  rules:
+  - host: {{ .Values.ingress.host }}
+    http:
+      paths:
+      - path: {{ .Values.ingress.path }}
+        backend:
+          serviceName: {{ include "wapi.fullname" . }}
+          servicePort: {{ .Values.service.port }}
