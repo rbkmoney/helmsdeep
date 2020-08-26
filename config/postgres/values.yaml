@@ -1,1 +1,8 @@
 replicas: 1
+
+initdbScripts:
+  rbk-dbs.sql: |
+     CREATE DATABASE helm;
+     CREATE DATABASE test1;
+     CREATE DATABASE wizard;
+     

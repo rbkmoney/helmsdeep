@@ -4,7 +4,9 @@ repositories:
 - name: incubator
   url: https://kubernetes-charts-incubator.storage.googleapis.com
 - name: postgres
-  url : https://charts.bitnami.com/bitnami 
+  url: https://charts.bitnami.com/bitnami
+- name: hashi
+  url: https://helm.releases.hashicorp.com
 
 templates:
   default: &default
@@ -45,3 +47,7 @@ releases:
   <<: *default
   chart: bitnami/postgresql
   version: 9.2.0
+- name: vault
+  <<: *default
+  chart: hashicorp/vault
+  version: 0.7.0
