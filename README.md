@@ -22,6 +22,11 @@ Helm Charts Repo
 $ kubectl create secret docker-registry dr2reg --docker-server=dr2.rbkmoney.com --docker-username=$USERNAME --docker-password=$PASSWORD
 
 ```
+Для быстрой и автоматической инициализации Vault нужен configMap:
+```
+kubectl apply -f config/vault/init-cm.yaml
+```
+
 Пример запуска сервисов:
 
 ```shell
@@ -60,7 +65,11 @@ You can use machinegun:8022 to connect to the machinegun woody interface.
 
 Работа с Vault
 ----------
-Волт запускается в dev режиме, то есть сразу инициированный и unseal. Но ему нужно активировать движки секретов и авторизации, для этого нужно зайти в контейнер с запущенным волтом:
+Волт запускается в dev режиме, то есть сразу инициированный и unseal. 
+Референс для работы с секретами в [доке vault](https://www.hashicorp.com/blog/dynamic-database-credentials-with-vault-and-kubernetes/)
+
+<details>
+  <summary>Здесь немного комментов к тому, что происходит автоматом при запуске пода vault</summary>
 
 ```
 # kubectl exec -ti vault-0 -- sh
@@ -99,8 +108,19 @@ vault write database/roles/db-app \
     default_ttl="1h" \
     max_ttl="24h"
 ```
+</details>
 
-Для того, чтобы приложение получило свои секретный логины-пароли к БД нужно добавить к описанию сервиса аннотации:
+Чтобы зайти в вебку волта нужно получить себе новый токен:
+```
+kubectl exec vault-0 -- vault token create
+```
+включить портфорвард на локалхост
+```
+kubectl port-forward vault-0 8200:8200 &
+```
+и с полученым токеном идти в браузере на http://127.0.0.1:8200
+
+Для того, чтобы приложение получило свои секретный логины-пароли к БД нужно добавить к описанию сервиса аннотации, [а тут смотреть целый манифест deployments](docs/service-with-vault-injected-creds-sample.yaml):
 ```
       annotations:
         vault.hashicorp.com/agent-inject: "true"
@@ -111,4 +131,4 @@ vault write database/roles/db-app \
           {{- end }}
         vault.hashicorp.com/role: "db-app"
 ```
-После этого в поде с сервисом будет лежать файл `/vault/secrets/db-creds` со строкой подклчюения к БД
+После этого в поде с сервисом будет лежать файл `/vault/secrets/db-creds` со строкой подключения к БД
