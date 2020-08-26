@@ -1,0 +1,13 @@
+version: v0.116.0
+dependencies:
+- name: consul
+  repository: https://kubernetes-charts.storage.googleapis.com
+  version: 3.9.5
+- name: kafka
+  repository: https://kubernetes-charts-incubator.storage.googleapis.com
+  version: 0.21.2
+- name: zookeeper
+  repository: https://kubernetes-charts-incubator.storage.googleapis.com
+  version: 2.1.3
+digest: sha256:0fb454b1a2afa9e8e7e465cd74699976bec14a17642a4d4164a19aa847a4befc
+generated: "2020-05-20T14:10:13.586616462+03:00"

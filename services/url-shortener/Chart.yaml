@@ -1,0 +1,6 @@
+apiVersion: v2
+name: url-shortener
+description: Url shortener
+type: application
+version: 0.1.0
+appVersion: ec89811b6b6c99f202102ad7dc657ff0fc31e3c6

@@ -2,5 +2,5 @@ apiVersion: v2
 name: riak
 description: A simple riak cluster for Kubernetes
 type: application
-version: 0.1.3
-appVersion: d9dec1c4a69482f5c013bb155f6ccd18cd9d4653
+version: 0.1.0
+appVersion: c02614659191d4b7793da74355421a32e28c489c

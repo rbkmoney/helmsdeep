@@ -1,0 +1,2 @@
+You can use {{ template "kds.fullname" . }}:{{ .Values.service.ports.managementPort }} to connect to the kds woody interface.
+
