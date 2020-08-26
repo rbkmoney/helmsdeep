@@ -21,7 +21,7 @@ spec:
     spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets.name }}
-      serviceAccountName: {{ include "machinegun.serviceAccountName" . }}
+      serviceAccountName: {{ include "wapi-pcidss-v0.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:

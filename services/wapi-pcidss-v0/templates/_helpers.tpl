@@ -54,9 +54,9 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "machinegun.serviceAccountName" -}}
+{{- define "wapi-pcidss-v0.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "machinegun.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "wapi-pcidss-v0.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
