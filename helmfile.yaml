@@ -5,7 +5,7 @@ repositories:
   url: https://kubernetes-charts-incubator.storage.googleapis.com
 - name: postgres
   url: https://charts.bitnami.com/bitnami
-- name: hashi
+- name: hashicorp
   url: https://helm.releases.hashicorp.com
 
 templates:

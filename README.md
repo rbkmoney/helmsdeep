@@ -57,3 +57,6 @@ Phase:          Succeeded
 NOTES:
 You can use machinegun:8022 to connect to the machinegun woody interface.
 ```
+
+Работа с Vault
+----------
