@@ -22,7 +22,7 @@ spec:
           {{- end }}
         vault.hashicorp.com/role: "db-app"
     spec:
-      serviceAccountName: mg-riak
+      serviceAccountName: default
       containers:
         - name: web
           image: nicholasjackson/fake-service:v0.7.3

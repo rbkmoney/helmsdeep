@@ -2,6 +2,21 @@ server:
   dev:
     enabled: true
 #  postStart:
-#    command:
-#      - vault auth enable kubernetes
-#      - vault secrets enable database
+#    - vault auth enable kubernetes
+#    - vault secrets enable database
+
+  volumes:
+    - name: vault-init
+      configMap:
+        name: vault-cm
+ # volumeMounts is a list of volumeMounts for the main server container. These are rendered
+ # via toYaml rather than pre-processed like the extraVolumes value.
+ # The purpose is to make it easy to share volumes between containers.
+  volumeMounts:
+    - mountPath: /vault-init
+      name: vault-init
+#      readOnly: true
+  postStart:
+    - /bin/sh
+    - -c
+    - "cat /vault-init/init.vault.sh | sh"
