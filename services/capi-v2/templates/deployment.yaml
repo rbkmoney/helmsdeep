@@ -14,11 +14,15 @@ spec:
       labels:
         {{- include "capi-v2.selectorLabels" . | nindent 8 }}
       annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         capi-v2/properties-hash: {{ include "capi-v2.propertiesHash" . }}
         capi-v2/secrets-hash: {{ include "capi-v2.secretsHash" . }}
     spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets.name }}
+      serviceAccountName: {{ include "capi-v2.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:

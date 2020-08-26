@@ -63,6 +63,17 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
+Create the name of the service account to use
+*/}}
+{{- define "binbase.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create -}}
+    {{ default (include "binbase.fullname" .) .Values.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create the configs hash
 */}}
 {{- define "machinegun.propertiesHash" -}}

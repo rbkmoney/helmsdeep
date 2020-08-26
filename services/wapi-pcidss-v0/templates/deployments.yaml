@@ -14,10 +14,14 @@ spec:
       labels:
         {{- include "wapi-pcidss-v0.selectorLabels" . | nindent 8 }}
       annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         wapi-pcidss-v0/properties-hash: {{ include "wapi-pcidss-v0.propertiesHash" . }}
     spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets.name }}
+      serviceAccountName: {{ include "machinegun.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
