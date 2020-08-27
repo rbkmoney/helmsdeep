@@ -4,6 +4,10 @@ metadata:
   name: {{ include "capi-pcidss-v2.fullname" . }}
   labels:
     {{- include "capi-pcidss-v2.labels" . | nindent 4 }}
+  annotations:
+    {{- with .Values.podAnnotations }}
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -14,10 +18,14 @@ spec:
       labels:
         {{- include "capi-pcidss-v2.selectorLabels" . | nindent 8 }}
       annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         capi-pcidss-v2/properties-hash: {{ include "capi-pcidss-v2.propertiesHash" . }}
     spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets.name }}
+      serviceAccountName: {{ include "capi-pcidss-v2.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:

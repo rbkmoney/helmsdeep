@@ -59,3 +59,14 @@ Configs hash
 {{- $secret := include (print $.Template.BasePath "/secret.yaml") . | sha256sum -}}
 {{ print $secret $config | sha256sum }}
 {{- end -}}
+
+{{/*
+Create the name of the service account
+*/}}
+{{- define "capi-pcidss-v2.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "capi-pcidss-v2.fullname" .) .Values.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.serviceAccount.name }}
+{{- end }}
+{{- end }}
