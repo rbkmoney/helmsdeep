@@ -14,6 +14,9 @@ spec:
       labels:
         {{- include "dominant.selectorLabels" . | nindent 8 }}
       annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         dominant/properties-hash: {{ include "dominant.propertiesHash" . }}
     spec:
       imagePullSecrets:
