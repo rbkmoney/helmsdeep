@@ -4,10 +4,6 @@ metadata:
   name: {{ include "capi-pcidss-v2.fullname" . }}
   labels:
     {{- include "capi-pcidss-v2.labels" . | nindent 4 }}
-  annotations:
-    {{- with .Values.podAnnotations }}
-      {{- toYaml . | nindent 8 }}
-    {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
