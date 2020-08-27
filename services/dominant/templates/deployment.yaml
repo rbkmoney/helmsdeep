@@ -40,15 +40,15 @@ spec:
               port: api
           volumeMounts:
             - name: config-volume
-              mountPath: /opt/shortener/releases/0.1.0/sys.config
+              mountPath: /opt/dominant/releases/0.1.0/sys.config
               subPath: sys.config
               readOnly: true
             - name: config-volume
-              mountPath: /opt/shortener/releases/0.1.0/vm.args
+              mountPath: /opt/dominant/releases/0.1.0/vm.args
               subPath: vm.args
               readOnly: true
             - name: config-volume
-              mountPath: /opt/shortener/erl_inetrc
+              mountPath: /opt/dominant/erl_inetrc
               subPath: erl_inetrc
               readOnly: true
           resources:
