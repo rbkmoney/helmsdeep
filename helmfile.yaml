@@ -70,6 +70,8 @@ releases:
     file: config/cds/ca.crt
   - name: clientCrt
     file: config/cds/client.pem
+- name: keycloak
+  <<: *default
 - name: url-shortener
   <<: *default
   set:

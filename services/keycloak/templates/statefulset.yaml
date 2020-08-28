@@ -2,18 +2,16 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ include "keycloak.fullname" . }}
-  {{- with .Values.statefulsetAnnotations }}
   labels:
     {{- include "keycloak.labels" . | nindent 4 }}
 spec:
+  replicas: {{ .Values.replicas }}
+  updateStrategy:
+    type: RollingUpdate
+  serviceName: {{ include "keycloak.fullname" . }}
   selector:
     matchLabels:
       {{- include "keycloak.selectorLabels" . | nindent 6 }}
-  replicas: {{ .Values.replicas }}
-  serviceName: {{ include "keycloak.fullname" . }}-headless
-  # podManagementPolicy: {{ .Values.podManagementPolicy }}
-  updateStrategy:
-    type: Recreate
   template:
     metadata:
       labels:
@@ -23,10 +21,8 @@ spec:
         {{- with .Values.extraInitContainers }}
         {{- tpl . $ | nindent 8 }}
         {{- end }}
-      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        - name: {{ .Values.imagePullSecrets.name }}
       serviceAccountName: {{ include "keycloak.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -36,7 +32,6 @@ spec:
       {{- end }}
       enableServiceLinks: {{ .Values.enableServiceLinks }}
       restartPolicy: {{ .Values.restartPolicy }}
-      {{- with .Values.nodeSelector }}
       containers:
         - name: keycloak
           securityContext:
@@ -79,11 +74,11 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-            {{- if .Values.startupScripts }}
-            - name: startup
-              mountPath: /opt/jboss/startup-scripts
-              readOnly: true
-            {{- end }}
+            # {{- if .Values.startupScripts }}
+            # - name: startup
+            #   mountPath: /opt/jboss/startup-scripts
+            #   readOnly: true
+            # {{- end }}
             {{- with .Values.extraVolumeMounts }}
             {{- tpl . $ | nindent 12 }}
             {{- end }}
@@ -91,24 +86,24 @@ spec:
         {{- tpl . $ | nindent 8 }}
         {{- end }}
       volumes:
-        {{- if .Values.startupScripts }}
-        - name: startup
-          configMap:
-            name: {{ include "keycloak.fullname" . }}-startup
-            defaultMode: 0555
-        {{- end }}
+        # {{- if .Values.startupScripts }}
+        # - name: startup
+        #   configMap:
+        #     name: {{ include "keycloak.fullname" . }}-startup
+        #     defaultMode: 0555
+        # {{- end }}
         {{- with .Values.extraVolumes }}
         {{- tpl . $ | nindent 8 }}
         {{- end }}
+    {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
+    {{- end }}
+    {{- with .Values.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
+    {{- end }}
+    {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.priorityClassName }}
+    {{- end }}

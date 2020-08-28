@@ -26,7 +26,7 @@ spec:
         image: busybox:1.32
         env:
         - name: TARGET
-          value: "/var/keycloak/keycloak.pubkey.pem"
+          value: "/var/lib/capi/keys/keycloak/keycloak.pubkey.pem"
         command:
           - /bin/sh
           - -c

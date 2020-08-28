@@ -1,0 +1,6 @@
+apiVersion: v2
+name: keycloak
+description: Keycloak
+type: application
+version: 0.1.0
+appVersion: 3829fe256ae3f31913c7f64e9a772ba9628ad87c

@@ -1,12 +1,124 @@
+# Optionally override the fully qualified name
+fullnameOverride: ""
+
+# Optionally override the name
+nameOverride: ""
+
+# The number of replicas to create
+replicas: 1
+
+image:
+  repository: dr2.rbkmoney.com/rbkmoney/keycloak
+  pullPolicy: IfNotPresent
+
+# Image pull secrets for the Pod
+imagePullSecrets:
+  name: dr2reg
+
+service:
+  httpPort: 8080
+
+# Mapping between IPs and hostnames that will be injected as entries in the Pod's hosts files
+hostAliases: []
+
+# Indicates whether information about services should be injected into Pod's environment variables, matching the syntax of Docker links
+enableServiceLinks: true
+
+# Pod management policy. One of `Parallel` or `OrderedReady`
+podManagementPolicy: Parallel
+
+# Pod restart policy. One of `Always`, `OnFailure`, or `Never`
+restartPolicy: Always
+
+serviceAccount:
+  # Specifies whether a ServiceAccount should be created
+  create: false
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+  # Additional annotations for the ServiceAccount
+  annotations: {}
+  # Additional labels for the ServiceAccount
+  labels: {}
+
+# SecurityContext for the entire Pod. Every container running in the Pod will inherit this SecurityContext. This might be relevant when other components of the environment inject additional containers into running Pods (service meshes are the most prominent example for this)
+podSecurityContext:
+  fsGroup: 1000
+
+# SecurityContext for the Keycloak container
+securityContext:
+  runAsUser: 1000
+  runAsNonRoot: true
+
+# Additional init containers, e. g. for providing custom themes
+extraInitContainers: ""
+
+# Additional sidecar containers, e. g. for a database proxy, such as Google's cloudsql-proxy
+extraContainers: ""
+
+# Lifecycle hooks for the Keycloak container
+lifecycleHooks: |
+#  postStart:
+#    exec:
+#      command:
+#        - /bin/sh
+#        - -c
+#        - ls
+
+# Termination grace period in seconds for Keycloak shutdown. Clusters with a large cache might need to extend this to give Infinispan more time to rebalance
+terminationGracePeriodSeconds: 60
+
+# The internal Kubernetes cluster domain
+clusterDomain: cluster.local
+
+## Overrides the default entrypoint of the Keycloak container
+command: []
+
+## Overrides the default args for the Keycloak container
+args: []
+
+# Additional environment variables for Keycloak
+extraEnv: ""
+
+# Additional environment variables for Keycloak mapped from Secret or ConfigMap
+extraEnvFrom: ""
+
+#  Pod priority class name
+priorityClassName: ""
+
+# Pod affinity
+affinity: []
+
+# Node labels for Pod assignment
+nodeSelector: {}
+
+# Node taints to tolerate
+tolerations: []
+
+# Additional Pod annotations
+podAnnotations: {}
+
+# Liveness probe configuration
+livenessProbe: |
+  httpGet:
+    path: /auth/
+    port: http
+  initialDelaySeconds: 300
+  timeoutSeconds: 5
+
+# Readiness probe configuration
+readinessProbe: |
+  httpGet:
+    path: /auth/realms/master
+    port: http
+  initialDelaySeconds: 30
+  timeoutSeconds: 1
+
 # Startup scripts to run before Keycloak starts up
 startupScripts:
   # WildFly CLI script for configuring the node-identifier
   keycloak.cli: |
     {{- .Files.Get "scripts/keycloak.cli" }}
-  # mystartup.sh: |
-  #   #!/bin/sh
-  #
-  # echo 'Hello from my custom startup script!'
 
 extraEnv: |
   - name: DB_VENDOR
@@ -17,8 +129,6 @@ extraEnv: |
     value: /secrets/admin-creds/password
   - name: JAVA_OPTS
     value: >-
-      -XX:+UseContainerSupport
-      -XX:MaxRAMPercentage=50.0
       -Djava.net.preferIPv4Stack=true
       -Djboss.modules.system.pkgs=$JBOSS_MODULES_SYSTEM_PKGS
       -Djava.awt.headless=true
@@ -40,9 +150,6 @@ extraVolumes: |
   - name: admin-creds
     secret:
       secretName: '{{ include "keycloak.fullname" . }}-admin-creds'
-
-postgresql:
-  enabled: false
 
 test:
   enabled: true
