@@ -1,9 +1,6 @@
 server:
   dev:
     enabled: true
-#  postStart:
-#    - vault auth enable kubernetes
-#    - vault secrets enable database
 
   volumes:
     - name: vault-init
