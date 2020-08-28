@@ -93,7 +93,7 @@ vault write auth/kubernetes/role/db-app \
     policies=db-app \
     ttl=1h
 
-#теперь настраиваем подклчюение к постгресу:
+#теперь настраиваем подключение к постгресу:
 vault write database/config/mydatabase \
     plugin_name=postgresql-database-plugin \
     allowed_roles="*" \
