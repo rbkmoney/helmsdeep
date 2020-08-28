@@ -12,4 +12,4 @@ spec:
       - path: {{ .Values.ingress.path }}
         backend:
           serviceName: {{ include "wapi.fullname" . }}
-          servicePort: {{ .Values.service.port }}
+          servicePort: {{ .Values.service.ports.ingressPort }}
