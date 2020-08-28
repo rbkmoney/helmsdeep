@@ -7,8 +7,12 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: port
+    - port: {{ .Values.service.ports.managementPort }}
+      targetPort: management
+      protocol: TCP
+      name: management
+    - port: {{ .Values.service.ports.ingressPort }}
+      targetPort: api
       protocol: TCP
       name: api
   selector:

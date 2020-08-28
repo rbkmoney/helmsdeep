@@ -15,12 +15,14 @@ fullnameOverride: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
-  create: false
+  create: true
   # Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
+
+podAnnotations: {}
 
 podSecurityContext: {}
   # fsGroup: 2000
@@ -35,7 +37,9 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 8080
+  ports:
+    ingressPort: 8080
+    managementPort: 8022
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

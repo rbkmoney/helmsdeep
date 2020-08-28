@@ -14,11 +14,14 @@ spec:
       labels:
         {{- include "wapi.selectorLabels" . | nindent 8 }}
       annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         wapi/properties-hash: {{ include "wapi.propertiesHash" . }}
-        wapi/secrets-hash: {{ include "wapi.secretsHash" . }}
     spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets.name }}
+      serviceAccountName: {{ include "wapi.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
@@ -45,17 +48,20 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
+            - name: management
+              containerPort: {{ .Values.service.ports.managementPort }}
+              protocol: TCP
             - name: api
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.service.ports.ingressPort }}
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /health
-              port: api
+              port: management
           readinessProbe:
             httpGet:
               path: /health
-              port: api
+              port: management
           volumeMounts:
             - name: config-volume
               mountPath: /opt/wapi/releases/0.1.0/sys.config

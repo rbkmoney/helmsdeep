@@ -8,8 +8,12 @@ metadata:
     "helm.sh/hook": test-success
 spec:
   containers:
-    - name: wget
+    - name: ingressWGet
       image: busybox
       command: ['wget']
-      args: ['{{ include "wapi.fullname" . }}:{{ .Values.service.port }}/health']
+      args: ['{{ include "wapi.fullname" . }}:{{ .Values.service.ports.ingressPort }}/health']
+    - name: managementWGet
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "wapi.fullname" . }}:{{ .Values.service.ports.managementPort }}/health']
   restartPolicy: Never
