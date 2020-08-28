@@ -2,7 +2,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "kds.name" -}}
+{{- define "hellgate.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -11,7 +11,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "kds.fullname" -}}
+{{- define "hellgate.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -27,16 +27,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "kds.chart" -}}
+{{- define "hellgate.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Common labels
 */}}
-{{- define "kds.labels" -}}
-helm.sh/chart: {{ include "kds.chart" . }}
-{{ include "kds.selectorLabels" . }}
+{{- define "hellgate.labels" -}}
+helm.sh/chart: {{ include "hellgate.chart" . }}
+{{ include "hellgate.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -44,29 +44,27 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*
-Selector labels
-*/}}
-{{- define "kds.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "kds.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end -}}
-
-{{/*
 Create the name of the service account to use
 */}}
-{{- define "kds.serviceAccountName" -}}
+{{- define "hellgate.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
-    {{ default (include "kds.fullname" .) .Values.serviceAccount.name }}
+    {{ default (include "hellgate.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
 
 {{/*
+Selector labels
+*/}}
+{{- define "hellgate.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "hellgate.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
+
+{{/*
 Configs hash
 */}}
-{{- define "kds.propertiesHash" -}}
-{{- $config := include (print $.Template.BasePath "/configmap.yaml") . | sha256sum -}}
-{{- $secret := include (print $.Template.BasePath "/secret.yaml") . | sha256sum -}}
-{{ print $secret $config | sha256sum }}
+{{- define "hellgate.propertiesHash" -}}
+{{- include (print $.Template.BasePath "/configmap.yaml") . | sha256sum -}}
 {{- end -}}

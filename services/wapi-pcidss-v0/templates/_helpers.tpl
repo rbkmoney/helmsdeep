@@ -52,6 +52,17 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Create the name of the service account to use
+*/}}
+{{- define "wapi-pcidss-v0.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "wapi-pcidss-v0.fullname" .) .Values.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.serviceAccount.name }}
+{{- end }}
+{{- end }}
+
+{{/*
 Configs hash
 */}}
 {{- define "wapi-pcidss-v0.propertiesHash" -}}
