@@ -86,6 +86,13 @@ releases:
   set:
   - name: entrypoint
     file: config/binbase/entrypoint.sh
+- name: hellgate
+  <<: *default
+  set:
+  - name: appConfig
+    file: config/hellgate/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
 - name: capi-v2
   <<: *default
   set:

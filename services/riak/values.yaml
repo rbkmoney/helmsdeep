@@ -28,6 +28,8 @@ podSecurityContext:
    enabled: false
    fsGroup: 102
 
+podAnnotations: {}
+
 securityContext: {}
   # capabilities:
   #   drop:

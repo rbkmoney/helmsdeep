@@ -52,20 +52,23 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Create the name of the service account to use
+*/}}
+{{- define "capi-v2.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create -}}
+    {{ default (include "capi-v2.fullname" .) .Values.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create the configs hash
 */}}
 {{- define "capi-v2.propertiesHash" -}}
 {{- $configmap_path := print $.Template.BasePath "/configmap.yaml" -}}
 {{- $oopsbodies_path := print $.Template.BasePath "/oops-bodies.yaml" -}}
 {{- $config := cat (include $configmap_path .) (include $oopsbodies_path .) | sha256sum -}}
-{{- print $config -}}
+{{- $secret := include (print $.Template.BasePath "/secret.yaml") . | sha256sum -}}
+{{- print $secret $config | sha256sum -}}
 {{- end -}}
-
-{{/*
-Create the secrets hash
-*/}}
-{{- define "capi-v2.secretsHash" -}}
-{{- $config := include (print $.Template.BasePath "/secret.yaml") . | sha256sum -}}
-{{- print $config -}}
-{{- end -}}
-

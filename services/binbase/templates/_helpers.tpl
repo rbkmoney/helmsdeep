@@ -52,6 +52,17 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Create the name of the service account to use
+*/}}
+{{- define "binbase.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "binbase.fullname" .) .Values.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.serviceAccount.name }}
+{{- end }}
+{{- end }}
+
+{{/*
 Configs hash
 */}}
 {{- define "binbase.propertiesHash" -}}

@@ -14,6 +14,9 @@ spec:
       labels:
         {{- include "url-shortener.selectorLabels" . | nindent 8 }}
       annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         url-shortener/properties-hash: {{ include "url-shortener.propertiesHash" . }}
     spec:
       imagePullSecrets:
