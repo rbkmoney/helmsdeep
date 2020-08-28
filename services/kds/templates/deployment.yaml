@@ -19,6 +19,7 @@ spec:
         {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        kds/properties-hash: {{ include "kds.propertiesHash" . }}
       labels:
         {{- include "kds.selectorLabels" . | nindent 8 }}
     spec:

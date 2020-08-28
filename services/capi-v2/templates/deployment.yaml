@@ -18,7 +18,6 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
         capi-v2/properties-hash: {{ include "capi-v2.propertiesHash" . }}
-        capi-v2/secrets-hash: {{ include "capi-v2.secretsHash" . }}
     spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets.name }}

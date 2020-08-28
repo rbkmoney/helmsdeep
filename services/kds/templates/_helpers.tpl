@@ -61,3 +61,12 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Configs hash
+*/}}
+{{- define "kds.propertiesHash" -}}
+{{- $config := include (print $.Template.BasePath "/configmap.yaml") . | sha256sum -}}
+{{- $secret := include (print $.Template.BasePath "/secret.yaml") . | sha256sum -}}
+{{ print $secret $config | sha256sum }}
+{{- end -}}
