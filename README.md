@@ -127,7 +127,7 @@ kubectl port-forward vault-0 8200:8200 &
         vault.hashicorp.com/agent-inject-secret-db-creds: "database/creds/db-app"
         vault.hashicorp.com/agent-inject-template-db-creds: |
           {{- with secret "database/creds/db-app" -}}
-          "db_connection": "postgresql://{{ .Data.username }}:{{ .Data.password }}@postgres-postgres$
+          "db_connection": "postgresql://{{ .Data.username }}:{{ .Data.password }}@postgres-postgresql:5432/?sslmode=disable"
           {{- end }}
         vault.hashicorp.com/role: "db-app"
 ```
