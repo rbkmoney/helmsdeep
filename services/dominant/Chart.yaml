@@ -1,0 +1,6 @@
+apiVersion: v2
+name: dominant
+description: Domain configuration service
+type: application
+version: 0.1.0
+appVersion: 6896d15357e87eb3de47d3e1aabcb1444e9c4f90

@@ -95,6 +95,13 @@ releases:
   set:
   - name: entrypoint
     file: config/binbase/entrypoint.sh
+- name: dominant
+  <<: *default
+  set:
+  - name: appConfig
+    file: config/dominant/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
 - name: hellgate
   <<: *default
   set:
