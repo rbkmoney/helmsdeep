@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "wapi.fullname" . }}
+  labels:
+    {{- include "wapi.labels" . | nindent 4 }}
+data:
+  fetch-keycloak-pubkey.sh: |
+    {{- .Values.fetchKeycloakPubkey | nindent 4 }}
+  sys.config: |
+    {{- .Values.appConfig | nindent 4 }}
+  vm.args: |
+    -sname {{ include "wapi.fullname" . }}
+    -setcookie {{ include "wapi.fullname" . }}_cookie
+    -kernel inetrc '"./erl_inetrc"''
+  erl_inetrc: |
+    {{- .Values.vmConfig | nindent 4 }}

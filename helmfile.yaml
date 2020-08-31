@@ -132,3 +132,20 @@ releases:
     file: config/api-common/keys/capi.privkey.pem
   - name: tokenEnctyptionKey1
     file: config/api-common/keys/token-encryption-keys/1.jwk
+- name: wapi
+  <<: *default
+  set:
+  - name: fetchKeycloakPubkey
+    file: config/api-common/fetch-keycloak-pubkey.sh
+  - name: appConfig
+    file: config/wapi/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+  - name: oopsBody1
+    file: config/api-common/oops-bodies/sad-kitty1
+  - name: oopsBody2
+    file: config/api-common/oops-bodies/sad-kitty2
+  - name: tokenEnctyptionKey1
+    file: config/api-common/keys/token-encryption-keys/1.jwk
+  - name: wapiPrivkey
+    file: config/api-common/keys/capi.privkey.pem
