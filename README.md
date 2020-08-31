@@ -22,6 +22,15 @@ Helm Charts Repo
 $ kubectl create secret docker-registry dr2reg --docker-server=dr2.rbkmoney.com --docker-username=$USERNAME --docker-password=$PASSWORD
 
 ```
+
+Добавление в minikube ingress
+------------------------------
+
+```shell
+$ minikube addons enable ingress
+
+```
+
 Пример запуска сервисов:
 
 ```shell

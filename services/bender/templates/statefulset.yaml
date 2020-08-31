@@ -17,6 +17,9 @@ spec:
       labels:
         {{- include "bender.selectorLabels" . | nindent 8 }}
       annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         bender/properties-hash: {{ include "bender.propertiesHash" . }}
     spec:
       imagePullSecrets:
