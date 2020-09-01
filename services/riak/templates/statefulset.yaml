@@ -39,8 +39,6 @@ spec:
               value: "riak"
             - name: COORDINATOR_NODE
               value: {{ include "riak.fullname" . }}-0.{{ include "riak.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
-            # - name: NODENAME
-            #   value: ${HOSTNAME}.{{ .Chart.Name }}
           ports:
             - name: http
               protocol: TCP
