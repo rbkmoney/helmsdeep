@@ -74,6 +74,19 @@ releases:
     file: config/cds/ca.crt
   - name: clientCrt
     file: config/cds/client.pem
+- name: capi-pcidss-v2
+  <<: *default
+  set:
+  - name: fetchKeycloakPubkey
+    file: config/api-common/fetch-keycloak-pubkey.sh
+  - name: appConfig
+    file: config/capi-pcidss-v2/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+  - name: privatePem
+    file: config/api-common/keys/capi.privkey.pem
+  - name: tokenEnctyptionKey1
+    file: config/api-common/keys/token-encryption-keys/1.jwk
 - name: url-shortener
   <<: *default
   set:
@@ -86,6 +99,13 @@ releases:
   set:
   - name: entrypoint
     file: config/binbase/entrypoint.sh
+- name: dominant
+  <<: *default
+  set:
+  - name: appConfig
+    file: config/dominant/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
 - name: hellgate
   <<: *default
   set:
@@ -131,3 +151,20 @@ releases:
   <<: *default
   chart: hashicorp/vault
   version: 0.7.0
+- name: wapi
+  <<: *default
+  set:
+  - name: fetchKeycloakPubkey
+    file: config/api-common/fetch-keycloak-pubkey.sh
+  - name: appConfig
+    file: config/wapi/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+  - name: oopsBody1
+    file: config/api-common/oops-bodies/sad-kitty1
+  - name: oopsBody2
+    file: config/api-common/oops-bodies/sad-kitty2
+  - name: tokenEnctyptionKey1
+    file: config/api-common/keys/token-encryption-keys/1.jwk
+  - name: wapiPrivkey
+    file: config/api-common/keys/capi.privkey.pem
