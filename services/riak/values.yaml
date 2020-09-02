@@ -61,10 +61,6 @@ affinity: {}
 config:
   user: ""
 
-state:
-  enabled: false
-  localpath: /data/
-
 storage:
   accessModes: ["ReadWriteOnce"]
 # set right storageClassName at real cluster.
