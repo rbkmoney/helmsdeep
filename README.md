@@ -25,7 +25,7 @@ $ kubectl create secret docker-registry dr2reg --docker-server=dr2.rbkmoney.com 
 Для быстрой и автоматической инициализации Vault нужен configMap:
 ```
 kubectl apply -f config/vault/init-cm.yaml
-
+```
 
 Добавление в minikube ingress
 ------------------------------
