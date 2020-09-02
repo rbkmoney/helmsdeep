@@ -12,7 +12,6 @@ server:
   volumeMounts:
     - mountPath: /vault-init
       name: vault-init
-#      readOnly: true
   postStart:
     - /bin/sh
     - -c

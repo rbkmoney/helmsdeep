@@ -6,7 +6,6 @@ replicaCount: 1
 
 image:
   repository: dr2.rbkmoney.com/rbkmoney/riak-base
-  tag: e0d38b2d6e8820bb94f26559a519871bcd789490
   pullPolicy: IfNotPresent
 
 imagePullSecrets:
