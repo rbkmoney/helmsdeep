@@ -3,6 +3,10 @@ repositories:
   url: https://kubernetes-charts.storage.googleapis.com
 - name: incubator
   url: https://kubernetes-charts-incubator.storage.googleapis.com
+- name: postgres
+  url: https://charts.bitnami.com/bitnami
+- name: hashicorp
+  url: https://helm.releases.hashicorp.com
 
 templates:
   default: &default
@@ -139,6 +143,14 @@ releases:
     file: config/api-common/keys/capi.privkey.pem
   - name: tokenEnctyptionKey1
     file: config/api-common/keys/token-encryption-keys/1.jwk
+- name: postgres
+  <<: *default
+  chart: bitnami/postgresql
+  version: 9.2.0
+- name: vault
+  <<: *default
+  chart: hashicorp/vault
+  version: 0.7.0
 - name: wapi
   <<: *default
   set:

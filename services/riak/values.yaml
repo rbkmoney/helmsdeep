@@ -23,10 +23,11 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name:
 
-podAnnotations: {}
+podSecurityContext:
+   enabled: false
+   fsGroup: 102
 
-podSecurityContext: {}
-  # fsGroup: 2000
+podAnnotations: {}
 
 securityContext: {}
   # capabilities:
@@ -62,6 +63,8 @@ config:
 
 storage:
   accessModes: ["ReadWriteOnce"]
+# set right storageClassName at real cluster.
+#  storageClassName: ""
   resources:
      requests:
-       storage: 1Gi
+       storage: 3Gi
