@@ -1,0 +1,12 @@
+# Look for reference at https://github.com/helm/charts/blob/master/stable/prometheus-operator/values.yaml#L1975
+prometheus:
+  additionalServiceMonitors:
+    - name: "rbk-intservice"
+      selector: 
+        matchLabels:
+          prometheusmetrics.enabled: "true"
+
+      endpoints:
+        - port: "web"
+          path: /metrics
+          scheme: http
