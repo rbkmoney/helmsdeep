@@ -15,7 +15,6 @@ spec:
         {{- include "capi-v1.selectorLabels" . | nindent 8 }}
       annotations:
         capi-v1/properties-hash: {{ include "capi-v1.propertiesHash" . }}
-        capi-v1/secrets-hash: {{ include "capi-v1.secretsHash" . }}
     spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets.name }}
