@@ -1,0 +1,6 @@
+apiVersion: v2
+name: capi-v1
+description: Common API service (v1)
+type: application
+version: 0.1.0
+appVersion: 9f912926d2a627ca23e15c329d753748fa67507f

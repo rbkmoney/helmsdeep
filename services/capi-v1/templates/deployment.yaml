@@ -1,0 +1,119 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "capi-v1.fullname" . }}
+  labels:
+    {{- include "capi-v1.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "capi-v1.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "capi-v1.selectorLabels" . | nindent 8 }}
+      annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        capi-v1/properties-hash: {{ include "capi-v1.propertiesHash" . }}
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecrets.name }}
+      serviceAccountName: {{ include "capi-v1.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+      - name: fetch-keycloack-pubkey
+        image: busybox:1.32
+        env:
+        - name: TARGET
+          value: "/var/keycloak/keycloak.pubkey.pem"
+        command:
+          - /bin/sh
+          - -c
+          - /opt/keycloak/fetch-keycloak-pubkey.sh
+        volumeMounts:
+          - name: config-volume
+            mountPath: /opt/keycloak/fetch-keycloak-pubkey.sh
+            subPath: fetch-keycloak-pubkey.sh
+            readOnly: true
+          - name: keycloak-pubkey
+            mountPath: /var/keycloak
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: api
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: api
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: api
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/capi/releases/0.1.0/sys.config
+              subPath: sys.config
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/capi/releases/0.1.0/vm.args
+              subPath: vm.args
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/capi/erl_inetrc
+              subPath: erl_inetrc
+              readOnly: true
+            - name: oops-bodies
+              mountPath: /var/lib/capi/oops-bodies
+              readOnly: true
+            - name: secret
+              mountPath: /var/lib/capi/keys
+              readOnly: true
+            - name: keycloak-pubkey
+              mountPath: /var/lib/capi/keys/keycloak
+              readOnly: true
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "capi-v1.fullname" . }}
+            items:
+            - key: fetch-keycloak-pubkey.sh
+              path: fetch-keycloak-pubkey.sh
+              mode: 0755
+            - key: sys.config
+              path: sys.config
+            - key: vm.args
+              path: vm.args
+            - key: erl_inetrc
+              path: erl_inetrc
+        - name: oops-bodies
+          configMap:
+            name: {{ include "capi-v1.fullname" . }}-oops-bodies
+        - name: secret
+          secret:
+            secretName: {{ include "capi-v1.fullname" . }}
+        - name: keycloak-pubkey
+          emptyDir: {}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
