@@ -1,0 +1,11 @@
+replicaCount: 1
+
+podAnnotations:
+  vault.hashicorp.com/role: "db-app"
+  vault.hashicorp.com/agent-inject: "true"
+  vault.hashicorp.com/agent-inject-secret-db-creds: "database/creds/db-app"
+  vault.hashicorp.com/agent-inject-template-db-creds: |
+    {{- with secret "database/creds/db-app" -}}
+    DB_USER={{ .Data.username }}
+    DB_PASS={{ .Data.password }}
+    {{- end }}
