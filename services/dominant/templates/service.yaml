@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "dominant.fullname" . }}
+  labels:
+    {{- include "dominant.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 8022
+      protocol: TCP
+      name: api
+  selector:
+    {{- include "dominant.selectorLabels" . | nindent 4 }}

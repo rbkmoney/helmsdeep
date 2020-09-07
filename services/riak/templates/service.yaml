@@ -1,3 +1,5 @@
+#Headless service for clean dns record of each pod in statefulset.
+#clusterIP: None - is not a fault, it's normal annotations
 apiVersion: v1
 kind: Service
 metadata:
@@ -6,6 +8,7 @@ metadata:
     {{- include "riak.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
+  clusterIP: None
   ports:
     - port: 8098
       targetPort: 8098

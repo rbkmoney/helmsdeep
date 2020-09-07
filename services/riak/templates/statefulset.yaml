@@ -14,6 +14,9 @@ spec:
   template:
     metadata:
       annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         riak/properties-hash: {{ include "riak.propertiesHash" . }}
       labels:
         app: {{ .Chart.Name }}
@@ -21,6 +24,12 @@ spec:
     spec:
       serviceAccountName: {{ include "riak.serviceAccountName" . }}
       terminationGracePeriodSeconds: 10
+{{- if .Values.podSecurityContext.enabled }}
+      securityContext:
+        fsGroup: {{ .Values.podSecurityContext.fsGroup | int64 }}
+        runAsUser: {{ .Values.podSecurityContext.fsGroup | int64 }}
+        runAsGroup: {{ .Values.podSecurityContext.fsGroup | int64 }}
+{{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
@@ -28,6 +37,8 @@ spec:
           env:
             - name: CLUSTER_NAME
               value: "riak"
+            - name: COORDINATOR_NODE
+              value: {{ include "riak.fullname" . }}-0.{{ include "riak.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
           ports:
             - name: http
               protocol: TCP
@@ -38,14 +49,14 @@ spec:
           livenessProbe:
             exec:
               command: ["riak", "ping"]
-            initialDelaySeconds: 60
+            initialDelaySeconds: 30
             periodSeconds: 60
             timeoutSeconds: 15
           readinessProbe:
             exec:
               command: ["riak-admin", "test"]
             initialDelaySeconds: 30
-            periodSeconds: 60
+            periodSeconds: 20
             timeoutSeconds: 10
           volumeMounts:
             - name: config-volume
@@ -62,7 +73,7 @@ spec:
             name: {{ include "riak.fullname" . }}-user-config
     {{- with .Values.affinity }}
       affinity:
-          {{- toYaml . | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
     {{- end }}
   volumeClaimTemplates:
     - metadata:
