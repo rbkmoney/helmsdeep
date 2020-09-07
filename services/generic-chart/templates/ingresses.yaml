@@ -1,0 +1,67 @@
+{{- $root := . -}}
+{{- range .Values.ingresses -}}
+{{- $host := (tpl .host $root) -}}
+{{- $ingressName := ($host | replace "." "-") -}}
+{{- if .name -}}
+{{- $ingressName = list $ingressName .name | join "-" -}}
+{{- end -}}
+{{- $ingressName = list $ingressName $root.Release.Name | join "-" -}}
+{{- if (.canary | default false) -}}
+{{- $ingressName = list $ingressName "canary" | join "-" -}}
+{{- end -}}
+{{- $ingressName = lower $ingressName -}}
+{{- $svcName := $root.Release.Name -}}
+{{- $svcName = lower $svcName -}}
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: {{ $ingressName }}
+  namespace: {{ $root.Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ $root.Release.Name }}
+    helm.sh/chart: "{{ $root.Chart.Name }}-{{ $root.Chart.Version }}"
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    {{- if not (eq (.ssl | default "enabled") "disabled") }}
+    {{- if not (eq $host "www.rbkmoney.com") }}
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt
+    {{- end }}
+    {{- end }}
+    {{- if .canary }}
+    nginx.ingress.kubernetes.io/canary: "true"
+    {{- if .canary.weight }}
+    nginx.ingress.kubernetes.io/canary-weight: {{ .canary.weight | quote }}
+    {{- end }}
+    {{- if .canary.cookie }}
+    nginx.ingress.kubernetes.io/canary-by-cookie: {{ .canary.cookie }}
+    {{- end }}
+    {{- end }}
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header GeoIP-City $geoip_city;
+      {{- if $root.Values.linkerd.enabled }}
+      proxy_set_header l5d-dst-override $service_name.$namespace.svc.cluster.local:{{ $root.Values.app.port }};
+      {{- end }}
+    {{- if .additionalAnnotations }}
+{{ toYaml .additionalAnnotations | indent 4 }}
+    {{- end }}
+spec:
+  {{- if not (eq (.ssl | default "enabled") "disabled") }}
+  tls:
+  - hosts:
+    - {{ $host }}
+    secretName: {{ $host | replace "." "-" }}
+  {{- end }}
+  rules:
+  - host: {{ $host }}
+    http:
+      paths:
+      {{- range .paths }}
+      - path: {{ . | quote }}
+        backend:
+          serviceName: {{ $svcName }}
+          servicePort: http
+      {{- end }}
+---
+{{ end }}

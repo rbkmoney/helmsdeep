@@ -1,0 +1,35 @@
+# Image settings
+global:
+  image:
+    repository: ""
+    tag: ""
+    pullPolicy: IfNotPresent
+  
+  imagePullSecrets: []
+
+image: {}
+
+app:
+  team: cronjobs
+  logs:
+    json: true
+
+defaults:
+  failedJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
+  resources:
+    enabled: true
+
+jobs: []
+# list of cronjobs example:
+# - name: hello-world
+#   schedule: "0 * * * *"
+#   activeDeadlineSeconds: 50
+#   command:
+#   - npm
+#   - run
+#   - test
+#   resources:
+#     cpu: 50m
+#     memory: 256Mi

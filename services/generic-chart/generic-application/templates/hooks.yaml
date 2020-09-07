@@ -1,0 +1,66 @@
+{{- $root := . -}}
+{{- if .Values.hooks -}}
+{{- range .Values.hooks -}}
+{{- $name := (list $root.Release.Name .name "hook" | join "-") -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ $name }}
+  namespace: {{ $root.Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ $name }}
+    chart: "{{ $root.Chart.Name }}-{{ $root.Chart.Version }}"
+  annotations:
+    helm.sh/hook: {{ default "pre-install,pre-upgrade" .stage | quote }}
+    helm.sh/hook-weight: {{ default "1" .weight | quote }}
+    helm.sh/hook-delete-policy: {{ default "hook-succeeded,before-hook-creation" .deletePolicy | quote }}
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ $name }}
+        chart: "{{ $root.Chart.Name }}-{{ $root.Chart.Version }}"
+      annotations:
+    spec:
+      restartPolicy: Never
+      {{- if or $root.Values.global.imagePullSecrets .imagePullSecrets }}
+      imagePullSecrets:
+      {{- if .imagePullSecrets }}
+      {{ range .imagePullSecrets }}
+      - name: {{ . | quote }}
+      {{- end }}
+      {{- else }}
+      {{- range $root.Values.global.imagePullSecrets }}
+      - name: {{ . | quote }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      containers:
+      - name: {{ $name }}
+        {{- if .image }}
+        image: "{{ .image.repository }}:{{ .image.tag }}"
+        {{- else }}
+        image: "{{ $root.Values.global.image.repository }}:{{ $root.Values.global.image.tag }}"
+        {{- end }}
+        command:
+        {{- range .command }}
+        - {{ . }}
+        {{- end }}
+        {{- if or .env }}
+        env:
+        {{- range .env }}
+        - name: {{ .name }}
+          {{- if .valueFrom }}
+          valueFrom:
+{{ toYaml .valueFrom | indent 12 -}}
+          {{- else -}}
+          {{- $value := .value -}}
+          {{- $_ := set $ "value" $value }}
+          value: {{ tpl .value $ | quote }}
+          {{- end -}}
+        {{- end }}
+        {{- end }}
+---
+{{- end -}}
+{{- end -}}

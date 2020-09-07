@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    consul.hashicorp.com/service-sync: "true"
+    # {{- if eq .Values.service.type "LoadBalancer" }}
+    # service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    # {{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app.kubernetes.io/name: {{ .Release.Name }}
+  ports:
+  - name: http
+    port: {{ .Values.service.port }}
+    targetPort: http
+    protocol: TCP

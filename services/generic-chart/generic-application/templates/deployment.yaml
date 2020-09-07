@@ -1,0 +1,135 @@
+{{- $root := . -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Release.Name }}
+      annotations:
+        {{- if .Values.app.additionalAnnotations }}
+{{ toYaml .Values.app.additionalAnnotations | indent 8 }}
+        {{- end }}
+    spec:
+      {{- if or .Values.global.imagePullSecrets .Values.imagePullSecrets }}
+      imagePullSecrets:
+      {{- if .Values.imagePullSecrets }}
+      {{- range .Values.imagePullSecrets }}
+      - name: {{ . | quote }}
+      {{- end }}
+      {{- else }}
+      {{ range .Values.global.imagePullSecrets }}
+      - name: {{ . | quote }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- if .Values.initContainers }}
+      initContainers:
+      {{- range .Values.initContainers }}
+      - name: {{ list $root.Release.Name .name | join "-" }}
+        {{- if .image }}
+        image: "{{ .image.repository }}:{{ .image.tag }}"
+        {{- else }}
+        image: "{{ $root.Values.global.image.repository }}:{{ $root.Values.global.image.tag }}"
+        {{- end }}
+        imagePullPolicy: {{ $root.Values.global.image.pullPolicy }}
+        command:
+        {{- range .command }}
+        - {{ . }}
+        {{- end }}
+        {{- if .env }}
+        env:
+        {{- range .env }}
+        - name: {{ .name }}
+          {{- if .valueFrom }}
+          valueFrom:
+{{ toYaml .valueFrom | indent 12 -}}
+          {{- else -}}
+          {{- $value := .value -}}
+          {{- $_ := set $ "value" $value }}
+          value: {{ tpl .value $ | quote }}
+          {{- end -}}
+        {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- end }}
+      containers:
+      - name: {{ .Release.Name }}
+        image: "{{ .Values.global.image.repository }}:{{ .Values.global.image.tag }}"
+        imagePullPolicy: {{ .Values.global.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.app.port }}
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.app.probes.readinessPath }}
+            port: http
+          initialDelaySeconds: {{ .Values.app.probes.initialDelaySeconds }}
+          periodSeconds: {{ .Values.app.probes.periodSeconds }}
+          failureThreshold: {{ .Values.app.probes.failureThreshold }}
+          timeoutSeconds: {{ .Values.app.probes.timeoutSeconds }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.app.probes.livenessPath }}
+            port: http
+          initialDelaySeconds: {{ include "livenessProbeInitialDelaySeconds" . }}
+          periodSeconds: {{ .Values.app.probes.periodSeconds }}
+          failureThreshold: {{ .Values.app.probes.failureThreshold }}
+          timeoutSeconds: {{ .Values.app.probes.timeoutSeconds }}
+        {{- if .Values.resources.enabled }}
+        resources:
+          requests:
+            cpu: {{ required "Valid .Values.resources.cpu should be specified" .Values.resources.cpu }}
+            memory: {{ required "Valid .Values.resources.memory should be specified" .Values.resources.memory }}
+          limits:
+            memory: {{ required "Valid .Values.resources.memory should be specified" .Values.resources.memory }}
+        {{- end -}}
+        {{- if .Values.app.env }}
+        env:
+        {{- range .Values.app.env }}
+        - name: {{ .name }}
+          {{- if .valueFrom }}
+          valueFrom:
+{{ toYaml .valueFrom | indent 12 -}}
+          {{- else -}}
+          {{- $value := .value -}}
+          {{- $_ := set $ "value" $value }}
+          value: {{ tpl .value $ | quote }}
+          {{- end -}}
+        {{- end }}
+        {{- end }}
+      dnsConfig:
+        options:
+        - name: single-request-reopen
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              topologyKey: "kubernetes.io/hostname"
+              labelSelector:
+                matchExpressions:
+                - key: "app.kubernetes.io/name"
+                  operator: In
+                  values:
+                  - {{ .Release.Name }}
+            weight: 100
+          - podAffinityTerm:
+              topologyKey: "failure-domain.beta.kubernetes.io/zone"
+              labelSelector:
+                matchExpressions:
+                - key: "app.kubernetes.io/name"
+                  operator: In
+                  values:
+                  - {{ .Release.Name }}
+            weight: 100
