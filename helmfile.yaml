@@ -185,3 +185,8 @@ releases:
     file: config/api-common/keys/token-encryption-keys/1.jwk
   - name: wapiPrivkey
     file: config/api-common/keys/capi.privkey.pem
+- name: prometheus
+  <<: *default
+  chart: stable/prometheus-operator
+  namespace: monitoring
+  createNamespace: true 
