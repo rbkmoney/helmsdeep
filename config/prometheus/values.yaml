@@ -7,6 +7,6 @@ prometheus:
           prometheusmetrics.enabled: "true"
 
       endpoints:
-        - port: "web"
+        - port: "api"
           path: /metrics
           scheme: http

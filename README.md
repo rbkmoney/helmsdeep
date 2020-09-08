@@ -145,7 +145,7 @@ kubectl port-forward vault-0 8200:8200 &
 ----------
 
 requrements:
-  - Service c именем порта web, на котором слушает http порт приложения
+  - Service c именем порта api, на котором слушает http порт приложения
   - label
   ```          prometheusmetrics.enabled: "true" ```
   - Метрики приложения в формате prometheus должны отдаваться на локейшене /metrics
