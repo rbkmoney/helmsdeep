@@ -1,9 +1,0 @@
-dependencies:
-- name: temp-redis
-  repository: file://../temp-redis
-  version: 0.1.0
-- name: cronjobs
-  repository: file://../cronjobs
-  version: 0.1.0
-digest: sha256:b358a1323fb78d2533b0c0065133a5ce03dd0a957a6d7b09ceb19e05545744c3
-generated: "2019-12-16T16:47:25.538322+03:00"
