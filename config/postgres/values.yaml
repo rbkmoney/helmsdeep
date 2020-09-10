@@ -5,7 +5,5 @@ postgresqlPassword: "uw2dFhY9EP"
 
 initdbScripts:
   rbk-dbs.sql: |
-     CREATE DATABASE helm;
-     CREATE DATABASE test1;
-     CREATE DATABASE wizard;
-     
+     CREATE DATABASE keycloak;
+
