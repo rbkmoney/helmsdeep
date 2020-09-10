@@ -1,4 +1,4 @@
-version: v0.125.5
+version: v0.128.0
 dependencies:
 - name: consul
   repository: https://kubernetes-charts.storage.googleapis.com
@@ -6,6 +6,12 @@ dependencies:
 - name: kafka
   repository: https://kubernetes-charts-incubator.storage.googleapis.com
   version: 0.21.2
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 9.2.0
+- name: keycloak
+  repository: https://codecentric.github.io/helm-charts
+  version: 9.0.0
 - name: prometheus-operator
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 9.3.1
@@ -15,5 +21,5 @@ dependencies:
 - name: zookeeper
   repository: https://kubernetes-charts-incubator.storage.googleapis.com
   version: 2.1.3
-digest: sha256:adf3d2d7db5150fa436914ba61d2183ae84b260b6195cdf97af68748bcff9923
-generated: "2020-09-04T11:17:29.545997+03:00"
+digest: sha256:1ce99f0a17e604b608047fe607cff64ff424c1a165213b089ba8d0b03e981495
+generated: "2020-09-08T17:49:23.771353742+03:00"

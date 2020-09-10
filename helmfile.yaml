@@ -3,10 +3,12 @@ repositories:
   url: https://kubernetes-charts.storage.googleapis.com
 - name: incubator
   url: https://kubernetes-charts-incubator.storage.googleapis.com
-- name: postgres
+- name: bitnami
   url: https://charts.bitnami.com/bitnami
 - name: hashicorp
   url: https://helm.releases.hashicorp.com
+- name: codecentric
+  url: https://codecentric.github.io/helm-charts
 
 templates:
   default: &default
@@ -32,6 +34,18 @@ releases:
   <<: *default
   chart: stable/consul
   version: 3.9.5
+- name: keycloak
+  <<: *default
+  chart: codecentric/keycloak
+  version: 9.0.0
+- name: postgres
+  <<: *default
+  chart: bitnami/postgresql
+  version: 9.2.0
+- name: vault
+  <<: *default
+  chart: hashicorp/vault
+  version: 0.7.0
 - name: mg-riak
   <<: *default
   chart: ./services/riak
@@ -160,14 +174,6 @@ releases:
     file: config/api-common/keys/capi.privkey.pem
   - name: tokenEnctyptionKey1
     file: config/api-common/keys/token-encryption-keys/1.jwk
-- name: postgres
-  <<: *default
-  chart: bitnami/postgresql
-  version: 9.2.0
-- name: vault
-  <<: *default
-  chart: hashicorp/vault
-  version: 0.7.0
 - name: wapi
   <<: *default
   set:
@@ -189,4 +195,4 @@ releases:
   <<: *default
   chart: stable/prometheus-operator
   namespace: monitoring
-  createNamespace: true 
+  createNamespace: true
