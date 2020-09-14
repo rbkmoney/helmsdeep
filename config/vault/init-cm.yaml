@@ -8,16 +8,16 @@ metadata:
 data:
   init.vault.sh: |
     vault secrets enable database
-    vault write database/config/mydatabase \
+    vault write database/config/shumway \
         plugin_name=postgresql-database-plugin \
         allowed_roles="*" \
         connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql.default:5432/?sslmode=disable" \
         username="postgres" \
         password="uw2dFhY9EP"
     vault write database/roles/db-app \
-        db_name=mydatabase \
+        db_name=shumway \
         creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; \
-            GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
+            GRANT ALL PRIVILEGES ON DATABASE shumway TO \"{{name}}\";" \
         default_ttl="1h" \
         max_ttl="24h"
 
