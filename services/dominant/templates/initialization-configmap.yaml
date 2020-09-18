@@ -1,0 +1,12 @@
+{{- if .Values.inializationTask.create -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ include "dominant.fullname" . }}-init-task"
+  labels:
+    {{- include "dominant.labels" . | nindent 4 }}
+data:
+  init-script: |
+    {{- .Values.inializationTask.script | nindent 4 }}
+{{- end -}}

@@ -102,6 +102,8 @@ releases:
 - name: dominant
   <<: *default
   set:
+  - name: inializationTask.script
+    file: config/dominant/init-script.sh
   - name: appConfig
     file: config/dominant/sys.config
   - name: vmConfig
