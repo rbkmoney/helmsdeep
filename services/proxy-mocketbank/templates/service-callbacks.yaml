@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "proxy-mocketbank.fullname" . }}-callbacks
+  labels:
+    {{- include "proxy-mocketbank.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.callbacksService.type }}
+  ports:
+    - port: {{ .Values.callbacksService.port }}
+      targetPort: 8080
+      protocol: TCP
+      name: callbacks
+  selector:
+    {{- include "proxy-mocketbank.selectorLabels" . | nindent 4 }}
