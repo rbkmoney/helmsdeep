@@ -5,7 +5,7 @@ image:
 imagePullSecrets:
   name: dr2reg
 
-inializationTask:
+initializationTask:
   create: false
   repository: dr2.rbkmoney.com/rbkmoney/holmes
   tag: bfa6fc0428a75c9f179b89b9278ed1aedbb8b649

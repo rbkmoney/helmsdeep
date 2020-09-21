@@ -1,4 +1,4 @@
-{{- if .Values.inializationTask.create -}}
+{{- if .Values.initializationTask.create -}}
 ---
 apiVersion: batch/v1
 kind: Job
@@ -23,11 +23,11 @@ spec:
       restartPolicy: Never
       containers:
         - name: dominant-init-job
-          image: "{{ .Values.inializationTask.repository }}:{{ .Values.inializationTask.tag }}"
-          command: ["{{ .Values.inializationTask.workdir }}/init-script"]
+          image: "{{ .Values.initializationTask.repository }}:{{ .Values.initializationTask.tag }}"
+          command: ["{{ .Values.initializationTask.workdir }}/init-script"]
           volumeMounts:
             - name: config-volume
-              mountPath: "{{ .Values.inializationTask.workdir }}/init-script"
+              mountPath: "{{ .Values.initializationTask.workdir }}/init-script"
               subPath: init-script
               readOnly: true
       volumes:
