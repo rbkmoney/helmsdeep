@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "shumway.fullname" . }}
+  labels:
+    {{- include "shumway.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "shumway.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "shumway.selectorLabels" . | nindent 8 }}
+      annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        shumway/properties-hash: {{ include "shumway.propertiesHash" . }}
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecrets.name }}
+      serviceAccountName: {{ include "shumway.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: api
+              containerPort: 8022
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: api
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: api
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/shumway/entrypoint.sh
+              subPath: entrypoint.sh
+              readOnly: true
+          command: ["/opt/shumway/entrypoint.sh"]
+          args:
+            - -jar
+            - /opt/shumway/shumway.jar
+            - --spring.flyway.table=schema_version
+            - --spring.flyway.schemas=shm
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "shumway.fullname" . }}
+            items:
+            - key: entrypoint.sh
+              path: entrypoint.sh
+              mode: 0755
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
