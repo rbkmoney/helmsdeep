@@ -11,7 +11,7 @@ data:
     vault write database/config/shumway \
         plugin_name=postgresql-database-plugin \
         allowed_roles="*" \
-        connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql.default:5432/?sslmode=disable" \
+        connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql.default:5432/shumway?sslmode=disable" \
         username="postgres" \
         password="uw2dFhY9EP"
     vault write database/roles/db-app \
