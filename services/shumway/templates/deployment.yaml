@@ -51,7 +51,6 @@ spec:
           args:
             - -jar
             - /opt/shumway/shumway.jar
-            - --spring.config.additional-location=/vault/secrets/application.properties
             - --spring.flyway.table=schema_version
             - --spring.flyway.schemas=shm
           resources:
