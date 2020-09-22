@@ -140,3 +140,12 @@ kubectl port-forward vault-0 8200:8200 &
         vault.hashicorp.com/role: "db-app"
 ```
 После этого в поде с сервисом будет лежать файл `/vault/secrets/db-creds` со строкой подключения к БД
+
+Как включить сбор метрик
+----------
+
+requrements:
+  - Service c именем порта api, на котором слушает http порт приложения
+  - label
+  ```          prometheusmetrics.enabled: "true" ```
+  - Метрики приложения в формате prometheus должны отдаваться на локейшене /metrics
