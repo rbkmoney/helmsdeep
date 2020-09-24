@@ -20,6 +20,9 @@ templates:
     - config/{{`{{ .Release.Name }}`}}/values.yaml
 
 releases:
+- name: logs
+  <<: *default
+  chart: ./services/elk
 - name: zookeeper
   <<: *default
   chart: incubator/zookeeper
