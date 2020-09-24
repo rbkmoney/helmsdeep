@@ -5,4 +5,5 @@ postgresqlPassword: "uw2dFhY9EP"
 
 initdbScripts:
   rbk-dbs.sql: |
+     CREATE DATABASE keycloak;
      CREATE DATABASE shumway;
