@@ -1,0 +1,41 @@
+{{- if .Values.initializationTask.create -}}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-initialization-task"
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    "helm.sh/hook": post-install
+spec:
+  template:
+    metadata:
+      name: "{{ .Release.Name }}"
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: dominant-init-job
+          image: "{{ .Values.initializationTask.repository }}:{{ .Values.initializationTask.tag }}"
+          command: ["{{ .Values.initializationTask.workdir }}/init-script"]
+          volumeMounts:
+            - name: config-volume
+              mountPath: "{{ .Values.initializationTask.workdir }}/init-script"
+              subPath: init-script
+              readOnly: true
+      volumes:
+        - name: config-volume
+          configMap:
+            name: "{{ include "dominant.fullname" . }}-init-task"
+            items:
+              - key: init-script
+                path: init-script
+                mode: 0755
+{{- end -}}

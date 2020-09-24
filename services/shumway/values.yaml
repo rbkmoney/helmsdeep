@@ -1,19 +1,17 @@
 image:
-  repository: dr2.rbkmoney.com/rbkmoney/dominant
+  repository: dr2.rbkmoney.com/rbkmoney/shumway
   pullPolicy: IfNotPresent
+
+replicaCount: 3
 
 imagePullSecrets:
   name: dr2reg
 
-initializationTask:
-  create: false
-  repository: dr2.rbkmoney.com/rbkmoney/holmes
-  tag: bfa6fc0428a75c9f179b89b9278ed1aedbb8b649
-  script: "#! /bin/sh"
-  workdir: /opt/holmes
-
 nameOverride: ""
 fullnameOverride: ""
+
+podSecurityContext: {}
+  # fsGroup: 2000
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -24,8 +22,7 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-podSecurityContext: {}
-  # fsGroup: 2000
+podAnnotations: {}
 
 securityContext: {}
   # capabilities:

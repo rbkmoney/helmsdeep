@@ -1,0 +1,6 @@
+apiVersion: v2
+name: proxy-mocketbank
+description: Mocket bank adapter
+type: application
+version: 0.1.0
+appVersion: 91953e1e9874a851816474b47ad0f123c7c936d1

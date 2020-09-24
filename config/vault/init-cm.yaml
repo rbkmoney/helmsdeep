@@ -8,16 +8,19 @@ metadata:
 data:
   init.vault.sh: |
     vault secrets enable database
-    vault write database/config/mydatabase \
+    vault write database/config/shumway \
         plugin_name=postgresql-database-plugin \
         allowed_roles="*" \
-        connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql.default:5432/?sslmode=disable" \
+        connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql.default:5432/shumway?sslmode=disable" \
         username="postgres" \
-        password="uw2dFhY9EP"    
+        password="uw2dFhY9EP"
     vault write database/roles/db-app \
-        db_name=mydatabase \
-        creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; \
-            GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
+        db_name=shumway \
+        creation_statements="Create schema if not exists shm;
+        CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
+        GRANT CREATE ON DATABASE shumway TO \"{{name}}\";
+        GRANT ALL ON schema shm TO \"{{name}}\";
+        GRANT ALL ON ALL TABLES IN SCHEMA shm TO \"{{name}}\";" \
         default_ttl="1h" \
         max_ttl="24h"
 
@@ -26,16 +29,15 @@ data:
            token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
            kubernetes_host=https://${KUBERNETES_PORT_443_TCP_ADDR}:443 \
            kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-    
+
     vault write auth/kubernetes/role/db-app \
         bound_service_account_names="*" \
         bound_service_account_namespaces=default \
         policies=db-app \
-        ttl=1h    
-    
+        ttl=1h
+
     vault policy write db-app /vault-init/db-policy.hcl
   db-policy.hcl: |
     path "database/creds/db-app" {
     capabilities = ["read"]
     }
-          
