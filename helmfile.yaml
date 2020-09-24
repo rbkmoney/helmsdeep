@@ -190,6 +190,13 @@ releases:
     file: config/api-common/keys/token-encryption-keys/1.jwk
   - name: wapiPrivkey
     file: config/api-common/keys/capi.privkey.pem
+- name: proxy-mocketbank
+  <<: *default
+  set:
+  - name: knownCards
+    file: config/proxy-mocketbank/cards.csv
+  - name: errorMapping
+    file: config/proxy-mocketbank/errors.json
 - name: prometheus
   <<: *default
   chart: stable/prometheus-operator
