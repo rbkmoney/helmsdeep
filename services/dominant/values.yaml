@@ -5,6 +5,13 @@ image:
 imagePullSecrets:
   name: dr2reg
 
+initializationTask:
+  create: false
+  repository: dr2.rbkmoney.com/rbkmoney/holmes
+  tag: bfa6fc0428a75c9f179b89b9278ed1aedbb8b649
+  script: "#! /bin/sh"
+  workdir: /opt/holmes
+
 nameOverride: ""
 fullnameOverride: ""
 
