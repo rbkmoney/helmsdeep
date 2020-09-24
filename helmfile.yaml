@@ -103,11 +103,6 @@ releases:
   set:
   - name: entrypoint
     file: config/binbase/entrypoint.sh
-- name: shumway
-  <<: *default
-  set:
-  - name: entrypoint
-    file: config/shumway/entrypoint.sh
 - name: dominant
   <<: *default
   set:
@@ -204,3 +199,13 @@ releases:
   chart: stable/prometheus-operator
   namespace: monitoring
   createNamespace: true
+- name: shumway
+  <<: *default
+  set:
+  - name: entrypoint
+    file: config/shumway/entrypoint.sh
+- name: hooker
+  <<: *default
+  set:
+  - name: entrypoint
+    file: config/hooker/entrypoint.sh

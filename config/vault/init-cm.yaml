@@ -23,6 +23,21 @@ data:
         GRANT ALL ON ALL TABLES IN SCHEMA shm TO \"{{name}}\";" \
         default_ttl="1h" \
         max_ttl="24h"
+    vault write database/config/hook \
+        plugin_name=postgresql-database-plugin \
+        allowed_roles="*" \
+        connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql.default:5432/hook?sslmode=disable" \
+        username="postgres" \
+        password="uw2dFhY9EP"
+    vault write database/roles/db-app \
+        db_name=hook \
+        creation_statements="Create schema if not exists hook;
+        CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
+        GRANT CREATE ON DATABASE hook TO \"{{name}}\";
+        GRANT ALL ON schema hook TO \"{{name}}\";
+        GRANT ALL ON ALL TABLES IN SCHEMA hook TO \"{{name}}\";" \
+        default_ttl="1h" \
+        max_ttl="24h"
 
     vault auth enable kubernetes
     vault write auth/kubernetes/config \
