@@ -64,6 +64,6 @@ Create the name of the service account to use
 {{/*
 Configs hash
 */}}
-{{- define "binbase.propertiesHash" -}}
+{{- define "hooker.propertiesHash" -}}
 {{- include (print $.Template.BasePath "/configmap.yaml") . | sha256sum -}}
 {{- end -}}

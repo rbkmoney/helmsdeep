@@ -17,6 +17,7 @@ spec:
         {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        hooker/properties-hash: {{ include "hooker.propertiesHash" . }}
     spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets.name }}
@@ -36,11 +37,11 @@ spec:
           livenessProbe:
             httpGet:
               path: /actuator/health
-              port: api
+              port: http
           readinessProbe:
             httpGet:
               path: /actuator/health
-              port: api
+              port: http
           volumeMounts:
             - name: config-volume
               mountPath: /opt/hooker/entrypoint.sh

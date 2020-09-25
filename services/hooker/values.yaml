@@ -4,8 +4,6 @@ image:
 
 replicaCount: 3
 
-cdsUrl: http://cds.default.svc.cluster.local:8022/v2/storage
-
 imagePullSecrets:
   name: dr2reg
 
