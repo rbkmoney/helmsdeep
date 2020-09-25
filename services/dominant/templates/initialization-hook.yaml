@@ -20,6 +20,8 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name | quote }}
         helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     spec:
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecrets.name }}
       restartPolicy: Never
       containers:
         - name: dominant-init-job
