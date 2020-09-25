@@ -47,6 +47,8 @@ releases:
   <<: *default
   chart: hashicorp/vault
   version: 0.7.0
+- name: keycloak-realms
+  <<: *default
 - name: keycloak
   <<: *default
   chart: codecentric/keycloak
