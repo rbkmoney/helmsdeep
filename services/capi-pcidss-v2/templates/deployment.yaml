@@ -19,8 +19,10 @@ spec:
         {{- end }}
         capi-pcidss-v2/properties-hash: {{ include "capi-pcidss-v2.propertiesHash" . }}
     spec:
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        - name: {{ .Values.imagePullSecrets.name }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ include "capi-pcidss-v2.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}

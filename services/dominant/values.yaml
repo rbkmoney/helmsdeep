@@ -3,7 +3,7 @@ image:
   pullPolicy: IfNotPresent
 
 imagePullSecrets:
-  name: dr2reg
+  - name: dr2reg
 
 initializationTask:
   create: false

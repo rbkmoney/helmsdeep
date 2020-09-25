@@ -5,7 +5,7 @@ image:
 replicaCount: 1
 
 imagePullSecrets:
-  name: dr2reg
+  - name: dr2reg
 
 nameOverride: ""
 fullnameOverride: ""
