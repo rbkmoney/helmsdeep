@@ -22,7 +22,12 @@ Helm Charts Repo
 $ kubectl create secret docker-registry dr2reg --docker-server=dr2.rbkmoney.com --docker-username=$USERNAME --docker-password=$PASSWORD
 
 ```
-Для быстрой и автоматической инициализации Vault нужен configMap:
+Для работы некоторым сервисам необходим установленный и сконфигурированный Vault. 
+Если Valut не установлен, воспользуйтесь командой:
+```
+helmfile --selector name=vault sync
+```
+Для быстрой и автоматической инициализации Vault выполните команду:
 ```
 kubectl apply -f config/vault/init-cm.yaml
 ```
