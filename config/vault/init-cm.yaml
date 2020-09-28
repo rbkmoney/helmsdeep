@@ -29,7 +29,7 @@ data:
         connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql.default:5432/hook?sslmode=disable" \
         username="postgres" \
         password="uw2dFhY9EP"
-    vault write database/roles/db-app \
+    vault write database/roles/db-app-hook \
         db_name=hook \
         creation_statements="Create schema if not exists hook;
         CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
@@ -54,5 +54,8 @@ data:
     vault policy write db-app /vault-init/db-policy.hcl
   db-policy.hcl: |
     path "database/creds/db-app" {
-    capabilities = ["read"]
+      capabilities = ["read"]
+    }
+    path "database/creds/db-app-hook" {
+      capabilities = ["read"]
     }
