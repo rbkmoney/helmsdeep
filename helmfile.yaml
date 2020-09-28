@@ -80,6 +80,13 @@ releases:
     file: config/bender/sys.config
   - name: vmConfig
     file: config/vm/erl_inetrc
+- name: cds-riak
+  <<: *default
+  chart: ./services/riak
+  set:
+  - name: config.user
+    file: config/mg-riak/user.yaml
+  atomic: true
 - name: kds
   <<: *default
   set:
@@ -95,6 +102,9 @@ releases:
     file: config/kds/keyring
 - name: cds
   <<: *default
+  needs:
+    - default/kds
+    - default/cds-riak
   set:
   - name: appConfig
     file: config/cds/sys.config
