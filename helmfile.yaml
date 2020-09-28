@@ -7,6 +7,8 @@ repositories:
   url: https://charts.bitnami.com/bitnami
 - name: hashicorp
   url: https://helm.releases.hashicorp.com
+- name: codecentric
+  url: https://codecentric.github.io/helm-charts
 
 templates:
   default: &default
@@ -20,6 +22,11 @@ templates:
     - config/{{`{{ .Release.Name }}`}}/values.yaml
 
 releases:
+- name: prometheus
+  <<: *default
+  chart: stable/prometheus-operator
+  namespace: monitoring
+  createNamespace: true
 - name: zookeeper
   <<: *default
   chart: incubator/zookeeper
@@ -36,6 +43,14 @@ releases:
   <<: *default
   chart: bitnami/postgresql
   version: 9.2.0
+- name: vault
+  <<: *default
+  chart: hashicorp/vault
+  version: 0.7.0
+- name: keycloak
+  <<: *default
+  chart: codecentric/keycloak
+  version: 9.0.0
 - name: mg-riak
   <<: *default
   chart: ./services/riak
@@ -47,6 +62,13 @@ releases:
   set:
   - name: appConfig
     file: config/machinegun/config.yaml
+- name: bender
+  <<: *default
+  set:
+  - name: appConfig
+    file: config/bender/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
 - name: kds
   <<: *default
   set:
@@ -60,13 +82,6 @@ releases:
     file: config/kds/server.pem
   - name: keyring
     file: config/kds/keyring
-- name: bender
-  <<: *default
-  set:
-  - name: appConfig
-    file: config/bender/sys.config
-  - name: vmConfig
-    file: config/vm/erl_inetrc
 - name: cds
   <<: *default
   set:
@@ -78,6 +93,44 @@ releases:
     file: config/cds/ca.crt
   - name: clientCrt
     file: config/cds/client.pem
+- name: shumway
+  <<: *default
+  set:
+  - name: entrypoint
+    file: config/shumway/entrypoint.sh
+- name: hooker
+  <<: *default
+  set:
+  - name: entrypoint
+    file: config/hooker/entrypoint.sh
+- name: dominant
+  <<: *default
+  set:
+  - name: initializationTask.script
+    file: config/dominant/init-script.sh
+  - name: appConfig
+    file: config/dominant/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+- name: binbase
+  <<: *default
+  set:
+  - name: entrypoint
+    file: config/binbase/entrypoint.sh
+- name: proxy-mocketbank
+  <<: *default
+  set:
+  - name: knownCards
+    file: config/proxy-mocketbank/cards.csv
+  - name: errorMapping
+    file: config/proxy-mocketbank/errors.json
+- name: hellgate
+  <<: *default
+  set:
+  - name: appConfig
+    file: config/hellgate/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
 - name: capi-pcidss-v2
   <<: *default
   set:
@@ -96,32 +149,6 @@ releases:
   set:
   - name: appConfig
     file: config/url-shortener/sys.config
-  - name: vmConfig
-    file: config/vm/erl_inetrc
-- name: binbase
-  <<: *default
-  set:
-  - name: entrypoint
-    file: config/binbase/entrypoint.sh
-- name: shumway
-  <<: *default
-  set:
-  - name: entrypoint
-    file: config/shumway/entrypoint.sh
-- name: dominant
-  <<: *default
-  set:
-  - name: initializationTask.script
-    file: config/dominant/init-script.sh
-  - name: appConfig
-    file: config/dominant/sys.config
-  - name: vmConfig
-    file: config/vm/erl_inetrc
-- name: hellgate
-  <<: *default
-  set:
-  - name: appConfig
-    file: config/hellgate/sys.config
   - name: vmConfig
     file: config/vm/erl_inetrc
 - name: capi-v1
@@ -171,10 +198,6 @@ releases:
     file: config/api-common/keys/capi.privkey.pem
   - name: tokenEnctyptionKey1
     file: config/api-common/keys/token-encryption-keys/1.jwk
-- name: vault
-  <<: *default
-  chart: hashicorp/vault
-  version: 0.7.0
 - name: wapi
   <<: *default
   set:
@@ -204,8 +227,3 @@ releases:
   chart: stable/prometheus-operator
   namespace: monitoring
   createNamespace: true
-- name: hooker
-  <<: *default
-  set:
-  - name: entrypoint
-    file: config/hooker/entrypoint.sh

@@ -16,7 +16,7 @@ errorMapping: ""
 knownCards: ""
 
 imagePullSecrets:
-  name: dr2reg
+  - name: dr2reg
 
 nameOverride: ""
 fullnameOverride: ""

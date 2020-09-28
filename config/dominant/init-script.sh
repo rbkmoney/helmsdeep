@@ -72,8 +72,8 @@ FIXTURE=$(cat <<END
                                 {"id": 1}
                             ]},
                             "payment_methods": {"value": [
-                                {"id": {"bank_card": "visa"}},
-                                {"id": {"bank_card": "mastercard"}}
+                                {"id": {"bank_card": {"payment_system": "visa"}}},
+                                {"id": {"bank_card": {"payment_system": "mastercard"}}}
                             ]},
                             "cash_limit": {"decisions": [
                                 {
@@ -98,15 +98,15 @@ FIXTURE=$(cat <<END
                             ]},
                             "holds": {
                                 "payment_methods": {"value": [
-                                    {"id": {"bank_card": "visa"}},
-                                    {"id": {"bank_card": "mastercard"}}
+                                    {"id": {"bank_card": {"payment_system": "visa"}}},
+                                    {"id": {"bank_card": {"payment_system": "mastercard"}}}
                                 ]},
                                 "lifetime": {"value": {"seconds": 10}}
                             },
                             "refunds": {
                                 "payment_methods": {"value": [
-                                    {"id": {"bank_card": "visa"}},
-                                    {"id": {"bank_card": "mastercard"}}
+                                    {"id": {"bank_card": {"payment_system": "visa"}}},
+                                    {"id": {"bank_card": {"payment_system": "mastercard"}}}
                                 ]},
                                 "fees": {"value": [
                                 ]}
@@ -145,7 +145,7 @@ FIXTURE=$(cat <<END
     }}}},
 
     {"insert": {"object": {"payment_method": {
-        "ref": {"id": {"bank_card": "visa"}},
+        "ref": {"id": {"bank_card": {"payment_system": "visa"}}},
         "data": {
             "name": "VISA",
             "description": "VISA bank cards"
@@ -153,7 +153,7 @@ FIXTURE=$(cat <<END
     }}}},
 
     {"insert": {"object": {"payment_method": {
-        "ref": {"id": {"bank_card": "mastercard"}},
+        "ref": {"id": {"bank_card": {"payment_system": "mastercard"}}},
         "data": {
             "name": "Mastercard",
             "description": "Mastercard bank cards"
@@ -182,8 +182,8 @@ FIXTURE=$(cat <<END
                         {"id": 1}
                     ]},
                     "payment_methods": {"value": [
-                        {"id": {"bank_card": "visa"}},
-                        {"id": {"bank_card": "mastercard"}}
+                        {"id": {"bank_card": {"payment_system": "visa"}}},
+                        {"id": {"bank_card": {"payment_system": "mastercard"}}}
                     ]},
                     "cash_limit": {"value": {
                         "lower": {"inclusive": {"amount": 1000, "currency": {"symbolic_code": "RUB"}}},

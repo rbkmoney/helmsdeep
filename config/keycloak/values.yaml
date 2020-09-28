@@ -1,0 +1,24 @@
+
+postgresql:
+    enabled: false
+
+extraEnv: |
+  - name: DB_VENDOR
+    value: postgres
+  - name: DB_ADDR
+    value: postgres-postgresql
+  - name: DB_PORT
+    value: "5432"
+  - name: DB_DATABASE
+    value: keycloak
+  - name: DB_USER
+    value: postgres
+  - name: DB_PASSWORD
+    value: "uw2dFhY9EP"
+  - name: JAVA_OPTS
+    value: >-
+      -XX:+UseContainerSupport
+      -XX:MaxRAMPercentage=50.0
+      -Djava.net.preferIPv4Stack=true
+      -Djboss.modules.system.pkgs=$JBOSS_MODULES_SYSTEM_PKGS
+      -Djava.awt.headless=true
