@@ -1,0 +1,59 @@
+[
+  {
+    "codeRegex": "^Unsupported\\sCard$",
+    "mapping": "authorization_failed:payment_tool_rejected:bank_card_rejected:issuer_not_found"
+  },
+  {
+    "codeRegex": "3-D Secure Failure",
+    "mapping": "preauthorization_failed:unknown"
+  },
+  {
+    "codeRegex": "3-D Secure Timeout",
+    "mapping": "preauthorization_failed:unknown"
+  },
+  {
+    "codeRegex": "Invalid Card",
+    "mapping": "authorization_failed:account_not_found"
+  },
+  {
+    "codeRegex": "CVV Match Fail",
+    "mapping": "authorization_failed:payment_tool_rejected:bank_card_rejected:cvv_invalid"
+  },
+  {
+    "codeRegex": "Expired Card",
+    "mapping": "authorization_failed:payment_tool_rejected:bank_card_rejected:card_expired"
+  },
+  {
+    "codeRegex": "Insufficient Funds",
+    "mapping": "authorization_failed:insufficient_funds"
+  },
+  {
+    "codeRegex": "Unknown",
+    "mapping": "authorization_failed:unknown"
+  },
+  {
+    "codeRegex": "Apple Pay Failure",
+    "mapping": "authorization_failed:unknown"
+  },
+  {
+    "codeRegex": "Google Pay Failure",
+    "mapping": "authorization_failed:unknown"
+  },
+  {
+    "codeRegex": "Samsung Pay Failure",
+    "mapping": "authorization_failed:unknown"
+  },
+  {
+    "codeRegex": "Unknown Failure",
+    "mapping": "authorization_failed:unknown"
+  },
+  {
+    "codeRegex": "error",
+    "descriptionRegex":"Expiration date not found",
+    "mapping": "authorization_failed:payment_tool_rejected:bank_card_rejected:card_expired"
+  },
+  {
+    "codeRegex": ".*",
+    "mapping": "authorization_failed:unknown"
+  }
+]
