@@ -85,7 +85,7 @@ releases:
   chart: ./services/riak
   set:
   - name: config.user
-    file: config/mg-riak/user.yaml
+    file: config/cds-riak/user.yaml
   atomic: true
 - name: kds
   <<: *default
