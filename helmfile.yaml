@@ -57,18 +57,18 @@ releases:
   <<: *default
   chart: codecentric/keycloak
   version: 9.0.0
-- name: mg-riak
+- name: riak
   <<: *default
   chart: ./services/riak
   set:
   - name: config.user
-    file: config/mg-riak/user.yaml
+    file: config/riak/user.yaml
   atomic: true
 - name: machinegun
   <<: *default
   needs:
   - default/consul
-  - default/mg-riak
+  - default/riak
   - default/kafka
   set:
   - name: appConfig
@@ -80,13 +80,6 @@ releases:
     file: config/bender/sys.config
   - name: vmConfig
     file: config/vm/erl_inetrc
-- name: cds-riak
-  <<: *default
-  chart: ./services/riak
-  set:
-  - name: config.user
-    file: config/cds-riak/user.yaml
-  atomic: true
 - name: kds
   <<: *default
   set:
@@ -104,7 +97,7 @@ releases:
   <<: *default
   needs:
     - default/kds
-    - default/cds-riak
+    - default/riak
   set:
   - name: appConfig
     file: config/cds/sys.config

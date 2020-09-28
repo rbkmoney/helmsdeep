@@ -1,2 +1,0 @@
-storage_backend = leveldb
-retry_put_coordinator_failure = off
