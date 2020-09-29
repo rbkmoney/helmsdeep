@@ -20,9 +20,10 @@ data:
         CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
         GRANT CREATE ON DATABASE shumway TO \"{{name}}\";
         GRANT ALL ON schema shm TO \"{{name}}\";
-        GRANT ALL ON ALL TABLES IN SCHEMA shm TO \"{{name}}\";" \
+        GRANT ALL ON ALL TABLES IN SCHEMA shm TO \"{{name}}\";
+        GRANT ALL ON ALL SEQUENCES IN SCHEMA shm TO \"{{name}}\";" \
         default_ttl="1h" \
-        max_ttl="24h"
+        max_ttl="240h"
     vault write database/config/hook \
         plugin_name=postgresql-database-plugin \
         allowed_roles="*" \

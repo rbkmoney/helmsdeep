@@ -13,6 +13,7 @@ Helm Charts Repo
 ----------
 
 Для работы с сервисами требуется Helm 3.2.1 и [Helmfile v0.116.0](https://github.com/roboll/helmfile).
+Для запуска всего стека рекомендуется выделить на minikube не менее **3 CPU, 8GB RAM, 30GB Disk**
 
 Запуск
 ------
@@ -22,6 +23,9 @@ Helm Charts Repo
 $ kubectl create secret docker-registry dr2reg --docker-server=dr2.rbkmoney.com --docker-username=$USERNAME --docker-password=$PASSWORD
 
 ```
+> !**NOTES** С драйвером hyperkit и реже с драйвером virtualbox бывают проблемы с доступами к ресурсам за VPN, где находится dr2 registry. В этом случае рекомендуется запускаться с драйвером docker:
+` minikube start --driver=docker`
+
 Для быстрой и автоматической инициализации Vault нужен configMap:
 ```
 kubectl apply -f config/vault/init-cm.yaml
@@ -45,7 +49,7 @@ UPDATED RELEASES:
 NAME         CHART                   VERSION
 machinegun   ./services/machinegun     0.1.0
 kafka        ./services/kafka         0.21.2
-mg-riak      ./services/riak           0.1.0
+riak         ./services/riak           0.1.0
 consul       ./services/consul         3.9.5
 zookeeper    ./services/zookeeper      2.1.3
 ```
