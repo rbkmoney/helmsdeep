@@ -49,7 +49,7 @@ UPDATED RELEASES:
 NAME         CHART                   VERSION
 machinegun   ./services/machinegun     0.1.0
 kafka        ./services/kafka         0.21.2
-mg-riak      ./services/riak           0.1.0
+riak         ./services/riak           0.1.0
 consul       ./services/consul         3.9.5
 zookeeper    ./services/zookeeper      2.1.3
 ```
