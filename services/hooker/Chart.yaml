@@ -1,0 +1,6 @@
+apiVersion: v2
+name: hooker
+description: Service for sending webhooks
+type: application
+version: 2.0.56
+appVersion: ef17ab6aa814411c38b0774837d19bf33b3a1d35

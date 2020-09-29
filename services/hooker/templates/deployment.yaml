@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hooker.fullname" . }}
+  labels:
+    {{- include "hooker.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "hooker.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+      {{- include "hooker.selectorLabels" . | nindent 8 }}
+      annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        hooker/properties-hash: {{ include "hooker.propertiesHash" . }}
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecrets.name }}
+      serviceAccountName: {{ include "hooker.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8022
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/hooker/entrypoint.sh
+              subPath: entrypoint.sh
+              readOnly: true
+          command: ["/opt/hooker/entrypoint.sh"]
+          args:
+            - -jar
+            - /opt/hooker/hooker.jar
+            - --spring.datasource.hikari.data-source-properties.prepareThreshold=0
+            - --spring.datasource.hikari.leak-detection-threshold=5300
+            - --spring.datasource.hikari.max-lifetime=300000
+            - --spring.datasource.hikari.idle-timeout=30000
+            - --spring.datasource.hikari.minimum-idle=2
+            - --spring.datasource.hikari.maximum-pool-size={{ .Values.datasource.poolsize }}
+            - --kafka.bootstrap-servers={{ .Values.kafka.bootstrapServers }}
+            - --kafka.topics.invoice.enabled=true
+            - --kafka.topics.customer.enabled=true
+            - --kafka.topics.invoice.concurrency={{ .Values.kafka.topicInvoiceConcurrency }}
+            - --kafka.topics.customer.concurrency={{ .Values.kafka.topicCustomerConcurrency }}
+            - --kafka.topics.invoice.id={{ .Values.kafka.topicInvoiceName }}
+            - --kafka.topics.customer.id={{ .Values.kafka.topicCustomerName }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "hooker.fullname" . }}
+            items:
+              - key: entrypoint.sh
+                path: entrypoint.sh
+                mode: 0755
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
