@@ -20,6 +20,7 @@ templates:
     missingFileHandler: Warn
     values:
     - config/{{`{{ .Release.Name }}`}}/values.yaml
+    timeout: 600
 
 
 helmfiles:
@@ -63,7 +64,6 @@ releases:
   set:
   - name: config.user
     file: config/riak/user.yaml
-  atomic: true
 - name: machinegun
   <<: *default
   needs:
