@@ -47,16 +47,18 @@ releases:
   <<: *default
   chart: hashicorp/vault
   version: 0.7.0
-- name: keycloak
-  <<: *default
-  chart: codecentric/keycloak
-  version: 9.0.0
 - name: mg-riak
   <<: *default
   chart: ./services/riak
   set:
   - name: config.user
     file: config/mg-riak/user.yaml
+- name: keycloak
+  <<: *default
+  version: 4.5.0
+  needs:
+  - default/postgres
+  atomic: true
 - name: machinegun
   <<: *default
   set:

@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "keycloak.fullname" . }}
+  labels:
+    {{- include "keycloak.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "keycloak.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "keycloak.selectorLabels" . | nindent 8 }}
+      annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        keycloak/properties-hash: {{ include "keycloak.propertiesHash" . }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "keycloak.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: api
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /auth/realms/master/
+              port: api
+          readinessProbe:
+            httpGet:
+              path: /auth/realms/master/
+              port: api
+{{/*          volumeMounts:*/}}
+{{/*            - name: config-volume*/}}
+{{/*              mountPath: /opt/jboss/tools/docker-entrypoint.sh*/}}
+{{/*              subPath: entrypoint.sh*/}}
+{{/*              readOnly: true*/}}
+          command: ["/opt/jboss/tools/docker-entrypoint.sh"]
+          args:
+            - -b
+            - "::"
+            - -c
+            - standalone.xml
+            - -Dkeycloak.migration.action=import
+            - -Dkeycloak.migration.provider=singleFile
+            - -Dkeycloak.migration.file=/opt/jboss/keycloak/all-realm.json
+            - -Dkeycloak.migration.strategy=IGNORE_EXISTING
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "keycloak.fullname" . }}
+            items:
+            - key: entrypoint.sh
+              path: entrypoint.sh
+              mode: 0755
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
