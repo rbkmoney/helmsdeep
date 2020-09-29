@@ -7,6 +7,9 @@ metadata:
     app: vault
 data:
   init.vault.sh: |
+    # TODO WHACK! Replace line below with helm hook
+    # to ensure init.vault.sh run AFTER Vault has been started
+    sleep 5
     vault secrets enable database
     vault write database/config/shumway \
         plugin_name=postgresql-database-plugin \
