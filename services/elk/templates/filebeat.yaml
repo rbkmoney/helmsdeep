@@ -21,6 +21,17 @@ spec:
               type: container
               paths:
               - /var/log/containers/*${data.kubernetes.container.id}.log
+        - type: kubernetes
+          node: ${NODE_NAME}
+          templates:
+            - condition:
+                equals:
+                  kubernetes.namespace: default
+              config:
+                - type: log
+                  paths:
+                    - /datalog/rbk/${data.kubernetes.container.name}/*.*
+                  exclude_lines: ["^\\s+[\\-`('.|_]"]  # drop asciiart lines
     processors:
     - add_cloud_metadata: {}
     - add_host_metadata: {}

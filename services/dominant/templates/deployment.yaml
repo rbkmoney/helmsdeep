@@ -57,6 +57,8 @@ spec:
               mountPath: /opt/dominant/erl_inetrc
               subPath: erl_inetrc
               readOnly: true
+            - name: logs-volume
+              mountPath: /var/log
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -70,6 +72,10 @@ spec:
               path: vm.args
             - key: erl_inetrc
               path: erl_inetrc
+        - name: logs-volume
+          hostPath:
+            path: /datalog/rbk
+            type: DirectoryOrCreate
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
