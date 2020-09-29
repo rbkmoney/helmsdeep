@@ -44,11 +44,11 @@ spec:
             httpGet:
               path: /auth/realms/master/
               port: api
-{{/*          volumeMounts:*/}}
-{{/*            - name: config-volume*/}}
-{{/*              mountPath: /opt/jboss/tools/docker-entrypoint.sh*/}}
-{{/*              subPath: entrypoint.sh*/}}
-{{/*              readOnly: true*/}}
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/jboss/tools/docker-entrypoint.sh
+              subPath: docker-entrypoint.sh
+              readOnly: true
           command: ["/opt/jboss/tools/docker-entrypoint.sh"]
           args:
             - -b
@@ -66,8 +66,8 @@ spec:
           configMap:
             name: {{ include "keycloak.fullname" . }}
             items:
-            - key: entrypoint.sh
-              path: entrypoint.sh
+            - key: docker-entrypoint.sh
+              path: docker-entrypoint.sh
               mode: 0755
       {{- with .Values.nodeSelector }}
       nodeSelector:
