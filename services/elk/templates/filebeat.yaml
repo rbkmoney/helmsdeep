@@ -12,15 +12,15 @@ spec:
   config:
     filebeat:
       autodiscover:
-        providers:
-        - type: kubernetes
-          node: ${NODE_NAME}
-          hints:
-            enabled: true
-            default_config:
-              type: container
-              paths:
-              - /var/log/containers/*${data.kubernetes.container.id}.log
+        # providers:
+        # - type: kubernetes
+        #   node: ${NODE_NAME}
+        #   hints:
+        #     enabled: true
+        #     default_config:
+        #       type: container
+        #       paths:
+        #       - /var/log/containers/*${data.kubernetes.container.id}.log
         - type: kubernetes
           node: ${NODE_NAME}
           templates:
