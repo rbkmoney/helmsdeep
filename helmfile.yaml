@@ -137,6 +137,11 @@ releases:
   set:
   - name: entrypoint
     file: config/binbase/entrypoint.sh
+- name: binbase-test
+  <<: *default
+  set:
+  - name: entrypoint
+    file: config/binbase-test/entrypoint.sh
 - name: proxy-mocketbank
   <<: *default
   set:
