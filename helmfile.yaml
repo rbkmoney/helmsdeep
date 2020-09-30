@@ -20,6 +20,7 @@ templates:
     missingFileHandler: Warn
     values:
     - config/{{`{{ .Release.Name }}`}}/values.yaml
+    timeout: 600
 
 
 helmfiles:
@@ -59,18 +60,17 @@ releases:
   <<: *default
   chart: codecentric/keycloak
   version: 9.0.0
-- name: mg-riak
+- name: riak
   <<: *default
   chart: ./services/riak
   set:
   - name: config.user
-    file: config/mg-riak/user.yaml
-  atomic: true
+    file: config/riak/user.yaml
 - name: machinegun
   <<: *default
   needs:
   - default/consul
-  - default/mg-riak
+  - default/riak
   - default/kafka
   set:
   - name: appConfig
@@ -97,6 +97,9 @@ releases:
     file: config/kds/keyring
 - name: cds
   <<: *default
+  needs:
+    - default/kds
+    - default/riak
   set:
   - name: appConfig
     file: config/cds/sys.config
@@ -114,6 +117,11 @@ releases:
   set:
   - name: entrypoint
     file: config/shumway/entrypoint.sh
+- name: hooker
+  <<: *default
+  set:
+  - name: entrypoint
+    file: config/hooker/entrypoint.sh
 - name: dominant
   <<: *default
   needs:
@@ -229,3 +237,15 @@ releases:
     file: config/api-common/keys/token-encryption-keys/1.jwk
   - name: wapiPrivkey
     file: config/api-common/keys/capi.privkey.pem
+- name: proxy-mocketbank
+  <<: *default
+  set:
+  - name: knownCards
+    file: config/proxy-mocketbank/cards.csv
+  - name: errorMapping
+    file: config/proxy-mocketbank/errors.json
+- name: prometheus
+  <<: *default
+  chart: stable/prometheus-operator
+  namespace: monitoring
+  createNamespace: true
