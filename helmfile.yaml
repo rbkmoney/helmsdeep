@@ -25,6 +25,8 @@ templates:
 helmfiles:
 - # Path to the helmfile state file being processed BEFORE releases in this state file
   path: helmfile-infra.yaml
+  selectors:
+  - name=infra
 
 releases:
 - name: zookeeper

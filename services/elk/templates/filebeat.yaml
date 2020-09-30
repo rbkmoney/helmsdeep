@@ -12,17 +12,15 @@ spec:
   config:
     filebeat:
       autodiscover:
-        # providers:
-        # - type: kubernetes
-        #   node: ${NODE_NAME}
-        #   hints:
-        #     enabled: true
-        #     default_config:
-        #       type: container
-        #       paths:
-        #       - /var/log/containers/*${data.kubernetes.container.id}.log
+        providers:
         - type: kubernetes
           node: ${NODE_NAME}
+          hints:
+            enabled: true
+            default_config:
+              type: container
+              paths:
+              - /var/log/containers/*${data.kubernetes.container.id}.log
           templates:
             - condition:
                 equals:
@@ -30,8 +28,7 @@ spec:
               config:
                 - type: log
                   paths:
-                    - /datalog/rbk/${data.kubernetes.container.name}/*.*
-                  exclude_lines: ["^\\s+[\\-`('.|_]"]  # drop asciiart lines
+                    - /datalog/rbk/${data.kubernetes.container.name}/*.json
     processors:
     - add_cloud_metadata: {}
     - add_host_metadata: {}
@@ -56,6 +53,8 @@ spec:
             mountPath: /var/log/pods
           - name: varlibdockercontainers
             mountPath: /var/lib/docker/containers
+          - name: rbkdatalogfolder
+            mountPath: /datalog/rbk
           env:
             - name: NODE_NAME
               valueFrom:
@@ -71,6 +70,9 @@ spec:
         - name: varlibdockercontainers
           hostPath:
             path: /var/lib/docker/containers
+        - name: rbkdatalogfolder
+          hostPath:
+            path: /datalog/rbk
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
