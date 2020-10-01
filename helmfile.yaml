@@ -122,6 +122,9 @@ releases:
   set:
   - name: entrypoint
     file: config/hooker/entrypoint.sh
+  needs:
+  - default/vault
+  - default/kafka
 - name: dominant
   <<: *default
   needs:
