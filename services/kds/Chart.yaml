@@ -2,6 +2,6 @@ apiVersion: v2
 name: kds
 description: Key Database System
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: 0045e9875723c9e6c06d392311b9e6bab5d564d4
 
