@@ -67,6 +67,8 @@ spec:
             - name: secret
               mountPath: /var/lib/kds/
               readOnly: true
+            - name: keyring
+              mountPath: /opt/kds/state/
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -83,6 +85,9 @@ spec:
         - name: secret
           secret:
             secretName: {{ include "kds.fullname" . }}
+        - name: keyring
+          persistentVolumeClaim:
+            claimName: '{{ include "kds.fullname" . }}-keyring'
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
