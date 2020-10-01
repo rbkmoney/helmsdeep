@@ -67,3 +67,10 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+# Persistent storage for keyring
+keyring:
+  accessModes: "ReadWriteOnce"
+  resources:
+    requests:
+      storage: 3Mi

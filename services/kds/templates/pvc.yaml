@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: '{{ include "kds.fullname" . }}-keyring'
+spec:
+  accessModes:
+    - {{ .Values.keyring.accessModes }}
+  resources:
+    requests:
+      storage: {{ .Values.keyring.resources.requests.storage }}
