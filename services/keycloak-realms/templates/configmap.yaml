@@ -7,4 +7,4 @@ metadata:
     {{- include "keycloak-realms.labels" . | nindent 4 }}
 data:
   realms.json: |
-    {{ tpl (.Files.Get "files/realms.json.gotmpl") . | quote | nindent 4 }}
+    {{ tpl (.Files.Get "files/realms.json.gotmpl") . | nindent 4 }}
