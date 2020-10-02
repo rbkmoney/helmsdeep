@@ -171,6 +171,8 @@ releases:
     file: config/api-common/keys/capi.privkey.pem
   - name: tokenEnctyptionKey1
     file: config/api-common/keys/token-encryption-keys/1.jwk
+  needs:
+    - default/keycloak
 - name: url-shortener
   <<: *default
   set:
@@ -195,6 +197,8 @@ releases:
     file: config/api-common/keys/token-encryption-keys/1.jwk
   - name: capiPrivkey
     file: config/api-common/keys/capi.privkey.pem
+  needs:
+    - default/keycloak
 - name: capi-v2
   <<: *default
   set:
@@ -212,6 +216,8 @@ releases:
     file: config/api-common/keys/token-encryption-keys/1.jwk
   - name: capiPrivkey
     file: config/api-common/keys/capi.privkey.pem
+  needs:
+    - default/keycloak
 - name: wapi-pcidss-v0
   <<: *default
   set:
@@ -225,6 +231,8 @@ releases:
     file: config/api-common/keys/capi.privkey.pem
   - name: tokenEnctyptionKey1
     file: config/api-common/keys/token-encryption-keys/1.jwk
+  needs:
+    - default/keycloak
 - name: wapi
   <<: *default
   set:
@@ -242,3 +250,5 @@ releases:
     file: config/api-common/keys/token-encryption-keys/1.jwk
   - name: wapiPrivkey
     file: config/api-common/keys/capi.privkey.pem
+  needs:
+    - default/keycloak

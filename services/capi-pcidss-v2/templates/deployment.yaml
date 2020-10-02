@@ -75,10 +75,10 @@ spec:
               subPath: erl_inetrc
               readOnly: true
             - name: secret
-              mountPath: /var/lib/capi/
+              mountPath: /var/lib/capi/keys
               readOnly: true
             - name: keycloak-pubkey
-              mountPath: /var/lib/capi/keycloak
+              mountPath: /var/lib/capi/keys/keycloak
               readOnly: true
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
