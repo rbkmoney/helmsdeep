@@ -169,7 +169,7 @@ releases:
     file: config/vm/erl_inetrc
   - name: privatePem
     file: config/api-common/keys/capi.privkey.pem
-  - name: tokenEnctyptionKey1
+  - name: tokenEncryptionKey1
     file: config/api-common/keys/token-encryption-keys/1.jwk
   needs:
     - default/keycloak
@@ -193,7 +193,7 @@ releases:
     file: config/api-common/oops-bodies/sad-kitty1
   - name: oopsBody2
     file: config/api-common/oops-bodies/sad-kitty2
-  - name: tokenEnctyptionKey1
+  - name: tokenEncryptionKey1
     file: config/api-common/keys/token-encryption-keys/1.jwk
   - name: capiPrivkey
     file: config/api-common/keys/capi.privkey.pem
@@ -212,7 +212,7 @@ releases:
     file: config/api-common/oops-bodies/sad-kitty1
   - name: oopsBody2
     file: config/api-common/oops-bodies/sad-kitty2
-  - name: tokenEnctyptionKey1
+  - name: tokenEncryptionKey1
     file: config/api-common/keys/token-encryption-keys/1.jwk
   - name: capiPrivkey
     file: config/api-common/keys/capi.privkey.pem
@@ -229,7 +229,7 @@ releases:
     file: config/vm/erl_inetrc
   - name: privatePem
     file: config/api-common/keys/capi.privkey.pem
-  - name: tokenEnctyptionKey1
+  - name: tokenEncryptionKey1
     file: config/api-common/keys/token-encryption-keys/1.jwk
   needs:
     - default/keycloak
@@ -246,7 +246,7 @@ releases:
     file: config/api-common/oops-bodies/sad-kitty1
   - name: oopsBody2
     file: config/api-common/oops-bodies/sad-kitty2
-  - name: tokenEnctyptionKey1
+  - name: tokenEncryptionKey1
     file: config/api-common/keys/token-encryption-keys/1.jwk
   - name: wapiPrivkey
     file: config/api-common/keys/capi.privkey.pem
