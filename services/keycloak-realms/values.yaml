@@ -1,0 +1,15 @@
+
+keycloakExtUrl: "https://some-site.example.com"
+
+koffingRedirectUri: "http://old.dashboard.some-site.example.com/*"
+koffingWebOrigins: "http://old.dashboard.some-site.example.com"
+shortenerRedirectUri: "https://some-site.example.com/*"
+shortenerWebOrigins: "https://some-site.example.com"
+weezingRedirectUri: "https://idkfa.some-site.example.com/*"
+weezingWebOrigins: "https://idkfa.some-site.example.com"
+controlCenterRedirectUri: "https://iddqd.some-site.example.com/*"
+controlCenterWebOrigins: "https://iddqd.some-site.example.com"
+demoMerchantEnabled: false
+
+nameOverride: ""
+fullnameOverride: ""

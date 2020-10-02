@@ -54,10 +54,14 @@ releases:
   needs:
   - default/postgres
   atomic: true
+- name: keycloak-realms
+  <<: *default
 - name: keycloak
   <<: *default
   chart: codecentric/keycloak
   version: 9.0.0
+  needs:
+    - default/postgres
 - name: riak
   <<: *default
   chart: ./services/riak

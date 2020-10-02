@@ -2,12 +2,11 @@
 
 set -o pipefail
 
-KK_HOST=${KK_HOST:-keycloak}
+KK_HOST=${KK_HOST:-keycloak-headless}
 KK_PORT=${KK_PORT:-8080}
 KK_REALM=${KK_REALM:-external}
 TARGET=${TARGET:-secret}
 
-CURL_OPTS=${CURL_OPTS:-}
 MAX_RETRY_TIMEOUT=${MAX_RETRY_TIMEOUT:-10}
 
 TIMEOUT=0
@@ -27,7 +26,7 @@ while true; do
 
     log INFO "Attempting to fetch Keycloak key..."
 
-    REALM_DATA=$(curl -s -m10 --fail ${CURL_OPTS} "http://${KK_HOST}:${KK_PORT}/auth/realms/${KK_REALM}")
+    REALM_DATA=$(wget --quiet --timeout=10 "http://${KK_HOST}:${KK_PORT}/auth/realms/${KK_REALM}" -O -)
     EXIT_CODE=$?
     if [ "${EXIT_CODE}" -ne "0" ]; then
         REALM_FAIL=true
