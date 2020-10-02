@@ -1,5 +1,5 @@
 image:
-  repository: dr2.rbkmoney.com/rbkmoney/wapi
+  repository: dr2.rbkmoney.com/rbkmoney/fistful-server
   pullPolicy: IfNotPresent
 
 replicaCount: 1
