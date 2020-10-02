@@ -1491,10 +1491,10 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "http://{{ .Values.keycloakExtUrl }}/*"
+        "{{ .Values.keycloakExtUrl }}/*"
       ],
       "webOrigins": [
-        "http://{{ .Values.keycloakExtUrl }}"
+        "{{ .Values.keycloakExtUrl }}"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -2187,10 +2187,10 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "http://{{ .Values.keycloakExtUrl }}/*"
+        "{{ .Values.keycloakExtUrl }}/*"
       ],
       "webOrigins": [
-        "http://{{ .Values.keycloakExtUrl }}"
+        "{{ .Values.keycloakExtUrl }}"
       ],
       "notBefore": 0,
       "bearerOnly": false,
