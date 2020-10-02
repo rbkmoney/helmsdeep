@@ -25,6 +25,10 @@ $ kubectl create secret docker-registry dr2reg --docker-server=dr2.rbkmoney.com 
 ```
 > !**NOTES** С драйвером hyperkit и реже с драйвером virtualbox бывают проблемы с доступами к ресурсам за VPN, где находится dr2 registry. В этом случае рекомендуется запускаться с драйвером docker:
 ` minikube start --driver=docker`
+` minikube start --cpus=4 --memory='9900m' --disk-size='20000mb' --addons='ingress'`
+
+Монтирование mocha-test для запуска тестовых транзакций
+` minikube mount <PROJ_PATH>/helmsdeep/config/test-transaction-v2/data:/opt/data `
 
 Для быстрой и автоматической инициализации Vault нужен configMap:
 ```
@@ -77,7 +81,7 @@ You can use machinegun:8022 to connect to the machinegun woody interface.
 
 Работа с Vault
 ----------
-Волт запускается в dev режиме, то есть сразу инициированный и unseal. 
+Волт запускается в dev режиме, то есть сразу инициированный и unseal.
 Референс для работы с секретами в [доке vault](https://www.hashicorp.com/blog/dynamic-database-credentials-with-vault-and-kubernetes/)
 
 <details>

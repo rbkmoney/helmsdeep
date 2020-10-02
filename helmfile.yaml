@@ -73,6 +73,11 @@ releases:
   set:
   - name: appConfig
     file: config/machinegun/config.yaml
+- name: test-transaction-v2
+  <<: *default
+  set:
+  - name: transaction
+    file: config/test-transaction-v2/test-transaction.sh
 - name: bender
   <<: *default
   set:
@@ -151,6 +156,9 @@ releases:
     file: config/proxy-mocketbank/errors.json
 - name: hellgate
   <<: *default
+  needs:
+  - default/machinegun
+  - default/dominant
   set:
   - name: appConfig
     file: config/hellgate/sys.config
@@ -158,6 +166,10 @@ releases:
     file: config/vm/erl_inetrc
 - name: capi-pcidss-v2
   <<: *default
+  needs:
+  - default/cds
+  - default/bender
+  - default/binbase
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -169,32 +181,11 @@ releases:
     file: config/api-common/keys/capi.privkey.pem
   - name: tokenEnctyptionKey1
     file: config/api-common/keys/token-encryption-keys/1.jwk
-- name: url-shortener
-  <<: *default
-  set:
-  - name: appConfig
-    file: config/url-shortener/sys.config
-  - name: vmConfig
-    file: config/vm/erl_inetrc
-- name: capi-v1
-  <<: *default
-  set:
-  - name: fetchKeycloakPubkey
-    file: config/api-common/fetch-keycloak-pubkey.sh
-  - name: appConfig
-    file: config/capi-v1/sys.config
-  - name: vmConfig
-    file: config/vm/erl_inetrc
-  - name: oopsBody1
-    file: config/api-common/oops-bodies/sad-kitty1
-  - name: oopsBody2
-    file: config/api-common/oops-bodies/sad-kitty2
-  - name: tokenEnctyptionKey1
-    file: config/api-common/keys/token-encryption-keys/1.jwk
-  - name: capiPrivkey
-    file: config/api-common/keys/capi.privkey.pem
 - name: capi-v2
   <<: *default
+  needs:
+  - default/bender
+  - default/hellgate
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -210,33 +201,57 @@ releases:
     file: config/api-common/keys/token-encryption-keys/1.jwk
   - name: capiPrivkey
     file: config/api-common/keys/capi.privkey.pem
-- name: wapi-pcidss-v0
+- name: url-shortener
   <<: *default
   set:
-  - name: fetchKeycloakPubkey
-    file: config/api-common/fetch-keycloak-pubkey.sh
   - name: appConfig
-    file: config/wapi-pcidss-v0/sys.config
+    file: config/url-shortener/sys.config
   - name: vmConfig
     file: config/vm/erl_inetrc
-  - name: privatePem
-    file: config/api-common/keys/capi.privkey.pem
-  - name: tokenEnctyptionKey1
-    file: config/api-common/keys/token-encryption-keys/1.jwk
-- name: wapi
-  <<: *default
-  set:
-  - name: fetchKeycloakPubkey
-    file: config/api-common/fetch-keycloak-pubkey.sh
-  - name: appConfig
-    file: config/wapi/sys.config
-  - name: vmConfig
-    file: config/vm/erl_inetrc
-  - name: oopsBody1
-    file: config/api-common/oops-bodies/sad-kitty1
-  - name: oopsBody2
-    file: config/api-common/oops-bodies/sad-kitty2
-  - name: tokenEnctyptionKey1
-    file: config/api-common/keys/token-encryption-keys/1.jwk
-  - name: wapiPrivkey
-    file: config/api-common/keys/capi.privkey.pem
+# - name: capi-v1
+#   <<: *default
+#   set:
+#   - name: fetchKeycloakPubkey
+#     file: config/api-common/fetch-keycloak-pubkey.sh
+#   - name: appConfig
+#     file: config/capi-v1/sys.config
+#   - name: vmConfig
+#     file: config/vm/erl_inetrc
+#   - name: oopsBody1
+#     file: config/api-common/oops-bodies/sad-kitty1
+#   - name: oopsBody2
+#     file: config/api-common/oops-bodies/sad-kitty2
+#   - name: tokenEnctyptionKey1
+#     file: config/api-common/keys/token-encryption-keys/1.jwk
+#   - name: capiPrivkey
+#     file: config/api-common/keys/capi.privkey.pem
+# - name: wapi-pcidss-v0
+#   <<: *default
+#   set:
+#   - name: fetchKeycloakPubkey
+#     file: config/api-common/fetch-keycloak-pubkey.sh
+#   - name: appConfig
+#     file: config/wapi-pcidss-v0/sys.config
+#   - name: vmConfig
+#     file: config/vm/erl_inetrc
+#   - name: privatePem
+#     file: config/api-common/keys/capi.privkey.pem
+#   - name: tokenEnctyptionKey1
+#     file: config/api-common/keys/token-encryption-keys/1.jwk
+# - name: wapi
+#   <<: *default
+#   set:
+#   - name: fetchKeycloakPubkey
+#     file: config/api-common/fetch-keycloak-pubkey.sh
+#   - name: appConfig
+#     file: config/wapi/sys.config
+#   - name: vmConfig
+#     file: config/vm/erl_inetrc
+#   - name: oopsBody1
+#     file: config/api-common/oops-bodies/sad-kitty1
+#   - name: oopsBody2
+#     file: config/api-common/oops-bodies/sad-kitty2
+#   - name: tokenEnctyptionKey1
+#     file: config/api-common/keys/token-encryption-keys/1.jwk
+#   - name: wapiPrivkey
+#     file: config/api-common/keys/capi.privkey.pem

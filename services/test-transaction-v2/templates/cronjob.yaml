@@ -1,0 +1,45 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "test-transaction-v2.fullname" . }}
+  labels:
+    {{- include "test-transaction-v2.labels" . | nindent 4 }}
+spec:
+  schedule: "*/1 * * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "test-transaction-v2.serviceAccountName" . }}
+          containers:
+            - name: {{ .Chart.Name }}
+              image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+              volumeMounts:
+                - name: volume
+                  mountPath: /opt/data
+                - name: config-volume
+                  mountPath: /opt/test-transaction/test-transaction.sh
+                  subPath: test-transaction.sh
+              command:
+              args:
+              - /bin/sh
+              - -c
+              - /opt/test-transaction/test-transaction.sh
+          volumes:
+            - name: volume
+              hostPath:
+                path: /opt/data
+            - name: config-volume
+              configMap:
+                name: {{ include "test-transaction-v2.fullname" . }}
+                items:
+                - key: test-transaction.sh
+                  path: test-transaction.sh
+                  mode: 0755
+          restartPolicy: OnFailure
