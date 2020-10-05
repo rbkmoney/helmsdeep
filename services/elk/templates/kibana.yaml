@@ -1,0 +1,9 @@
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: {{ .Values.kibana.nameref }}
+spec:
+  version: {{ .Chart.AppVersion }}
+  count: 1
+  elasticsearchRef:
+    name: {{ .Values.elastic.nameref }}
