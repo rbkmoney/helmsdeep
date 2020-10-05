@@ -9,6 +9,13 @@ image:
 imagePullSecrets:
   - name: dr2reg
 
+initializationTask:
+  create: false
+  repository: dr2.rbkmoney.com/rbkmoney/holmes
+  tag: 55e745b7c020c367bff202036af84726d66755f7
+  script: "#! /bin/sh"
+  workdir: /opt/holmes
+
 beam:
   disableSBWT: false
 
@@ -60,3 +67,10 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+# Persistent storage for keyring
+keyring:
+  accessModes: "ReadWriteOnce"
+  resources:
+    requests:
+      storage: 3Mi

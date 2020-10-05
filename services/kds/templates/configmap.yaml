@@ -17,5 +17,3 @@ data:
     -kernel inetrc '"./erl_inetrc"''
   erl_inetrc: |
     {{- .Values.vmConfig | nindent 4 }}
-  keyring: |
-    {{- .Values.keyring | nindent 4 }}

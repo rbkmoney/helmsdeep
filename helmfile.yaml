@@ -56,10 +56,14 @@ releases:
   needs:
   - default/postgres
   atomic: true
+- name: keycloak-realms
+  <<: *default
 - name: keycloak
   <<: *default
   chart: codecentric/keycloak
   version: 9.0.0
+  needs:
+    - default/postgres
 - name: riak
   <<: *default
   chart: ./services/riak
@@ -93,8 +97,6 @@ releases:
     file: config/kds/ca.crt
   - name: serverCrt
     file: config/kds/server.pem
-  - name: keyring
-    file: config/kds/keyring
 - name: cds
   <<: *default
   needs:
@@ -172,8 +174,10 @@ releases:
     file: config/vm/erl_inetrc
   - name: privatePem
     file: config/api-common/keys/capi.privkey.pem
-  - name: tokenEnctyptionKey1
+  - name: tokenEncryptionKey1
     file: config/api-common/keys/token-encryption-keys/1.jwk
+  needs:
+    - default/keycloak
 - name: url-shortener
   <<: *default
   set:
@@ -194,10 +198,12 @@ releases:
     file: config/api-common/oops-bodies/sad-kitty1
   - name: oopsBody2
     file: config/api-common/oops-bodies/sad-kitty2
-  - name: tokenEnctyptionKey1
+  - name: tokenEncryptionKey1
     file: config/api-common/keys/token-encryption-keys/1.jwk
   - name: capiPrivkey
     file: config/api-common/keys/capi.privkey.pem
+  needs:
+    - default/keycloak
 - name: capi-v2
   <<: *default
   set:
@@ -211,10 +217,12 @@ releases:
     file: config/api-common/oops-bodies/sad-kitty1
   - name: oopsBody2
     file: config/api-common/oops-bodies/sad-kitty2
-  - name: tokenEnctyptionKey1
+  - name: tokenEncryptionKey1
     file: config/api-common/keys/token-encryption-keys/1.jwk
   - name: capiPrivkey
     file: config/api-common/keys/capi.privkey.pem
+  needs:
+    - default/keycloak
 - name: wapi-pcidss-v0
   <<: *default
   set:
@@ -226,8 +234,10 @@ releases:
     file: config/vm/erl_inetrc
   - name: privatePem
     file: config/api-common/keys/capi.privkey.pem
-  - name: tokenEnctyptionKey1
+  - name: tokenEncryptionKey1
     file: config/api-common/keys/token-encryption-keys/1.jwk
+  needs:
+    - default/keycloak
 - name: wapi
   <<: *default
   set:
@@ -241,7 +251,9 @@ releases:
     file: config/api-common/oops-bodies/sad-kitty1
   - name: oopsBody2
     file: config/api-common/oops-bodies/sad-kitty2
-  - name: tokenEnctyptionKey1
+  - name: tokenEncryptionKey1
     file: config/api-common/keys/token-encryption-keys/1.jwk
   - name: wapiPrivkey
     file: config/api-common/keys/capi.privkey.pem
+  needs:
+    - default/keycloak

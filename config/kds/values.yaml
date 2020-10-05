@@ -1,0 +1,7 @@
+replicaCount: 1
+
+initializationTask:
+  create: true
+  repository: dr2.rbkmoney.com/rbkmoney/holmes
+  tag: 55e745b7c020c367bff202036af84726d66755f7
+  workdir: /opt/holmes

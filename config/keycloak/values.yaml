@@ -22,3 +22,15 @@ extraEnv: |
       -Djava.net.preferIPv4Stack=true
       -Djboss.modules.system.pkgs=$JBOSS_MODULES_SYSTEM_PKGS
       -Djava.awt.headless=true
+  - name: KEYCLOAK_IMPORT
+    value: /realm/realms.json
+
+extraVolumes: |
+  - name: keycloak-realms-volume
+    configMap:
+      name: keycloak-realms
+
+extraVolumeMounts: |
+  - name: keycloak-realms-volume
+    mountPath: "/realm/"
+    readOnly: true
