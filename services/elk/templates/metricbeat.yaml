@@ -1,14 +1,15 @@
+{{- if .Values.metricbeat.enabled -}}
 apiVersion: beat.k8s.elastic.co/v1beta1
 kind: Beat
 metadata:
   name: metricbeat
 spec:
   type: metricbeat
-  version: 7.9.1
+  version: {{ .Chart.AppVersion }}
   elasticsearchRef:
-    name: quickstart
+    name: {{ .Values.elastic.nameref }}
   kibanaRef:
-    name: quickstart
+    name: {{ .Values.kibana.nameref }}
   config:
     metricbeat:
       autodiscover:
@@ -168,4 +169,5 @@ roleRef:
   kind: ClusterRole
   name: metricbeat
   apiGroup: rbac.authorization.k8s.io
+{{- end -}}
 

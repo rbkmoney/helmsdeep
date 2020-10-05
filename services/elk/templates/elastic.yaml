@@ -1,9 +1,9 @@
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
-  name: quickstart
+  name: {{ .Values.elastic.nameref }}
 spec:
-  version: 7.9.1
+  version: {{ .Chart.AppVersion }}
   nodeSets:
   - name: default
     count: 1

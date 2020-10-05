@@ -1,9 +1,9 @@
 apiVersion: kibana.k8s.elastic.co/v1
 kind: Kibana
 metadata:
-  name: quickstart
+  name: {{ .Values.kibana.nameref }}
 spec:
-  version: 7.9.1
+  version: {{ .Chart.AppVersion }}
   count: 1
   elasticsearchRef:
-    name: quickstart
+    name: {{ .Values.elastic.nameref }}

@@ -2,6 +2,18 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+###Beats enable
+metricbeat:
+  enabled: false
+filebeat:
+  enabled: true
+
+
+elastic:
+  nameref: "rbk"
+kibana:
+  nameref: "rbk"
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -59,3 +71,4 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
