@@ -178,6 +178,21 @@ releases:
     file: config/api-common/keys/token-encryption-keys/1.jwk
   needs:
     - default/keycloak
+- name: capi-pcidss-v1
+  <<: *default
+  set:
+  - name: fetchKeycloakPubkey
+    file: config/api-common/fetch-keycloak-pubkey.sh
+  - name: appConfig
+    file: config/capi-pcidss-v1/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+  - name: privatePem
+    file: config/api-common/keys/capi.privkey.pem
+  - name: tokenEncryptionKey1
+    file: config/api-common/keys/token-encryption-keys/1.jwk
+  needs:
+    - default/keycloak
 - name: url-shortener
   <<: *default
   set:
