@@ -272,3 +272,5 @@ releases:
     file: config/api-common/keys/capi.privkey.pem
   needs:
     - default/keycloak
+- name: payform
+  <<: *default
