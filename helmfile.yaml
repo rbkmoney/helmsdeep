@@ -170,10 +170,14 @@ releases:
     file: config/capi-pcidss-v2/sys.config
   - name: vmConfig
     file: config/vm/erl_inetrc
-  - name: privatePem
-    file: config/api-common/keys/capi.privkey.pem
+  - name: oopsBody1
+    file: config/api-common/oops-bodies/sad-kitty1
+  - name: oopsBody2
+    file: config/api-common/oops-bodies/sad-kitty2
   - name: tokenEncryptionKey1
     file: config/api-common/keys/token-encryption-keys/1.jwk
+  - name: capiPrivkey
+    file: config/api-common/keys/capi.privkey.pem
   needs:
     - default/keycloak
 - name: capi-pcidss-v1
@@ -185,10 +189,14 @@ releases:
     file: config/capi-pcidss-v1/sys.config
   - name: vmConfig
     file: config/vm/erl_inetrc
-  - name: privatePem
-    file: config/api-common/keys/capi.privkey.pem
+  - name: oopsBody1
+    file: config/api-common/oops-bodies/sad-kitty1
+  - name: oopsBody2
+    file: config/api-common/oops-bodies/sad-kitty2
   - name: tokenEncryptionKey1
     file: config/api-common/keys/token-encryption-keys/1.jwk
+  - name: capiPrivkey
+    file: config/api-common/keys/capi.privkey.pem
   needs:
     - default/keycloak
 - name: url-shortener
