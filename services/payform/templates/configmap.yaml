@@ -6,3 +6,5 @@ metadata:
   labels:
     {{- include "payform.labels" . | nindent 4 }}
 data:
+  appConfig.json: |
+    {{- .Values.appconfig | nindent 4 }}

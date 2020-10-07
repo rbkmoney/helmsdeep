@@ -274,3 +274,6 @@ releases:
     - default/keycloak
 - name: payform
   <<: *default
+  set:
+  - name: appconfig
+    file: config/payform/appConfig.json
