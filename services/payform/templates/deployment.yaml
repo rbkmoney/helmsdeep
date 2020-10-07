@@ -50,6 +50,7 @@ spec:
           volumeMounts:
             - name: config-volume
               mountPath: /usr/share/nginx/html/appConfig.json
+              subPath: appConfig.json
               readOnly: true
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -68,6 +69,6 @@ spec:
           configMap:
             name: {{ include "payform.fullname" . }}
             items:
-            - key: appconfig.json
+            - key: appConfig.json
               path: appConfig.json
               mode: 0755
