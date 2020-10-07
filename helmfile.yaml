@@ -26,8 +26,6 @@ templates:
 helmfiles:
 - # Path to the helmfile state file being processed BEFORE releases in this state file
   path: helmfile-infra.yaml
-  selectors:
-  - name=infra
 
 releases:
 - name: zookeeper
@@ -61,7 +59,7 @@ releases:
 - name: keycloak
   <<: *default
   chart: codecentric/keycloak
-  version: 9.0.0
+  version: 9.0.1
   needs:
     - default/postgres
 - name: riak
