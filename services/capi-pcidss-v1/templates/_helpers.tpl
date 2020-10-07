@@ -52,12 +52,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Configs hash
+Create the configs hash
 */}}
 {{- define "capi-pcidss-v1.propertiesHash" -}}
-{{- $config := include (print $.Template.BasePath "/configmap.yaml") . | sha256sum -}}
+{{- $configmap_path := print $.Template.BasePath "/configmap.yaml" -}}
+{{- $oopsbodies_path := print $.Template.BasePath "/oops-bodies.yaml" -}}
+{{- $config := cat (include $configmap_path .) (include $oopsbodies_path .) | sha256sum -}}
 {{- $secret := include (print $.Template.BasePath "/secret.yaml") . | sha256sum -}}
-{{ print $secret $config | sha256sum }}
+{{- print $secret $config | sha256sum -}}
 {{- end -}}
 
 {{/*
