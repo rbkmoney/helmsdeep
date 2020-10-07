@@ -34,3 +34,7 @@ extraVolumeMounts: |
   - name: keycloak-realms-volume
     mountPath: "/realm/"
     readOnly: true
+
+service:
+  type: NodePort
+  httpPort: 80
