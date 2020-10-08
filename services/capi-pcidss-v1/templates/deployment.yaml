@@ -80,6 +80,8 @@ spec:
             - name: keycloak-pubkey
               mountPath: /var/lib/capi/keys/keycloak
               readOnly: true
+            - name: logs-volume
+              mountPath: /var/log
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -101,6 +103,10 @@ spec:
             secretName: {{ include "capi-pcidss-v1.fullname" . }}
         - name: keycloak-pubkey
           emptyDir: {}
+        - name: logs-volume
+          hostPath:
+            path: /datalog/rbk
+            type: DirectoryOrCreate
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

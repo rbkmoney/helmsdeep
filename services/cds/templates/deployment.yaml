@@ -60,6 +60,8 @@ spec:
             - name: secret
               mountPath: /var/lib/cds/
               readOnly: true
+            - name: logs-volume
+              mountPath: /var/log
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -76,6 +78,10 @@ spec:
         - name: secret
           secret:
             secretName: {{ include "cds.fullname" . }}
+        - name: logs-volume
+          hostPath:
+            path: /datalog/rbk
+            type: DirectoryOrCreate
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -20,7 +20,7 @@ releases:
   <<: *default
   chart: stable/prometheus-operator
   namespace: monitoring
-# - name: logs
-#   <<: *default
-#   chart: ./services/elk
+- name: logs
+  <<: *default
+  chart: ./services/elk
 

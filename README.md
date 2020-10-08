@@ -77,7 +77,7 @@ You can use machinegun:8022 to connect to the machinegun woody interface.
 
 Работа с Vault
 ----------
-Волт запускается в dev режиме, то есть сразу инициированный и unseal. 
+Волт запускается в dev режиме, то есть сразу инициированный и unseal.
 Референс для работы с секретами в [доке vault](https://www.hashicorp.com/blog/dynamic-database-credentials-with-vault-and-kubernetes/)
 
 <details>
@@ -156,7 +156,7 @@ requrements:
 
 Доступ к логам в kibana
 -----------
-[docs reference](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-deploy-kibana.html) 
+[docs reference](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-deploy-kibana.html)
 our name is "rbk" not "quickstart"
 
 Use kubectl port-forward to access Kibana from your local workstation:
@@ -167,7 +167,7 @@ kubectl port-forward service/rbk-kb-http 5601
 
 Open https://localhost:5601 in your browser. Your browser will show a warning because the self-signed certificate configured by default is not verified by a known certificate authority and not trusted by your browser. You can temporarily acknowledge the warning for the purposes of this quick start but it is highly recommended that you configure valid certificates for any production deployments.
 
-Login as the elastic user. The password can be obtained with the following command:
+Login as the username = elastic. The password can be obtained with the following command:
 
 ```
 kubectl get secret rbk-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo

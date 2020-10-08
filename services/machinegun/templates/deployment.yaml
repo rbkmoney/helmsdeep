@@ -59,6 +59,8 @@ spec:
               mountPath: {{ .Values.cookie.path }}
               subPath: cookie
               readOnly: true
+            - name: logs-volume
+              mountPath: /var/log
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -68,6 +70,10 @@ spec:
         - name: cookie-secret
           secret:
             secretName: {{ include "machinegun.fullname" . }}-cookie
+        - name: logs-volume
+          hostPath:
+            path: /datalog/rbk
+            type: DirectoryOrCreate
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
