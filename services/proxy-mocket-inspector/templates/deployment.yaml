@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "proxy-mocket-inspector.fullname" . }}
+  labels:
+    {{- include "proxy-mocket-inspector.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "proxy-mocket-inspector.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "proxy-mocket-inspector.selectorLabels" . | nindent 8 }}
+      annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        proxy-mocket-inspector/properties-hash: {{ include "proxy-mocket-inspector.propertiesHash" . }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "proxy-mocket-inspector.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: api
+              containerPort: 8022
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: api
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: api
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/proxy-mocket-inspector/entrypoint.sh
+              subPath: entrypoint.sh
+              readOnly: true
+          command: ["/opt/proxy-mocket-inspector/entrypoint.sh"]
+          args:
+            - -jar
+            - /opt/proxy-mocket-inspector/proxy-mocket-inspector.jar
+            - --server.port=8022
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "proxy-mocket-inspector.fullname" . }}
+            items:
+              - key: entrypoint.sh
+                path: entrypoint.sh
+                mode: 0755
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
