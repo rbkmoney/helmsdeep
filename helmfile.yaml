@@ -280,3 +280,8 @@ releases:
     file: config/api-common/keys/capi.privkey.pem
   needs:
     - default/keycloak
+- name: payform
+  <<: *default
+  set:
+  - name: appconfig
+    file: config/payform/appConfig.json

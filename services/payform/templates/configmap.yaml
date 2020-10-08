@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "payform.fullname" . }}
+  labels:
+    {{- include "payform.labels" . | nindent 4 }}
+data:
+  appConfig.json: |
+    {{- .Values.appconfig | nindent 4 }}
