@@ -62,6 +62,8 @@ releases:
   version: 9.0.1
   needs:
     - default/postgres
+- name: holmes
+  <<: *default
 - name: riak
   <<: *default
   chart: ./services/riak
