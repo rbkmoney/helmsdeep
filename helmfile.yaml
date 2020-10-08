@@ -156,6 +156,8 @@ releases:
     file: config/proxy-mocketbank/cards.csv
   - name: errorMapping
     file: config/proxy-mocketbank/errors.json
+- name: proxy-mocket-inspector
+  <<: *default
 - name: hellgate
   <<: *default
   set:
