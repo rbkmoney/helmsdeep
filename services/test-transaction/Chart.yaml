@@ -1,0 +1,6 @@
+apiVersion: v2
+name: test-transaction
+description: A chart for test transaction
+type: application
+version: 0.1.0
+appVersion: 8c5611a1b7984269a58c0c934bc765eb13972ad1
