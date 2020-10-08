@@ -1,7 +1,7 @@
 replicaCount: 1
 
 podAnnotations:
-  vault.hashicorp.com/role: "db-app-hook"
+  vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
   vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-hook"
   vault.hashicorp.com/agent-inject-template-application.properties: |
