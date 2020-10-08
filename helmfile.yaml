@@ -236,6 +236,14 @@ releases:
     file: config/api-common/keys/capi.privkey.pem
   needs:
     - default/keycloak
+- name: test-transaction-v2
+  <<: *default
+  set:
+  - name: appConfig
+    file: config/test-transaction-v2/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+
 # - name: wapi-pcidss-v0
 #   <<: *default
 #   set:
