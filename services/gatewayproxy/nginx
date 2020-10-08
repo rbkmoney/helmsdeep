@@ -1,0 +1,144 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+data:
+  nginx.conf: |
+    user nginx;
+    worker_processes  3;
+    error_log  /var/log/nginx/error.log;
+    events {
+      worker_connections  10240;
+    }
+    http {
+      log_format  main
+              'remote_addr:$remote_addr\t'
+              'time_local:$time_local\t'
+              'method:$request_method\t'
+              'uri:$request_uri\t'
+              'host:$host\t'
+              'status:$status\t'
+              'bytes_sent:$body_bytes_sent\t'
+              'referer:$http_referer\t'
+              'useragent:$http_user_agent\t'
+              'forwardedfor:$http_x_forwarded_for\t'
+              'request_time:$request_time';
+      access_log	/var/log/nginx/access.log main;
+      server {
+          listen       80;
+          server_name  _;
+          location / {
+              root   html;
+              index  index.html index.htm;
+          }
+      }
+      include /etc/nginx/virtualhost/virtualhost.conf;
+    }
+  virtualhost.conf: |
+    upstream payform {
+      server payform:8080;
+      keepalive 1024;
+    }
+    upstream capidssv2 {
+      server capi-pcidss-v2:8080;
+      keepalive 1024;
+    }
+    upstream capiv1 {
+      server capi-v1:8080;
+      keepalive 1024;
+    }
+    upstream capiv2 {
+      server capi-v2:8080;
+      keepalive 1024;
+    }
+    upstream wapi {
+      server wapi:8080;
+      keepalive 1024;
+    }
+    upstream wapidss {
+      server wapi-pcidss-v0:8080;
+      keepalive 1024;
+    }
+
+    server {
+      listen 80 default_server;
+      root /usr/local/app;
+      access_log /var/log/nginx/app.access_log main;
+      error_log /var/log/nginx/app.error_log;
+      location / {
+        proxy_pass http://wapidss/;
+      }
+      location =/v2/processing/payment-resources {
+        proxy_pass http://capidssv2;
+      }
+      location ^~ /v2(/|$)(.*) {
+        proxy_pass http://capiv2/$2;
+      }
+      location =/v1 {
+        proxy_pass http://capiv1;
+      }
+      location ^~ /wapi {
+        proxy_pass http://wapi;
+      }
+      location ^~ /web(/|$)(.*) {
+        proxy_pass http://payform/$2;
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigw
+  labels:
+    app.kubernetes.io/name: nginxtst
+    app.kubernetes.io/instance: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nginxtst
+      app.kubernetes.io/instance: nginx
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: nginxtst
+        app.kubernetes.io/instance: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /etc/nginx/nginx.conf
+          readOnly: true
+          subPath: nginx.conf
+          name: nginx-conf
+        - mountPath: /etc/nginx/virtualhost/virtualhost.conf
+          readOnly: true
+          subPath: virtualhost.conf
+          name: nginx-conf
+      volumes:
+      - name: nginx-conf
+        configMap:
+          name: nginx-conf
+          items:
+            - key: nginx.conf
+              path: nginx.conf
+            - key: virtualhost.conf
+              path: virtualhost.conf
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apigateway
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: web
+  selector:
+      app.kubernetes.io/name: nginxtst
+      app.kubernetes.io/instance: nginx
