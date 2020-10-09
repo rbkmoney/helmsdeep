@@ -11,17 +11,22 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            {{- include "test-transaction.labels" . | nindent 12 }}
         spec:
           {{- with .Values.imagePullSecrets }}
           imagePullSecrets:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           serviceAccountName: {{ include "test-transaction.serviceAccountName" . }}
           containers:
             - name: gateway
               image: nginx
               ports:
-                - containerPort: 80
+                - name: api
+                  containerPort: 80
+                  protocol: TCP
               volumeMounts:
                 - name: config-volume
                   mountPath: /etc/nginx/nginx.conf
@@ -31,7 +36,7 @@ spec:
                   mountPath: /etc/nginx/virtualhost/virtualhost.conf
                   subPath: virtualhost.conf
                   readOnly: true
-            - name: test_transaction
+            - name: test-transaction
               image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
               volumeMounts:
                 - name: config-volume
@@ -43,20 +48,17 @@ spec:
                 - "{{ .Values.userName }}"
                 - "{{ .Values.userPassword }}"
                 - "{{ .Values.apiUrl }}"
-                {{- if .Values.useIPv4 -}}
+                {{- if .Values.useIPv4 }}
                 - "-4"
                 {{- end }}
-                {{- if .Values.createTestShop -}}
-                --create-test-shop
+                {{- if .Values.createTestShop }}
+                - --create-test-shop
                 {{- end }}
           volumes:
             - name: config-volume
               configMap:
                 name: {{ include "test-transaction.fullname" . }}
                 items:
-                - key: test-transaction.sh
-                  path: test-transaction.sh
-                  mode: 0755
                 - key: nginx.conf
                   path: nginx.conf
                 - key: virtualhost.conf
