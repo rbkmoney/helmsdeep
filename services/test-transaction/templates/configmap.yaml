@@ -6,8 +6,6 @@ metadata:
   labels:
     {{- include "test-transaction.labels" . | nindent 4 }}
 data:
-  test-transaction.sh: |
-    {{- .Values.transaction | nindent 4 }}
   nginx.conf: |
     user nginx;
     worker_processes  3;

@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "test-transaction.labels" . | nindent 4 }}
 spec:
-  schedule: "*/1 * * * *"
+  schedule: "{{ .Values.schedule }}"
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
   jobTemplate:
@@ -38,11 +38,17 @@ spec:
                   mountPath: /opt/test-transaction/test-transaction.sh
                   subPath: test-transaction.sh
                   readOnly: true
-              command:
               args:
-              - /bin/sh
-              - -c
-              - /opt/test-transaction/test-transaction.sh
+                - "{{ .Values.keycloakUrl }}"
+                - "{{ .Values.userName }}"
+                - "{{ .Values.userPassword }}"
+                - "{{ .Values.apiUrl }}"
+                {{- if .Values.useIPv4 -}}
+                - "-4"
+                {{- end }}
+                {{- if .Values.createTestShop -}}
+                --create-test-shop
+                {{- end }}
           volumes:
             - name: config-volume
               configMap:

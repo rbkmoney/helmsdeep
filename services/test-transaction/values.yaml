@@ -2,6 +2,17 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+keycloakUrl: http://keycloak-http
+apiUrl: http://localhost
+
+userName: demo_merchant
+userPassword: Parolec0
+
+useIPv4: true
+createTestShop: true
+
+schedule: "*/1 * * * *"
+
 image:
   repository: dr2.rbkmoney.com/rbkmoney/test_transaction_v2
   pullPolicy: IfNotPresent
