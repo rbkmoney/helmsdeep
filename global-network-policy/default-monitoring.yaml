@@ -1,0 +1,29 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default.monitoring
+  namespace: default
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - ports:
+      - protocol: TCP
+        port: 8022
+      - protocol: TCP
+        port: 8080
+      from:
+        - namespaceSelector:
+            matchLabels:
+              namespace: kube-system
+        - namespaceSelector:
+            matchLabels:
+              namespace: monitoring
+          podSelector:
+            matchLabels:
+              app: prometheus
+        - podSelector:
+            matchLabels:
+              app: consul

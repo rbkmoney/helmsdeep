@@ -1,0 +1,27 @@
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ include "kds.fullname" . }}
+  namespace: default
+  labels:
+    chart: {{ template "kds.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "kds.name" . }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - ports:
+      - protocol: TCP
+        port: 8022
+      from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: cds
+        - podSelector:
+            matchLabels:
+              job-name: kds-initialization-task

@@ -36,6 +36,7 @@ Common labels
 */}}
 {{- define "shumway.labels" -}}
 helm.sh/chart: {{ include "shumway.chart" . }}
+helm.sh/release: {{ .Release.Name | quote }}
 {{ include "shumway.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}

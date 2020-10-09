@@ -36,6 +36,7 @@ Common labels
 */}}
 {{- define "machinegun.labels" -}}
 helm.sh/chart: {{ include "machinegun.chart" . }}
+helm.sh/release: {{ .Release.Name | quote }}
 {{ include "machinegun.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}

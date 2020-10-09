@@ -36,6 +36,7 @@ Common labels
 */}}
 {{- define "keycloak-realms.labels" -}}
 helm.sh/chart: {{ include "keycloak-realms.chart" . }}
+helm.sh/release: {{ .Release.Name | quote }}
 {{ include "keycloak-realms.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
