@@ -1,18 +1,17 @@
 ---
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
 metadata:
   name: default.kafka
   namespace: default
 spec:
-  podSelector: {}
-  policyTypes:
-    - Egress
+  endpointSelector:
+    matchLabels: {}
   egress:
-    - ports:
-      - protocol: TCP
-        port: 9092
-      to:
-        - podSelector:
-            matchLabels:
-              app.kubernetes.io/name: kafka
+    - toPorts:
+      - ports:
+        - protocol: TCP
+          port: "9092"
+      toEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/name: kafka
