@@ -18,12 +18,26 @@ spec:
           {{- end }}
           serviceAccountName: {{ include "test-transaction.serviceAccountName" . }}
           containers:
-            - name: {{ .Chart.Name }}
+            - name: gateway
+              image: nginx
+              ports:
+                - containerPort: 80
+              volumeMounts:
+                - name: config-volume
+                  mountPath: /etc/nginx/nginx.conf
+                  subPath: nginx.conf
+                  readOnly: true
+                - name: config-volume
+                  mountPath: /etc/nginx/virtualhost/virtualhost.conf
+                  subPath: virtualhost.conf
+                  readOnly: true
+            - name: test_transaction
               image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
               volumeMounts:
                 - name: config-volume
                   mountPath: /opt/test-transaction/test-transaction.sh
                   subPath: test-transaction.sh
+                  readOnly: true
               command:
               args:
               - /bin/sh
@@ -37,4 +51,8 @@ spec:
                 - key: test-transaction.sh
                   path: test-transaction.sh
                   mode: 0755
+                - key: nginx.conf
+                  path: nginx.conf
+                - key: virtualhost.conf
+                  path: virtualhost.conf
           restartPolicy: OnFailure
