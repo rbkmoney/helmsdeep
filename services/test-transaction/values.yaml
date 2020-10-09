@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 image:
-  repository: dr2reg
+  repository: dr2.rbkmoney.com/rbkmoney/test_transaction_v2
   pullPolicy: IfNotPresent
 
 imagePullSecrets:
