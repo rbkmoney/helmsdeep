@@ -287,3 +287,5 @@ releases:
   set:
   - name: appconfig
     file: config/payform/appConfig.json
+- name: test-transaction
+  <<: *default
