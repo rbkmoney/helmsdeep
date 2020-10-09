@@ -15,7 +15,7 @@ spec:
         {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        machiengun/properties-hash: {{ include "machinegun.propertiesHash" . }}
+        machinegun/properties-hash: {{ include "machinegun.propertiesHash" . }}
       labels:
         {{- include "machinegun.selectorLabels" . | nindent 8 }}
     spec:

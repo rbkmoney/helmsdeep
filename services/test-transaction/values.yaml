@@ -3,7 +3,6 @@
 # Declare variables to be passed into your templates.
 
 keycloakUrl: http://keycloak-http
-apiUrl: http://localhost
 
 userName: demo_merchant
 userPassword: Parolec0
@@ -69,3 +68,7 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+gatewayService:
+  type: ClusterIP
+  port: 80

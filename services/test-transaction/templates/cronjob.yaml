@@ -21,22 +21,7 @@ spec:
           {{- end }}
           serviceAccountName: {{ include "test-transaction.serviceAccountName" . }}
           containers:
-            - name: gateway
-              image: nginx
-              ports:
-                - name: api
-                  containerPort: 80
-                  protocol: TCP
-              volumeMounts:
-                - name: config-volume
-                  mountPath: /etc/nginx/nginx.conf
-                  subPath: nginx.conf
-                  readOnly: true
-                - name: config-volume
-                  mountPath: /etc/nginx/virtualhost/virtualhost.conf
-                  subPath: virtualhost.conf
-                  readOnly: true
-            - name: test-transaction
+            - name: {{ .Chart.Name }}
               image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
               volumeMounts:
                 - name: config-volume
@@ -47,7 +32,7 @@ spec:
                 - "{{ .Values.keycloakUrl }}"
                 - "{{ .Values.userName }}"
                 - "{{ .Values.userPassword }}"
-                - "{{ .Values.apiUrl }}"
+                - http://{{ include "test-transaction.fullname" . }}-gateway
                 {{- if .Values.useIPv4 }}
                 - "-4"
                 {{- end }}
