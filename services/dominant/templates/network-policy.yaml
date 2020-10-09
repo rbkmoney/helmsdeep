@@ -1,0 +1,33 @@
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ include "dominant.name" . }}
+  namespace: default
+  labels:
+    chart: {{ template "dominant.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "dominant.name" . }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - ports:
+      - protocol: TCP
+        port: 8022
+      from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: machinegun
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: hellgate
+        - podSelector:
+            matchLabels:
+              service-class: capi
+        - podSelector:
+            matchLabels:
+              service-class: wapi

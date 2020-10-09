@@ -36,6 +36,7 @@ Common labels
 */}}
 {{- define "binbase.labels" -}}
 helm.sh/chart: {{ include "binbase.chart" . }}
+helm.sh/release: {{ .Release.Name | quote }}
 {{ include "binbase.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}

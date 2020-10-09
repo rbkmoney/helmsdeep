@@ -1,0 +1,27 @@
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ include "binbase.name" . }}
+  namespace: default
+  labels:
+    chart: {{ template "binbase.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "binbase.name" . }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - ports:
+      - protocol: TCP
+        port: 8022
+      from:
+        - podSelector:
+            matchLabels:
+              service-class: provider-adapter
+        - podSelector:
+            matchLabels:
+              service-class: capi-pcidss

@@ -36,6 +36,7 @@ Common labels
 */}}
 {{- define "capi-v1.labels" -}}
 helm.sh/chart: {{ include "capi-v1.chart" . }}
+helm.sh/release: {{ .Release.Name | quote }}
 {{ include "capi-v1.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
@@ -49,6 +50,7 @@ Selector labels
 {{- define "capi-v1.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "capi-v1.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+service-class: capi
 {{- end }}
 
 {{/*

@@ -1,0 +1,36 @@
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ include "hellgate.fullname" . }}
+  namespace: default
+  labels:
+    chart: {{ template "hellgate.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "hellgate.name" . }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - ports:
+      - protocol: TCP
+        port: 8022
+      from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: machinegun
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: dominant
+        - podSelector:
+            matchLabels:
+              service-class: capi
+        - podSelector:
+            matchLabels:
+              service-class: provider-adapter
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: wapi

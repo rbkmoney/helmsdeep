@@ -49,6 +49,7 @@ Selector labels
 {{- define "capi-pcidss-v1.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "capi-pcidss-v1.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+service-class: capi-pcidss
 {{- end }}
 
 {{/*

@@ -1,0 +1,21 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default.ingress
+  namespace: default
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - ports:
+      - protocol: TCP
+        port: 8080
+      from:
+        - namespaceSelector:
+            matchLabels:
+              namespace: kube-system
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ingress-nginx

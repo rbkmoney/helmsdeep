@@ -36,6 +36,7 @@ Common labels
 */}}
 {{- define "kds.labels" -}}
 helm.sh/chart: {{ include "kds.chart" . }}
+helm.sh/release: {{ .Release.Name | quote }}
 {{ include "kds.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
