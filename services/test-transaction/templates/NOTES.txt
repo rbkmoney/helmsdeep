@@ -1,1 +1,1 @@
-Execute test transaction through v1
+Execute test transaction
