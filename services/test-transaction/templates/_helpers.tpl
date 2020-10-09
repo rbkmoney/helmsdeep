@@ -57,8 +57,16 @@ Create the name of the service account to use
 */}}
 {{- define "test-transaction.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-    {{- default (include "test-transaction.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "test-transaction.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
-    {{- default "default" .Values.serviceAccount.name }}
+{{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Create the gateway configs hash
+*/}}
+{{- define "test-transaction.gwPropertiesHash" -}}
+{{- $config := include (print $.Template.BasePath "/configmap.yaml") . | sha256sum -}}
+{{ print $config | sha256sum }}
+{{- end -}}

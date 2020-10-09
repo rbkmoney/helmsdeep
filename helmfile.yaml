@@ -28,268 +28,264 @@ helmfiles:
   path: helmfile-infra.yaml
 
 releases:
-# - name: zookeeper
-#   <<: *default
-#   chart: incubator/zookeeper
-#   version: 2.1.3
-# - name: kafka
-#   <<: *default
-#   needs:
-#   - default/zookeeper
-#   chart: incubator/kafka
-#   version: 0.21.2
-# - name: consul
-#   <<: *default
-#   chart: stable/consul
-#   version: 3.9.5
-# - name: postgres
-#   <<: *default
-#   chart: bitnami/postgresql
-#   version: 9.2.0
-#   atomic: true
-# - name: vault
-#   <<: *default
-#   chart: hashicorp/vault
-#   version: 0.7.0
-#   needs:
-#   - default/postgres
-#   atomic: true
-# - name: keycloak-realms
-#   <<: *default
-# - name: keycloak
-#   <<: *default
-#   chart: codecentric/keycloak
-#   version: 9.0.1
-#   needs:
-#     - default/postgres
-# - name: holmes
-#   <<: *default
-# - name: riak
-#   <<: *default
-#   chart: ./services/riak
-#   set:
-#   - name: config.user
-#     file: config/riak/user.yaml
-# - name: machinegun
-#   <<: *default
-#   needs:
-#   - default/consul
-#   - default/riak
-#   - default/kafka
-#   set:
-#   - name: appConfig
-#     file: config/machinegun/config.yaml
-# - name: bender
-#   <<: *default
-#   set:
-#   - name: appConfig
-#     file: config/bender/sys.config
-#   - name: vmConfig
-#     file: config/vm/erl_inetrc
-# - name: kds
-#   <<: *default
-#   set:
-#   - name: appConfig
-#     file: config/kds/sys.config
-#   - name: vmConfig
-#     file: config/vm/erl_inetrc
-#   - name: caCrt
-#     file: config/kds/ca.crt
-#   - name: serverCrt
-#     file: config/kds/server.pem
-# - name: cds
-#   <<: *default
-#   needs:
-#     - default/kds
-#     - default/riak
-#   set:
-#   - name: appConfig
-#     file: config/cds/sys.config
-#   - name: vmConfig
-#     file: config/vm/erl_inetrc
-#   - name: caCrt
-#     file: config/cds/ca.crt
-#   - name: clientCrt
-#     file: config/cds/client.pem
-# - name: shumway
-#   <<: *default
-#   needs:
-#   - default/vault
-#   atomic: true
-#   set:
-#   - name: entrypoint
-#     file: config/shumway/entrypoint.sh
-# - name: hooker
-#   <<: *default
-#   set:
-#   - name: entrypoint
-#     file: config/hooker/entrypoint.sh
-#   needs:
-#   - default/vault
-#   - default/kafka
-# - name: dominant
-#   <<: *default
-#   needs:
-#   - default/shumway
-#   #installed: false
-#   set:
-#   - name: initializationTask.script
-#     file: config/dominant/init-script.sh
-#   - name: appConfig
-#     file: config/dominant/sys.config
-#   - name: vmConfig
-#     file: config/vm/erl_inetrc
-# - name: binbase
-#   <<: *default
-#   set:
-#   - name: entrypoint
-#     file: config/binbase/entrypoint.sh
-# - name: binbase-test
-#   <<: *default
-#   set:
-#   - name: entrypoint
-#     file: config/binbase-test/entrypoint.sh
-# - name: proxy-mocketbank
-#   <<: *default
-#   set:
-#   - name: knownCards
-#     file: config/proxy-mocketbank/cards.csv
-#   - name: errorMapping
-#     file: config/proxy-mocketbank/errors.json
-# - name: proxy-mocket-inspector
-#   <<: *default
-# - name: hellgate
-#   <<: *default
-#   set:
-#   - name: appConfig
-#     file: config/hellgate/sys.config
-#   - name: vmConfig
-#     file: config/vm/erl_inetrc
-# - name: capi-pcidss-v2
-#   <<: *default
-#   set:
-#   - name: fetchKeycloakPubkey
-#     file: config/api-common/fetch-keycloak-pubkey.sh
-#   - name: appConfig
-#     file: config/capi-pcidss-v2/sys.config
-#   - name: vmConfig
-#     file: config/vm/erl_inetrc
-#   - name: oopsBody1
-#     file: config/api-common/oops-bodies/sad-kitty1
-#   - name: oopsBody2
-#     file: config/api-common/oops-bodies/sad-kitty2
-#   - name: tokenEncryptionKey1
-#     file: config/api-common/keys/token-encryption-keys/1.jwk
-#   - name: capiPrivkey
-#     file: config/api-common/keys/capi.privkey.pem
-#   needs:
-#     - default/keycloak
-# - name: capi-pcidss-v1
-#   <<: *default
-#   set:
-#   - name: fetchKeycloakPubkey
-#     file: config/api-common/fetch-keycloak-pubkey.sh
-#   - name: appConfig
-#     file: config/capi-pcidss-v1/sys.config
-#   - name: vmConfig
-#     file: config/vm/erl_inetrc
-#   - name: oopsBody1
-#     file: config/api-common/oops-bodies/sad-kitty1
-#   - name: oopsBody2
-#     file: config/api-common/oops-bodies/sad-kitty2
-#   - name: tokenEncryptionKey1
-#     file: config/api-common/keys/token-encryption-keys/1.jwk
-#   - name: capiPrivkey
-#     file: config/api-common/keys/capi.privkey.pem
-#   needs:
-#     - default/keycloak
-# - name: url-shortener
-#   <<: *default
-#   set:
-#   - name: appConfig
-#     file: config/url-shortener/sys.config
-#   - name: vmConfig
-#     file: config/vm/erl_inetrc
-# - name: capi-v1
-#   <<: *default
-#   set:
-#   - name: fetchKeycloakPubkey
-#     file: config/api-common/fetch-keycloak-pubkey.sh
-#   - name: appConfig
-#     file: config/capi-v1/sys.config
-#   - name: vmConfig
-#     file: config/vm/erl_inetrc
-#   - name: oopsBody1
-#     file: config/api-common/oops-bodies/sad-kitty1
-#   - name: oopsBody2
-#     file: config/api-common/oops-bodies/sad-kitty2
-#   - name: tokenEncryptionKey1
-#     file: config/api-common/keys/token-encryption-keys/1.jwk
-#   - name: capiPrivkey
-#     file: config/api-common/keys/capi.privkey.pem
-#   needs:
-#     - default/keycloak
-# - name: capi-v2
-#   <<: *default
-#   set:
-#   - name: fetchKeycloakPubkey
-#     file: config/api-common/fetch-keycloak-pubkey.sh
-#   - name: appConfig
-#     file: config/capi-v2/sys.config
-#   - name: vmConfig
-#     file: config/vm/erl_inetrc
-#   - name: oopsBody1
-#     file: config/api-common/oops-bodies/sad-kitty1
-#   - name: oopsBody2
-#     file: config/api-common/oops-bodies/sad-kitty2
-#   - name: tokenEncryptionKey1
-#     file: config/api-common/keys/token-encryption-keys/1.jwk
-#   - name: capiPrivkey
-#     file: config/api-common/keys/capi.privkey.pem
-#   needs:
-#     - default/keycloak
-# - name: wapi-pcidss-v0
-#   <<: *default
-#   set:
-#   - name: fetchKeycloakPubkey
-#     file: config/api-common/fetch-keycloak-pubkey.sh
-#   - name: appConfig
-#     file: config/wapi-pcidss-v0/sys.config
-#   - name: vmConfig
-#     file: config/vm/erl_inetrc
-#   - name: privatePem
-#     file: config/api-common/keys/capi.privkey.pem
-#   - name: tokenEncryptionKey1
-#     file: config/api-common/keys/token-encryption-keys/1.jwk
-#   needs:
-#     - default/keycloak
-# - name: wapi
-#   <<: *default
-#   set:
-#   - name: fetchKeycloakPubkey
-#     file: config/api-common/fetch-keycloak-pubkey.sh
-#   - name: appConfig
-#     file: config/wapi/sys.config
-#   - name: vmConfig
-#     file: config/vm/erl_inetrc
-#   - name: oopsBody1
-#     file: config/api-common/oops-bodies/sad-kitty1
-#   - name: oopsBody2
-#     file: config/api-common/oops-bodies/sad-kitty2
-#   - name: tokenEncryptionKey1
-#     file: config/api-common/keys/token-encryption-keys/1.jwk
-#   - name: wapiPrivkey
-#     file: config/api-common/keys/capi.privkey.pem
-#   needs:
-#     - default/keycloak
-# - name: payform
-#   <<: *default
-#   set:
-#   - name: appconfig
-#     file: config/payform/appConfig.json
-- name: test-transaction
+- name: zookeeper
+  <<: *default
+  chart: incubator/zookeeper
+  version: 2.1.3
+- name: kafka
+  <<: *default
+  needs:
+  - default/zookeeper
+  chart: incubator/kafka
+  version: 0.21.2
+- name: consul
+  <<: *default
+  chart: stable/consul
+  version: 3.9.5
+- name: postgres
+  <<: *default
+  chart: bitnami/postgresql
+  version: 9.2.0
+  atomic: true
+- name: vault
+  <<: *default
+  chart: hashicorp/vault
+  version: 0.7.0
+  needs:
+  - default/postgres
+  atomic: true
+- name: keycloak-realms
+  <<: *default
+- name: keycloak
+  <<: *default
+  chart: codecentric/keycloak
+  version: 9.0.1
+  needs:
+    - default/postgres
+- name: holmes
+  <<: *default
+- name: riak
+  <<: *default
+  chart: ./services/riak
+  set:
+  - name: config.user
+    file: config/riak/user.yaml
+- name: machinegun
+  <<: *default
+  needs:
+  - default/consul
+  - default/riak
+  - default/kafka
+  set:
+  - name: appConfig
+    file: config/machinegun/config.yaml
+- name: bender
   <<: *default
   set:
-  - name: transaction
-    file: config/test-transaction/test-transaction.sh
-
+  - name: appConfig
+    file: config/bender/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+- name: kds
+  <<: *default
+  set:
+  - name: appConfig
+    file: config/kds/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+  - name: caCrt
+    file: config/kds/ca.crt
+  - name: serverCrt
+    file: config/kds/server.pem
+- name: cds
+  <<: *default
+  needs:
+    - default/kds
+    - default/riak
+  set:
+  - name: appConfig
+    file: config/cds/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+  - name: caCrt
+    file: config/cds/ca.crt
+  - name: clientCrt
+    file: config/cds/client.pem
+- name: shumway
+  <<: *default
+  needs:
+  - default/vault
+  atomic: true
+  set:
+  - name: entrypoint
+    file: config/shumway/entrypoint.sh
+- name: hooker
+  <<: *default
+  set:
+  - name: entrypoint
+    file: config/hooker/entrypoint.sh
+  needs:
+  - default/vault
+  - default/kafka
+- name: dominant
+  <<: *default
+  needs:
+  - default/shumway
+  #installed: false
+  set:
+  - name: initializationTask.script
+    file: config/dominant/init-script.sh
+  - name: appConfig
+    file: config/dominant/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+- name: binbase
+  <<: *default
+  set:
+  - name: entrypoint
+    file: config/binbase/entrypoint.sh
+- name: binbase-test
+  <<: *default
+  set:
+  - name: entrypoint
+    file: config/binbase-test/entrypoint.sh
+- name: proxy-mocketbank
+  <<: *default
+  set:
+  - name: knownCards
+    file: config/proxy-mocketbank/cards.csv
+  - name: errorMapping
+    file: config/proxy-mocketbank/errors.json
+- name: proxy-mocket-inspector
+  <<: *default
+- name: hellgate
+  <<: *default
+  set:
+  - name: appConfig
+    file: config/hellgate/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+- name: capi-pcidss-v2
+  <<: *default
+  set:
+  - name: fetchKeycloakPubkey
+    file: config/api-common/fetch-keycloak-pubkey.sh
+  - name: appConfig
+    file: config/capi-pcidss-v2/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+  - name: oopsBody1
+    file: config/api-common/oops-bodies/sad-kitty1
+  - name: oopsBody2
+    file: config/api-common/oops-bodies/sad-kitty2
+  - name: tokenEncryptionKey1
+    file: config/api-common/keys/token-encryption-keys/1.jwk
+  - name: capiPrivkey
+    file: config/api-common/keys/capi.privkey.pem
+  needs:
+    - default/keycloak
+- name: capi-pcidss-v1
+  <<: *default
+  set:
+  - name: fetchKeycloakPubkey
+    file: config/api-common/fetch-keycloak-pubkey.sh
+  - name: appConfig
+    file: config/capi-pcidss-v1/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+  - name: oopsBody1
+    file: config/api-common/oops-bodies/sad-kitty1
+  - name: oopsBody2
+    file: config/api-common/oops-bodies/sad-kitty2
+  - name: tokenEncryptionKey1
+    file: config/api-common/keys/token-encryption-keys/1.jwk
+  - name: capiPrivkey
+    file: config/api-common/keys/capi.privkey.pem
+  needs:
+    - default/keycloak
+- name: url-shortener
+  <<: *default
+  set:
+  - name: appConfig
+    file: config/url-shortener/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+- name: capi-v1
+  <<: *default
+  set:
+  - name: fetchKeycloakPubkey
+    file: config/api-common/fetch-keycloak-pubkey.sh
+  - name: appConfig
+    file: config/capi-v1/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+  - name: oopsBody1
+    file: config/api-common/oops-bodies/sad-kitty1
+  - name: oopsBody2
+    file: config/api-common/oops-bodies/sad-kitty2
+  - name: tokenEncryptionKey1
+    file: config/api-common/keys/token-encryption-keys/1.jwk
+  - name: capiPrivkey
+    file: config/api-common/keys/capi.privkey.pem
+  needs:
+    - default/keycloak
+- name: capi-v2
+  <<: *default
+  set:
+  - name: fetchKeycloakPubkey
+    file: config/api-common/fetch-keycloak-pubkey.sh
+  - name: appConfig
+    file: config/capi-v2/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+  - name: oopsBody1
+    file: config/api-common/oops-bodies/sad-kitty1
+  - name: oopsBody2
+    file: config/api-common/oops-bodies/sad-kitty2
+  - name: tokenEncryptionKey1
+    file: config/api-common/keys/token-encryption-keys/1.jwk
+  - name: capiPrivkey
+    file: config/api-common/keys/capi.privkey.pem
+  needs:
+    - default/keycloak
+- name: wapi-pcidss-v0
+  <<: *default
+  set:
+  - name: fetchKeycloakPubkey
+    file: config/api-common/fetch-keycloak-pubkey.sh
+  - name: appConfig
+    file: config/wapi-pcidss-v0/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+  - name: privatePem
+    file: config/api-common/keys/capi.privkey.pem
+  - name: tokenEncryptionKey1
+    file: config/api-common/keys/token-encryption-keys/1.jwk
+  needs:
+    - default/keycloak
+- name: wapi
+  <<: *default
+  set:
+  - name: fetchKeycloakPubkey
+    file: config/api-common/fetch-keycloak-pubkey.sh
+  - name: appConfig
+    file: config/wapi/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+  - name: oopsBody1
+    file: config/api-common/oops-bodies/sad-kitty1
+  - name: oopsBody2
+    file: config/api-common/oops-bodies/sad-kitty2
+  - name: tokenEncryptionKey1
+    file: config/api-common/keys/token-encryption-keys/1.jwk
+  - name: wapiPrivkey
+    file: config/api-common/keys/capi.privkey.pem
+  needs:
+    - default/keycloak
+- name: payform
+  <<: *default
+  set:
+  - name: appconfig
+    file: config/payform/appConfig.json
+- name: test-transaction
+  <<: *default

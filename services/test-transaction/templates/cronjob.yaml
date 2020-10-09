@@ -5,12 +5,15 @@ metadata:
   labels:
     {{- include "test-transaction.labels" . | nindent 4 }}
 spec:
-  schedule: "*/1 * * * *"
+  schedule: "{{ .Values.schedule }}"
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            {{- include "test-transaction.labels" . | nindent 12 }}
         spec:
           {{- with .Values.imagePullSecrets }}
           imagePullSecrets:
@@ -24,13 +27,25 @@ spec:
                 - name: config-volume
                   mountPath: /opt/test-transaction/test-transaction.sh
                   subPath: test-transaction.sh
-              command: ["/opt/test-transaction/test-transaction.sh"]
+                  readOnly: true
+              args:
+                - "{{ .Values.keycloakUrl }}"
+                - "{{ .Values.userName }}"
+                - "{{ .Values.userPassword }}"
+                - http://{{ include "test-transaction.fullname" . }}-gateway
+                {{- if .Values.useIPv4 }}
+                - "-4"
+                {{- end }}
+                {{- if .Values.createTestShop }}
+                - --create-test-shop
+                {{- end }}
           volumes:
             - name: config-volume
               configMap:
                 name: {{ include "test-transaction.fullname" . }}
                 items:
-                - key: test-transaction.sh
-                  path: test-transaction.sh
-                  mode: 0755
+                - key: nginx.conf
+                  path: nginx.conf
+                - key: virtualhost.conf
+                  path: virtualhost.conf
           restartPolicy: OnFailure

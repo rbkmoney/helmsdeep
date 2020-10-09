@@ -6,5 +6,69 @@ metadata:
   labels:
     {{- include "test-transaction.labels" . | nindent 4 }}
 data:
-  test-transaction.sh: |
-    {{- .Values.transaction | nindent 4 }}
+  nginx.conf: |
+    user nginx;
+    worker_processes  3;
+    error_log  /var/log/nginx/error.log;
+    events {
+      worker_connections  10240;
+    }
+    http {
+      log_format  main
+              'remote_addr:$remote_addr\t'
+              'time_local:$time_local\t'
+              'method:$request_method\t'
+              'uri:$request_uri\t'
+              'host:$host\t'
+              'status:$status\t'
+              'bytes_sent:$body_bytes_sent\t'
+              'referer:$http_referer\t'
+              'useragent:$http_user_agent\t'
+              'forwardedfor:$http_x_forwarded_for\t'
+              'request_time:$request_time';
+      access_log	/var/log/nginx/access.log main;
+      server {
+          listen       80;
+          server_name  _;
+          location / {
+              root   html;
+              index  index.html index.htm;
+          }
+      }
+      include /etc/nginx/virtualhost/virtualhost.conf;
+    }
+  virtualhost.conf: |
+    upstream capidssv1 {
+      server capi-pcidss-v1:8080;
+      keepalive 1024;
+    }
+    upstream capidssv2 {
+      server capi-pcidss-v2:8080;
+      keepalive 1024;
+    }
+    upstream capiv1 {
+      server capi-v1:8080;
+      keepalive 1024;
+    }
+    upstream capiv2 {
+      server capi-v2:8080;
+      keepalive 1024;
+    }
+
+    server {
+      listen 80 default_server;
+      access_log /var/log/nginx/app.access_log main;
+      error_log /var/log/nginx/app.error_log;
+      location =/v1/processing/payment-resources {
+        proxy_pass http://capidssv1/v1/processing/payment-resources;
+      }
+      location =/v2/processing/payment-resources {
+        proxy_pass http://capidssv2/v2/processing/payment-resources;
+      }
+      location /v1 {
+        proxy_pass http://capiv1/v1;
+      }
+      location /v2 {
+        proxy_pass http://capiv2/v2;
+      }
+    }
