@@ -1,6 +1,6 @@
 #!/bin/sh
 
-    ./check_test-transaction http://keycloak-http demo_merchant Parolec0 http://apigateway \
+/opt/test_transaction/bin/test_transaction http://keycloak-http demo_merchant Parolec0 http://apigateway \
         -4 \
         -p 3000 -r 3 \
         --connect-timeout 1000 --send-timeout 500 --recv-timeout 10000 \

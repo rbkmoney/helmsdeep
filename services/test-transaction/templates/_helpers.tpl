@@ -57,8 +57,8 @@ Create the name of the service account to use
 */}}
 {{- define "test-transaction.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "test-transaction.fullname" .) .Values.serviceAccount.name }}
+    {{- default (include "test-transaction.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
-{{- default "default" .Values.serviceAccount.name }}
+    {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}

@@ -14,7 +14,7 @@ spec:
         spec:
           {{- with .Values.imagePullSecrets }}
           imagePullSecrets:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           serviceAccountName: {{ include "test-transaction.serviceAccountName" . }}
           containers:
@@ -24,11 +24,7 @@ spec:
                 - name: config-volume
                   mountPath: /opt/test-transaction/test-transaction.sh
                   subPath: test-transaction.sh
-              command:
-              args:
-              - /bin/sh
-              - -c
-              - /opt/test-transaction/test-transaction.sh
+              command: ["/opt/test-transaction/test-transaction.sh"]
           volumes:
             - name: config-volume
               configMap:
