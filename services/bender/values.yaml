@@ -5,7 +5,7 @@
 replicaCount: 3
 
 image:
-  repository: dr2.rbkmoney.com/rbkmoney/bender
+  repository: docker.io/rbkmoney/bender
   pullPolicy: IfNotPresent
 
 imagePullSecrets:

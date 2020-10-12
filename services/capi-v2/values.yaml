@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: dr2.rbkmoney.com/rbkmoney/capi-v2
+  repository: docker.io/rbkmoney/capi-v2
   pullPolicy: IfNotPresent
 
 imagePullSecrets:

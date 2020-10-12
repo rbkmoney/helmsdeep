@@ -1,5 +1,5 @@
 image:
-  repository: dr2.rbkmoney.com/rbkmoney/fistful-server
+  repository: docker.io/rbkmoney/fistful-server
   pullPolicy: IfNotPresent
 
 replicaCount: 1

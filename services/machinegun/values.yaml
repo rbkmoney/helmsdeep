@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: dr2.rbkmoney.com/rbkmoney/machinegun
+  repository: docker.io/rbkmoney/machinegun
   pullPolicy: IfNotPresent
 
 imagePullSecrets:

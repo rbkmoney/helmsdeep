@@ -1,5 +1,5 @@
 image:
-  repository: dr2.rbkmoney.com/rbkmoney/holmes
+  repository: docker.io/rbkmoney/holmes
   pullPolicy: IfNotPresent
 
 imagePullSecrets:

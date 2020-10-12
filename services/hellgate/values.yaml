@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 image:
-  repository: dr2.rbkmoney.com/rbkmoney/hellgate
+  repository: docker.io/rbkmoney/hellgate
   pullPolicy: IfNotPresent
 
 imagePullSecrets:

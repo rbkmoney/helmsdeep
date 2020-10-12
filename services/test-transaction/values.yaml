@@ -13,7 +13,7 @@ createTestShop: true
 schedule: "*/1 * * * *"
 
 image:
-  repository: dr2.rbkmoney.com/rbkmoney/test_transaction_v2
+  repository: docker.io/rbkmoney/test_transaction_v2
   pullPolicy: IfNotPresent
 
 imagePullSecrets:

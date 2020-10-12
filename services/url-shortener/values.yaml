@@ -1,5 +1,5 @@
 image:
-  repository: dr2.rbkmoney.com/rbkmoney/url-shortener
+  repository: docker.io/rbkmoney/url-shortener
   pullPolicy: IfNotPresent
 
 replicaCount: 1
