@@ -8,6 +8,7 @@ spec:
   schedule: "{{ .Values.schedule }}"
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       template:
