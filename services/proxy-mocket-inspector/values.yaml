@@ -1,5 +1,5 @@
 image:
-  repository: rbkmoney/proxy-mocket-inspector
+  repository: docker.io/rbkmoney/proxy-mocket-inspector
   pullPolicy: IfNotPresent
 
 replicaCount: 3
