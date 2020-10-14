@@ -11,7 +11,7 @@ metadata:
 spec:
   endpointSelector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "machinegun.name" . }}
+      k8s:app.kubernetes.io/name: {{ include "machinegun.name" . }}
   ingress:
     - toPorts:
       - ports:
@@ -19,19 +19,19 @@ spec:
           port: "8022"
       fromEndpoints:
         - matchLabels:
-            app.kubernetes.io/name: hellgate
+            k8s:app.kubernetes.io/name: hellgate
         - matchLabels:
-            app.kubernetes.io/name: dominant
+            k8s:app.kubernetes.io/name: dominant
         - matchLabels:
-            app.kubernetes.io/name: url-shortener
+            k8s:app.kubernetes.io/name: url-shortener
         - matchLabels:
-            app.kubernetes.io/name: shumway
+            k8s:app.kubernetes.io/name: shumway
         - matchLabels:
-            app.kubernetes.io/name: xrates
+            k8s:app.kubernetes.io/name: xrates
         - matchLabels:
-            app.kubernetes.io/name: wapi
+            k8s:app.kubernetes.io/name: wapi
         - matchLabels:
-            app.kubernetes.io/name: bender
+            k8s:app.kubernetes.io/name: bender
     - fromEndpoints:
       - matchLabels:
           component: consul-consul
@@ -39,7 +39,7 @@ spec:
     - toPorts:
       - ports:
         - protocol: TCP
-          port: 8500
+          port: "8500"
       toEndpoints:
         - matchLabels:
             component: consul-consul
