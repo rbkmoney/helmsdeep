@@ -11,7 +11,7 @@ metadata:
 spec:
   endpointSelector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "cds.name" . }}
+      k8s:app.kubernetes.io/name: {{ include "cds.name" . }}
   ingress:
     - toPorts:
       - ports:
@@ -19,10 +19,10 @@ spec:
           port: "8022"
       fromEndpoints:
         - matchLabels:
-          k8s:app.kubernetes.io/name: kds
+            k8s:app.kubernetes.io/name: kds
         - matchLabels:
-          k8s:service-class: provider-adapter
+            k8s:service-class: provider-adapter
         - matchLabels:
-          k8s:service-class: capi-pcidss
+            k8s:service-class: capi-pcidss
         - matchLabels:
-          k8s:service-class: wapi-pcidss
+            k8s:service-class: wapi-pcidss

@@ -19,10 +19,10 @@ spec:
           port: "8022"
       fromEndpoints:
         - matchLabels:
-          k8s:app.kubernetes.io/name: machinegun
+            k8s:app.kubernetes.io/name: machinegun
         - matchLabels:
-          k8s:app.kubernetes.io/name: hellgate
+            k8s:app.kubernetes.io/name: hellgate
         - matchLabels:
-          k8s:service-class: capi
+            k8s:service-class: capi
         - matchLabels:
-          k8s:service-class: wapi
+            k8s:service-class: wapi
