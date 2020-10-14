@@ -40,8 +40,6 @@ releases:
   version: 0.21.2
 - name: consul
   <<: *default
-  chart: stable/consul
-  version: 3.9.5
 - name: postgres
   <<: *default
   chart: bitnami/postgresql
