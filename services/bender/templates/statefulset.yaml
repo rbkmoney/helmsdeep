@@ -35,6 +35,9 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: HOME
+            value: "/"
           ports:
             - name: bender
               containerPort: {{ .Values.service.port }}
