@@ -1,1 +1,5 @@
 replicaCount: 1
+
+ingress:
+  host: rbkmoney.standoff.city
+  path: /v2/processing/payment-resources
