@@ -16,7 +16,7 @@ data:
         allowed_roles="*" \
         connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql.default:5432/shumway?sslmode=disable" \
         username="postgres" \
-        password="uw2dFhY9EP"
+        password="H@ckM3"
     vault write database/roles/db-app \
         db_name=shumway \
         creation_statements="Create schema if not exists shm;
@@ -32,7 +32,7 @@ data:
         allowed_roles="*" \
         connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql.default:5432/hook?sslmode=disable" \
         username="postgres" \
-        password="uw2dFhY9EP"
+        password="H@ckM3"
     vault write database/roles/db-app-hook \
         db_name=hook \
         creation_statements="Create schema if not exists hook;

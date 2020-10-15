@@ -1,7 +1,7 @@
 replicas: 1
 
 #This is just init password for vault connections.
-postgresqlPassword: "uw2dFhY9EP"
+postgresqlPassword: "H@ckM3"
 
 initdbScripts:
   rbk-dbs.sql: |
