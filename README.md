@@ -109,7 +109,7 @@ vault write database/config/mydatabase \
     allowed_roles="*" \
     connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql.default:5432/?sslmode=disable" \
     username="postgres" \
-    password="uw2dFhY9EP"
+    password="H@ckM3"
 
 vault write database/roles/db-app \
     db_name=mydatabase \

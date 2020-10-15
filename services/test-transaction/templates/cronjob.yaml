@@ -24,11 +24,6 @@ spec:
           containers:
             - name: {{ .Chart.Name }}
               image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
-              volumeMounts:
-                - name: config-volume
-                  mountPath: /opt/test-transaction/test-transaction.sh
-                  subPath: test-transaction.sh
-                  readOnly: true
               args:
                 - "{{ .Values.keycloakUrl }}"
                 - "{{ .Values.userName }}"
