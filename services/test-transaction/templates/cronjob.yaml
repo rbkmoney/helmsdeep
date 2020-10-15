@@ -40,13 +40,4 @@ spec:
                 {{- if .Values.createTestShop }}
                 - --create-test-shop
                 {{- end }}
-          volumes:
-            - name: config-volume
-              configMap:
-                name: {{ include "test-transaction.fullname" . }}
-                items:
-                - key: nginx.conf
-                  path: nginx.conf
-                - key: virtualhost.conf
-                  path: virtualhost.conf
           restartPolicy: OnFailure

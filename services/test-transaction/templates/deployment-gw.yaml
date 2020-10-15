@@ -3,12 +3,12 @@ kind: Deployment
 metadata:
   name: {{ include "test-transaction.fullname" . }}-gateway
   labels:
-    {{- include "test-transaction.labels" . | nindent 4 }}
+    {{- include "test-transaction.gwLabels" . | nindent 4 }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "test-transaction.selectorLabels" . | nindent 6 }}
+      {{- include "test-transaction.gwSelectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -17,7 +17,7 @@ spec:
         {{- end }}
         test-transaction/properties-hash: {{ include "test-transaction.gwPropertiesHash" . }}
       labels:
-        {{- include "test-transaction.selectorLabels" . | nindent 8 }}
+        {{- include "test-transaction.gwSelectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
