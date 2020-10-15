@@ -4,9 +4,6 @@ image:
 
 replicaCount: 3
 
-imagePullSecrets:
-  name: dr2reg
-
 nameOverride: ""
 fullnameOverride: ""
 

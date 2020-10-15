@@ -8,9 +8,6 @@ image:
   repository: docker.io/rbkmoney/bender
   pullPolicy: IfNotPresent
 
-imagePullSecrets:
-  - name: dr2reg
-
 beam:
   disableSBWT: false
 

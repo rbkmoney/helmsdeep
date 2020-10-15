@@ -15,9 +15,6 @@ entrypoint: |
 errorMapping: ""
 knownCards: ""
 
-imagePullSecrets:
-  - name: dr2reg
-
 nameOverride: ""
 fullnameOverride: ""
 

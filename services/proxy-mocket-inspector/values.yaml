@@ -9,9 +9,6 @@ entrypoint: |
   set -ue
   exec java ${@}
 
-imagePullSecrets:
-  - name: dr2reg
-
 nameOverride: ""
 fullnameOverride: ""
 

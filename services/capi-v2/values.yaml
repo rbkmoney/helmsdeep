@@ -8,9 +8,6 @@ image:
   repository: docker.io/rbkmoney/capi-v2
   pullPolicy: IfNotPresent
 
-imagePullSecrets:
-  - name: dr2reg
-
 beam:
   disableSBWT: false
 

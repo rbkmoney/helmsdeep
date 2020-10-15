@@ -2,9 +2,6 @@ image:
   repository: docker.io/rbkmoney/dominant
   pullPolicy: IfNotPresent
 
-imagePullSecrets:
-  - name: dr2reg
-
 initializationTask:
   create: false
   repository: docker.io/rbkmoney/holmes
