@@ -19,8 +19,10 @@ spec:
         {{- end }}
         hooker/properties-hash: {{ include "hooker.propertiesHash" . }}
     spec:
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        - name: {{ .Values.imagePullSecrets.name }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ include "hooker.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
