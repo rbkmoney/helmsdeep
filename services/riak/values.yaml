@@ -24,8 +24,7 @@ serviceAccount:
   name:
 
 podSecurityContext:
-   enabled: false
-   fsGroup: 102
+  fsGroup: 102
 
 podAnnotations: {}
 
