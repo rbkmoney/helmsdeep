@@ -31,6 +31,9 @@ consuela:
   discovery:
     tags: []
 
+logging:
+  out_type: stdout
+
 # Consul client settings.
 # Required when distributed machine registry is enabled.
 consul:
