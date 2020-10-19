@@ -14,3 +14,9 @@ spec:
             backend:
               serviceName: {{ include "wapi-pcidss-v0.fullname" . }}
               servicePort: {{ .Values.service.port }}
+{{ if .Values.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}
+      secretName: {{ .Values.ingress.tls.secret }}
+{{- end -}}

@@ -13,3 +13,9 @@ spec:
         backend:
           serviceName: {{ include "wapi.fullname" . }}
           servicePort: {{ .Values.service.ports.ingressPort }}
+{{ if .Values.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}
+      secretName: {{ .Values.ingress.tls.secret }}
+{{- end -}}

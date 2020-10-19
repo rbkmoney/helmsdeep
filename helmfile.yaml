@@ -20,6 +20,10 @@ templates:
     missingFileHandler: Warn
     values:
     - config/{{`{{ .Release.Name }}`}}/values.yaml
+    - ingress:
+        tls:
+          enabled: true
+          secret: default/standoff
     timeout: 600
 
 
