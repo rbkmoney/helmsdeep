@@ -2,6 +2,8 @@ image:
   repository: docker.io/rbkmoney/hooker
   pullPolicy: IfNotPresent
 
+imagePullSecrets: []
+
 replicaCount: 3
 
 nameOverride: ""

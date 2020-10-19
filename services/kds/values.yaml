@@ -6,6 +6,8 @@ image:
   repository: docker.io/rbkmoney/kds
   pullPolicy: IfNotPresent
 
+imagePullSecrets: []
+
 initializationTask:
   create: false
   repository: docker.io/rbkmoney/holmes

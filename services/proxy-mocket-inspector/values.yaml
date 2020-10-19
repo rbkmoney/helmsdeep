@@ -2,6 +2,8 @@ image:
   repository: docker.io/rbkmoney/proxy-mocket-inspector
   pullPolicy: IfNotPresent
 
+imagePullSecrets: []
+
 replicaCount: 3
 
 entrypoint: |

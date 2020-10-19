@@ -16,6 +16,8 @@ image:
   repository: docker.io/rbkmoney/test_transaction_v2
   pullPolicy: IfNotPresent
 
+imagePullSecrets: []
+
 nameOverride: ""
 fullnameOverride: ""
 

@@ -8,6 +8,8 @@ image:
   repository: docker.io/rbkmoney/capi-v1
   pullPolicy: IfNotPresent
 
+imagePullSecrets: []
+
 beam:
   disableSBWT: false
 
