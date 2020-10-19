@@ -1,4 +1,6 @@
-replicas: 1
+replicas: 3
+persistence:
+  enabled: true
 
 zookeeper:
   ## If true, install the Zookeeper chart alongside Kafka
