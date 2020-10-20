@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ include "test-transaction.fullname" . }}-gateway
   labels:
-    {{- include "test-transaction.labels" . | nindent 4 }}
+    {{- include "test-transaction.gwLabels" . | nindent 4 }}
 spec:
   type: {{ .Values.gatewayService.type }}
   ports:
@@ -12,4 +12,4 @@ spec:
       protocol: TCP
       name: api
   selector:
-    {{- include "test-transaction.selectorLabels" . | nindent 4 }}
+    {{- include "test-transaction.gwSelectorLabels" . | nindent 4 }}

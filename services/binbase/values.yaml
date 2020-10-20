@@ -1,13 +1,12 @@
 image:
-  repository: dmitryrbk/binbase
+  repository: docker.io/rbkmoney/binbase-test-data
   pullPolicy: IfNotPresent
+
+imagePullSecrets: []
 
 replicaCount: 3
 
 cdsUrl: http://cds.default.svc.cluster.local:8022/v2/storage
-
-imagePullSecrets:
-  - name: binbasereg
 
 nameOverride: ""
 fullnameOverride: ""

@@ -2,10 +2,9 @@ image:
   repository: docker.io/rbkmoney/fistful-server
   pullPolicy: IfNotPresent
 
-replicaCount: 1
+imagePullSecrets: []
 
-imagePullSecrets:
-  - name: dr2reg
+replicaCount: 1
 
 beam:
   disableSBWT: false

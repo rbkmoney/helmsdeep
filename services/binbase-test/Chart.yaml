@@ -1,6 +1,0 @@
-apiVersion: v2
-name: binbase-test
-description: Bank card information retrieval service
-type: application
-version: 0.1.0
-appVersion: f4a76ddf86d98838d21e0773cdf3603e158dabc5

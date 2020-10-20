@@ -1,1 +1,7 @@
 replicaCount: 1
+
+securityContext:
+ capabilities:
+   add: 
+   - "SYS_CHROOT"
+   - "NET_RAW"

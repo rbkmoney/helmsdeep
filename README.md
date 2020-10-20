@@ -8,35 +8,25 @@ Helm Charts Repo
 - config - настройки чартов, по каталогу на сервис
 - libraries - чарты вспомогательных библиотек, по каталогу на библиотеку
 - docs - документация
+- tools - вспомогательные скрипты для миникуба
 
 Требования
 ----------
 
-Для работы с сервисами требуется Helm 3.2.1 и [Helmfile v0.116.0](https://github.com/roboll/helmfile).
-Для запуска всего стека рекомендуется выделить на minikube не менее **3 CPU, 8GB RAM, 30GB Disk**
+Для работы с сервисами требуется Helm 3.2.1+, [Helmfile v0.116.0](https://github.com/roboll/helmfile), kubectl, minikube и VirtualBox. Без VirtualBox можно обойтись если запускать миникуб с другим драйвером, но этот сценарий - за рамками ридми.
+Для запуска всего стека рекомендуется выделить на minikube **4 CPU, 10GB RAM, 40GB Disk**
 
 Запуск
 ------
-Для доступа к приватному docker registry необходимо создать secret:
 
+Холодный старт (~20 минут)
 ```shell
-$ kubectl create secret docker-registry dr2reg --docker-server=dr2.rbkmoney.com --docker-username=$USERNAME --docker-password=$PASSWORD
-
-```
-> !**NOTES** С драйвером hyperkit и реже с драйвером virtualbox бывают проблемы с доступами к ресурсам за VPN, где находится dr2 registry. В этом случае рекомендуется запускаться с драйвером docker:
-` minikube start --driver=docker`
-
-Для быстрой и автоматической инициализации Vault нужен configMap:
-```
-kubectl apply -f config/vault/init-cm.yaml
+$ ./tools/cold_reset.sh && helmfile sync --concurrency 2
 ```
 
-Добавление в minikube ingress
-------------------------------
-
+Быстрый резет без повторного скачивания образов (~7 минут)
 ```shell
-$ minikube addons enable ingress
-
+$ ./tools/quick_reset.sh && helmfile sync --concurrency 2
 ```
 
 Пример запуска сервисов:
@@ -77,7 +67,7 @@ You can use machinegun:8022 to connect to the machinegun woody interface.
 
 Работа с Vault
 ----------
-Волт запускается в dev режиме, то есть сразу инициированный и unseal. 
+Волт запускается в dev режиме, то есть сразу инициированный и unseal.
 Референс для работы с секретами в [доке vault](https://www.hashicorp.com/blog/dynamic-database-credentials-with-vault-and-kubernetes/)
 
 <details>
@@ -111,7 +101,7 @@ vault write database/config/mydatabase \
     allowed_roles="*" \
     connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql.default:5432/?sslmode=disable" \
     username="postgres" \
-    password="uw2dFhY9EP"
+    password="H@ckM3"
 
 vault write database/roles/db-app \
     db_name=mydatabase \
@@ -156,7 +146,7 @@ requrements:
 
 Доступ к логам в kibana
 -----------
-[docs reference](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-deploy-kibana.html) 
+[docs reference](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-deploy-kibana.html)
 our name is "rbk" not "quickstart"
 
 Use kubectl port-forward to access Kibana from your local workstation:

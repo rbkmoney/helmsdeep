@@ -2,10 +2,9 @@ image:
   repository: docker.io/rbkmoney/wapi
   pullPolicy: IfNotPresent
 
-replicaCount: 3
+imagePullSecrets: []
 
-imagePullSecrets:
-  name: dr2reg
+replicaCount: 3
 
 beam:
   disableSBWT: false
