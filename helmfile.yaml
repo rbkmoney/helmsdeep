@@ -20,12 +20,14 @@ templates:
     missingFileHandler: Warn
     values:
     - config/{{`{{ .Release.Name }}`}}/values.yaml
+    timeout: 600
+
+  ingress: &ingress
+    values:
     - ingress:
         tls:
           enabled: true
           secret: default/standoff
-    timeout: 600
-
 
 helmfiles:
 - # Path to the helmfile state file being processed BEFORE releases in this state file
@@ -169,6 +171,7 @@ releases:
     file: config/vm/erl_inetrc
 - name: capi-pcidss-v2
   <<: *default
+  <<: *ingress
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -188,6 +191,7 @@ releases:
     - default/keycloak
 - name: capi-pcidss-v1
   <<: *default
+  <<: *ingress
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -214,6 +218,7 @@ releases:
     file: config/vm/erl_inetrc
 - name: capi-v1
   <<: *default
+  <<: *ingress
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -233,6 +238,7 @@ releases:
     - default/keycloak
 - name: capi-v2
   <<: *default
+  <<: *ingress
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -252,6 +258,7 @@ releases:
     - default/keycloak
 - name: wapi-pcidss-v0
   <<: *default
+  <<: *ingress
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -267,6 +274,7 @@ releases:
     - default/keycloak
 - name: wapi
   <<: *default
+  <<: *ingress
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -286,6 +294,7 @@ releases:
     - default/keycloak
 - name: payform
   <<: *default
+  <<: *ingress
   set:
   - name: appconfig
     file: config/payform/appConfig.json

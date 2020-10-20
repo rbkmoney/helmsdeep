@@ -1,0 +1,4 @@
+ingress:
+  tls:
+    enabled: true
+    secret: default/standoff
