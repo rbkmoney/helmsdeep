@@ -26,6 +26,7 @@ spec:
     - add_cloud_metadata: {}
     - add_host_metadata: {}
     - decode_json_fields:
+        # See https://www.elastic.co/guide/en/beats/filebeat/current/decode-json-fields.html for option details
         fields:
         - message
         target: ""
