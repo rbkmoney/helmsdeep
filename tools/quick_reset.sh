@@ -6,4 +6,3 @@ kubectl delete deploy,rs,pvc,svc,crd,ing,sts,job,cj,cm,secret,sa --all \
 && kubectl delete -f https://raw.githubusercontent.com/cilium/cilium/v1.8/install/kubernetes/quick-install.yaml || echo "cilium not found" \
 && kubectl apply -f https://raw.githubusercontent.com/cilium/cilium/v1.8/install/kubernetes/quick-install.yaml \
 && kubectl apply -f config/vault/init-cm.yaml
-
