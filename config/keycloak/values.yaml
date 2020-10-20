@@ -34,3 +34,15 @@ extraVolumeMounts: |
   - name: keycloak-realms-volume
     mountPath: "/realm/"
     readOnly: true
+
+ingress:
+  enabled: true
+  rules:
+    -
+      host: 'auth.rbkmoney.standoff.city'
+      paths: 
+        - /
+  tls:
+    - hosts:
+        - auth.rbkmoney.standoff.city
+      secretName: "default/standoff"

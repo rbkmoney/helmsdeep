@@ -25,6 +25,7 @@ templates:
   ingress: &ingress
     values:
     - ingress:
+        host: api.rbkmoney.standoff.city
         tls:
           enabled: true
           secret: default/standoff
