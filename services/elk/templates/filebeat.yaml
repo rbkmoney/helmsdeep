@@ -22,14 +22,6 @@ spec:
               type: container
               paths:
               - /var/log/containers/*${data.kubernetes.container.id}.log
-          templates:
-            - condition:
-                equals:
-                  kubernetes.namespace: default
-              config:
-                - type: log
-                  paths:
-                    - /datalog/rbk/${data.kubernetes.container.name}/*.json
     processors:
     - add_cloud_metadata: {}
     - add_host_metadata: {}
@@ -59,8 +51,6 @@ spec:
             mountPath: /var/log/pods
           - name: varlibdockercontainers
             mountPath: /var/lib/docker/containers
-          - name: rbkdatalogfolder
-            mountPath: /datalog/rbk
           env:
             - name: NODE_NAME
               valueFrom:
@@ -76,9 +66,6 @@ spec:
         - name: varlibdockercontainers
           hostPath:
             path: /var/lib/docker/containers
-        - name: rbkdatalogfolder
-          hostPath:
-            path: /datalog/rbk
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
