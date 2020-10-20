@@ -1,8 +1,8 @@
-# Look for reference at https://github.com/helm/charts/blob/master/stable/prometheus-operator/values.yaml#L1975
+# Look for reference at https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L2008
 prometheus:
   additionalServiceMonitors:
     - name: "rbk-intservice"
-      selector: 
+      selector:
         matchLabels:
           prometheusmetrics.enabled: "true"
 
