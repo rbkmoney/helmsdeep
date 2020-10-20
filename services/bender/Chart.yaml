@@ -3,4 +3,4 @@ name: bender
 description: Service for binding external IDs to internal IDs
 type: application
 version: 0.1.0
-appVersion: eadd87e750ee771d512a9bf90d3dbbe083e42175
+appVersion: 6db9c04a83e5757bd5c2a70614aff7fe71687f94

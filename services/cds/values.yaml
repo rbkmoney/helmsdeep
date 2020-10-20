@@ -3,11 +3,10 @@
 # Declare variables to be passed into your templates.
 
 image:
-  repository: dr2.rbkmoney.com/rbkmoney/cds
+  repository: docker.io/rbkmoney/cds
   pullPolicy: IfNotPresent
 
-imagePullSecrets:
-  - name: dr2reg
+imagePullSecrets: []
 
 beam:
   disableSBWT: false
