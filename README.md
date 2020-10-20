@@ -8,33 +8,25 @@ Helm Charts Repo
 - config - настройки чартов, по каталогу на сервис
 - libraries - чарты вспомогательных библиотек, по каталогу на библиотеку
 - docs - документация
+- tools - вспомогательные скрипты для миникуба
 
 Требования
 ----------
 
-Для работы с сервисами требуется Helm 3.2.1 и [Helmfile v0.116.0](https://github.com/roboll/helmfile).
-Для запуска всего стека рекомендуется выделить на minikube не менее **3 CPU, 8GB RAM, 30GB Disk**
+Для работы с сервисами требуется Helm 3.2.1+, [Helmfile v0.116.0](https://github.com/roboll/helmfile), kubectl, minikube и VirtualBox. Без VirtualBox можно обойтись если запускать миникуб с другим драйвером, но этот сценарий - за рамками ридми.
+Для запуска всего стека рекомендуется выделить на minikube **4 CPU, 10GB RAM, 40GB Disk**
 
 Запуск
 ------
 
+Холодный старт (~20 минут)
 ```shell
-$ minikube start --cpus=4 --memory="10g" --disk-size="40g" --addons="ingress" --driver="virtualbox" --network-plugin="cni" --extra-config="kubelet.network-plugin=cni"
-$ minikube ssh -- sudo mount bpffs -t bpf /sys/fs/bpf
-$ kubectl create -f https://raw.githubusercontent.com/cilium/cilium/v1.8/install/kubernetes/quick-install.yaml
+$ ./tools/cold_reset.sh && helmfile sync --concurrency 2
 ```
 
-Для быстрой и автоматической инициализации Vault нужен configMap:
-```
-kubectl apply -f config/vault/init-cm.yaml
-```
-
-Добавление в minikube ingress
-------------------------------
-
+Быстрый резет без повторного скачивания образов (~7 минут)
 ```shell
-$ minikube addons enable ingress
-
+$ ./tools/quick_reset.sh && helmfile sync --concurrency 2
 ```
 
 Пример запуска сервисов:
@@ -75,7 +67,7 @@ You can use machinegun:8022 to connect to the machinegun woody interface.
 
 Работа с Vault
 ----------
-Волт запускается в dev режиме, то есть сразу инициированный и unseal. 
+Волт запускается в dev режиме, то есть сразу инициированный и unseal.
 Референс для работы с секретами в [доке vault](https://www.hashicorp.com/blog/dynamic-database-credentials-with-vault-and-kubernetes/)
 
 <details>
@@ -154,7 +146,7 @@ requrements:
 
 Доступ к логам в kibana
 -----------
-[docs reference](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-deploy-kibana.html) 
+[docs reference](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-deploy-kibana.html)
 our name is "rbk" not "quickstart"
 
 Use kubectl port-forward to access Kibana from your local workstation:
