@@ -8,8 +8,7 @@ image:
   repository: docker.io/rbkmoney/machinegun
   pullPolicy: IfNotPresent
 
-imagePullSecrets:
-  - name: dr2reg
+imagePullSecrets: []
 
 nameOverride: ""
 fullnameOverride: ""

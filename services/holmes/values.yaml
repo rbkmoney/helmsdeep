@@ -2,8 +2,7 @@ image:
   repository: docker.io/rbkmoney/holmes
   pullPolicy: IfNotPresent
 
-imagePullSecrets:
-  - name: dr2reg
+imagePullSecrets: []
 
 replicaCount: 1
 

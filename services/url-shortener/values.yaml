@@ -2,10 +2,9 @@ image:
   repository: docker.io/rbkmoney/url-shortener
   pullPolicy: IfNotPresent
 
-replicaCount: 1
+imagePullSecrets: []
 
-imagePullSecrets:
-  - name: dr2reg
+replicaCount: 1
 
 nameOverride: ""
 fullnameOverride: ""

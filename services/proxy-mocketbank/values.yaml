@@ -2,6 +2,8 @@ image:
   repository: docker.io/rbkmoney/proxy-mocketbank
   pullPolicy: IfNotPresent
 
+imagePullSecrets: []
+
 replicaCount: 3
 
 cdsUrl: http://cds.default.svc.cluster.local:8022/v2/storage
@@ -14,9 +16,6 @@ entrypoint: |
 
 errorMapping: ""
 knownCards: ""
-
-imagePullSecrets:
-  - name: dr2reg
 
 nameOverride: ""
 fullnameOverride: ""

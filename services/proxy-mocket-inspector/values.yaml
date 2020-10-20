@@ -2,15 +2,14 @@ image:
   repository: docker.io/rbkmoney/proxy-mocket-inspector
   pullPolicy: IfNotPresent
 
+imagePullSecrets: []
+
 replicaCount: 3
 
 entrypoint: |
   #!/bin/sh
   set -ue
   exec java ${@}
-
-imagePullSecrets:
-  - name: dr2reg
 
 nameOverride: ""
 fullnameOverride: ""
