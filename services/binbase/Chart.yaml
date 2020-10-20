@@ -3,4 +3,4 @@ name: binbase
 description: Bank card information retrieval service
 type: application
 version: 0.1.0
-appVersion: f4a76ddf86d98838d21e0773cdf3603e158dabc5
+appVersion: 38e0ba4ab0a56c96d57e9d8113e32bf7dc16fc9c
