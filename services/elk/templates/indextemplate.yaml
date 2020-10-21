@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: filebeat-index-template
+data:
+  template.json: |
+    {{- .Values.filebeat.indextemplate | nindent 4 }}
