@@ -49,12 +49,17 @@ spec:
               mountPath: /opt/shumway/entrypoint.sh
               subPath: entrypoint.sh
               readOnly: true
+            - name: config-volume
+              mountPath: /opt/shumway/logback.xml
+              subPath: logback.xml
+              readOnly: true
           command: ["/opt/shumway/entrypoint.sh"]
           args:
             - -jar
             - /opt/shumway/shumway.jar
             - --spring.flyway.table=schema_version
             - --spring.flyway.schemas=shm
+            - --logging.config=/opt/shumway/logback.xml
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -65,6 +70,9 @@ spec:
             - key: entrypoint.sh
               path: entrypoint.sh
               mode: 0755
+            - key: logback.xml
+              path: logback.xml
+
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

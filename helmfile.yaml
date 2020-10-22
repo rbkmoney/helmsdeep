@@ -113,6 +113,8 @@ releases:
     file: config/cds/client.pem
 - name: shumway
   <<: *default
+  labels:
+    logfmt: json
   needs:
   - default/vault
   - default/postgres
