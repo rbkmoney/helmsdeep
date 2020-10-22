@@ -61,13 +61,13 @@ tolerations: []
 affinity: {}
 
 ingress:
-  enabled: false
-  annotations: {}
+  # enabled: false
+  # annotations: {}
     # nginx.ingress.kubernetes.io/rewrite-target: /
     # kubernetes.io/tls-acme: "true"
-  host: api.rbk.dev
-  path: /
-  tls: []
+  # host: api.rbk.dev
+  # path: /
+  # tls: []
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local

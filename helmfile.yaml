@@ -28,7 +28,7 @@ templates:
         host: api.rbkmoney.standoff.city
         tls:
           enabled: true
-          secret: default/standoff
+          secret: stand-wild
 
 helmfiles:
 - # Path to the helmfile state file being processed BEFORE releases in this state file
@@ -257,6 +257,7 @@ releases:
 - name: wapi-pcidss-v0
   <<: *default
   <<: *ingress
+  installed: false
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -273,6 +274,7 @@ releases:
 - name: wapi
   <<: *default
   <<: *ingress
+  installed: false
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -292,7 +294,16 @@ releases:
     - default/keycloak
 - name: payform
   <<: *default
-  <<: *ingress
+  values:
+  - ingress:
+      enabled: true
+      annotations:
+        kubernetes.io/ingress.class: nginx
+      host: checkout.rbkmoney.standoff.city
+      path: /
+      tls:
+        enabled: true
+        secret: stand-wild
   set:
   - name: appconfig
     file: config/payform/appConfig.json

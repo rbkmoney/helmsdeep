@@ -3,7 +3,9 @@ replicaCount: 1
 ingress:
   enabled: true
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
-    # kubernetes.io/tls-acme: "true"
-  host: rbkmoney.standoff.city
-  path: /web(/|$)(.*)
+    kubernetes.io/ingress.class: nginx
+  host: checkout.rbkmoney.standoff.city
+  path: /
+  tls:
+    enabled: true
+    

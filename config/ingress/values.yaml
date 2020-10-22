@@ -1,4 +1,30 @@
-ingress:
-  tls:
-    enabled: true
-    secret: default/standoff
+controller:
+  podSecurityContext:
+    fsGroup: 0
+  image:
+    repository: dmitryrbk/ptaf4-ingress
+    tag: "v4.0.4"
+    pullPolicy: IfNotPresent
+  defaultTLS:
+    secret: "default/standoff"
+  wildcardTLS:
+    secret: "default/standoff"
+  serviceAccount:
+    imagePullSecrets:
+      - name: hubkey
+  volumeMounts:
+    - name: config-volume
+      mountPath: /nginx.tmpl
+      subPath: nginx.tmpl
+      readOnly: false
+  volumes:
+    - name: config-volume
+      configMap:
+        name: ingress-pt-conf
+        items:
+          - key: nginx.tmpl
+            path: nginx.tmpl
+  service:
+    externalIPs:
+      - 10.126.120.135
+    externalTrafficPolicy: Cluster

@@ -1,7 +1,7 @@
 {
     "applePayMerchantID": "merchant.money.rbk.checkout",
     "brandless": false,
-    "capiEndpoint": "https://api.rbk.money/",
+    "capiEndpoint": "https://api.rbkmoney.standoff.city",
     "fixedTheme": "",
     "googlePayGatewayMerchantID": "rbkmoneycheckout",
     "googlePayMerchantID": "15442243338125315447",
