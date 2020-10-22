@@ -22,17 +22,27 @@ spec:
               type: container
               paths:
               - /var/log/containers/*${data.kubernetes.container.id}.log
-          templates:
-            - condition:
-                equals:
-                  kubernetes.namespace: default
-              config:
-                - type: log
-                  paths:
-                    - /datalog/rbk/${data.kubernetes.container.name}/*.json
     processors:
-    - add_cloud_metadata: {}
-    - add_host_metadata: {}
+      - decode_json_fields:
+          fields: ["log"]
+          max_depth: 5
+          target: ""
+          overwrite_keys: true
+          add_error_key: true
+    setup:
+      template:
+        enabled: true
+        name: filebeat-rbkm # could it conflict with .json.name?..
+        pattern: filebeat-*
+        overwrite: true
+        settings:
+          index:
+            number_of_shards: 1
+            number_of_replicas: 1
+        json:
+          enabled: true
+          path: "/etc/template.json"
+          name: filebeat-rbkm
   daemonSet:
     podTemplate:
       spec:
@@ -54,8 +64,9 @@ spec:
             mountPath: /var/log/pods
           - name: varlibdockercontainers
             mountPath: /var/lib/docker/containers
-          - name: rbkdatalogfolder
-            mountPath: /datalog/rbk
+          - name: index-template
+            mountPath: /etc/template.json
+            subPath: template.json
           env:
             - name: NODE_NAME
               valueFrom:
@@ -71,9 +82,9 @@ spec:
         - name: varlibdockercontainers
           hostPath:
             path: /var/lib/docker/containers
-        - name: rbkdatalogfolder
-          hostPath:
-            path: /datalog/rbk
+        - name: index-template
+          configMap:
+            name: filebeat-index-template
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
