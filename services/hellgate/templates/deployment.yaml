@@ -46,11 +46,11 @@ spec:
               port: api
           volumeMounts:
             - name: config-volume
-              mountPath: /opt/hellgate/releases/0.1.0/sys.config
+              mountPath: /opt/hellgate/releases/0.1/sys.config
               subPath: sys.config
               readOnly: true
             - name: config-volume
-              mountPath: /opt/hellgate/releases/0.1.0/vm.args
+              mountPath: /opt/hellgate/releases/0.1/vm.args
               subPath: vm.args
               readOnly: true
             - name: config-volume
