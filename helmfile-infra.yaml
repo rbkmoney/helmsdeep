@@ -1,8 +1,6 @@
 repositories:
-- name: stable
-  url: https://kubernetes-charts.storage.googleapis.com
-
-
+- name: prometheus-community
+  url: https://prometheus-community.github.io/helm-charts
 
 templates:
   default: &default
@@ -18,7 +16,7 @@ templates:
 releases:
 - name: prometheus
   <<: *default
-  chart: stable/prometheus-operator
+  chart: prometheus-community/kube-prometheus-stack
   namespace: monitoring
 #- name: logs
 #  <<: *default
