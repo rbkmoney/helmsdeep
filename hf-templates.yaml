@@ -1,0 +1,17 @@
+templates:
+  default: &default
+    chart: ./services/{{ .Release.Name }}
+    namespace: default
+    missingFileHandler: Warn
+    values:
+      - config/_common/logging.yaml.gotmpl
+      - config/{{ .Release.Name }}/values.yaml
+    timeout: 900
+
+  ingress: &ingress
+  values:
+  - ingress:
+      host: api.rbkmoney.standoff.city
+      tls:
+        enabled: true
+        secret: stand-wild
