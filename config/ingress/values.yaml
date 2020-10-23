@@ -1,14 +1,15 @@
 controller:
+  ingressClass: ptwaf
   podSecurityContext:
     fsGroup: 0
   image:
     repository: dmitryrbk/ptaf4-ingress
-    tag: "v4.0.4"
+    tag: "v4.0.6"
     pullPolicy: IfNotPresent
   defaultTLS:
     secret: "default/standoff"
   wildcardTLS:
-    secret: "default/standoff"
+    secret: "default/stand-wild"
   serviceAccount:
     imagePullSecrets:
       - name: hubkey

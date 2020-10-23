@@ -11,6 +11,15 @@ filebeat:
 
 elastic:
   nameref: "rbk"
+  replicas: 1
+  podTemplate: {}
+    # spec:
+    #   containers:
+    #     - name: elasticsearch
+    #       securityContext:
+    #         capabilities:
+    #           add:
+    #           - SYS_CHROOT
 kibana:
   nameref: "rbk"
 

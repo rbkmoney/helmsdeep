@@ -6,9 +6,12 @@ spec:
   version: {{ .Chart.AppVersion }}
   nodeSets:
   - name: default
-    count: 1
+    count: {{ .Values.elastic.replicas }}
     config:
       node.master: true
       node.data: true
       node.ingest: true
       node.store.allow_mmap: false
+    podTemplate:
+      {{- toYaml .Values.elastic.podTemplate | nindent 6 }}
+
