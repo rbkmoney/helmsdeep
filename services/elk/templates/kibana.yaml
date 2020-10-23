@@ -7,3 +7,7 @@ spec:
   count: 1
   elasticsearchRef:
     name: {{ .Values.elastic.nameref }}
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true 

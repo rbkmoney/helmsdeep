@@ -16,8 +16,8 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: kibana.rbkmoney.standoff.city
-      paths: []
-
+      paths: 
+        - /
   tls:
    - secretName: stand-wild
      hosts:
