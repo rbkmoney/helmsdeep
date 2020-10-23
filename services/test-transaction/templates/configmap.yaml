@@ -42,7 +42,7 @@ data:
       listen 80 default_server;
       access_log /var/log/nginx/app.access_log main;
       error_log /var/log/nginx/app.error_log;
-      resolver kube-dns.kube-system.svc.cluster.local ipv6=off;
+      resolver kube-dns.kube-system.svc.cluster.local valid=20s ipv6=off;
 
       location =/v1/processing/payment-resources {
         set $capipciv1 capi-pcidss-v1.default.svc.cluster.local;
