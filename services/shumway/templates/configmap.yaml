@@ -8,44 +8,7 @@ metadata:
 data:
   entrypoint.sh: |
     {{- .Values.entrypoint | nindent 4 }}
-  # TODO: вынести в отдельный файл!
   logback.xml: |
-    <?xml version="1.0" encoding="UTF-8"?>
-    <configuration>
-        <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-        <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
-
-        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
-                <providers>
-                    <mdc/>
-                    <threadName/>
-                    <message/>
-                    <version/>
-                    <loggerName/>
-                    <context/>
-                    <pattern>
-                        <pattern>
-                            {
-                            "@timestamp": "%date{yyy-MM-dd'T'HH:mm:ss.SSSXXX, UTC}",
-                            "@severity": "%level",
-                            "application": {{ include "shumway.fullname" . | quote }}
-                            }
-                        </pattern>
-                    </pattern>
-                    <stackTrace>
-                        <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
-                            <shortenedClassNameLength>20</shortenedClassNameLength>
-                            <rootCauseFirst>true</rootCauseFirst>
-                        </throwableConverter>
-                    </stackTrace>
-                </providers>
-            </encoder>
-        </appender>
-
-        <root level="INFO">
-            <appender-ref ref="STDOUT"/>
-        </root>
-
-        <logger name="com.rbkmoney" level="INFO"/>
-    </configuration>
+    {{- .Values.logback | nindent 4 }}
+  loggers.xml: |
+    {{- .Values.loggers | nindent 4 }}

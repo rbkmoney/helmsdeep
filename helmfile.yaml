@@ -121,12 +121,20 @@ releases:
   set:
   - name: entrypoint
     file: config/shumway/entrypoint.sh
+  - name: logback
+    file: config/logs/logback.xml
+  - name: loggers
+    file: config/shumway/loggers.xml
   wait: true
 - name: hooker
   <<: *default
   set:
   - name: entrypoint
     file: config/hooker/entrypoint.sh
+  - name: logback
+    file: config/logs/logback.xml
+  - name: loggers
+    file: config/hooker/loggers.xml
   needs:
   - default/vault
   - default/kafka
