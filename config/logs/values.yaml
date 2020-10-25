@@ -1,0 +1,24 @@
+elastic:
+  replicas: 3
+  podTemplate: 
+    spec:
+      containers:
+        - name: elasticsearch
+          securityContext:
+            capabilities:
+              add:
+              - SYS_CHROOT
+
+ingress:
+  enabled: true
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: kibana.rbkmoney.standoff.city
+      paths: 
+        - /
+  tls:
+   - secretName: stand-wild
+     hosts:
+       - kibana.rbkmoney.standoff.city
