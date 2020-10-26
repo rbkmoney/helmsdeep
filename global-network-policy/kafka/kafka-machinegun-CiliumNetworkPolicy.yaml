@@ -2,7 +2,7 @@
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
-  name: "to Kafka app ACLs"
+  name: "kafkaPolicy-machinegun"
   namespace: default
 spec:
   endpointSelector:
@@ -15,19 +15,9 @@ spec:
           port: "9092"
       fromEndpoints:
         - matchLabels:
-            k8s:app.kubernetes.io/name: wallets-hooker
-        - matchLabels:
-            k8s:app.kubernetes.io/name: wallets-hooker-kafka
-        - matchLabels:
             k8s:app.kubernetes.io/name: machinegun
-        - matchLabels:
-            k8s:app.kubernetes.io/name: hooker
       rules:
         kafka:
-          - role: consume
-            topic: mg-events-customer
-          - role: consume
-            topic: mg-events-invoice
           - role: produce
             topic: mg-events-cashreg
           - role: produce
@@ -66,11 +56,3 @@ spec:
             topic: mg-events-recurrent-paytools
           - role: produce
             topic: mg-events-schedulers
-          - role: consume
-            topic: mg-events-ff-destination
-          - role: consume
-            topic: mg-events-ff-wallet
-          - role: consume
-            topic: mg-events-ff-withdrawal
-          - role: produce
-            topic: webhooks

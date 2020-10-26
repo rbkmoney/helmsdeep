@@ -26,8 +26,6 @@ templates:
 helmfiles:
 - # Path to the helmfile state file being processed BEFORE releases in this state file
   path: helmfile-infra.yaml
-- # Path to kafka network policy
-  path: global-network-policy/kafka-CiliumNetworkPolicy.yml
 
 releases:
 - name: zookeeper

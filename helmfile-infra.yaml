@@ -23,4 +23,6 @@ releases:
 - name: logs
   <<: *default
   chart: ./services/elk
-
+- name: kafkaPolicy
+  <<: *default
+  chart: ./global-network-policy/kafka
