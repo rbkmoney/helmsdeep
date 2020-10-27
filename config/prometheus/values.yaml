@@ -5,7 +5,9 @@ prometheus:
       selector:
         matchLabels:
           prometheusmetrics.enabled: "true"
-
+      namespaceSelector:
+        matchNames:
+        - default
       endpoints:
         - port: "api"
           path: /metrics
