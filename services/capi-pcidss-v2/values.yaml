@@ -4,7 +4,7 @@ image:
 
 imagePullSecrets: []
 
-replicaCount: 3
+replicaCount: 1
 
 beam:
   disableSBWT: false
@@ -59,4 +59,3 @@ affinity: {}
 ingress:
   host: api.rbk.dev
   path: /v2/processing/payment-resources
-
