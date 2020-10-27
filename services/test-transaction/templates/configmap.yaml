@@ -1,0 +1,63 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "test-transaction.fullname" . }}
+  labels:
+    {{- include "test-transaction.labels" . | nindent 4 }}
+data:
+  nginx.conf: |
+    user nginx;
+    worker_processes  3;
+    error_log  /var/log/nginx/error.log;
+    events {
+      worker_connections  10240;
+    }
+    http {
+      log_format  main
+              'remote_addr:$remote_addr\t'
+              'time_local:$time_local\t'
+              'method:$request_method\t'
+              'uri:$request_uri\t'
+              'host:$host\t'
+              'status:$status\t'
+              'bytes_sent:$body_bytes_sent\t'
+              'referer:$http_referer\t'
+              'useragent:$http_user_agent\t'
+              'forwardedfor:$http_x_forwarded_for\t'
+              'request_time:$request_time';
+      access_log	/var/log/nginx/access.log main;
+      server {
+          listen       80;
+          server_name  _;
+          location / {
+              root   html;
+              index  index.html index.htm;
+          }
+      }
+      include /etc/nginx/virtualhost/virtualhost.conf;
+    }
+  virtualhost.conf: |
+    server {
+      listen 80 default_server;
+      access_log /var/log/nginx/app.access_log main;
+      error_log /var/log/nginx/app.error_log;
+      resolver kube-dns.kube-system.svc.cluster.local valid=20s ipv6=off;
+
+      location =/v1/processing/payment-resources {
+        set $capipciv1 capi-pcidss-v1.default.svc.cluster.local;
+        proxy_pass http://$capipciv1:8080/v1/processing/payment-resources;
+      }
+      location =/v2/processing/payment-resources {
+        set $capipciv2 capi-pcidss-v2.default.svc.cluster.local;
+        proxy_pass http://$capipciv2:8080/v2/processing/payment-resources;
+      }
+      location /v1 {
+        set $capiv1 capi-v1.default.svc.cluster.local;
+        proxy_pass http://$capiv1:8080;
+      }
+      location /v2 {
+        set $capiv2 capi-v2.default.svc.cluster.local;
+        proxy_pass http://$capiv2:8080;
+      }
+    }

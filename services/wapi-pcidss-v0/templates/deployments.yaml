@@ -19,8 +19,10 @@ spec:
         {{- end }}
         wapi-pcidss-v0/properties-hash: {{ include "wapi-pcidss-v0.propertiesHash" . }}
     spec:
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        - name: {{ .Values.imagePullSecrets.name }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ include "wapi-pcidss-v0.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}

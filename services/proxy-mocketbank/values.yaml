@@ -1,8 +1,10 @@
 image:
-  repository: dr2.rbkmoney.com/rbkmoney/proxy-mocketbank
+  repository: docker.io/rbkmoney/proxy-mocketbank
   pullPolicy: IfNotPresent
 
-replicaCount: 3
+imagePullSecrets: []
+
+replicaCount: 1
 
 cdsUrl: http://cds.default.svc.cluster.local:8022/v2/storage
 hellgateUrl: http://hellgate.default.svc.cluster.local:8022/v1/proxyhost/provider
@@ -14,9 +16,6 @@ entrypoint: |
 
 errorMapping: ""
 knownCards: ""
-
-imagePullSecrets:
-  - name: dr2reg
 
 nameOverride: ""
 fullnameOverride: ""

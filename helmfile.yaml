@@ -1,3 +1,5 @@
+{{ readFile "hf-templates.yaml" }}
+
 repositories:
 - name: stable
   url: https://kubernetes-charts.storage.googleapis.com
@@ -9,19 +11,6 @@ repositories:
   url: https://helm.releases.hashicorp.com
 - name: codecentric
   url: https://codecentric.github.io/helm-charts
-
-templates:
-  default: &default
-    chart: ./services/{{`{{ .Release.Name }}`}}
-    namespace: default
-    # This prevents helmfile exiting when it encounters a missing file
-    # Valid values are "Error", "Warn", "Info", "Debug". The default is "Error"
-    # Use "Debug" to make missing files errors invisible at the default log level(--log-level=INFO)
-    missingFileHandler: Warn
-    values:
-    - config/{{`{{ .Release.Name }}`}}/values.yaml
-    timeout: 600
-
 
 helmfiles:
 - # Path to the helmfile state file being processed BEFORE releases in this state file
@@ -48,14 +37,14 @@ releases:
   <<: *default
   chart: bitnami/postgresql
   version: 9.2.0
-  atomic: true
+  wait: true
 - name: vault
   <<: *default
   chart: hashicorp/vault
   version: 0.7.0
   needs:
   - default/postgres
-  atomic: true
+  wait: true
 - name: keycloak-realms
   <<: *default
 - name: keycloak
@@ -63,15 +52,22 @@ releases:
   chart: codecentric/keycloak
   version: 9.0.1
   needs:
-    - default/postgres
+  - default/postgres
+  wait: true
+- name: holmes
+  <<: *default
 - name: riak
   <<: *default
+  labels:
+    logfmt: json
   chart: ./services/riak
   set:
   - name: config.user
     file: config/riak/user.yaml
 - name: machinegun
   <<: *default
+  labels:
+    logfmt: json
   needs:
   - default/consul
   - default/riak
@@ -81,6 +77,8 @@ releases:
     file: config/machinegun/config.yaml
 - name: bender
   <<: *default
+  labels:
+    logfmt: json
   set:
   - name: appConfig
     file: config/bender/sys.config
@@ -88,6 +86,8 @@ releases:
     file: config/vm/erl_inetrc
 - name: kds
   <<: *default
+  labels:
+    logfmt: json
   set:
   - name: appConfig
     file: config/kds/sys.config
@@ -99,6 +99,8 @@ releases:
     file: config/kds/server.pem
 - name: cds
   <<: *default
+  labels:
+    logfmt: json
   needs:
     - default/kds
     - default/riak
@@ -113,25 +115,38 @@ releases:
     file: config/cds/client.pem
 - name: shumway
   <<: *default
+  labels:
+    logfmt: json
   needs:
   - default/vault
-  atomic: true
+  - default/postgres
   set:
   - name: entrypoint
     file: config/shumway/entrypoint.sh
+  - name: logback
+    file: config/logs/logback.xml
+  - name: loggers
+    file: config/shumway/loggers.xml
+  wait: true
 - name: hooker
   <<: *default
   set:
   - name: entrypoint
     file: config/hooker/entrypoint.sh
+  - name: logback
+    file: config/logs/logback.xml
+  - name: loggers
+    file: config/hooker/loggers.xml
   needs:
   - default/vault
   - default/kafka
 - name: dominant
   <<: *default
+  labels:
+    logfmt: json
   needs:
   - default/shumway
-  #installed: false
+  wait: true
   set:
   - name: initializationTask.script
     file: config/dominant/init-script.sh
@@ -144,11 +159,6 @@ releases:
   set:
   - name: entrypoint
     file: config/binbase/entrypoint.sh
-- name: binbase-test
-  <<: *default
-  set:
-  - name: entrypoint
-    file: config/binbase-test/entrypoint.sh
 - name: proxy-mocketbank
   <<: *default
   set:
@@ -156,8 +166,12 @@ releases:
     file: config/proxy-mocketbank/cards.csv
   - name: errorMapping
     file: config/proxy-mocketbank/errors.json
+- name: proxy-mocket-inspector
+  <<: *default
 - name: hellgate
   <<: *default
+  labels:
+    logfmt: json
   set:
   - name: appConfig
     file: config/hellgate/sys.config
@@ -165,6 +179,8 @@ releases:
     file: config/vm/erl_inetrc
 - name: capi-pcidss-v2
   <<: *default
+  labels:
+    logfmt: json
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -184,6 +200,8 @@ releases:
     - default/keycloak
 - name: capi-pcidss-v1
   <<: *default
+  labels:
+    logfmt: json
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -210,6 +228,8 @@ releases:
     file: config/vm/erl_inetrc
 - name: capi-v1
   <<: *default
+  labels:
+    logfmt: json
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -229,6 +249,8 @@ releases:
     - default/keycloak
 - name: capi-v2
   <<: *default
+  labels:
+    logfmt: json
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -248,6 +270,8 @@ releases:
     - default/keycloak
 - name: wapi-pcidss-v0
   <<: *default
+  labels:
+    logfmt: json
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -263,6 +287,8 @@ releases:
     - default/keycloak
 - name: wapi
   <<: *default
+  labels:
+    logfmt: json
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -279,4 +305,16 @@ releases:
   - name: wapiPrivkey
     file: config/api-common/keys/capi.privkey.pem
   needs:
+    - default/keycloak
+- name: payform
+  <<: *default
+  set:
+  - name: appconfig
+    file: config/payform/appConfig.json
+- name: test-transaction
+  <<: *default
+  needs:
+    - default/shumway
+    - default/dominant
+    - default/cds
     - default/keycloak

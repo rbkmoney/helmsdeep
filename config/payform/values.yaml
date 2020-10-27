@@ -1,0 +1,9 @@
+replicaCount: 1
+
+ingress:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # kubernetes.io/tls-acme: "true"
+  host: api.rbk.dev
+  path: /web(/|$)(.*)

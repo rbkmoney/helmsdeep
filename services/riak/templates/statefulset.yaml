@@ -24,14 +24,12 @@ spec:
     spec:
       serviceAccountName: {{ include "riak.serviceAccountName" . }}
       terminationGracePeriodSeconds: 10
-      {{- if .Values.podSecurityContext.enabled }}
       securityContext:
-        fsGroup: {{ .Values.podSecurityContext.fsGroup | int64 }}
-        runAsUser: {{ .Values.podSecurityContext.fsGroup | int64 }}
-        runAsGroup: {{ .Values.podSecurityContext.fsGroup | int64 }}
-      {{- end }}
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
