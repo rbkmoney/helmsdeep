@@ -2,7 +2,7 @@
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
-  name: "kafkaPolicy-machinegun"
+  name: "kafka-policy-machinegun"
   namespace: default
 spec:
   endpointSelector:

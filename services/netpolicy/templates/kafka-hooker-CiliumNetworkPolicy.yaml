@@ -2,7 +2,7 @@
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
-  name: "kafkaPolicy-wallets-hooker"
+  name: "kafka-policy-hooker"
   namespace: default
 spec:
   endpointSelector:
@@ -15,8 +15,10 @@ spec:
           port: "9092"
       fromEndpoints:
         - matchLabels:
-            k8s:app.kubernetes.io/name: wallets-hooker
+            k8s:app.kubernetes.io/name: hooker
       rules:
         kafka:
-          - role: produce
-            topic: webhooks
+          - role: consume
+            topic: mg-events-customer
+          - role: consume
+            topic: mg-events-invoice
