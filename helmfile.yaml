@@ -159,6 +159,10 @@ releases:
     file: config/binbase/entrypoint.sh
 - name: proxy-mocketbank
   <<: *default
+  labels:
+    logfmt: json
+  needs:
+    - default/hellgate
   set:
   - name: knownCards
     file: config/proxy-mocketbank/cards.csv
@@ -166,10 +170,16 @@ releases:
     file: config/proxy-mocketbank/errors.json
 - name: proxy-mocket-inspector
   <<: *default
+  labels:
+    logfmt: json
+  needs:
+    - default/hellgate
 - name: hellgate
   <<: *default
   labels:
     logfmt: json
+  needs:
+    - default/dominant
   set:
   - name: appConfig
     file: config/hellgate/sys.config
@@ -267,6 +277,7 @@ releases:
   needs:
     - default/keycloak
 - name: wapi-pcidss-v0
+  installed: false
   <<: *default
   labels:
     logfmt: json
@@ -284,6 +295,7 @@ releases:
   needs:
     - default/keycloak
 - name: wapi
+  installed: false
   <<: *default
   labels:
     logfmt: json
