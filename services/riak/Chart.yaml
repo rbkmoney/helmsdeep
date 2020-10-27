@@ -3,4 +3,4 @@ name: riak
 description: A simple riak cluster for Kubernetes
 type: application
 version: 0.1.1
-appVersion: e0d38b2d6e8820bb94f26559a519871bcd789490
+appVersion: f5b757c2ec73c7db1460c94a17a20a3b5799fde6

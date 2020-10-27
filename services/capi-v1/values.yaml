@@ -5,11 +5,10 @@
 replicaCount: 1
 
 image:
-  repository: dr2.rbkmoney.com/rbkmoney/capi-v1
+  repository: docker.io/rbkmoney/capi-v1
   pullPolicy: IfNotPresent
 
-imagePullSecrets:
-  - name: dr2reg
+imagePullSecrets: []
 
 beam:
   disableSBWT: false

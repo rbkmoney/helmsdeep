@@ -3,15 +3,14 @@
 # Declare variables to be passed into your templates.
 
 image:
-  repository: dr2.rbkmoney.com/rbkmoney/kds
+  repository: docker.io/rbkmoney/kds
   pullPolicy: IfNotPresent
 
-imagePullSecrets:
-  - name: dr2reg
+imagePullSecrets: []
 
 initializationTask:
   create: false
-  repository: dr2.rbkmoney.com/rbkmoney/holmes
+  repository: docker.io/rbkmoney/holmes
   tag: 55e745b7c020c367bff202036af84726d66755f7
   script: "#! /bin/sh"
   workdir: /opt/holmes

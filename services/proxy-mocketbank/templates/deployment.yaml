@@ -66,8 +66,8 @@ spec:
             - /opt/proxy-mocketbank/proxy-mocketbank.jar
             - --server.secondary.ports=8080
             - --server.port=8022
-            - --cds.url.storage={{ .Values.cdsUrl }}
-            - --hellgate.url={{ .Values.hellgateUrl }}
+            - --cds.client.storage.url={{ .Values.cdsUrl }}
+            - --hellgate.client.adapter.url={{ .Values.hellgateUrl }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:

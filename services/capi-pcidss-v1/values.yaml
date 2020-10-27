@@ -1,11 +1,10 @@
 image:
-  repository: dr2.rbkmoney.com/rbkmoney/capi_pcidss-v1
+  repository: docker.io/rbkmoney/capi_pcidss-v1
   pullPolicy: IfNotPresent
 
-replicaCount: 3
+imagePullSecrets: []
 
-imagePullSecrets:
-  - name: dr2reg
+replicaCount: 1
 
 beam:
   disableSBWT: false
@@ -60,4 +59,3 @@ affinity: {}
 ingress:
   host: api.rbk.dev
   path: /v1/processing/payment-resources
-

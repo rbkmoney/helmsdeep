@@ -19,8 +19,10 @@ spec:
         {{- end }}
         hooker/properties-hash: {{ include "hooker.propertiesHash" . }}
     spec:
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        - name: {{ .Values.imagePullSecrets.name }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ include "hooker.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -47,10 +49,19 @@ spec:
               mountPath: /opt/hooker/entrypoint.sh
               subPath: entrypoint.sh
               readOnly: true
+            - name: config-volume
+              mountPath: /opt/hooker/logback.xml
+              subPath: logback.xml
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/hooker/loggers.xml
+              subPath: loggers.xml
+              readOnly: true
           command: ["/opt/hooker/entrypoint.sh"]
           args:
             - -jar
             - /opt/hooker/hooker.jar
+            - --logging.config=/opt/hooker/logback.xml
             - --spring.datasource.hikari.data-source-properties.prepareThreshold=0
             - --spring.datasource.hikari.leak-detection-threshold=5300
             - --spring.datasource.hikari.max-lifetime=300000
@@ -64,6 +75,9 @@ spec:
             - --kafka.topics.customer.concurrency={{ .Values.kafka.topicCustomerConcurrency }}
             - --kafka.topics.invoice.id={{ .Values.kafka.topicInvoiceName }}
             - --kafka.topics.customer.id={{ .Values.kafka.topicCustomerName }}
+          env:
+            - name: LOGBACK_SERVICE_NAME
+              value: "hooker"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -74,6 +88,10 @@ spec:
               - key: entrypoint.sh
                 path: entrypoint.sh
                 mode: 0755
+              - key: logback.xml
+                path: logback.xml
+              - key: loggers.xml
+                path: loggers.xml
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
