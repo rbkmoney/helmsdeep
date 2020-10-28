@@ -5,11 +5,11 @@ metadata:
 spec:
   endpointSelector:
     matchLabels:
-      app.kubernetes.io/component: kafka-broker
+      k8s:app.kubernetes.io/component: kafka-broker
   ingress:
   - fromEndpoints:
     - matchLabels:
-        app.kubernetes.io/component: kafka-broker
+        k8s:app.kubernetes.io/component: kafka-broker
     toPorts:
     - ports:
       - port: "9092"
@@ -17,7 +17,7 @@ spec:
   egress:
   - toEndpoints:
     - matchLabels:
-        app.kubernetes.io/component: kafka-broker
+        k8s:app.kubernetes.io/component: kafka-broker
     toPorts:
     - ports:
       - port: "9092"

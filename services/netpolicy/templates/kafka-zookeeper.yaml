@@ -5,7 +5,7 @@ metadata:
 spec:
   endpointSelector:
     matchLabels:
-      app.kubernetes.io/component: kafka-broker
+      k8s:app.kubernetes.io/component: kafka-broker
   ingress:
   - fromEndpoints:
     - matchLabels:
