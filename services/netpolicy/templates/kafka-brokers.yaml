@@ -1,0 +1,24 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-kafka-brokers"
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/component: kafka-broker
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        app.kubernetes.io/component: kafka-broker
+    toPorts:
+    - ports:
+      - port: "9092"
+        protocol: TCP
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        app.kubernetes.io/component: kafka-broker
+    toPorts:
+    - ports:
+      - port: "9092"
+        protocol: TCP
