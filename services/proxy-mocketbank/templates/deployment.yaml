@@ -68,6 +68,7 @@ spec:
             - --server.port=8022
             - --cds.client.storage.url={{ .Values.cdsUrl }}
             - --hellgate.client.adapter.url={{ .Values.hellgateUrl }}
+            - --adapter-mock-mpi.url={{ .Values.mockMpiUrl }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:

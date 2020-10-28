@@ -173,7 +173,7 @@ releases:
   labels:
     logfmt: json
   needs:
-    - default/hellgate
+    - default/proxy-mocketbank
   set:
     - name: knownCards
       file: config/proxy-mocketbank-mpi/cards.csv
