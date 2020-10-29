@@ -33,7 +33,9 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 8022
+  ports:
+    api: 8022
+    management: 8023
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
