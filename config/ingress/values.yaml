@@ -1,31 +1,31 @@
 controller:
-  ingressClass: ptwaf
-  podSecurityContext:
-    fsGroup: 0
   image:
     repository: dmitryrbk/ptaf4-ingress
     tag: "v4.0.6"
     pullPolicy: IfNotPresent
-  defaultTLS:
-    secret: "default/standoff"
-  wildcardTLS:
-    secret: "default/stand-wild"
   serviceAccount:
     imagePullSecrets:
-      - name: hubkey
+      - name: stanreg
   volumeMounts:
-    - name: config-volume
-      mountPath: /nginx.tmpl
-      subPath: nginx.tmpl
-      readOnly: false
+    - mountPath: /dev/shm
+      name: dshm
   volumes:
-    - name: config-volume
-      configMap:
-        name: ingress-pt-conf
-        items:
-          - key: nginx.tmpl
-            path: nginx.tmpl
+    - emptyDir:
+        medium: Memory
+        sizeLimit: 512M
+      name: dshm
   service:
     externalIPs:
       - 10.126.120.135
     externalTrafficPolicy: Cluster
+  config:
+    entries:
+      main-snippets: |
+        load_module /opt/ptaf/lib/ngx_wrapper.so;
+        env PTAF_LOG_LEVEL;
+        env DEBUG;
+        env HOSTNAME;
+        env PTAF_NODE_NAME;
+        env POD_IP=127.0.0.1;
+      http-snippets: |
+        ptaf_config "tcp://eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJ0b2tlbl9pZCI6IjRhZTk1OWY1LTQ3N2UtNDZkZi05YzI3LTRkYzI1ZjU2ZjgyYiIsInRlbmFudF9pZCI6ImU4YzUxNGU2LWYyYjEtNDg3YS1hOTdjLTZmZjk4YjRlNTAzNCIsInJvbGVzIjpbImNvcmUiLCJ3c2MtYWdlbnQiXX0.09cHWzhb9nVtJHy3FCE_9USrXUnXmXbf-XdeA9n96ZBDORfnFFaF77SbiABvW-u4e_2_q4Js5_myhUp9bR-hsA@10.126.120.237:8443";
