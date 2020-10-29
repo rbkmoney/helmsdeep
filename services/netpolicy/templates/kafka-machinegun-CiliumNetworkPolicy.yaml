@@ -13,46 +13,46 @@ spec:
       - ports:
         - protocol: TCP
           port: "9092"
+        rules:
+          kafka:
+            - role: produce
+              topic: mg-events-cashreg
+            - role: produce
+              topic: mg-events-customer
+            - role: produce
+              topic: mg-events-ff-deposit
+            - role: produce
+              topic: mg-events-ff-destination
+            - role: produce
+              topic: mg-events-ff-identity
+            - role: produce
+              topic: mg-events-ff-p2p-template
+            - role: produce
+              topic: mg-events-ff-p2p-transfer
+            - role: produce
+              topic: mg-events-ff-p2p-transfer-session
+            - role: produce
+              topic: mg-events-ff-source
+            - role: produce
+              topic: mg-events-ff-w2w-transfer
+            - role: produce
+              topic: mg-events-ff-wallet
+            - role: produce
+              topic: mg-events-ff-withdrawal
+            - role: produce
+              topic: mg-events-ff-withdrawal-session
+            - role: produce
+              topic: mg-events-invoice
+            - role: produce
+              topic: mg-events-invoice-template
+            - role: produce
+              topic: mg-events-party
+            - role: produce
+              topic: mg-events-rates
+            - role: produce
+              topic: mg-events-recurrent-paytools
+            - role: produce
+              topic: mg-events-schedulers
       fromEndpoints:
         - matchLabels:
             k8s:app.kubernetes.io/name: machinegun
-      rules:
-        kafka:
-          - role: produce
-            topic: mg-events-cashreg
-          - role: produce
-            topic: mg-events-customer
-          - role: produce
-            topic: mg-events-ff-deposit
-          - role: produce
-            topic: mg-events-ff-destination
-          - role: produce
-            topic: mg-events-ff-identity
-          - role: produce
-            topic: mg-events-ff-p2p-template
-          - role: produce
-            topic: mg-events-ff-p2p-transfer
-          - role: produce
-            topic: mg-events-ff-p2p-transfer-session
-          - role: produce
-            topic: mg-events-ff-source
-          - role: produce
-            topic: mg-events-ff-w2w-transfer
-          - role: produce
-            topic: mg-events-ff-wallet
-          - role: produce
-            topic: mg-events-ff-withdrawal
-          - role: produce
-            topic: mg-events-ff-withdrawal-session
-          - role: produce
-            topic: mg-events-invoice
-          - role: produce
-            topic: mg-events-invoice-template
-          - role: produce
-            topic: mg-events-party
-          - role: produce
-            topic: mg-events-rates
-          - role: produce
-            topic: mg-events-recurrent-paytools
-          - role: produce
-            topic: mg-events-schedulers
