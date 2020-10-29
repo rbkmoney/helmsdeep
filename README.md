@@ -138,11 +138,17 @@ kubectl port-forward vault-0 8200:8200 &
 Как включить сбор метрик
 ----------
 
-requrements:
-  - Service c именем порта api, на котором слушает http порт приложения
-  - label
-  ```          prometheusmetrics.enabled: "true" ```
-  - Метрики приложения в формате prometheus должны отдаваться на локейшене /metrics
+  - Настроить сервис таким образом, чтобы метрики в формате Prometheus отдавались:
+    - на `/metrics` с порта `api` для erlang-приложения
+    - на `/actuator/prometheus` с порта `management` для java-приложения
+  - Повесить в `spec.template.metadata.labels` соответствующего сервиса label:
+    - `prometheus.metrics.erlang.enabled: "true"` для erlang-приложения
+    - `prometheus.metrics.java.enabled: "true"` для java-приложения
+    
+Для получения доступа к веб-интерфейсу Prometheus на https://localhost:31337:
+```
+kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 31337:9090
+``` 
 
 Доступ к логам в kibana
 -----------

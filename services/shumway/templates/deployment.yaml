@@ -34,16 +34,29 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: api
-              containerPort: 8022
+              containerPort: {{ .Values.service.ports.api }}
+              protocol: TCP
+            - name: management
+              containerPort: {{ .Values.service.ports.management }}
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /actuator/health
-              port: api
+              port: management
+            initialDelaySeconds: 120
+            timeoutSeconds: 3
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
           readinessProbe:
             httpGet:
               path: /actuator/health
-              port: api
+              port: management
+            initialDelaySeconds: 120
+            timeoutSeconds: 3
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
           volumeMounts:
             - name: config-volume
               mountPath: /opt/shumway/entrypoint.sh
