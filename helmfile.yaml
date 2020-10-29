@@ -2,9 +2,9 @@
 
 repositories:
 - name: stable
-  url: https://kubernetes-charts.storage.googleapis.com
+  url: https://charts.helm.sh/stable
 - name: incubator
-  url: https://kubernetes-charts-incubator.storage.googleapis.com
+  url: https://charts.helm.sh/incubator
 - name: bitnami
   url: https://charts.bitnami.com/bitnami
 - name: hashicorp
@@ -121,12 +121,20 @@ releases:
   set:
   - name: entrypoint
     file: config/shumway/entrypoint.sh
+  - name: logback
+    file: config/logs/logback.xml
+  - name: loggers
+    file: config/shumway/loggers.xml
   wait: true
 - name: hooker
   <<: *default
   set:
   - name: entrypoint
     file: config/hooker/entrypoint.sh
+  - name: logback
+    file: config/logs/logback.xml
+  - name: loggers
+    file: config/hooker/loggers.xml
   needs:
   - default/vault
   - default/kafka
@@ -151,6 +159,10 @@ releases:
     file: config/binbase/entrypoint.sh
 - name: proxy-mocketbank
   <<: *default
+  labels:
+    logfmt: json
+  needs:
+    - default/hellgate
   set:
   - name: knownCards
     file: config/proxy-mocketbank/cards.csv
@@ -158,10 +170,16 @@ releases:
     file: config/proxy-mocketbank/errors.json
 - name: proxy-mocket-inspector
   <<: *default
+  labels:
+    logfmt: json
+  needs:
+    - default/hellgate
 - name: hellgate
   <<: *default
   labels:
     logfmt: json
+  needs:
+    - default/dominant
   set:
   - name: appConfig
     file: config/hellgate/sys.config
@@ -259,6 +277,7 @@ releases:
   needs:
     - default/keycloak
 - name: wapi-pcidss-v0
+  installed: false
   <<: *default
   labels:
     logfmt: json
@@ -276,6 +295,7 @@ releases:
   needs:
     - default/keycloak
 - name: wapi
+  installed: false
   <<: *default
   labels:
     logfmt: json

@@ -40,7 +40,8 @@ data:
         CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
         GRANT CREATE ON DATABASE hook TO \"{{name}}\";
         GRANT ALL ON schema hook TO \"{{name}}\";
-        GRANT ALL ON ALL TABLES IN SCHEMA hook TO \"{{name}}\";" \
+        GRANT ALL ON ALL TABLES IN SCHEMA hook TO \"{{name}}\";
+        GRANT ALL ON ALL SEQUENCES IN SCHEMA hook TO \"{{name}}\";" \
         default_ttl="1h" \
         max_ttl="24h"
 
