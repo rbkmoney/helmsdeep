@@ -8,3 +8,5 @@ metadata:
 data:
   entrypoint.sh: |
     {{- .Values.entrypoint | nindent 4 }}
+  cards.csv: |
+    {{- .Values.knownCards | nindent 4 }}
