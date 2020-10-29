@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "proxy-mocketbank.fullname" . }}
+  name: {{ include "proxy-mocketbank-mpi.fullname" . }}
   labels:
-    {{- include "proxy-mocketbank.labels" . | nindent 4 }}
+    {{- include "proxy-mocketbank-mpi.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "proxy-mocketbank.selectorLabels" . | nindent 6 }}
+      {{- include "proxy-mocketbank-mpi.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "proxy-mocketbank.selectorLabels" . | nindent 8 }}
+        {{- include "proxy-mocketbank-mpi.selectorLabels" . | nindent 8 }}
       annotations:
         {{- with .Values.podAnnotations }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        proxy-mocketbank/properties-hash: {{ include "proxy-mocketbank.propertiesHash" . }}
+          {{- toYaml . | nindent 8 }}
+          {{- end }}
+          proxy-mocketbank-mpi/properties-hash: {{ include "proxy-mocketbank-mpi.propertiesHash" . }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "proxy-mocketbank.serviceAccountName" . }}
+      serviceAccountName: {{ include "proxy-mocketbank-mpi.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -49,38 +49,29 @@ spec:
               port: api
           volumeMounts:
             - name: config-volume
-              mountPath: /opt/proxy-mocketbank/entrypoint.sh
+              mountPath: /opt/proxy-mocketbank-mpi/entrypoint.sh
               subPath: entrypoint.sh
               readOnly: true
             - name: config-volume
-              mountPath: /opt/proxy-mocketbank/fixture/errors.json
-              subPath: errors.json
-              readOnly: true
-            - name: config-volume
-              mountPath: /opt/proxy-mocketbank/fixture/cards.csv
+              mountPath: /opt/proxy-mocketbank-mpi/fixture/cards.csv
               subPath: cards.csv
               readOnly: true
-          command: ["/opt/proxy-mocketbank/entrypoint.sh"]
+          command: ["/opt/proxy-mocketbank-mpi/entrypoint.sh"]
           args:
             - -jar
-            - /opt/proxy-mocketbank/proxy-mocketbank.jar
+            - /opt/proxy-mocketbank-mpi/proxy-mocketbank-mpi.jar
             - --server.secondary.ports=8080
             - --server.port=8022
-            - --cds.client.storage.url={{ .Values.cdsUrl }}
-            - --hellgate.client.adapter.url={{ .Values.hellgateUrl }}
-            - --adapter-mock-mpi.url={{ .Values.mockMpiUrl }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
         - name: config-volume
           configMap:
-            name: {{ include "proxy-mocketbank.fullname" . }}
+            name: {{ include "proxy-mocketbank-mpi.fullname" . }}
             items:
               - key: entrypoint.sh
                 path: entrypoint.sh
                 mode: 0755
-              - key: errors.json
-                path: errors.json
               - key: cards.csv
                 path: cards.csv
       {{- with .Values.nodeSelector }}
