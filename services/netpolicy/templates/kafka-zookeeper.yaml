@@ -9,11 +9,11 @@ spec:
   ingress:
   - fromEndpoints:
     - matchLabels:
-        app: zookeeper
+        k8s:app: zookeeper
   egress:
   - toEndpoints:
     - matchLabels:
-        app: zookeeper
+        k8s:app: zookeeper
     toPorts:
     - ports:
       - port: "2181"
