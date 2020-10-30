@@ -2,9 +2,9 @@
 
 repositories:
 - name: stable
-  url: https://kubernetes-charts.storage.googleapis.com
+  url: https://charts.helm.sh/stable
 - name: incubator
-  url: https://kubernetes-charts-incubator.storage.googleapis.com
+  url: https://charts.helm.sh/incubator
 - name: bitnami
   url: https://charts.bitnami.com/bitnami
 - name: hashicorp
@@ -149,6 +149,10 @@ releases:
   set:
   - name: entrypoint
     file: config/binbase/entrypoint.sh
+- name: grafana
+  <<: *default
+  labels:
+    logfmt: json
 - name: proxy-mocketbank
   <<: *default
   set:
