@@ -13,6 +13,11 @@ imagePullSecrets: []
 beam:
   disableSBWT: false
 
+metrics:
+  serviceMonitor:
+    enabled: false
+    namespace: default
+
 nameOverride: ""
 fullnameOverride: ""
 
