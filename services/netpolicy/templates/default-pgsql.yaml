@@ -15,8 +15,12 @@ spec:
           port: "5123"
       fromEndpoints:
         - matchLabels:
-            k8s:io.kubernetes.pod.namespace: default
-        - matchLabels:
             k8s:io.kubernetes.pod.namespace: kube-system
         - matchLabels:
             k8s:io.kubernetes.pod.namespace: monitoring
+        - matchLabels:
+            k8s:app.kubernetes.io/name: hooker
+        - matchLabels:
+            k8s:app.kubernetes.io/name: shumway
+        - matchLabels:
+            k8s:app.kubernetes.io/name: keykloak

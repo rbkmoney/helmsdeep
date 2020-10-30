@@ -1,17 +1,17 @@
 ---
+kind:  CiliumNetworkPolicy
 apiVersion: "cilium.io/v2"
-kind: CiliumNetworkPolicy
 metadata:
-  name: {{ include "proxy-mocketbank.name" . }}
+  name: {{ include "proxy-mocket-inspector.fullname" . }}
   namespace: default
   labels:
-    chart: {{ template "proxy-mocketbank.chart" . }}
+    chart: {{ template "proxy-mocket-inspector.chart" . }}
     release: {{ .Release.Name | quote }}
     heritage: {{ .Release.Service | quote }}
 spec:
   endpointSelector:
     matchLabels:
-      k8s:app.kubernetes.io/name: {{ include "proxy-mocketbank.name" . }}
+      k8s:app.kubernetes.io/name: {{ include "proxy-mocket-inspector.name" . }}
   ingress:
     - toPorts:
       - ports:
@@ -20,7 +20,3 @@ spec:
       fromEndpoints:
         - matchLabels:
             k8s:app.kubernetes.io/name: dominant
-    - toPorts:
-      - ports:
-        - protocol: TCP
-          port: "8080"

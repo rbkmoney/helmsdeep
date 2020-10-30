@@ -16,7 +16,7 @@ spec:
     - toPorts:
       - ports:
         - protocol: TCP
-          port: "8022"
+          port: "8023"
       fromEndpoints:
         - matchLabels:
             k8s:app.kubernetes.io/name: cds

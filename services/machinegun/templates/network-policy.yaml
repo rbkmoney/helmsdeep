@@ -25,10 +25,6 @@ spec:
         - matchLabels:
             k8s:app.kubernetes.io/name: url-shortener
         - matchLabels:
-            k8s:app.kubernetes.io/name: shumway
-        - matchLabels:
-            k8s:app.kubernetes.io/name: xrates
-        - matchLabels:
             k8s:app.kubernetes.io/name: wapi
         - matchLabels:
             k8s:app.kubernetes.io/name: bender

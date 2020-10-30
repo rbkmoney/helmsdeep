@@ -19,10 +19,10 @@ spec:
           port: "8022"
       fromEndpoints:
         - matchLabels:
-            k8s:app.kubernetes.io/name: kds
-        - matchLabels:
             k8s:service-class: provider-adapter
         - matchLabels:
             k8s:service-class: capi-pcidss
         - matchLabels:
             k8s:service-class: wapi-pcidss
+        - matchLabels:
+            k8s:service-class: wapi

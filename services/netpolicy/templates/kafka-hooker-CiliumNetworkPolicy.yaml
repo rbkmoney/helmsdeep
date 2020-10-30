@@ -19,6 +19,6 @@ spec:
               topic: mg-events-customer
             - role: consume
               topic: mg-events-invoice
-      fromEndpoints:
+       fromEndpoints:
         - matchLabels:
             k8s:app.kubernetes.io/name: hooker

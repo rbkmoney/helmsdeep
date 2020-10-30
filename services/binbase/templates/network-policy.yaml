@@ -22,3 +22,5 @@ spec:
             k8s:service-class: provider-adapter
         - matchLabels:
             k8s:service-class: capi-pcidss
+        - matchLabels:
+            k8s:service-class: wapi

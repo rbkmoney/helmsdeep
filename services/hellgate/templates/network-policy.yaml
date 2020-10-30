@@ -21,8 +21,6 @@ spec:
         - matchLabels:
             k8s:app.kubernetes.io/name: machinegun
         - matchLabels:
-            k8s:app.kubernetes.io/name: dominant
-        - matchLabels:
             k8s:service-class: capi
         - matchLabels:
             k8s:service-class: provider-adapter

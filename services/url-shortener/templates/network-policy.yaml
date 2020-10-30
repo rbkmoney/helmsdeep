@@ -19,4 +19,4 @@ spec:
           port: "8022"
       fromEndpoints:
         - matchLabels:
-            k8s:service-class: capi
+            k8s:service-class: machinegun
