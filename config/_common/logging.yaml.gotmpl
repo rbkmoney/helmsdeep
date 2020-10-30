@@ -3,4 +3,10 @@ podAnnotations:
   co.elastic.logs/json.keys_under_root: "true"
   co.elastic.logs/json.overwrite_keys: "true"
   co.elastic.logs/json.add_error_key: "true"
+  co.elastic.logs/processors.1.decode_json_fields.fields: ["log"]
+  co.elastic.logs/processors.1.decode_json_fields.max_depth: 5
+  co.elastic.logs/processors.1.decode_json_fields.target: ""
+  co.elastic.logs/processors.1.decode_json_fields.overwrite_keys: true
+  co.elastic.logs/processors.1.decode_json_fields.add_error_key: true
+  co.elastic.logs/processors.2.add_kubernetes_metadata:
 {{ end }}
