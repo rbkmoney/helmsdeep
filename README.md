@@ -145,7 +145,7 @@ kubectl port-forward vault-0 8200:8200 &
     - `prometheus.metrics.erlang.enabled: "true"` для erlang-приложения
     - `prometheus.metrics.java.enabled: "true"` для java-приложения
     
-Для получения доступа к веб-интерфейсу Prometheus на https://localhost:31337:
+Для получения доступа к веб-интерфейсу Prometheus на http://localhost:31337:
 ```
 kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 31337:9090
 ``` 
