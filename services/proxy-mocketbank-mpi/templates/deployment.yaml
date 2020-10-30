@@ -16,8 +16,8 @@ spec:
       annotations:
         {{- with .Values.podAnnotations }}
           {{- toYaml . | nindent 8 }}
-          {{- end }}
-          proxy-mocketbank-mpi/properties-hash: {{ include "proxy-mocketbank-mpi.propertiesHash" . }}
+        {{- end }}
+        proxy-mocketbank-mpi/properties-hash: {{ include "proxy-mocketbank-mpi.propertiesHash" . }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
