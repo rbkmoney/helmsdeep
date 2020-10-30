@@ -1,6 +1,6 @@
 elastic:
-  replicas: 3
-  podTemplate: 
+  replicas: 2
+  podTemplate:
     spec:
       containers:
         - name: elasticsearch
@@ -16,7 +16,7 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: kibana.rbkmoney.standoff.city
-      paths: 
+      paths:
         - /
   tls:
    - secretName: stand-wild
