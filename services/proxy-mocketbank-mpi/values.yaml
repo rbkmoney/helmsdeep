@@ -1,28 +1,23 @@
 image:
-  repository: docker.io/rbkmoney/proxy-mocketbank
+  repository: docker.io/rbkmoney/proxy-mocketbank-mpi
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
 
 replicaCount: 1
 
-cdsUrl: http://cds.default.svc.cluster.local:8022/v2/storage
-hellgateUrl: http://hellgate.default.svc.cluster.local:8022/v1/proxyhost/provider
-mockMpiUrl: http://proxy-mocketbank-mpi.default.svc.cluster.local:8080
-
 entrypoint: |
   #!/bin/sh
   set -ue
   exec java ${@}
 
-errorMapping: ""
 knownCards: ""
 
 nameOverride: ""
 fullnameOverride: ""
 
 podSecurityContext: {}
-  # fsGroup: 2000
+# fsGroup: 2000
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -41,7 +36,7 @@ securityContext: {}
   #   - ALL
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
-  # runAsUser: 1000
+# runAsUser: 1000
 
 apiService:
   type: ClusterIP
@@ -61,7 +56,7 @@ resources: {}
   #   memory: 128Mi
   # requests:
   #   cpu: 100m
-  #   memory: 128Mi
+#   memory: 128Mi
 
 nodeSelector: {}
 
