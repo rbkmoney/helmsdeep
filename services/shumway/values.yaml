@@ -23,6 +23,9 @@ serviceAccount:
 
 podAnnotations: {}
 
+podLabels:
+  prometheus.metrics.java.enabled: "true"
+
 securityContext: {}
   # capabilities:
   #   drop:

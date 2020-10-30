@@ -4,7 +4,7 @@ metadata:
   name: {{ include "shumway.fullname" . }}
   labels:
     {{- include "shumway.labels" . | nindent 4 }}
-    prometheus.metrics.java.enabled: "true"
+    {{- include .Values.podLabels . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
