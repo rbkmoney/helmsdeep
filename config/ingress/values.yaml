@@ -22,10 +22,6 @@ controller:
     entries:
       main-snippets: |
         load_module /opt/ptaf/lib/ngx_wrapper.so;
-        env PTAF_LOG_LEVEL;
-        env DEBUG;
-        env HOSTNAME;
-        env PTAF_NODE_NAME;
         env POD_IP=127.0.0.1;
       http-snippets: |
-        ptaf_config "tcp://eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJ0b2tlbl9pZCI6IjRhZTk1OWY1LTQ3N2UtNDZkZi05YzI3LTRkYzI1ZjU2ZjgyYiIsInRlbmFudF9pZCI6ImU4YzUxNGU2LWYyYjEtNDg3YS1hOTdjLTZmZjk4YjRlNTAzNCIsInJvbGVzIjpbImNvcmUiLCJ3c2MtYWdlbnQiXX0.09cHWzhb9nVtJHy3FCE_9USrXUnXmXbf-XdeA9n96ZBDORfnFFaF77SbiABvW-u4e_2_q4Js5_myhUp9bR-hsA@10.126.120.237:8443";
+        ptaf_config "tcp://eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJ0b2tlbl9pZCI6IjRhZTk1OWY1LTQ3N2UtNDZkZi05YzI3LTRkYzI1ZjU2ZjgyYiIsInRlbmFudF9pZCI6ImU4YzUxNGU2LWYyYjEtNDg3YS1hOTdjLTZmZjk4YjRlNTAzNCIsInJvbGVzIjpbImNvcmUiLCJ3c2MtYWdlbnQiXX0.TgJedEpfJga_4w2AsmWPCHvtTP7-Vlm76-zbysVTGBh1WIl7OzaSAVciyMXEaW6nNbvCWVpGbyk4-VCjWg9z3Q@172.21.22.237:8443";

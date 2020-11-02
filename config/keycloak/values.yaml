@@ -39,10 +39,10 @@ ingress:
   enabled: true
   rules:
     -
-      host: 'rbkmoney.standoff.city'
+      host: 'auth.rbkmoney.standoff.city'
       paths: 
         - /
   tls:
     - hosts:
-        - rbkmoney.standoff.city
-      secretName: "default/standoff"
+        - auth.rbkmoney.standoff.city
+      secretName: "stand-wild"

@@ -12,6 +12,7 @@ releases:
 - name: logs
   <<: *default
   chart: ./services/elk
+  installed: false
   set:
     - name: filebeat.indextemplate
       file: config/logs/template.json

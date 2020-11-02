@@ -1,10 +1,7 @@
-version: 0.128.0
+version: v0.132.1
 dependencies:
-- name: consul
-  repository: https://kubernetes-charts.storage.googleapis.com
-  version: 3.9.5
 - name: kafka
-  repository: https://kubernetes-charts-incubator.storage.googleapis.com
+  repository: https://charts.helm.sh/incubator
   version: 0.21.2
 - name: keycloak
   repository: https://codecentric.github.io/helm-charts
@@ -16,7 +13,7 @@ dependencies:
   repository: https://helm.releases.hashicorp.com
   version: 0.7.0
 - name: zookeeper
-  repository: https://kubernetes-charts-incubator.storage.googleapis.com
+  repository: https://charts.helm.sh/incubator
   version: 2.1.3
-digest: sha256:bed903d95133a2a79588ab931113bdfeda00d7d16908d6010fa4c56a60893adf
-generated: "2020-10-07T20:35:38.065459+05:00"
+digest: sha256:9ea2033efbd12ba8f56ecdd03a4cdc000028cfe7d9fda17e1a206bfd0ff6a494
+generated: "2020-11-02T01:26:01.734125+03:00"
