@@ -170,6 +170,15 @@ releases:
     file: config/proxy-mocketbank/cards.csv
   - name: errorMapping
     file: config/proxy-mocketbank/errors.json
+- name: proxy-mocketbank-mpi
+  <<: *default
+  labels:
+    logfmt: json
+  needs:
+    - default/proxy-mocketbank
+  set:
+    - name: knownCards
+      file: config/proxy-mocketbank-mpi/cards.csv
 - name: proxy-mocket-inspector
   <<: *default
   labels:
