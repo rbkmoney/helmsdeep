@@ -3,4 +3,4 @@ name: machinegun
 description: A Machinegun Helm chart for Kubernetes
 type: application
 version: 0.1.0
-appVersion: dff398d550685336594c9165dde40856f3691963
+appVersion: 976bb0f8eb5494c38d127ce71b471b234d97f4c7
