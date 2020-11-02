@@ -10,128 +10,25 @@ spec:
     name: {{ .Values.elastic.nameref }}
   kibanaRef:
     name: {{ .Values.kibana.nameref }}
-    # TODO: переместить весь кастом в config/
-        # templates:
-        #   - condition:
-        #       equals:
-        #         kubernetes.namespace: kube-system
-        #     config:
-        #       - type: container
-        #         paths:
-        #           - /var/log/containers/*-${data.kubernetes.container.id}.log
-        #         exclude_lines: ["^\\s+[\\-`('.|_]"] # https://www.elastic.co/guide/en/beats/filebeat/current/configuration-autodiscover.html
-        #   - condition:
-        #       equals:
-        #         kubernetes.container.name: filebeat
-        #     config:
-        #       - type
-# filebeat.autodiscover:
-#   providers:
-#   - hints.enabled: false
-#     templates:
-#     - condition:
-#         equals:
-#           kubernetes.labels.app: mongodb
-#       config:
-#       - log:
-#           input:
-#             containers.ids:
-#             - ${data.kubernetes.container.id}
-#             exclude_lines:
-#             - ^\s+[\-`('.|_]
-#             type: docker
-#         module: mongodb
-#     - condition:
-#         equals:
-#           kubernetes.labels.app: redis
-#       config:
-#       - log:
-#           input:
-#             containers.ids:
-#             - ${data.kubernetes.container.id}
-#             exclude_lines:
-#             - ^\s+[\-`('.|_]
-#             type: docker
-#         module: redis
-#         slowlog:
-#           enabled: false
-#     - condition:
-#         equals:
-#           kubernetes.labels.log-format: json
-#       config:
-#       - containers.ids:
-#         - ${data.kubernetes.container.id}
-#         exclude_lines:
-#         - ^\s+[\-`('.|_]
-#         type: docker
-#     type: kubernetes
-#  co.elastic.logs/processors.2: "add_kubernetes_metadata"
-
-
   config:
     filebeat.autodiscover:
       providers:
       - type: kubernetes
-        node: ${NODE_NAME}
         hints.enabled: true
-        templates:
-        - condition.equals:
-            kubernetes.labels.common_k8s_elastic_co/type: kibana
-          config:
-          - module: kibana
-            log.input:
-              paths:
-              - /var/log/containers/*${data.kubernetes.container.id}.log
-              type: container
-
-        # - condition.equals:
-        #     kubernetes.labels.beat_k8s_elastic_co/name: filebeat
-        #   config:
-        #   - type: container
-        #     paths:
-        #     - /var/log/containers/*${data.kubernetes.container.id}.log
-        #     processors:
-        #     - decode_json_fields:
-        #         when.equals:
-        #           kubernetes.labels.beat_k8s_elastic_co/name: filebeat
-        #         fields: ["message"]
-        #         max_depth: 5
-        #         target: ""
-        #         overwrite_keys: true
-        #         add_error_key: true
-        default_config:
-          enabled: false
-          # type: container
-          # paths:
-          # - /var/log/containers/*${data.kubernetes.container.id}.log
-          # processors:
-          # - decode_json_fields:
-          #     fields: ["log"]
-          #     max_depth: 5
-          #     target: ""
-          #     overwrite_keys: true
-          #     add_error_key: true
-          # - add_kubernetes_metadata:
+        default_config.enabled: false
+        node: ${NODE_NAME}
     logging:
-      #selectors: '*'
-      #json: true
-      level: warning
+      level: error
     output.elasticsearch:
       index: "filebeat-rbkmoney-processing-%{[agent.version]}-%{+yyyy.MM.dd}"
-      indices:
-      - index: "filebeat-rbkmoney-filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
-        when.equals:
-          kubernetes.labels.beat_k8s_elastic_co/name: filebeat
-      - index: "filebeat-rbkmoney-kibana-%{[agent.version]}-%{+yyyy.MM.dd}"
-        when.equals:
-          kubernetes.labels.common_k8s_elastic_co/type: kibana
-    setup.template.enabled: false
+    setup:
       ilm.enabled: false
       dashboards:
         enabled: false
         index: filebeat-rbkmoney-processing-*
       template:
         enabled: true
+        overwrite: true
         pattern: filebeat-rbkmoney-processing-*
         name: filebeat-rbkmoney-processing
         json:

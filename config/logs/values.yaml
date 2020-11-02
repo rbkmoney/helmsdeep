@@ -1,2 +1,2 @@
 filebeat:
-    enabled: false
+    enabled: true

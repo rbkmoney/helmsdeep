@@ -72,3 +72,5 @@ tolerations: []
 
 affinity: {}
 
+hooks:
+  createIndexPatterns: true
