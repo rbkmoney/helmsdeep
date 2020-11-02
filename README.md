@@ -141,7 +141,7 @@ kubectl port-forward vault-0 8200:8200 &
   - Настроить сервис таким образом, чтобы метрики в формате Prometheus отдавались:
     - на `/metrics` с порта `api` для erlang-приложения
     - на `/actuator/prometheus` с порта `management` для java-приложения
-  - Повесить в `spec.template.metadata.labels` соответствующего сервиса label:
+  - Повесить на соответствующий сервис label:
     - `prometheus.metrics.erlang.enabled: "true"` для erlang-приложения
     - `prometheus.metrics.java.enabled: "true"` для java-приложения
     
