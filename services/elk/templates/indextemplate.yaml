@@ -5,4 +5,4 @@ metadata:
   name: filebeat-index-template
 data:
   template.json: |
-    {{- .Values.filebeat.indextemplate | nindent 4 }}
+    {{- .Files.Get "files/template_new.json" | nindent 4 -}}

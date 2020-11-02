@@ -65,7 +65,7 @@ spec:
 #         - ^\s+[\-`('.|_]
 #         type: docker
 #     type: kubernetes
-
+#  co.elastic.logs/processors.2: "add_kubernetes_metadata"
 
 
   config:
@@ -74,8 +74,16 @@ spec:
       - type: kubernetes
         node: ${NODE_NAME}
         hints.enabled: true
-        #templates:
-        #  - condition.and:
+        templates:
+        - condition.equals:
+            kubernetes.labels.common_k8s_elastic_co/type: kibana
+          config:
+          - module: kibana
+            log.input:
+              paths:
+              - /var/log/containers/*${data.kubernetes.container.id}.log
+              type: container
+
         # - condition.equals:
         #     kubernetes.labels.beat_k8s_elastic_co/name: filebeat
         #   config:
@@ -83,9 +91,14 @@ spec:
         #     paths:
         #     - /var/log/containers/*${data.kubernetes.container.id}.log
         #     processors:
-        #     - drop_event:
+        #     - decode_json_fields:
         #         when.equals:
         #           kubernetes.labels.beat_k8s_elastic_co/name: filebeat
+        #         fields: ["message"]
+        #         max_depth: 5
+        #         target: ""
+        #         overwrite_keys: true
+        #         add_error_key: true
         default_config:
           enabled: false
           # type: container
@@ -100,8 +113,8 @@ spec:
           #     add_error_key: true
           # - add_kubernetes_metadata:
     logging:
-      selectors: '*'
-      json: true
+      #selectors: '*'
+      #json: true
       level: warning
     output.elasticsearch:
       index: "filebeat-rbkmoney-processing-%{[agent.version]}-%{+yyyy.MM.dd}"
@@ -109,7 +122,10 @@ spec:
       - index: "filebeat-rbkmoney-filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
         when.equals:
           kubernetes.labels.beat_k8s_elastic_co/name: filebeat
-    setup:
+      - index: "filebeat-rbkmoney-kibana-%{[agent.version]}-%{+yyyy.MM.dd}"
+        when.equals:
+          kubernetes.labels.common_k8s_elastic_co/type: kibana
+    setup.template.enabled: false
       ilm.enabled: false
       dashboards:
         enabled: false
@@ -118,11 +134,6 @@ spec:
         enabled: true
         pattern: filebeat-rbkmoney-processing-*
         name: filebeat-rbkmoney-processing
-        overwrite: true
-        settings:
-          index:
-            number_of_shards: 1
-            number_of_replicas: 1
         json:
           enabled: true
           path: "/etc/template.json"
