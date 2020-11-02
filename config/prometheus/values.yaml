@@ -1,14 +1,25 @@
 # Look for reference at https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L2008
 prometheus:
   additionalServiceMonitors:
-    - name: "rbk-intservice"
+    - name: "rbk-erlang-service"
       selector:
         matchLabels:
-          prometheusmetrics.enabled: "true"
+          prometheus.metrics.erlang.enabled: "true"
       namespaceSelector:
         matchNames:
-        - default
+          - default
       endpoints:
         - port: "api"
           path: /metrics
+          scheme: http
+    - name: "rbk-java-service"
+      selector:
+        matchLabels:
+          prometheus.metrics.java.enabled: "true"
+      namespaceSelector:
+        matchNames:
+          - default
+      endpoints:
+        - port: "management"
+          path: /actuator/prometheus
           scheme: http

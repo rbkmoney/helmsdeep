@@ -9,6 +9,7 @@ releases:
   installed: false
   <<: *default
   chart: prometheus-community/kube-prometheus-stack
+  version: 10.1.0
   namespace: monitoring
 - name: logs
   installed: false
