@@ -16,9 +16,13 @@ spec:
     - toPorts:
       - ports:
         - protocol: TCP
+          port: "8022"
+      - ports:
+        - protocol: TCP
           port: "8023"
       fromEndpoints:
         - matchLabels:
             k8s:app.kubernetes.io/name: cds
         - matchLabels:
             k8s:job-name: kds-initialization-task
+
