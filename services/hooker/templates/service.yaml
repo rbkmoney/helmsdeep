@@ -4,12 +4,17 @@ metadata:
   name: {{ include "hooker.fullname" . }}
   labels:
     {{- include "hooker.labels" . | nindent 4 }}
+    {{- include .Values.podLabels . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: 8022
+    - port: {{ .Values.service.ports.api }}
+      targetPort: api
       protocol: TCP
-      name: http
+      name: api
+    - port: {{ .Values.service.ports.management }}
+      targetPort: management
+      protocol: TCP
+      name: management
   selector:
     {{- include "hooker.selectorLabels" . | nindent 4 }}
