@@ -1,1 +1,8 @@
 replicaCount: 1
+
+metrics:
+  serviceMonitor:
+    enabled: true
+    namespace: monitoring
+    additionalLabels:
+      release: prometheus

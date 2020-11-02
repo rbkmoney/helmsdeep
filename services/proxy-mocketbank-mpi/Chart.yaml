@@ -1,0 +1,6 @@
+apiVersion: v2
+name: proxy-mocketbank-mpi
+description: Universal Acquiring MPI Mock
+type: application
+version: 1.0.7
+appVersion: e43b6f00eca01eb57a6e917704bff608de57336a

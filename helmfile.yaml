@@ -119,12 +119,20 @@ releases:
   set:
   - name: entrypoint
     file: config/shumway/entrypoint.sh
+  - name: logback
+    file: config/logs/logback.xml
+  - name: loggers
+    file: config/shumway/loggers.xml
   wait: true
 - name: hooker
   <<: *default
   set:
   - name: entrypoint
     file: config/hooker/entrypoint.sh
+  - name: logback
+    file: config/logs/logback.xml
+  - name: loggers
+    file: config/hooker/loggers.xml
   needs:
   - default/vault
   - default/kafka
@@ -149,17 +157,36 @@ releases:
     file: config/binbase/entrypoint.sh
 - name: proxy-mocketbank
   <<: *default
+  labels:
+    logfmt: json
+  needs:
+    - default/hellgate
   set:
   - name: knownCards
     file: config/proxy-mocketbank/cards.csv
   - name: errorMapping
     file: config/proxy-mocketbank/errors.json
+- name: proxy-mocketbank-mpi
+  <<: *default
+  labels:
+    logfmt: json
+  needs:
+    - default/proxy-mocketbank
+  set:
+    - name: knownCards
+      file: config/proxy-mocketbank-mpi/cards.csv
 - name: proxy-mocket-inspector
   <<: *default
+  labels:
+    logfmt: json
+  needs:
+    - default/hellgate
 - name: hellgate
   <<: *default
   labels:
     logfmt: json
+  needs:
+    - default/dominant
   set:
   - name: appConfig
     file: config/hellgate/sys.config
@@ -261,9 +288,9 @@ releases:
   needs:
     - default/keycloak
 - name: wapi-pcidss-v0
+  installed: false
   <<: *default
   <<: *ingress
-  installed: false
   labels:
     logfmt: json
   set:
@@ -280,9 +307,9 @@ releases:
   needs:
     - default/keycloak
 - name: wapi
+  installed: false
   <<: *default
   <<: *ingress
-  installed: false
   labels:
     logfmt: json
   set:

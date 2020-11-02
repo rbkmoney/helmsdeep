@@ -8,6 +8,7 @@ replicaCount: 1
 
 cdsUrl: http://cds.default.svc.cluster.local:8022/v2/storage
 hellgateUrl: http://hellgate.default.svc.cluster.local:8022/v1/proxyhost/provider
+mockMpiUrl: http://proxy-mocketbank-mpi.default.svc.cluster.local:8080
 
 entrypoint: |
   #!/bin/sh

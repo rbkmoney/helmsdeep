@@ -38,37 +38,26 @@ data:
       include /etc/nginx/virtualhost/virtualhost.conf;
     }
   virtualhost.conf: |
-    upstream capidssv1 {
-      server capi-pcidss-v1:8080;
-      keepalive 1024;
-    }
-    upstream capidssv2 {
-      server capi-pcidss-v2:8080;
-      keepalive 1024;
-    }
-    upstream capiv1 {
-      server capi-v1:8080;
-      keepalive 1024;
-    }
-    upstream capiv2 {
-      server capi-v2:8080;
-      keepalive 1024;
-    }
-
     server {
       listen 80 default_server;
       access_log /var/log/nginx/app.access_log main;
       error_log /var/log/nginx/app.error_log;
+      resolver kube-dns.kube-system.svc.cluster.local valid=20s ipv6=off;
+
       location =/v1/processing/payment-resources {
-        proxy_pass http://capidssv1/v1/processing/payment-resources;
+        set $capipciv1 capi-pcidss-v1.default.svc.cluster.local;
+        proxy_pass http://$capipciv1:8080/v1/processing/payment-resources;
       }
       location =/v2/processing/payment-resources {
-        proxy_pass http://capidssv2/v2/processing/payment-resources;
+        set $capipciv2 capi-pcidss-v2.default.svc.cluster.local;
+        proxy_pass http://$capipciv2:8080/v2/processing/payment-resources;
       }
       location /v1 {
-        proxy_pass http://capiv1/v1;
+        set $capiv1 capi-v1.default.svc.cluster.local;
+        proxy_pass http://$capiv1:8080;
       }
       location /v2 {
-        proxy_pass http://capiv2/v2;
+        set $capiv2 capi-v2.default.svc.cluster.local;
+        proxy_pass http://$capiv2:8080;
       }
     }
