@@ -19,5 +19,6 @@ releases:
       file: config/logs/template.json
 - name: cilium
   <<: *default
+  version: 1.8.5
   chart: cilium/cilium
   namespace: kube-system

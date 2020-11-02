@@ -1,10 +1,10 @@
 agent:
   policyEnforcementMode: "never"
-global:
+#global:
   #ipv6:
   #  enabled: true
-  hubble:
-    enabled: true
+  #hubble:
+    #enabled: true
     #ui:
     #  enabled: true
     #relay:
