@@ -36,6 +36,9 @@ Common labels
 {{- define "hooker.labels" -}}
 helm.sh/chart: {{ include "hooker.chart" . }}
 {{ include "hooker.selectorLabels" . }}
+{{- range $key, $value := .Values.podLabels }}
+{{ $key }}: {{ $value | quote }}
+{{- end }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
