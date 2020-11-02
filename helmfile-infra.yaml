@@ -6,10 +6,12 @@ repositories:
 
 releases:
 - name: prometheus
+  installed: false
   <<: *default
   chart: prometheus-community/kube-prometheus-stack
   namespace: monitoring
 - name: logs
+  installed: false
   <<: *default
   chart: ./services/elk
   set:
