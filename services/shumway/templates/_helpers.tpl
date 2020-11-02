@@ -37,9 +37,6 @@ Common labels
 {{- define "shumway.labels" -}}
 helm.sh/chart: {{ include "shumway.chart" . }}
 {{ include "shumway.selectorLabels" . }}
-{{- range $key, $value := .Values.podLabels }}
-{{ $key }}: {{ $value | quote }}
-{{- end }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
