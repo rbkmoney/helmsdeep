@@ -5,3 +5,10 @@ initializationTask:
   repository: docker.io/rbkmoney/holmes
   tag: 55e745b7c020c367bff202036af84726d66755f7
   workdir: /opt/holmes
+
+metrics:
+  serviceMonitor:
+    enabled: true
+    namespace: monitoring
+    additionalLabels:
+      release: prometheus

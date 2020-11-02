@@ -2,18 +2,18 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ template "bender.fullname" . }}
-  {{- with .Values.metrics.serviceMonitor.namespace }}
-  namespace: {{ toYaml . }}
+  name: {{ template "capi-pcidss-v1.fullname" . }}
+  {{- if .Values.metrics.serviceMonitor.namespace }}
+  namespace: {{ .Values.metrics.serviceMonitor.namespace }}
   {{- end }}
   labels:
-    {{- include "bender.labels" . | nindent 4 }}
+    {{- include "capi-pcidss-v1.labels" . | nindent 4 }}
     {{- with .Values.metrics.serviceMonitor.additionalLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
   endpoints:
-    - port: "bender"
+    - port: "api"
       path: /metrics
       scheme: http
   namespaceSelector:
@@ -21,5 +21,5 @@ spec:
       - "{{ $.Release.Namespace }}"
   selector:
     matchLabels:
-      {{- include "bender.selectorLabels" . | nindent 6 }}
+      {{- include "capi-pcidss-v1.selectorLabels" . | nindent 6 }}
 {{- end }}
