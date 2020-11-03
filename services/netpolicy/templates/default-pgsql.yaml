@@ -12,11 +12,14 @@ spec:
     - toPorts:
       - ports:
         - protocol: TCP
-          port: "5123"
+          port: "5432"
       fromEndpoints:
         - matchLabels:
             k8s:io.kubernetes.pod.namespace: kube-system
         - matchLabels:
             k8s:io.kubernetes.pod.namespace: monitoring
         - matchLabels:
-            k8s:io.kubernetes.pod.namespace: default
+            k8s:app.kubernetes.io/name: keycloak
+        - matchLabels:
+            k8s:app.kubernetes.io/name: shumway
+            
