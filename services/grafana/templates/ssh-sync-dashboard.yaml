@@ -1,0 +1,10 @@
+{{- if .Values.sidecar.autosync.enabled  }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ssh-sync-dashboard
+type: Opaque
+data:
+  synckey: |
+{{- end }}
+

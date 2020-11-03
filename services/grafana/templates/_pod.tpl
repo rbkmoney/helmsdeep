@@ -15,7 +15,7 @@ hostAliases:
 {{- if .Values.priorityClassName }}
 priorityClassName: {{ .Values.priorityClassName }}
 {{- end }}
-{{- if ( or .Values.persistence.enabled .Values.dashboards .Values.sidecar.datasources.enabled .Values.sidecar.notifiers.enabled .Values.extraInitContainers) }}
+{{- if ( or .Values.persistence.enabled .Values.dashboards .Values.sidecar.datasources.enabled .Values.sidecar.notifiers.enabled .Values.extraInitContainers .Values.sidecar.autosync.enabled) }}
 initContainers:
 {{- end }}
 {{- if ( and .Values.persistence.enabled .Values.initChownData.enabled ) }}
@@ -71,6 +71,25 @@ initContainers:
         readOnly: {{ .readOnly }}
     {{- end }}
 {{- end }}
+{{- if .Values.sidecar.autosync.enabled }}
+  - name: dashboard-autosync
+    image: alpine/git:v2.26.2
+    imagePullPolicy: IfNotPresent
+    args: [ "clone", "-b", "{{ .Values.sidecar.autosync.branch }}", "{{ .Values.sidecar.autosync.repos }}", "/git/dashboards" ]
+#    args: [ "clone", "-b", "dashboard/release", "git@github.com:rbkmoney/grafana-jsonnet.git", "/git/dashboards" ]
+    env:
+      - name: GIT_SSH_COMMAND
+        value: "ssh -o 'StrictHostKeyChecking no' -i /etc/synckey/synckey"
+    volumeMounts:
+      - name: dashboard-dir
+        mountPath: "/git/dashboards/"
+      - name: ssh-dir
+        mountPath: "/root/.ssh"
+      - name: sync-key
+        mountPath: "/etc/synckey"
+        readOnly: true
+{{- end }}
+
 {{- if .Values.sidecar.datasources.enabled }}
   - name: {{ template "grafana.name" . }}-sc-datasources
     {{- if .Values.sidecar.image.sha }}
@@ -272,6 +291,10 @@ containers:
       - name: sc-notifiers-volume
         mountPath: "/etc/grafana/provisioning/notifiers"
 {{- end}}
+{{- if .Values.sidecar.autosync.enabled }}
+      - name: dashboard-dir
+        mountPath: "/var/lib/grafana/dashboards/general"
+{{- end}}
     {{- range .Values.extraSecretMounts }}
       - name: {{ .name }}
         mountPath: {{ .mountPath }}
@@ -315,6 +338,13 @@ containers:
           secretKeyRef:
             name: rbk-es-elastic-user
             key: elastic
+      {{- if .Values.sidecar.autosync.enabled  }}
+      - name: SSH_SYNC_KEY
+        valueFrom:
+          secretKeyRef:
+            name: ssh-sync-dashboard
+            key: synckey
+      {{- end }}
       {{- if .Values.plugins }}
       - name: GF_INSTALL_PLUGINS
         valueFrom:
@@ -443,6 +473,16 @@ volumes:
   - name: sc-notifiers-volume
     emptyDir: {}
 {{- end -}}
+{{- if .Values.sidecar.autosync.enabled }}
+  - name: sync-key
+    secret:
+      secretName: ssh-sync-dashboard
+      defaultMode: 0600
+  - name: dashboard-dir
+    emptyDir: {}
+  - name: ssh-dir
+    emptyDir: {}
+{{- end }}
 {{- range .Values.extraSecretMounts }}
 {{- if .secretName }}
   - name: {{ .name }}
