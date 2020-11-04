@@ -3,4 +3,4 @@ name: hooker
 description: Service for sending webhooks
 type: application
 version: 2.0.56
-appVersion: ef17ab6aa814411c38b0774837d19bf33b3a1d35
+appVersion: a43373a188384be3239f7329e27639d5432117d6
