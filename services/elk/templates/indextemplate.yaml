@@ -1,8 +1,0 @@
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: filebeat-index-template
-data:
-  template.json: |
-    {{- .Files.Get "files/processing_logs_template.json" | nindent 4 -}}

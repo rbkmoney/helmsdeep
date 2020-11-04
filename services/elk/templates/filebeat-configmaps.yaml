@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: filebeat-configs
+data:
+  index_template_json: |
+    {{- .Files.Get "files/filebeat-index-template.json" | nindent 4 }}
+  # TODO: вынести в конфиг
+  # Для любой инсталляции, где логи старше часа не нужно тереть,
+  # стоит использовать другой конфиг для ilm (index lifecycle management).
+  # Для примера сделал конфиг для 16 часов - files/filebeat-ilm-policy-16h.json
+  #
+  # В кибане есть интерфейс для редактирования ilm - https://hostname:5601/app/management/data/index_lifecycle_management/policies ,
+  # откуда легко и непринужденно можно получить искомый json
+  ilm_policy_json: |
+    {{- .Files.Get "files/filebeat-ilm-policy-1h.json" | nindent 4 }}
