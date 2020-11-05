@@ -288,7 +288,6 @@ releases:
   needs:
     - default/keycloak
 - name: wapi-pcidss-v0
-  installed: false
   <<: *default
   <<: *ingress
   installed: false
@@ -308,7 +307,6 @@ releases:
   needs:
     - default/keycloak
 - name: wapi
-  installed: false
   <<: *default
   <<: *ingress
   installed: false
@@ -333,16 +331,6 @@ releases:
     - default/keycloak
 - name: payform
   <<: *default
-  values:
-  - ingress:
-      enabled: true
-      annotations:
-        kubernetes.io/ingress.class: nginx
-      host: checkout.rbkmoney.standoff.city
-      path: /
-      tls:
-        enabled: true
-        secret: stand-wild
   set:
   - name: appconfig
     file: config/payform/appConfig.json

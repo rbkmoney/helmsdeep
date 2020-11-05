@@ -2,6 +2,8 @@ elastic:
   replicas: 3
   podTemplate:
     spec:
+      nodeSelector:
+        esnode: "true"
       containers:
         - name: elasticsearch
           securityContext:

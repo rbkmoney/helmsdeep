@@ -8,4 +8,4 @@ ingress:
   path: /
   tls:
     enabled: true
-    
+    secret: stand-wild
