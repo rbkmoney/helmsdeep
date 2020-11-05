@@ -1,7 +1,8 @@
-replicas: 3
+postgresql.replicaCount: 3
+#replicas: 3
 
 #This is just init password for vault connections.
-postgresqlPassword: "H@ckM3"
+#postgresqlPassword: "H@ckM3"
 postgresql.password: "H@ckM3"
 
 initdbScripts:
