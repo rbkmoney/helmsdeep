@@ -162,3 +162,39 @@ Login as the elastic user. The password can be obtained with the following comma
 ```
 kubectl get secret rbk-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo
 ```
+
+Доступ к grafana и синк dashboards
+-----------
+
+Используем kubectl port-forward
+
+```
+kubectl port-forward <grafana-pod> 3000
+```
+grafana доступна в браузере https://localhost:3000. Получить пароль для входа:
+
+```
+kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+```
+
+Для включения автосинка dashboards в grafana необходимо свой приватный ssh ключ закодировать в base64 и записать в секрет `services/grafana/templates/ssh-sync-dashboard.yaml`:
+```
+...
+type: Opaque
+data:
+  synckey: |
+    <your ssh privat-key>
+...
+```
+
+После в `services/grafana/values.yaml` в блоке `autosync` поменять значение enabled с false на true:
+```
+...
+  autosync:
+    enabled: false
+    repos: "git@github.com:rbkmoney/grafana-jsonnet.git"
+    branch: "dashboard/release"
+
+...
+```
+
