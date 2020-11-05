@@ -1,0 +1,13 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "kafka-default-deny"
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: kafka
+  ingress:
+  - {}
+  egress:
+  - {}

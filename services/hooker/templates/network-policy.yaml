@@ -20,3 +20,11 @@ spec:
       fromEndpoints:
         - matchLabels:
             k8s:service-class: capi
+  egress:
+    - toPorts:
+      - ports:
+        - protocol: TCP
+          port: "8200"
+      toEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/name: vault

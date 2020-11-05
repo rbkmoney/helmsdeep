@@ -22,4 +22,5 @@ spec:
             k8s:app.kubernetes.io/name: keycloak
         - matchLabels:
             k8s:app.kubernetes.io/name: shumway
-            
+        - matchLabels:
+            k8s:app.kubernetes.io/name: vault

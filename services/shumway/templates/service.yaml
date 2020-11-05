@@ -4,7 +4,9 @@ metadata:
   name: {{ include "shumway.fullname" . }}
   labels:
     {{- include "shumway.labels" . | nindent 4 }}
-    {{- include .Values.podLabels . | nindent 4 }}
+    {{- range $label, $value := .Values.podLabels }}
+    {{ $label }}: {{ $value | quote }}
+    {{- end }}
 spec:
   type: {{ .Values.service.type }}
   ports:

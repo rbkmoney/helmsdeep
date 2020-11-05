@@ -24,3 +24,11 @@ spec:
             k8s:app.kubernetes.io/name: capi
         - matchLabels:
             k8s:app.kubernetes.io/name: wapi
+  egress:
+    - toPorts:
+      - ports:
+        - protocol: TCP
+          port: "8200"
+      toEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/name: vault

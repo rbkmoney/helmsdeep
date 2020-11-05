@@ -2,16 +2,12 @@
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
-  name: {{ include "keycloak-realms.name" . }}
+  name: keycloak
   namespace: default
-  labels:
-    chart: {{ template "keycloak-realms.chart" . }}
-    release: {{ .Release.Name | quote }}
-    heritage: {{ .Release.Service | quote }}
 spec:
   endpointSelector:
     matchLabels:
-      k8s:app.kubernetes.io/name: {{ include "keycloak-realms.name" . }}
+      k8s:app.kubernetes.io/name: keycloak
   ingress:
     - toPorts:
       - ports:

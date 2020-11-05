@@ -7,16 +7,14 @@ metadata:
 spec:
   endpointSelector:
     matchLabels:
-      k8s:app.kubernetes.io/component: kafka-broker
+      k8s:app: zookeeper
+      k8s:component: server
   ingress:
-    - fromEndpoints:
-      - matchLabels:
-          k8s:app: zookeeper
-  egress:
-    - toEndpoints:
-      - matchLabels:
-          k8s:app: zookeeper
-      toPorts:
+    - toPorts:
       - ports:
-        - port: "2181"
-          protocol: TCP
+        - protocol: TCP
+          port: "2181"
+      fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/component: kafka-broker
+            k8s:app.kubernetes.io/name: kafka
