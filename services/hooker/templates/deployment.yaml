@@ -33,17 +33,30 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
-              containerPort: 8022
+            - name: api
+              containerPort: {{ .Values.service.ports.api }}
+              protocol: TCP
+            - name: management
+              containerPort: {{ .Values.service.ports.management }}
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /actuator/health
-              port: http
+              port: management
+            initialDelaySeconds: 120
+            timeoutSeconds: 3
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
           readinessProbe:
             httpGet:
               path: /actuator/health
-              port: http
+              port: management
+            initialDelaySeconds: 120
+            timeoutSeconds: 3
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
           volumeMounts:
             - name: config-volume
               mountPath: /opt/hooker/entrypoint.sh
