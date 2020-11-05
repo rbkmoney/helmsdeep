@@ -31,9 +31,14 @@ releases:
   <<: *default
 - name: postgres
   <<: *default
+  chart: bitnami/postgresql-ha
+  wait: true
+- name: postgres-not-ha
+  <<: *default
   chart: bitnami/postgresql
   version: 9.2.0
   wait: true
+  installed: false
 - name: vault
   <<: *default
   chart: hashicorp/vault
