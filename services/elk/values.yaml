@@ -10,9 +10,9 @@ filebeat:
 
 
 elastic:
-  nameref: "rbk"
+  nameref: "rbkmoney"
 kibana:
-  nameref: "rbk"
+  nameref: "rbkmoney"
 
 imagePullSecrets: []
 nameOverride: ""
