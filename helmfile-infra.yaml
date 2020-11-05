@@ -11,8 +11,7 @@ releases:
   version: 10.1.0
   namespace: monitoring
 - name: logs
+  # Change to installed: true if you need ECK installed
+  installed: false
   <<: *default
   chart: ./services/elk
-  set:
-    - name: filebeat.indextemplate
-      file: config/logs/template.json
