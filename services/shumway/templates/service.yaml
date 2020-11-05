@@ -4,12 +4,19 @@ metadata:
   name: {{ include "shumway.fullname" . }}
   labels:
     {{- include "shumway.labels" . | nindent 4 }}
+  {{- with .Values.podLabels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: 8022
+    - port: {{ .Values.service.ports.api }}
+      targetPort: api
       protocol: TCP
       name: api
+    - port: {{ .Values.service.ports.management }}
+      targetPort: management
+      protocol: TCP
+      name: management
   selector:
     {{- include "shumway.selectorLabels" . | nindent 4 }}

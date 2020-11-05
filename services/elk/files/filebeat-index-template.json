@@ -1,0 +1,2556 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": "1",
+      "number_of_replicas": "0",
+      "lifecycle": {
+        "name": "filebeat-rbkmoney-processing-ilm-policy",
+        "rollover_alias": "filebeat-rbkmoney-processing"
+      }
+    }
+  },
+  "mappings": {
+    "_routing": {
+      "required": false
+    },
+    "numeric_detection": false,
+    "dynamic_date_formats": [
+      "strict_date_optional_time",
+      "yyyy/MM/dd HH:mm:ss Z||yyyy/MM/dd Z"
+    ],
+    "dynamic": true,
+    "_source": {
+      "excludes": [],
+      "includes": [],
+      "enabled": true
+    },
+    "dynamic_templates": [
+      {
+        "fields": {
+          "path_match": "fields.*",
+          "mapping": {
+            "ignore_above": 1024,
+            "index": true,
+            "type": "keyword"
+          },
+          "match_mapping_type": "string"
+        }
+      },
+      {
+        "rpc_url": {
+          "path_match": "rpc.*.url",
+          "mapping": {
+            "index": true,
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "rpc_deadline": {
+          "path_match": "rpc.*.deadline",
+          "mapping": {
+            "index": true,
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "invoice_event_amount": {
+          "path_match": "invoice_event.*.amount",
+          "mapping": {
+            "index": true,
+            "type": "long"
+          }
+        }
+      },
+      {
+        "invoice_event_currency": {
+          "path_match": "invoice_event.*.currency",
+          "mapping": {
+            "ignore_above": 128,
+            "index": true,
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "invoice_event_id": {
+          "path_match": "invoice_event.*.id",
+          "mapping": {
+            "ignore_above": 128,
+            "index": true,
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "invoice_event_owner_id": {
+          "path_match": "invoice_event.*.owner_id",
+          "mapping": {
+            "ignore_above": 128,
+            "index": true,
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "invoice_event_shop_id": {
+          "path_match": "invoice_event.*.shop_id",
+          "mapping": {
+            "ignore_above": 128,
+            "index": true,
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "invoice_event_status": {
+          "path_match": "invoice_event.*.status",
+          "mapping": {
+            "ignore_above": 128,
+            "index": true,
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "invoice_event_type": {
+          "path_match": "invoice_event.*.type",
+          "mapping": {
+            "ignore_above": 128,
+            "index": true,
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "invoice_payment_event_amount": {
+          "path_match": "invoice_payment_event.*.amount",
+          "mapping": {
+            "index": true,
+            "type": "long"
+          }
+        }
+      },
+      {
+        "invoice_payment_event_currency": {
+          "path_match": "invoice_payment_event.*.currency",
+          "mapping": {
+            "ignore_above": 128,
+            "index": true,
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "invoice_payment_event_id": {
+          "path_match": "invoice_payment_event.*.id",
+          "mapping": {
+            "ignore_above": 128,
+            "index": true,
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "invoice_payment_event_owner_id": {
+          "path_match": "invoice_payment_event.*.owner_id",
+          "mapping": {
+            "ignore_above": 128,
+            "index": true,
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "invoice_payment_event_shop_id": {
+          "path_match": "invoice_payment_event.*.shop_id",
+          "mapping": {
+            "ignore_above": 128,
+            "index": true,
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "invoice_payment_event_status": {
+          "path_match": "invoice_payment_event.*.status",
+          "mapping": {
+            "ignore_above": 128,
+            "index": true,
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "invoice_payment_event_type": {
+          "path_match": "invoice_payment_event.*.type",
+          "mapping": {
+            "ignore_above": 128,
+            "index": true,
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "invoice_payment_event_error": {
+          "path_match": "invoice_payment_event.*.error",
+          "mapping": {
+            "ignore_above": 256,
+            "index": true,
+            "type": "keyword"
+          }
+        }
+      }
+    ],
+    "date_detection": true,
+    "properties": {
+      "exception": {
+        "type": "object",
+        "properties": {
+          "frames": {
+            "type": "object",
+            "properties": {
+              "method": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "line": {
+                "type": "long"
+              },
+              "class": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              }
+            }
+          },
+          "message": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "@severity": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "orderId": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "action_code": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "wait_timeout": {
+        "type": "long"
+      },
+      "type": {
+        "ignore_above": 128,
+        "type": "keyword"
+      },
+      "attempt": {
+        "type": "long"
+      },
+      "RRN": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "target_timestamp": {
+        "type": "date"
+      },
+      "threadId": {
+        "type": "long"
+      },
+      "healthcheck": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "details": {
+            "type": "object",
+            "enabled": false
+          },
+          "event": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "status": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "route_choice_metadata": {
+        "type": "object",
+        "properties": {
+          "chosen_route": {
+            "type": "object",
+            "properties": {
+              "terminal_name": {
+                "ignore_above": 128,
+                "type": "keyword"
+              },
+              "provider_name": {
+                "ignore_above": 128,
+                "type": "keyword"
+              },
+              "provider_ref ": {
+                "type": "long"
+              },
+              "terminal_ref ": {
+                "type": "long"
+              },
+              "terminal_ref": {
+                "type": "long"
+              },
+              "provider_ref": {
+                "type": "long"
+              }
+            }
+          },
+          "reject_reason": {
+            "ignore_above": 128,
+            "type": "keyword"
+          },
+          "preferable_route": {
+            "type": "object",
+            "properties": {
+              "terminal_name": {
+                "ignore_above": 128,
+                "type": "keyword"
+              },
+              "provider_name": {
+                "ignore_above": 128,
+                "type": "keyword"
+              },
+              "provider_ref ": {
+                "type": "long"
+              },
+              "terminal_ref ": {
+                "type": "long"
+              },
+              "terminal_ref": {
+                "type": "long"
+              },
+              "provider_ref": {
+                "type": "long"
+              }
+            }
+          }
+        }
+      },
+      "time_left": {
+        "type": "integer"
+      },
+      "paymentId": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "context": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "payment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "terminal_id": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "order": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "eventsink_handler": {
+        "type": "object"
+      },
+      "peer_addr": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "span_id": {
+        "ignore_above": 128,
+        "type": "keyword"
+      },
+      "module": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "input_type": {
+        "ignore_above": 128,
+        "index": false,
+        "type": "keyword"
+      },
+      "machine_id": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "amount_transaction": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "fistful_admin": {
+        "type": "object"
+      },
+      "rrn": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "tags": {
+        "ignore_above": 256,
+        "type": "keyword"
+      },
+      "partymgmt": {
+        "type": "object",
+        "properties": {
+          "party_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "questionary_id": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "input": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "node": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "response_length": {
+        "type": "long"
+      },
+      "request_length": {
+        "type": "long"
+      },
+      "http_referrer": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "http_x-request-id": {
+        "ignore_above": 128,
+        "type": "keyword"
+      },
+      "invoice_event": {
+        "type": "object",
+        "properties": {
+          "shop_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "cost": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "long"
+              },
+              "currency": {
+                "ignore_above": 128,
+                "type": "keyword"
+              }
+            }
+          },
+          "owner_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "status": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "stack_trace": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "tls_protocol": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "status": {
+        "type": "short"
+      },
+      "log": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              }
+            }
+          },
+          "offset": {
+            "type": "long"
+          }
+        }
+      },
+      "pos_data": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "http_host": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "MERCHANT": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "http_user_agent": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "ORDER": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "upstream_cache_status": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "retrieval_reference_data": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "identity": {
+        "type": "object",
+        "properties": {
+          "identity_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": {
+        "ignore_above": 128,
+        "type": "keyword"
+      },
+      "bender": {
+        "type": "object",
+        "properties": {
+          "external_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "deadline": {
+        "type": "date"
+      },
+      "leader_pid": {
+        "type": "keyword"
+      },
+      "retry_strategy": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "application_version": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "APPROVAL_CODE": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "parent_invoice": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "wallet": {
+        "type": "object"
+      },
+      "tls_cipher": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "withdrawal": {
+        "type": "object",
+        "properties": {
+          "wallet_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "destination_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "external_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "ndc": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "MRCH_TRANSACTION_ID": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "@timestamp": {
+        "type": "date"
+      },
+      "invoice_payment_event": {
+        "type": "object",
+        "properties": {
+          "cost": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "long"
+              },
+              "currency": {
+                "ignore_above": 128,
+                "type": "keyword"
+              }
+            }
+          },
+          "risk_score": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "timings": {
+            "type": "object",
+            "properties": {
+              "session": {
+                "type": "object",
+                "properties": {
+                  "processed": {
+                    "type": "object",
+                    "properties": {
+                      "finished": {
+                        "type": "long"
+                      },
+                      "suspended": {
+                        "type": "long"
+                      }
+                    }
+                  },
+                  "captured": {
+                    "type": "object",
+                    "properties": {
+                      "finished": {
+                        "type": "long"
+                      }
+                    }
+                  },
+                  "cancelled": {
+                    "type": "object",
+                    "properties": {
+                      "finished": {
+                        "type": "long"
+                      }
+                    }
+                  }
+                }
+              },
+              "payment": {
+                "type": "object",
+                "properties": {
+                  "processed": {
+                    "type": "long"
+                  },
+                  "waiting": {
+                    "type": "long"
+                  },
+                  "captured": {
+                    "type": "long"
+                  },
+                  "cancelled": {
+                    "type": "long"
+                  },
+                  "failed": {
+                    "type": "long"
+                  }
+                }
+              }
+            }
+          },
+          "accounts": {
+            "type": "object",
+            "properties": {
+              "external": {
+                "type": "object",
+                "properties": {
+                  "outcome": {
+                    "type": "object",
+                    "properties": {
+                      "remainder": {
+                        "type": "object",
+                        "properties": {
+                          "amount": {
+                            "type": "long"
+                          },
+                          "currency": {
+                            "ignore_above": 128,
+                            "type": "keyword"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "system": {
+                "type": "object",
+                "properties": {
+                  "settlement": {
+                    "type": "object",
+                    "properties": {
+                      "remainder": {
+                        "type": "object",
+                        "properties": {
+                          "amount": {
+                            "type": "long"
+                          },
+                          "currency": {
+                            "ignore_above": 128,
+                            "type": "keyword"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "provider": {
+                "type": "object",
+                "properties": {
+                  "settlement": {
+                    "type": "object",
+                    "properties": {
+                      "remainder": {
+                        "type": "object",
+                        "properties": {
+                          "amount": {
+                            "type": "long"
+                          },
+                          "currency": {
+                            "ignore_above": 128,
+                            "type": "keyword"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "merchant": {
+                "type": "object",
+                "properties": {
+                  "guarantee": {
+                    "type": "object",
+                    "properties": {
+                      "remainder": {
+                        "type": "object",
+                        "properties": {
+                          "amount": {
+                            "type": "long"
+                          },
+                          "currency": {
+                            "ignore_above": 128,
+                            "type": "keyword"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "settlement": {
+                    "type": "object",
+                    "properties": {
+                      "remainder": {
+                        "type": "object",
+                        "properties": {
+                          "amount": {
+                            "type": "long"
+                          },
+                          "currency": {
+                            "ignore_above": 128,
+                            "type": "keyword"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "invoice": {
+            "type": "object",
+            "properties": {
+              "shop_id": {
+                "ignore_above": 128,
+                "type": "keyword"
+              },
+              "cost": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "long"
+                  },
+                  "currency": {
+                    "ignore_above": 128,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "owner_id": {
+                "ignore_above": 128,
+                "type": "keyword"
+              },
+              "id": {
+                "ignore_above": 128,
+                "type": "keyword"
+              }
+            }
+          },
+          "error": {
+            "ignore_above": 128,
+            "type": "keyword"
+          },
+          "type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "flow": {
+            "type": "object",
+            "properties": {
+              "on_hold_expiration": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "type": {
+                "ignore_above": 128,
+                "type": "keyword"
+              }
+            }
+          },
+          "status": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "machine": {
+        "type": "object",
+        "properties": {
+          "activity": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "namespace": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "signal": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "request_path": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "invoiceId": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "scoper": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "agent": {
+        "type": "object",
+        "properties": {
+          "hostname": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "ephemeral_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "version": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "machine_ns": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "body_bytes_sent": {
+        "type": "long"
+      },
+      "invoice_templating": {
+        "type": "object",
+        "properties": {
+          "invoice_template_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "pid": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "source": {
+        "ignore_above": 256,
+        "type": "keyword"
+      },
+      "swagger": {
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "user-identity": {
+                "type": "object",
+                "properties": {
+                  "realm": {
+                    "type": "text",
+                    "fields": {
+                      "keyword": {
+                        "ignore_above": 256,
+                        "type": "keyword"
+                      }
+                    }
+                  },
+                  "id": {
+                    "type": "text",
+                    "fields": {
+                      "keyword": {
+                        "ignore_above": 256,
+                        "type": "keyword"
+                      }
+                    }
+                  },
+                  "email": {
+                    "type": "text",
+                    "fields": {
+                      "keyword": {
+                        "ignore_above": 256,
+                        "type": "keyword"
+                      }
+                    }
+                  },
+                  "username": {
+                    "type": "text",
+                    "fields": {
+                      "keyword": {
+                        "ignore_above": 256,
+                        "type": "keyword"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "operation_id": {
+            "ignore_above": 128,
+            "type": "keyword"
+          },
+          "api": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "webhookID": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "reportID": {
+                "type": "long"
+              },
+              "contractID": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "customerID": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "invoiceID": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "shopID": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "invoiceTemplateID": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              }
+            }
+          },
+          "request_id": {
+            "type": "keyword"
+          }
+        }
+      },
+      "p2p_template": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "remote_user": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "lastOpId": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "ecs": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "function_code": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "okko-environment": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "next_retry_strategy": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "function": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "beat": {
+        "type": "object",
+        "properties": {
+          "hostname": {
+            "ignore_above": 256,
+            "type": "keyword"
+          },
+          "name": {
+            "ignore_above": 256,
+            "type": "keyword"
+          },
+          "version": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "host": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "invoice_id": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "logbackAppenders": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "logger_name": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "loggerName": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "machine_ref": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "offset": {
+        "type": "long"
+      },
+      "level": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "machine_tag": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "warden_pid": {
+        "type": "keyword"
+      },
+      "mdc": {
+        "type": "object"
+      },
+      "customer_management": {
+        "type": "object",
+        "properties": {
+          "customer_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "cachePeriod": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "sequence": {
+        "type": "long"
+      },
+      "parent_id": {
+        "ignore_above": 128,
+        "type": "keyword"
+      },
+      "thread_name": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "swag": {
+        "type": "object",
+        "properties": {
+          "server": {
+            "type": "object",
+            "properties": {
+              "trace_id": {
+                "ignore_above": 128,
+                "type": "keyword"
+              },
+              "operation_id": {
+                "ignore_above": 128,
+                "type": "keyword"
+              },
+              "api": {
+                "ignore_above": 128,
+                "type": "keyword"
+              },
+              "operation": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "request_id": {
+                "ignore_above": 128,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "party": {
+        "type": "object",
+        "properties": {
+          "activity": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "es_subscription_key": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "request": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "keycloak": {
+        "type": "object",
+        "properties": {
+          "auth_type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "clientId": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "realmId": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "ipAddress": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "response_type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "restart_after_timeout": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "error": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "userId": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "code_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "response_mode": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "auth_method": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "register_method": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "grant_type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "redirect_uri": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "remember_me": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "email": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "client_auth_method": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "username": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "RESULT_CODE": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "loggerClassName": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "line": {
+        "type": "long"
+      },
+      "swag_handler": {
+        "type": "object",
+        "properties": {
+          "trace_id": {
+            "ignore_above": 128,
+            "type": "keyword"
+          },
+          "operation_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "request_id": {
+            "ignore_above": 128,
+            "type": "keyword"
+          }
+        }
+      },
+      "destination": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "recurrent_payment_tools": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "request_method": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "error": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "text"
+          },
+          "stack_trace": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "message": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "class": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "timeout": {
+        "type": "integer"
+      },
+      "txn_id": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "request_time": {
+        "type": "float"
+      },
+      "@version": {
+        "type": "long"
+      },
+      "loggingLevelRoot": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "approval_code": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "remote_addr": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "trace_id": {
+        "ignore_above": 128,
+        "type": "keyword"
+      },
+      "rpc": {
+        "type": "object",
+        "properties": {
+          "server": {
+            "type": "object",
+            "properties": {
+              "metadata": {
+                "type": "object",
+                "properties": {
+                  "user-identity": {
+                    "type": "object",
+                    "properties": {
+                      "realm": {
+                        "type": "text",
+                        "fields": {
+                          "keyword": {
+                            "ignore_above": 256,
+                            "type": "keyword"
+                          }
+                        }
+                      },
+                      "id": {
+                        "type": "text",
+                        "fields": {
+                          "keyword": {
+                            "ignore_above": 256,
+                            "type": "keyword"
+                          }
+                        }
+                      },
+                      "email": {
+                        "type": "text",
+                        "fields": {
+                          "keyword": {
+                            "ignore_above": 256,
+                            "type": "keyword"
+                          }
+                        }
+                      },
+                      "username": {
+                        "type": "text",
+                        "fields": {
+                          "keyword": {
+                            "ignore_above": 256,
+                            "type": "keyword"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "role": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "service": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "function": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "deadline": {
+                "type": "keyword"
+              },
+              "event": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "execution_duration_ms": {
+                "type": "long"
+              },
+              "type": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "url": {
+                "type": "keyword"
+              }
+            }
+          },
+          "caching_client": {
+            "type": "object",
+            "properties": {
+              "metadata": {
+                "type": "object",
+                "properties": {
+                  "user-identity": {
+                    "type": "object",
+                    "properties": {
+                      "realm": {
+                        "type": "text",
+                        "fields": {
+                          "keyword": {
+                            "ignore_above": 256,
+                            "type": "keyword"
+                          }
+                        }
+                      },
+                      "id": {
+                        "type": "text",
+                        "fields": {
+                          "keyword": {
+                            "ignore_above": 256,
+                            "type": "keyword"
+                          }
+                        }
+                      },
+                      "email": {
+                        "type": "text",
+                        "fields": {
+                          "keyword": {
+                            "ignore_above": 256,
+                            "type": "keyword"
+                          }
+                        }
+                      },
+                      "username": {
+                        "type": "text",
+                        "fields": {
+                          "keyword": {
+                            "ignore_above": 256,
+                            "type": "keyword"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "service": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "function": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "event": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "type": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "url": {
+                "type": "keyword"
+              }
+            }
+          },
+          "client": {
+            "type": "object",
+            "properties": {
+              "metadata": {
+                "type": "object",
+                "properties": {
+                  "user-identity": {
+                    "type": "object",
+                    "properties": {
+                      "realm": {
+                        "type": "text",
+                        "fields": {
+                          "keyword": {
+                            "ignore_above": 256,
+                            "type": "keyword"
+                          }
+                        }
+                      },
+                      "id": {
+                        "type": "text",
+                        "fields": {
+                          "keyword": {
+                            "ignore_above": 256,
+                            "type": "keyword"
+                          }
+                        }
+                      },
+                      "email": {
+                        "type": "text",
+                        "fields": {
+                          "keyword": {
+                            "ignore_above": 256,
+                            "type": "keyword"
+                          }
+                        }
+                      },
+                      "username": {
+                        "type": "text",
+                        "fields": {
+                          "keyword": {
+                            "ignore_above": 256,
+                            "type": "keyword"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "role": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "service": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "function": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "deadline": {
+                "type": "keyword"
+              },
+              "event": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "execution_duration_ms": {
+                "type": "long"
+              },
+              "type": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "url": {
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "prospector": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "message": {
+        "norms": false,
+        "type": "text"
+      },
+      "date_time_local_transaction": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "trxId": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "threadName": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "claimmgmt": {
+        "type": "object",
+        "properties": {
+          "party_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "mg_pulse_event_id": {
+        "type": "keyword"
+      },
+      "application": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "http_x-forwarded-for": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "REC_TOKEN": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "party_id": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "invoicing": {
+        "type": "object",
+        "properties": {
+          "payment_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "invoice_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "invoice": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "scheduler_name": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "ff_withdrawal_adapter_host": {
+        "type": "object"
+      }
+    }
+  },
+  "index_patterns": [
+    "filebeat-rbkmoney-processing-*"
+  ]
+}

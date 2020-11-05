@@ -1,0 +1,51 @@
+{{- if .Values.hooks.createIndexPatterns -}}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-create-index-patterns"
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-upgrade,post-install
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    metadata:
+      name: "{{ .Release.Name }}"
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: kibana-index-patterns
+          image: curlimages/curl
+          env:
+            - name: KB_USERNAME
+              value: default-filebeat-beat-kb-user
+            - name: KB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: filebeat-beat-kb-user
+                  key: default-filebeat-beat-kb-user
+          command:
+            - /bin/sh
+            - -c
+            - |
+              curl -XPOST https://{{- .Values.kibana.nameref -}}-kb-http.default.svc:5601/api/saved_objects/index-pattern/filebeat-rbkmoney-processing?overwrite=true \
+              -H 'kbn-xsrf: true' -H 'Content-Type: application/json' \
+              -u ${KB_USERNAME}:${KB_PASS} -k -d '
+              {
+                "attributes": {
+                  "title": "filebeat-rbkmoney-*",
+                  "timeFieldName": "@timestamp"
+                  }
+              }'
+{{- end -}}
