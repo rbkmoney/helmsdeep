@@ -1,6 +1,10 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
+{{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+{{- end }}
   name:  {{ include "capi-v1.fullname" . }}
   labels:
     {{- include "capi-v1.labels" . | nindent 4 }}

@@ -10,3 +10,61 @@ zookeeper:
   ## If the Zookeeper Chart is disabled a URL and port are required to connect
   url: "zookeeper"
   port: 2181
+
+topics:
+  - name: wb-list-command
+    partitions: 1
+    replicationFactor: 1
+  - name: wb-list-event-sink
+    partitions: 1
+    replicationFactor: 1
+  - name: result
+    partitions: 1
+    replicationFactor: 1
+  - name: p2p_result
+    partitions: 1
+    replicationFactor: 1
+  - name: fraud_payment
+    partitions: 1
+    replicationFactor: 1
+  - name: payment_event
+    partitions: 1
+    replicationFactor: 1
+  - name: refund_event
+    partitions: 1
+    replicationFactor: 1
+  - name: chargeback_event
+    partitions: 1
+    replicationFactor: 1
+  - name: template
+    partitions: 1
+    replicationFactor: 1
+    config: "cleanup.policy=compact"
+  - name: template_p2p
+    partitions: 1
+    replicationFactor: 1
+    config: "cleanup.policy=compact"
+  - name: template_reference
+    partitions: 1
+    replicationFactor: 1
+    config: "cleanup.policy=compact"
+  - name: template_p2p_reference
+    partitions: 1
+    replicationFactor: 1
+    config: "cleanup.policy=compact"
+  - name: group_list
+    partitions: 1
+    replicationFactor: 1
+    config: "cleanup.policy=compact"
+  - name: group_p2p_list
+    partitions: 1
+    replicationFactor: 1
+    config: "cleanup.policy=compact"
+  - name: group_reference
+    partitions: 1
+    replicationFactor: 1
+    config: "cleanup.policy=compact"
+  - name: group_p2p_reference
+    partitions: 1
+    replicationFactor: 1
+    config: "cleanup.policy=compact"
