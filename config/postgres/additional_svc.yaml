@@ -1,0 +1,25 @@
+# Source: postgresql-ha/templates/postgresql/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    meta.helm.sh/release-name: postgres
+    meta.helm.sh/release-namespace: default
+  labels:
+    app.kubernetes.io/instance: postgres
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: postgresql-ha
+    helm.sh/chart: postgresql-ha-5.2.4
+  name: postgres-postgresql
+  namespace: default
+spec:
+  type: ClusterIP
+  ports:
+    - name: postgresql
+      port: 5432
+      targetPort: postgresql
+      protocol: TCP
+  selector:
+    app.kubernetes.io/component: pgpool
+    app.kubernetes.io/instance: postgres
+    app.kubernetes.io/name: postgresql-ha
