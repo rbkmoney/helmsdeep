@@ -60,7 +60,7 @@ releases:
 - name: riak
   <<: *default
   labels:
-    logfmt: json
+    logfmt: cri
   chart: ./services/riak
   set:
   - name: config.user
@@ -68,7 +68,7 @@ releases:
 - name: machinegun
   <<: *default
   labels:
-    logfmt: json
+    logfmt: cri
   needs:
   - default/consul
   - default/riak
@@ -79,7 +79,7 @@ releases:
 - name: bender
   <<: *default
   labels:
-    logfmt: json
+    logfmt: cri
   set:
   - name: appConfig
     file: config/bender/sys.config
@@ -88,7 +88,7 @@ releases:
 - name: kds
   <<: *default
   labels:
-    logfmt: json
+    logfmt: cri
   set:
   - name: appConfig
     file: config/kds/sys.config
@@ -101,7 +101,7 @@ releases:
 - name: cds
   <<: *default
   labels:
-    logfmt: json
+    logfmt: cri
   needs:
     - default/kds
     - default/riak
@@ -117,7 +117,7 @@ releases:
 - name: shumway
   <<: *default
   labels:
-    logfmt: json
+    logfmt: cri
   needs:
   - default/vault
   - default/postgres
@@ -144,7 +144,7 @@ releases:
 - name: dominant
   <<: *default
   labels:
-    logfmt: json
+    logfmt: cri
   needs:
   - default/shumway
   wait: true
@@ -163,7 +163,7 @@ releases:
 - name: proxy-mocketbank
   <<: *default
   labels:
-    logfmt: json
+    logfmt: cri
   needs:
     - default/hellgate
   set:
@@ -174,7 +174,7 @@ releases:
 - name: proxy-mocketbank-mpi
   <<: *default
   labels:
-    logfmt: json
+    logfmt: cri
   needs:
     - default/proxy-mocketbank
   set:
@@ -183,13 +183,13 @@ releases:
 - name: proxy-mocket-inspector
   <<: *default
   labels:
-    logfmt: json
+    logfmt: cri
   needs:
     - default/hellgate
 - name: hellgate
   <<: *default
   labels:
-    logfmt: json
+    logfmt: cri
   needs:
     - default/dominant
   set:
@@ -201,7 +201,7 @@ releases:
   <<: *default
   <<: *ingress
   labels:
-    logfmt: json
+    logfmt: cri
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -223,7 +223,7 @@ releases:
   <<: *default
   <<: *ingress
   labels:
-    logfmt: json
+    logfmt: cri
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -252,7 +252,7 @@ releases:
   <<: *default
   <<: *ingress
   labels:
-    logfmt: json
+    logfmt: cri
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -274,7 +274,7 @@ releases:
   <<: *default
   <<: *ingress
   labels:
-    logfmt: json
+    logfmt: cri
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -297,7 +297,7 @@ releases:
   <<: *ingress
   installed: false
   labels:
-    logfmt: json
+    logfmt: cri
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -316,7 +316,7 @@ releases:
   <<: *ingress
   installed: false
   labels:
-    logfmt: json
+    logfmt: cri
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh

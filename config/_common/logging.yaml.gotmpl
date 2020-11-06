@@ -1,10 +1,18 @@
-{{ if eq (index .Release.Labels "logfmt") "json" }}
 podAnnotations:
   co.elastic.logs/enabled: "true"
+{{ if eq (index .Release.Labels "logfmt") "json" }}
   co.elastic.logs/json.keys_under_root: "true"
   co.elastic.logs/json.overwrite_keys: "true"
   co.elastic.logs/json.add_error_key: "true"
   co.elastic.logs/processors.1.decode_json_fields.fields: "log"
+  co.elastic.logs/processors.1.decode_json_fields.max_depth: "5"
+  co.elastic.logs/processors.1.decode_json_fields.target: ""
+  co.elastic.logs/processors.1.decode_json_fields.overwrite_keys: "true"
+  co.elastic.logs/processors.1.decode_json_fields.add_error_key: "true"
+{{ else if eq (index .Release.Labels "logfmt") "cri" }}
+  co.elastic.logs/cri.force: "true"
+  co.elastic.logs/cri.parse_flags: "true"
+  co.elastic.logs/processors.1.decode_json_fields.fields: "message"
   co.elastic.logs/processors.1.decode_json_fields.max_depth: "5"
   co.elastic.logs/processors.1.decode_json_fields.target: ""
   co.elastic.logs/processors.1.decode_json_fields.overwrite_keys: "true"
