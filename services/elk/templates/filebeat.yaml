@@ -15,8 +15,12 @@ spec:
       providers:
       - type: kubernetes
         hints.enabled: true
-        default_config.enabled: false
         node: ${NODE_NAME}
+        hints.default_config:
+          type: container
+          paths:
+            - /var/log/containers/*-${data.container.id}.log  # CRI path
+
     logging:
       level: info
     # output.elasticsearch:

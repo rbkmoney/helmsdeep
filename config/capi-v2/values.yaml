@@ -1,5 +1,5 @@
 ingress:
-  host: rbkmoney.standoff.city
+  host: api.rbkmoney.standoff.city
   path: /v2
 replicaCount: 1
 
