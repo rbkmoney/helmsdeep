@@ -10,18 +10,9 @@ filebeat:
 
 
 elastic:
-  nameref: "rbk"
-  replicas: 1
-  podTemplate: {}
-    # spec:
-    #   containers:
-    #     - name: elasticsearch
-    #       securityContext:
-    #         capabilities:
-    #           add:
-    #           - SYS_CHROOT
+  nameref: "rbkmoney"
 kibana:
-  nameref: "rbk"
+  nameref: "rbkmoney"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -50,3 +41,5 @@ ingress:
   #      - chart-example.local
 
 
+hooks:
+  createIndexPatterns: true

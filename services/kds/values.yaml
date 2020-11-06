@@ -18,6 +18,14 @@ initializationTask:
 beam:
   disableSBWT: false
 
+metrics:
+  serviceMonitor:
+    enabled: false
+    namespace: default
+    # Used to pass Labels that are used by the Prometheus installed in your cluster to select Service Monitors to work with
+    # ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
+    additionalLabels: {}
+
 nameOverride: ""
 fullnameOverride: ""
 

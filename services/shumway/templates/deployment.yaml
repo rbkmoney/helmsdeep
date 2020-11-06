@@ -34,16 +34,29 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: api
-              containerPort: 8022
+              containerPort: {{ .Values.service.ports.api }}
+              protocol: TCP
+            - name: management
+              containerPort: {{ .Values.service.ports.management }}
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /actuator/health
-              port: api
+              port: management
+            initialDelaySeconds: 120
+            timeoutSeconds: 3
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
           readinessProbe:
             httpGet:
               path: /actuator/health
-              port: api
+              port: management
+            initialDelaySeconds: 120
+            timeoutSeconds: 3
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
           volumeMounts:
             - name: config-volume
               mountPath: /opt/shumway/entrypoint.sh
@@ -53,13 +66,20 @@ spec:
               mountPath: /opt/shumway/logback.xml
               subPath: logback.xml
               readOnly: true
+            - name: config-volume
+              mountPath: /opt/shumway/loggers.xml
+              subPath: loggers.xml
+              readOnly: true
           command: ["/opt/shumway/entrypoint.sh"]
           args:
             - -jar
             - /opt/shumway/shumway.jar
+            - --logging.config=/opt/shumway/logback.xml
             - --spring.flyway.table=schema_version
             - --spring.flyway.schemas=shm
-            - --logging.config=/opt/shumway/logback.xml
+          env:
+            - name: LOGBACK_SERVICE_NAME
+              value: "shumway"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -72,7 +92,8 @@ spec:
               mode: 0755
             - key: logback.xml
               path: logback.xml
-
+            - key: loggers.xml
+              path: loggers.xml
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

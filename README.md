@@ -138,11 +138,17 @@ kubectl port-forward vault-0 8200:8200 &
 Как включить сбор метрик
 ----------
 
-requrements:
-  - Service c именем порта api, на котором слушает http порт приложения
-  - label
-  ```          prometheusmetrics.enabled: "true" ```
-  - Метрики приложения в формате prometheus должны отдаваться на локейшене /metrics
+  - Настроить сервис таким образом, чтобы метрики в формате Prometheus отдавались:
+    - на `/metrics` с порта `api` для erlang-приложения
+    - на `/actuator/prometheus` с порта `management` для java-приложения
+  - Повесить на соответствующий сервис label:
+    - `prometheus.metrics.erlang.enabled: "true"` для erlang-приложения
+    - `prometheus.metrics.java.enabled: "true"` для java-приложения
+
+Для получения доступа к веб-интерфейсу Prometheus на http://localhost:31337:
+```
+kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 31337:9090
+```
 
 Доступ к логам в kibana
 -----------
@@ -152,7 +158,7 @@ our name is "rbk" not "quickstart"
 Use kubectl port-forward to access Kibana from your local workstation:
 
 ```
-kubectl port-forward service/rbk-kb-http 5601
+kubectl port-forward service/rbkmoney-kb-http 5601
 ```
 
 Open https://localhost:5601 in your browser. Your browser will show a warning because the self-signed certificate configured by default is not verified by a known certificate authority and not trusted by your browser. You can temporarily acknowledge the warning for the purposes of this quick start but it is highly recommended that you configure valid certificates for any production deployments.

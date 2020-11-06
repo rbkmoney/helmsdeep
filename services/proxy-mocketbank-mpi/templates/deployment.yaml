@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "proxy-mocketbank-mpi.fullname" . }}
+  labels:
+    {{- include "proxy-mocketbank-mpi.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "proxy-mocketbank-mpi.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "proxy-mocketbank-mpi.selectorLabels" . | nindent 8 }}
+      annotations:
+        {{- with .Values.podAnnotations }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        proxy-mocketbank-mpi/properties-hash: {{ include "proxy-mocketbank-mpi.propertiesHash" . }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "proxy-mocketbank-mpi.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: api
+              containerPort: 8022
+              protocol: TCP
+            - name: callbacks
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: api
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: api
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/proxy-mocketbank-mpi/entrypoint.sh
+              subPath: entrypoint.sh
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/proxy-mocketbank-mpi/fixture/cards.csv
+              subPath: cards.csv
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/proxy-mocketbank-mpi/logback.xml
+              subPath: logback.xml
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/proxy-mocketbank-mpi/loggers.xml
+              subPath: loggers.xml
+              readOnly: true
+          command: ["/opt/proxy-mocketbank-mpi/entrypoint.sh"]
+          args:
+            - -jar
+            - /opt/proxy-mocketbank-mpi/proxy-mocketbank-mpi.jar
+            - --logging.config=/opt/proxy-mocketbank-mpi/logback.xml
+            - --server.secondary.ports=8080
+            - --server.port=8022
+          env:
+            - name: LOGBACK_SERVICE_NAME
+              value: "proxy-mocketbank-mpi"
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "proxy-mocketbank-mpi.fullname" . }}
+            items:
+              - key: entrypoint.sh
+                path: entrypoint.sh
+                mode: 0755
+              - key: cards.csv
+                path: cards.csv
+              - key: logback.xml
+                path: logback.xml
+              - key: loggers.xml
+                path: loggers.xml
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

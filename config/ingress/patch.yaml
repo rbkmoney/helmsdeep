@@ -1,0 +1,17 @@
+spec:
+  template:
+    spec:
+      containers:
+      - name: rbk-ing-nginx-ingress
+        env:
+        - name: PTAF_NODE_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        - name: PTAF_LOG_LEVEL
+          value: DEBUG
+        - name: CORE_GRACEFUL_SHUTDOWN_TIMEOUT
+          value: "30"
+        - name: POD_IP
+          value: "127.0.0.1"

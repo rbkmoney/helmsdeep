@@ -1,5 +1,11 @@
 replicaCount: 1
 
 ingress:
-  host: rbkmoney.standoff.city
+  host: api.rbkmoney.standoff.city
   path: /v1/processing/payment-resources
+metrics:
+  serviceMonitor:
+    enabled: true
+    namespace: monitoring
+    additionalLabels:
+      release: prometheus

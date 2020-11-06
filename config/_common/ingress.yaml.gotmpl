@@ -1,0 +1,7 @@
+{{ if (index .Release.Labels "ingress") }}
+ingress:
+  host: api.rbkmoney.standoff.city
+  tls:
+      enabled: false
+      secret: stand-wild
+{{ end }}
