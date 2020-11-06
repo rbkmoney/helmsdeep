@@ -17,6 +17,9 @@ helmfiles:
   path: helmfile-infra.yaml
 
 releases:
+#######################
+## External services ##
+#######################
 - name: zookeeper
   <<: *default
   chart: incubator/zookeeper
@@ -46,17 +49,6 @@ releases:
   needs:
   - default/postgres
   wait: true
-- name: keycloak-realms
-  <<: *default
-- name: keycloak
-  <<: *default
-  chart: codecentric/keycloak
-  version: 9.0.1
-  needs:
-  - default/postgres
-  wait: true
-- name: holmes
-  <<: *default
 - name: riak
   <<: *default
   labels:
@@ -65,6 +57,11 @@ releases:
   set:
   - name: config.user
     file: config/riak/user.yaml
+
+
+############
+## Erlang ##
+############
 - name: machinegun
   <<: *default
   labels:
@@ -76,6 +73,20 @@ releases:
   set:
   - name: appConfig
     file: config/machinegun/config.yaml
+- name: dominant
+  <<: *default
+  labels:
+    logfmt: cri
+  needs:
+  - default/shumway
+  wait: true
+  set:
+  - name: initializationTask.script
+    file: config/dominant/init-script.sh
+  - name: appConfig
+    file: config/dominant/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
 - name: bender
   <<: *default
   labels:
@@ -114,95 +125,6 @@ releases:
     file: config/cds/ca.crt
   - name: clientCrt
     file: config/cds/client.pem
-- name: shumway
-  <<: *default
-  labels:
-    logfmt: cri
-  needs:
-  - default/vault
-  - default/postgres
-  set:
-  - name: entrypoint
-    file: config/shumway/entrypoint.sh
-  - name: logback
-    file: config/logs/logback.xml
-  - name: loggers
-    file: config/shumway/loggers.xml
-  wait: true
-- name: hooker
-  <<: *default
-  set:
-  - name: entrypoint
-    file: config/hooker/entrypoint.sh
-  - name: logback
-    file: config/logs/logback.xml
-  - name: loggers
-    file: config/hooker/loggers.xml
-  needs:
-  - default/vault
-  - default/kafka
-- name: dominant
-  <<: *default
-  labels:
-    logfmt: cri
-  needs:
-  - default/shumway
-  wait: true
-  set:
-  - name: initializationTask.script
-    file: config/dominant/init-script.sh
-  - name: appConfig
-    file: config/dominant/sys.config
-  - name: vmConfig
-    file: config/vm/erl_inetrc
-- name: binbase
-  <<: *default
-  set:
-  - name: entrypoint
-    file: config/binbase/entrypoint.sh
-  - name: logback
-    file: config/logs/logback.xml
-  - name: loggers
-    file: config/binbase/loggers.xml
-- name: proxy-mocketbank
-  <<: *default
-  labels:
-    logfmt: cri
-  needs:
-    - default/hellgate
-  set:
-  - name: knownCards
-    file: config/proxy-mocketbank/cards.csv
-  - name: errorMapping
-    file: config/proxy-mocketbank/errors.json
-  - name: logback
-    file: config/logs/logback.xml
-  - name: loggers
-    file: config/proxy-mocketbank/loggers.xml
-- name: proxy-mocketbank-mpi
-  <<: *default
-  labels:
-    logfmt: cri
-  needs:
-    - default/proxy-mocketbank
-  set:
-    - name: knownCards
-      file: config/proxy-mocketbank-mpi/cards.csv
-    - name: logback
-      file: config/logs/logback.xml
-    - name: loggers
-      file: config/proxy-mocketbank-mpi/loggers.xml
-- name: proxy-mocket-inspector
-  <<: *default
-  labels:
-    logfmt: cri
-  needs:
-    - default/hellgate
-  set:
-    - name: logback
-      file: config/logs/logback.xml
-    - name: loggers
-      file: config/proxy-mocket-inspector/loggers.xml
 - name: hellgate
   <<: *default
   labels:
@@ -214,33 +136,11 @@ releases:
     file: config/hellgate/sys.config
   - name: vmConfig
     file: config/vm/erl_inetrc
-- name: capi-pcidss-v2
-  <<: *default
-  <<: *ingress
-  labels:
-    logfmt: cri
-  set:
-  - name: fetchKeycloakPubkey
-    file: config/api-common/fetch-keycloak-pubkey.sh
-  - name: appConfig
-    file: config/capi-pcidss-v2/sys.config
-  - name: vmConfig
-    file: config/vm/erl_inetrc
-  - name: oopsBody1
-    file: config/api-common/oops-bodies/sad-kitty1
-  - name: oopsBody2
-    file: config/api-common/oops-bodies/sad-kitty2
-  - name: tokenEncryptionKey1
-    file: config/api-common/keys/token-encryption-keys/1.jwk
-  - name: capiPrivkey
-    file: config/api-common/keys/capi.privkey.pem
-  needs:
-    - default/keycloak
 - name: capi-pcidss-v1
   <<: *default
-  <<: *ingress
   labels:
     logfmt: cri
+    ingress: true
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -258,18 +158,33 @@ releases:
     file: config/api-common/keys/capi.privkey.pem
   needs:
     - default/keycloak
-- name: url-shortener
+- name: capi-pcidss-v2
   <<: *default
-  set:
-  - name: appConfig
-    file: config/url-shortener/sys.config
-  - name: vmConfig
-    file: config/vm/erl_inetrc
-- name: capi-v1
-  <<: *default
-  <<: *ingress
   labels:
     logfmt: cri
+    ingress: true
+  set:
+  - name: fetchKeycloakPubkey
+    file: config/api-common/fetch-keycloak-pubkey.sh
+  - name: appConfig
+    file: config/capi-pcidss-v2/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+  - name: oopsBody1
+    file: config/api-common/oops-bodies/sad-kitty1
+  - name: oopsBody2
+    file: config/api-common/oops-bodies/sad-kitty2
+  - name: tokenEncryptionKey1
+    file: config/api-common/keys/token-encryption-keys/1.jwk
+  - name: capiPrivkey
+    file: config/api-common/keys/capi.privkey.pem
+  needs:
+    - default/keycloak
+- name: capi-v1
+  <<: *default
+  labels:
+    logfmt: cri
+    ingress: true
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -289,9 +204,9 @@ releases:
     - default/keycloak
 - name: capi-v2
   <<: *default
-  <<: *ingress
   labels:
     logfmt: cri
+    ingress: true
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -311,10 +226,10 @@ releases:
     - default/keycloak
 - name: wapi-pcidss-v0
   <<: *default
-  <<: *ingress
   installed: false
   labels:
     logfmt: cri
+    ingress: true
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -330,10 +245,10 @@ releases:
     - default/keycloak
 - name: wapi
   <<: *default
-  <<: *ingress
   installed: false
   labels:
     logfmt: cri
+    ingress: true
   set:
   - name: fetchKeycloakPubkey
     file: config/api-common/fetch-keycloak-pubkey.sh
@@ -351,11 +266,113 @@ releases:
     file: config/api-common/keys/capi.privkey.pem
   needs:
     - default/keycloak
+
+
+
+
+##########
+## Java ##
+##########
+- name: keycloak
+  <<: *default
+  labels:
+    logfmt: cri
+  chart: codecentric/keycloak
+  version: 9.0.1
+  needs:
+  - default/postgres
+  wait: true
+- name: keycloak-realms
+  <<: *default
+- name: shumway
+  <<: *default
+  labels:
+    logfmt: cri
+  needs:
+  - default/vault
+  - default/postgres
+  set:
+  - name: entrypoint
+    file: config/shumway/entrypoint.sh
+  - name: logback
+    file: config/logs/logback.xml
+  - name: loggers
+    file: config/shumway/loggers.xml
+  wait: true
+- name: hooker
+  <<: *default
+  labels:
+    logfmt: cri
+  set:
+  - name: entrypoint
+    file: config/hooker/entrypoint.sh
+  - name: logback
+    file: config/logs/logback.xml
+  - name: loggers
+    file: config/hooker/loggers.xml
+  needs:
+  - default/vault
+  - default/kafka
+- name: binbase
+  <<: *default
+  labels:
+    logfmt: cri
+  set:
+  - name: entrypoint
+    file: config/binbase/entrypoint.sh
+  - name: logback
+    file: config/logs/logback.xml
+  - name: loggers
+    file: config/binbase/loggers.xml
+- name: proxy-mocketbank
+  <<: *default
+  labels:
+    logfmt: cri
+  needs:
+    - default/hellgate
+  set:
+  - name: knownCards
+    file: config/proxy-mocketbank/cards.csv
+  - name: errorMapping
+    file: config/proxy-mocketbank/errors.json
+- name: proxy-mocketbank-mpi
+  <<: *default
+  labels:
+    logfmt: cri
+  needs:
+    - default/proxy-mocketbank
+  set:
+    - name: knownCards
+      file: config/proxy-mocketbank-mpi/cards.csv
+- name: proxy-mocket-inspector
+  <<: *default
+  labels:
+    logfmt: cri
+  needs:
+    - default/hellgate
+
+- name: url-shortener
+  <<: *default
+  set:
+  - name: appConfig
+    file: config/url-shortener/sys.config
+  - name: vmConfig
+    file: config/vm/erl_inetrc
+
+
+##############
+## Frontend ##
+##############
 - name: payform
   <<: *default
   set:
   - name: appconfig
     file: config/payform/appConfig.json
+
+
+##########
+## Misc ##
+##########
 - name: test-transaction
   <<: *default
   needs:
@@ -363,3 +380,5 @@ releases:
     - default/dominant
     - default/cds
     - default/keycloak
+- name: holmes
+  <<: *default
