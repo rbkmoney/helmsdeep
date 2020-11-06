@@ -315,6 +315,8 @@ releases:
   - default/kafka
 - name: binbase
   <<: *default
+  labels:
+    logfmt: cri
   set:
   - name: entrypoint
     file: config/binbase/entrypoint.sh
