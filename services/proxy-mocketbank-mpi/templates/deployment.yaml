@@ -56,12 +56,24 @@ spec:
               mountPath: /opt/proxy-mocketbank-mpi/fixture/cards.csv
               subPath: cards.csv
               readOnly: true
+            - name: config-volume
+              mountPath: /opt/proxy-mocketbank-mpi/logback.xml
+              subPath: logback.xml
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/proxy-mocketbank-mpi/loggers.xml
+              subPath: loggers.xml
+              readOnly: true
           command: ["/opt/proxy-mocketbank-mpi/entrypoint.sh"]
           args:
             - -jar
             - /opt/proxy-mocketbank-mpi/proxy-mocketbank-mpi.jar
+            - --logging.config=/opt/proxy-mocketbank-mpi/logback.xml
             - --server.secondary.ports=8080
             - --server.port=8022
+          env:
+            - name: LOGBACK_SERVICE_NAME
+              value: "proxy-mocketbank-mpi"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -74,6 +86,10 @@ spec:
                 mode: 0755
               - key: cards.csv
                 path: cards.csv
+              - key: logback.xml
+                path: logback.xml
+              - key: loggers.xml
+                path: loggers.xml
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

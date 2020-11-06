@@ -10,3 +10,7 @@ data:
     {{- .Values.entrypoint | nindent 4 }}
   cards.csv: |
     {{- .Values.knownCards | nindent 4 }}
+  logback.xml: |
+    {{- .Values.logback | nindent 4 }}
+  loggers.xml: |
+    {{- .Values.loggers | nindent 4 }}

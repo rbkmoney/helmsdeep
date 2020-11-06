@@ -49,11 +49,23 @@ spec:
               mountPath: /opt/proxy-mocket-inspector/entrypoint.sh
               subPath: entrypoint.sh
               readOnly: true
+            - name: config-volume
+              mountPath: /opt/proxy-mocket-inspector/logback.xml
+              subPath: logback.xml
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/proxy-mocket-inspector/loggers.xml
+              subPath: loggers.xml
+              readOnly: true
           command: ["/opt/proxy-mocket-inspector/entrypoint.sh"]
           args:
             - -jar
             - /opt/proxy-mocket-inspector/proxy-mocket-inspector.jar
+            - --logging.config=/opt/proxy-mocket-inspector/logback.xml
             - --server.port=8022
+          env:
+            - name: LOGBACK_SERVICE_NAME
+              value: "proxy-mocket-inspector"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -64,6 +76,10 @@ spec:
               - key: entrypoint.sh
                 path: entrypoint.sh
                 mode: 0755
+              - key: logback.xml
+                path: logback.xml
+              - key: loggers.xml
+                path: loggers.xml
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
