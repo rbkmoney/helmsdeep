@@ -160,6 +160,10 @@ releases:
   set:
   - name: entrypoint
     file: config/binbase/entrypoint.sh
+  - name: logback
+    file: config/logs/logback.xml
+  - name: loggers
+    file: config/hooker/loggers.xml
 - name: proxy-mocketbank
   <<: *default
   labels:

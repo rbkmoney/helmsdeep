@@ -49,15 +49,27 @@ spec:
               mountPath: /opt/binbase/entrypoint.sh
               subPath: entrypoint.sh
               readOnly: true
+            - name: config-volume
+              mountPath: /opt/hooker/logback.xml
+              subPath: logback.xml
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/hooker/loggers.xml
+              subPath: loggers.xml
+              readOnly: true
           command: ["/opt/binbase/entrypoint.sh"]
           args:
             - -jar
             - /opt/binbase/binbase.jar
+            - --logging.config=/opt/binbase/logback.xml
             - --management.security.enabled=false
             - --spring.batch.job.enabled=false
             - --client.cds.url={{ .Values.cdsUrl }}
             - --spring.flyway.enabled=false
             - --spring.batch.initialize-schema=never
+          env:
+            - name: LOGBACK_SERVICE_NAME
+              value: "binbase"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -68,6 +80,10 @@ spec:
             - key: entrypoint.sh
               path: entrypoint.sh
               mode: 0755
+            - key: logback.xml
+              path: logback.xml
+            - key: loggers.xml
+              path: loggers.xml
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
