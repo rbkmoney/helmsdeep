@@ -163,7 +163,7 @@ releases:
   - name: logback
     file: config/logs/logback.xml
   - name: loggers
-    file: config/hooker/loggers.xml
+    file: config/binbase/loggers.xml
 - name: proxy-mocketbank
   <<: *default
   labels:

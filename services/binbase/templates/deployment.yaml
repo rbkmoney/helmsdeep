@@ -50,11 +50,11 @@ spec:
               subPath: entrypoint.sh
               readOnly: true
             - name: config-volume
-              mountPath: /opt/hooker/logback.xml
+              mountPath: /opt/binbase/logback.xml
               subPath: logback.xml
               readOnly: true
             - name: config-volume
-              mountPath: /opt/hooker/loggers.xml
+              mountPath: /opt/binbase/loggers.xml
               subPath: loggers.xml
               readOnly: true
           command: ["/opt/binbase/entrypoint.sh"]
