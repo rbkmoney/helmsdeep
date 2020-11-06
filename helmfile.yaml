@@ -335,6 +335,10 @@ releases:
     file: config/proxy-mocketbank/cards.csv
   - name: errorMapping
     file: config/proxy-mocketbank/errors.json
+  - name: logback
+    file: config/logs/logback.xml
+  - name: loggers
+    file: config/proxy-mocketbank/loggers.xml
 - name: proxy-mocketbank-mpi
   <<: *default
   labels:
@@ -344,12 +348,21 @@ releases:
   set:
     - name: knownCards
       file: config/proxy-mocketbank-mpi/cards.csv
+    - name: logback
+      file: config/logs/logback.xml
+    - name: loggers
+      file: config/proxy-mocketbank-mpi/loggers.xml
 - name: proxy-mocket-inspector
   <<: *default
   labels:
     logfmt: cri
   needs:
     - default/hellgate
+  set:
+    - name: logback
+      file: config/logs/logback.xml
+    - name: loggers
+      file: config/proxy-mocket-inspector/loggers.xml
 
 - name: url-shortener
   <<: *default
