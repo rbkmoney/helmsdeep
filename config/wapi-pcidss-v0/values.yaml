@@ -1,7 +1,7 @@
 replicaCount: 1
 
 ingress:
-  host: rbkmoney.standoff.city
-  paths: 
+  host: api.rbkmoney.standoff.city
+  paths:
     - path: /privdoc/v0
     - path: /payres/v0
