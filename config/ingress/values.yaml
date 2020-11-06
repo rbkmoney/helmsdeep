@@ -9,11 +9,16 @@ controller:
   volumeMounts:
     - mountPath: /dev/shm
       name: dshm
+    - mountPath: /auth/.htpasswd
+      name: basic
   volumes:
     - emptyDir:
         medium: Memory
         sizeLimit: 512M
       name: dshm
+    - name: basic
+      secret:
+        secretName: basic-auth
   service:
     externalIPs:
       - 10.126.120.135
