@@ -1,13 +1,21 @@
-postgresql.replicaCount: 3
-#replicas: 3
+replicas: 3
 
 #This is just init password for vault connections.
 #postgresqlPassword: "H@ckM3"
-postgresql.password: "H@ckM3"
+global:
+  postgresql:
+    password: "H@ckM3"
+    repmgrPassword: "H@ckM3"
 
-initdbScripts:
-  rbk-dbs.sql: |
-     CREATE DATABASE keycloak;
-     CREATE DATABASE shumway;
-     CREATE DATABASE hook;
-     CREATE DATABASE fraudbusters;
+postgresql:
+  initdbScripts:
+    rbk-dbs.sql: |
+       CREATE DATABASE IF NOT EXIST keycloak;
+       CREATE DATABASE shumway;
+       CREATE DATABASE hook;
+       CREATE DATABASE fraudbusters;
+  replicaCount: 3
+pgpool:  
+  extraEnvVars:
+    - name: PGPOOL_ENABLE_POOL_HBA
+      value: "no"
