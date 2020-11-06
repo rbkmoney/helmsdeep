@@ -315,11 +315,13 @@ releases:
   - default/kafka
 - name: binbase
   <<: *default
-  labels:
-    logfmt: cri
   set:
   - name: entrypoint
     file: config/binbase/entrypoint.sh
+  - name: logback
+    file: config/logs/logback.xml
+  - name: loggers
+    file: config/binbase/loggers.xml
 - name: proxy-mocketbank
   <<: *default
   labels:
