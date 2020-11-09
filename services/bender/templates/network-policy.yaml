@@ -1,0 +1,28 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: {{ include "bender.name" . }}
+  namespace: default
+  labels:
+    chart: {{ template "bender.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: {{ include  "bender.name" . }}
+  ingress:
+  - toPorts:
+    - ports:
+      - protocol: TCP
+        port: "8022"
+    fromEndpoints:
+      - matchLabels:
+          k8s:service-class: capi
+      - matchLabels:
+          k8s:service-class: capi-pcidss
+      - matchLabels:
+          k8s:service-class: wapi-pcidss
+      - matchLabels:
+          k8s:app.kubernetes.io/name: machinegun

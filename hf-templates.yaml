@@ -7,3 +7,10 @@ templates:
       - config/_common/logging.yaml.gotmpl
       - config/{{ .Release.Name }}/values.yaml
     timeout: 900
+  netpolicy: &netpolicy
+    chart: ./services/{{ .Release.Name }}
+    namespace: default
+    missingFileHandler: Warn
+    values:
+      - config/{{ .Release.Name }}/values.yaml
+    timeout: 900

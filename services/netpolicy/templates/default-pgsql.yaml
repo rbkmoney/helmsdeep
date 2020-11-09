@@ -1,0 +1,28 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: default.pgsql
+  namespace: default
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: postgresql
+  ingress:
+  - toPorts:
+    - ports:
+      - protocol: TCP
+        port: "5432"
+    fromEndpoints:
+      - matchLabels:
+          k8s:io.kubernetes.pod.namespace: kube-system
+      - matchLabels:
+          k8s:io.kubernetes.pod.namespace: monitoring
+      - matchLabels:
+          k8s:app.kubernetes.io/name: keycloak
+      - matchLabels:
+          k8s:app.kubernetes.io/name: shumway
+      - matchLabels:
+          k8s:app.kubernetes.io/name: hooker
+      - matchLabels:
+          k8s:app.kubernetes.io/name: vault

@@ -1,0 +1,24 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: {{ include "riak.name" . }}
+  namespace: default
+  labels:
+    chart: {{ template "riak.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: {{ include "riak.name" . }}
+  ingress:
+  - toPorts:
+    - ports:
+      - protocol: TCP
+        port: "8087"
+    fromEndpoints:
+      - matchLabels:
+          k8s:app.kubernetes.io/name: cds
+      - matchLabels:
+          k8s:app.kubernetes.io/name: machinegun

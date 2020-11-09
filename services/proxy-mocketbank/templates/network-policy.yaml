@@ -1,0 +1,28 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: {{ include "proxy-mocketbank.name" . }}
+  namespace: default
+  labels:
+    chart: {{ template "proxy-mocketbank.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: {{ include "proxy-mocketbank.name" . }}
+  ingress:
+  - toPorts:
+    - ports:
+      - protocol: TCP
+        port: "8022"
+    fromEndpoints:
+      - matchLabels:
+          k8s:app.kubernetes.io/name: dominant
+      - matchLabels:
+          k8s:app.kubernetes.io/name: hellgate
+  - toPorts:
+    - ports:
+      - protocol: TCP
+        port: "8080"

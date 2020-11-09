@@ -1,0 +1,30 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "vault-rules"
+  namespace: default
+specs:
+  - endpointSelector:
+      matchLabels:
+        k8s:app.kubernetes.io/name: vault
+    ingress:
+    - toPorts:
+      - ports:
+        - protocol: TCP
+          port: "8200"
+      fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/name: shumway
+        - matchLabels:
+            k8s:app.kubernetes.io/name: hooker
+  - endpointSelector:
+      matchLabels:
+        k8s:app.kubernetes.io/name: vault-agent-injector
+    ingress:
+    - toPorts:
+      - ports:
+        - protocol: TCP
+          port: "8090"
+      fromEntities:
+        - host

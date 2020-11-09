@@ -36,6 +36,7 @@ Common labels
 */}}
 {{- define "capi-pcidss-v2.labels" -}}
 helm.sh/chart: {{ include "capi-pcidss-v2.chart" . }}
+helm.sh/release: {{ .Release.Name | quote }}
 {{ include "capi-pcidss-v2.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
@@ -49,6 +50,7 @@ Selector labels
 {{- define "capi-pcidss-v2.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "capi-pcidss-v2.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+service-class: capi-pcidss
 {{- end }}
 
 {{/*

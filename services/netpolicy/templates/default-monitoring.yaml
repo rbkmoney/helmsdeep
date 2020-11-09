@@ -1,0 +1,28 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: default.monitoring
+  namespace: default
+spec:
+  endpointSelector:
+    matchLabels: {}
+  ingress:
+  - toPorts:
+    - ports:
+      - protocol: TCP
+        port: "8080"
+      - protocol: TCP
+        port: "8023"
+      - protocol: TCP
+        port: "8022"
+      rules:
+        http:
+        - method: "GET"
+          path: "/metrics"
+        - method: "GET"
+          path: "/actuator/prometheus"
+    fromEndpoints:
+      - matchLabels:
+          k8s:io.kubernetes.pod.namespace: monitoring
+          k8s:app: prometheus

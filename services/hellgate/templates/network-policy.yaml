@@ -1,0 +1,28 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: {{ include "hellgate.fullname" . }}
+  namespace: default
+  labels:
+    chart: {{ template "hellgate.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: {{ include "hellgate.name" . }}
+  ingress:
+  - toPorts:
+    - ports:
+      - protocol: TCP
+        port: "8022"
+    fromEndpoints:
+      - matchLabels:
+          k8s:app.kubernetes.io/name: machinegun
+      - matchLabels:
+          k8s:service-class: capi
+      - matchLabels:
+          k8s:service-class: provider-adapter
+      - matchLabels:
+          k8s:app.kubernetes.io/name: wapi

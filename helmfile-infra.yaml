@@ -3,6 +3,8 @@
 repositories:
 - name: prometheus-community
   url: https://prometheus-community.github.io/helm-charts
+- name: cilium
+  url: https://helm.cilium.io/
 
 releases:
 - name: prometheus
@@ -12,6 +14,11 @@ releases:
   namespace: monitoring
 - name: logs
   # Change to installed: true if you need ECK installed
-  installed: false
+  installed: true
   <<: *default
   chart: ./services/elk
+- name: cilium
+  <<: *default
+  version: 1.8.5
+  chart: cilium/cilium
+  namespace: kube-system

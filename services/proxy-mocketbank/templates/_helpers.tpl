@@ -36,6 +36,7 @@ Common labels
 */}}
 {{- define "proxy-mocketbank.labels" -}}
 helm.sh/chart: {{ include "proxy-mocketbank.chart" . }}
+helm.sh/release: {{ .Release.Name | quote }}
 {{ include "proxy-mocketbank.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
@@ -49,6 +50,7 @@ Selector labels
 {{- define "proxy-mocketbank.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "proxy-mocketbank.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+service-class: provider-adapter
 {{- end }}
 
 {{/*

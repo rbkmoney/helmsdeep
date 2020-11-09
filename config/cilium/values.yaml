@@ -1,0 +1,15 @@
+global:
+  #ipv6:
+  #  enabled: true
+  hubble:
+    enabled: true
+    ui:
+      enabled: true
+    relay:
+      enabled: true
+    listenAddress: ":4244"
+operator:
+  numReplicas: 1
+hubble-relay:
+  enabled: true
+  listenPort: "4245"

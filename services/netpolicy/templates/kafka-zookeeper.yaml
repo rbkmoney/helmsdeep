@@ -1,0 +1,18 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-kafka-zookeeper"
+  namespace: default
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app: zookeeper
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        k8s:app.kubernetes.io/component: kafka-broker 
+    toPorts:
+    - ports:
+      - port: "2181"
+        protocol: TCP

@@ -1,0 +1,32 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: {{ include "dominant.name" . }}
+  namespace: default
+  labels:
+    chart: {{ template "dominant.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: {{ include "dominant.name" . }}
+  ingress:
+  - toPorts:
+    - ports:
+      - protocol: TCP
+        port: "8022"
+    fromEndpoints:
+      - matchLabels:
+          k8s:app.kubernetes.io/name: machinegun
+      - matchLabels:
+          k8s:app.kubernetes.io/name: hellgate
+      - matchLabels:
+          k8s:service-class: capi
+      - matchLabels:
+          k8s:service-class: wapi
+      - matchLabels:
+          k8s:job-name: dominant-initialization-task
+          k8s:app.kubernetes.io/instance: dominant
+

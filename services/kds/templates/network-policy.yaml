@@ -1,0 +1,28 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: {{ include "kds.fullname" . }}
+  namespace: default
+  labels:
+    chart: {{ template "kds.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: {{ include "kds.name" . }}
+  ingress:
+  - toPorts:
+    - ports:
+      - protocol: TCP
+        port: "8022"
+    - ports:
+      - protocol: TCP
+        port: "8023"
+    fromEndpoints:
+      - matchLabels:
+          k8s:app.kubernetes.io/name: cds
+      - matchLabels:
+          k8s:job-name: kds-initialization-task
+

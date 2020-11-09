@@ -36,11 +36,13 @@ Common labels
 */}}
 {{- define "wapi.labels" -}}
 helm.sh/chart: {{ include "wapi.chart" . }}
+helm.sh/release: {{ .Release.Name | quote }}
 {{ include "wapi.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+service-class: wapi-pcidss
 {{- end }}
 
 {{/*

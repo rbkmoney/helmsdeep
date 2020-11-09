@@ -15,7 +15,9 @@ repositories:
 helmfiles:
 - # Path to the helmfile state file being processed BEFORE releases in this state file
   path: helmfile-infra.yaml
-
+- # Path to the helmfile state file being processed BEFORE releases in this state file
+  path: helmfile-netpolicy.yaml
+  
 releases:
 - name: zookeeper
   <<: *default

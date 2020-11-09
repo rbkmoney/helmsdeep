@@ -1,0 +1,26 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "kafka-policy-wallets-hooker-kafka"
+  namespace: default
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: kafka
+  ingress:
+  - toPorts:
+    - ports:
+      - protocol: TCP
+        port: "9092"
+      rules:
+        kafka:
+          - role: consume
+            topic: mg-events-ff-destination
+          - role: consume
+            topic: mg-events-ff-wallet
+          - role: consume
+            topic: mg-events-ff-withdrawal
+    fromEndpoints:
+      - matchLabels:
+          k8s:app.kubernetes.io/name: wallets-hooker-kafka

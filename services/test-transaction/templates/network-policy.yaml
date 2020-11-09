@@ -1,0 +1,40 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: test-transaction-gateway
+  namespace: default
+specs:
+  - endpointSelector:
+      matchLabels:
+        k8s:app.kubernetes.io/name: test-transaction-gateway
+    ingress:
+    - toPorts:
+      - ports:
+        - protocol: TCP
+          port: "80"
+      fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/name: test-transaction
+  - endpointSelector:
+      matchLabels:
+        k8s:service-class: capi
+    ingress:
+    - toPorts:
+      - ports:
+        - protocol: TCP
+          port: "8080"
+      fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/name: test-transaction-gateway
+  - endpointSelector:
+      matchLabels:
+        k8s:service-class: capi-pcidss
+    ingress:
+    - toPorts:
+      - ports:
+        - protocol: TCP
+          port: "8080"
+      fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/name: test-transaction-gateway

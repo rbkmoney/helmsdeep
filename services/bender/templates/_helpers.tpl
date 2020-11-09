@@ -36,6 +36,7 @@ Common labels
 */}}
 {{- define "bender.labels" -}}
 helm.sh/chart: {{ include "bender.chart" . }}
+helm.sh/release: {{ .Release.Name | quote }}
 {{ include "bender.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}

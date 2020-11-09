@@ -1,0 +1,18 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: default.consul
+  namespace: default
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:component: consul-consul
+  ingress:
+  - toPorts:
+    - ports:
+      - protocol: TCP
+        port: "8500"
+    fromEndpoints:
+      - matchLabels:
+          k8s:app.kubernetes.io/name: machinegun

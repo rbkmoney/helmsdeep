@@ -36,6 +36,7 @@ Common labels
 */}}
 {{- define "riak.labels" -}}
 helm.sh/chart: {{ include "riak.chart" . }}
+helm.sh/release: {{ .Release.Name | quote }}
 {{ include "riak.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}

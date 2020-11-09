@@ -1,0 +1,35 @@
+---
+kind:  CiliumNetworkPolicy
+apiVersion: "cilium.io/v2"
+metadata:
+  name: {{ include "machinegun.fullname" . }}
+  namespace: default
+  labels:
+    chart: {{ template "machinegun.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: {{ include "machinegun.name" . }}
+  ingress:
+  - toPorts:
+    - ports:
+      - protocol: TCP
+        port: "8022"
+    fromEndpoints:
+      - matchLabels:
+          k8s:app.kubernetes.io/name: hellgate
+      - matchLabels:
+          k8s:app.kubernetes.io/name: dominant
+      - matchLabels:
+          k8s:app.kubernetes.io/name: url-shortener
+      - matchLabels:
+          k8s:app.kubernetes.io/name: wapi
+      - matchLabels:
+          k8s:app.kubernetes.io/name: bender
+      - matchLabels:
+          k8s:app.kubernetes.io/name: machinegun
+  - fromEndpoints:
+      - matchLabels:
+          component: consul-consul
