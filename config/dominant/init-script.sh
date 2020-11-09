@@ -281,7 +281,7 @@ FIXTURE=$(cat <<END
         "data": {
             "name": "Fraudbusters",
             "description": "Fraudbusters",
-            "url": "http://proxy-mocketbank-api:8022/proxy/mocketbank",
+            "url": "XXX",
             "options": {}
         }
     }}}},
