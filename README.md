@@ -168,3 +168,10 @@ Login as the elastic user. The password can be obtained with the following comma
 ```
 kubectl get secret rbk-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo
 ```
+Доступ к интерфейсу hubble для просмотра потоков между подами:
+-----------
+```
+kubectl --namespace=kube-system port-forward service/hubble-ui 8080:80
+```
+
+Интерфейс будет доступен по адресу http://localhost:8080
