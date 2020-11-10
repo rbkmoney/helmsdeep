@@ -18,5 +18,8 @@ dependencies:
 - name: zookeeper
   repository: https://charts.helm.sh/incubator
   version: 2.1.3
+- name: grafana
+  repository: https://grafana.github.io/helm-charts
+  version: 6.1.3
 digest: sha256:f640cc46a54fc0fa8eaf0462bf71395928ffe08f4d5893f72fe4c24d1693d425
 generated: "2020-10-28T19:52:52.6139374+03:00"
