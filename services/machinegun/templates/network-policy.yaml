@@ -33,3 +33,5 @@ spec:
   - fromEndpoints:
       - matchLabels:
           component: consul-consul
+      - matchLabels: 
+          k8s:app.kubernetes.io/component: kafka-broker

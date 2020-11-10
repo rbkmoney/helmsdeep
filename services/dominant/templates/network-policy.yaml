@@ -29,4 +29,3 @@ spec:
       - matchLabels:
           k8s:job-name: dominant-initialization-task
           k8s:app.kubernetes.io/instance: dominant
-
