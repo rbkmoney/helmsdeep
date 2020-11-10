@@ -1,5 +1,5 @@
 apiVersion: v2
-name: adapterw-standoff
+name: adapter-standoff
 description: Adapter Standoff
 type: application
 version: 0.1.0
