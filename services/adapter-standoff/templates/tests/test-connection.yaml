@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "adapter-standoff.fullname" . }}-test-connection"
+  labels:
+    {{- include "adapter-standoff.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "adapter-standoff.fullname" . }}:{{ .Values.service.ports.management }}/actuator/health']
+  restartPolicy: Never

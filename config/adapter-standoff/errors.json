@@ -1,0 +1,22 @@
+[
+  {
+    "codeRegex": "INSUFFICIENT_FUNDS",
+    "mapping": "authorization_failed:insufficient_funds"
+  },
+  {
+    "codeRegex": "OPERATION_BLOCKED",
+    "mapping": "authorization_failed:operation_blocked"
+  },
+  {
+    "codeRegex": "PAYMENT_TOOL_REJECTED",
+    "mapping": "authorization_failed:payment_tool_rejected:unknown"
+  },
+  {
+    "codeRegex": "ACCOUNT_NOT_FOUND",
+    "mapping": "authorization_failed:account_not_found"
+  },
+  {
+    "codeRegex": ".*",
+    "mapping": "ResultUnexpected"
+  }
+]

@@ -1,0 +1,119 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "adapter-standoff.fullname" . }}
+  labels:
+    {{- include "adapter-standoff.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "adapter-standoff.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "adapter-standoff.selectorLabels" . | nindent 8 }}
+      annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        adapter-standoff/properties-hash: {{ include "adapter-standoff.propertiesHash" . }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "adapter-standoff.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: api
+              containerPort: {{ .Values.service.ports.api }}
+              protocol: TCP
+            - name: management
+              containerPort: {{ .Values.service.ports.management }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: management
+            initialDelaySeconds: 120
+            timeoutSeconds: 3
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: management
+            initialDelaySeconds: 120
+            timeoutSeconds: 3
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/adapter-standoff/entrypoint.sh
+              subPath: entrypoint.sh
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/adapter-standoff/logback.xml
+              subPath: logback.xml
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/adapter-standoff/loggers.xml
+              subPath: loggers.xml
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/adapter-standoff/fixture/errors.json
+              subPath: errors.json
+              readOnly: true
+          command: ["/opt/adapter-standoff/entrypoint.sh"]
+          args:
+            - -jar
+            - /opt/adapter-standoff/adapter-standoff.jar
+            - --logging.config=/opt/adapter-standoff/logback.xml
+            - --spring.flyway.table=schema_version
+            - --spring.flyway.schemas=adapter_standoff
+            - --cds.client.storage.url={{ .Values.cdsUrl }}
+            - --cds.client.storage.networkTimeout=5000
+            - --hellgate.client.adapter.url={{ .Values.hellgateUrl }}
+            - --hellgate.client.adapter.networkTimeout=30000
+            - --error-mapping.file=file:/opt/adapter-standoff/fixture/errors.json
+          env:
+            - name: LOGBACK_SERVICE_NAME
+              value: "adapter-standoff"
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "adapter-standoff.fullname" . }}
+            items:
+            - key: entrypoint.sh
+              path: entrypoint.sh
+              mode: 0755
+            - key: logback.xml
+              path: logback.xml
+            - key: loggers.xml
+              path: loggers.xml
+            - key: errors.json
+              path: errors.json
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

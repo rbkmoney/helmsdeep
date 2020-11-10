@@ -363,6 +363,22 @@ releases:
       file: config/logs/logback.xml
     - name: loggers
       file: config/proxy-mocket-inspector/loggers.xml
+- name: adapter-standoff
+  <<: *default
+  labels:
+    logfmt: cri
+  needs:
+    - default/vault
+    - default/postgres
+  set:
+    - name: entrypoint
+      file: config/adapter-standoff/entrypoint.sh
+    - name: logback
+      file: config/logs/logback.xml
+    - name: loggers
+      file: config/adapter-standoff/loggers.xml
+    - name: errors
+      file: config/adapter-standoff/errors.json
 
 - name: url-shortener
   <<: *default

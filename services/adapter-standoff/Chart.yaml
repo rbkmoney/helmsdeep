@@ -1,0 +1,6 @@
+apiVersion: v2
+name: adapterw-standoff
+description: Adapter Standoff
+type: application
+version: 0.1.0
+appVersion: 9ecf98df84c0304072c6714424eacc07e13da8fb
