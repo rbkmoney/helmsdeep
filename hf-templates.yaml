@@ -6,4 +6,5 @@ templates:
     values:
       - config/_common/logging.yaml.gotmpl
       - config/{{ .Release.Name }}/values.yaml
+      - config/{{ .Release.Name }}/values.yaml.gotmpl
     timeout: 900

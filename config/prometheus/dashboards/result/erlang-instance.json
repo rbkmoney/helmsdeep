@@ -1,0 +1,941 @@
+{
+   "__inputs": [ ],
+   "__requires": [ ],
+   "annotations": {
+      "list": [ ]
+   },
+   "editable": false,
+   "gnetId": null,
+   "graphTooltip": 1,
+   "hideControls": false,
+   "id": null,
+   "links": [ ],
+   "panels": [
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "Prometheus",
+         "fill": 1,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 5,
+            "w": 12,
+            "x": 0,
+            "y": 0
+         },
+         "id": 2,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "erlang_vm_memory_bytes_total{namespace=\"$namespace\", pod=\"$pod\", kind=\"processes\"}",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Processes Memory",
+               "refId": "A"
+            },
+            {
+               "expr": "erlang_vm_memory_system_bytes_total{namespace=\"$namespace\", pod=\"$pod\", usage=\"atom\"}",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Atoms",
+               "refId": "B"
+            },
+            {
+               "expr": "erlang_vm_memory_system_bytes_total{namespace=\"$namespace\", pod=\"$pod\", usage=\"binary\"}",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Binary",
+               "refId": "C"
+            },
+            {
+               "expr": "erlang_vm_memory_system_bytes_total{namespace=\"$namespace\", pod=\"$pod\", usage=\"code\"}",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Code",
+               "refId": "D"
+            },
+            {
+               "expr": "erlang_vm_memory_system_bytes_total{namespace=\"$namespace\", pod=\"$pod\", usage=\"ets\"}",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "ETS",
+               "refId": "E"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "BEAM Memory",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "bytes",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": 0,
+               "show": true
+            },
+            {
+               "format": "bytes",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": 0,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "Prometheus",
+         "fill": 1,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 5,
+            "w": 12,
+            "x": 0,
+            "y": 0
+         },
+         "id": 3,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "CPU Limit",
+               "bars": false,
+               "color": "#890f02",
+               "fill": 0,
+               "lines": true
+            },
+            {
+               "alias": "CPU Requests",
+               "bars": false,
+               "color": "#f2495c",
+               "fill": 0,
+               "lines": true
+            },
+            {
+               "alias": "BEAM CPU Time",
+               "color": "#3f6833",
+               "zindex": 1
+            },
+            {
+               "alias": "Pod CPU Time",
+               "color": "#ef843c",
+               "zindex": 2
+            },
+            {
+               "alias": "CPU Throttling",
+               "bars": false,
+               "color": "#b877d9",
+               "fill": 0,
+               "lines": true,
+               "yaxis": 2,
+               "zindex": 3
+            }
+         ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "kube_pod_container_resource_limits_cpu_cores{namespace=\"$namespace\", pod=\"$pod\"}",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "CPU Limit",
+               "refId": "A"
+            },
+            {
+               "expr": "kube_pod_container_resource_requests_cpu_cores{namespace=\"$namespace\", pod=\"$pod\"}",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "CPU Requests",
+               "refId": "B"
+            },
+            {
+               "expr": "irate(erlang_vm_statistics_runtime_milliseconds{namespace=\"$namespace\", pod=\"$pod\"}[$interval]) / on (namespace, pod) irate(erlang_vm_statistics_wallclock_time_milliseconds[$interval])",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "BEAM CPU Time",
+               "refId": "C"
+            },
+            {
+               "expr": "irate(container_cpu_usage_seconds_total{namespace=\"$namespace\", pod=\"$pod\", container=\"\"}[$interval]) * 1000 / on (namespace, pod) irate(erlang_vm_statistics_wallclock_time_milliseconds[$interval])",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Pod CPU Time",
+               "refId": "D"
+            },
+            {
+               "expr": "irate(container_cpu_cfs_throttled_periods_total{namespace=\"$namespace\", pod=\"$pod\", container=\"\"}[$interval]) / on (namespace, pod, container) irate(container_cpu_cfs_periods_total[$interval])",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "CPU Throttling",
+               "refId": "E"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "CPU",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "percentunit",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": 0,
+               "show": true
+            },
+            {
+               "format": "percentunit",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": 0,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "Prometheus",
+         "fill": 1,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 5,
+            "w": 12,
+            "x": 0,
+            "y": 0
+         },
+         "id": 4,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "Context Switches",
+               "yaxis": 2
+            }
+         ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "irate(erlang_vm_statistics_context_switches{namespace=\"$namespace\", pod=\"$pod\"}[$interval])",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Context Switches",
+               "refId": "A"
+            },
+            {
+               "expr": "irate(erlang_vm_statistics_reductions_total{namespace=\"$namespace\", pod=\"$pod\"}[$interval])",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Reductions",
+               "refId": "B"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Load",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": 0,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": 0,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "Prometheus",
+         "fill": 1,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 5,
+            "w": 12,
+            "x": 0,
+            "y": 0
+         },
+         "id": 5,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "Bytes Reclaimed",
+               "bars": false,
+               "fill": 0,
+               "lines": true,
+               "yaxis": 2,
+               "zindex": 1
+            }
+         ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "irate(erlang_vm_statistics_garbage_collection_number_of_gcs{namespace=\"$namespace\", pod=\"$pod\"}[$interval])",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Number of GCs",
+               "refId": "A"
+            },
+            {
+               "expr": "irate(erlang_vm_statistics_garbage_collection_bytes_reclaimed{namespace=\"$namespace\", pod=\"$pod\"}[$interval])",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Bytes Reclaimed",
+               "refId": "B"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "GC",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": 0,
+               "show": true
+            },
+            {
+               "format": "bytes",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": 0,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "Prometheus",
+         "fill": 1,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 5,
+            "w": 12,
+            "x": 12,
+            "y": 0
+         },
+         "id": 6,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "Memory Limit",
+               "bars": false,
+               "color": "#890f02",
+               "fill": 0,
+               "lines": true,
+               "stack": false
+            },
+            {
+               "alias": "Memory Requests",
+               "bars": false,
+               "color": "#f2495c",
+               "fill": 0,
+               "lines": true,
+               "stack": false
+            },
+            {
+               "alias": "BEAM Total",
+               "color": "#ef843c",
+               "stack": false,
+               "zindex": 1
+            },
+            {
+               "alias": "Pod Usage",
+               "color": "#3f6833",
+               "stack": false,
+               "zindex": -1
+            },
+            {
+               "alias": "Pod RSS",
+               "stack": "A"
+            }
+         ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "kube_pod_container_resource_limits_memory_bytes{namespace=\"$namespace\", pod=\"$pod\"}",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Memory Limit",
+               "refId": "A"
+            },
+            {
+               "expr": "kube_pod_container_resource_requests_memory_bytes{namespace=\"$namespace\", pod=\"$pod\"}",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Memory Requests",
+               "refId": "B"
+            },
+            {
+               "expr": "sum(erlang_vm_memory_system_bytes_total{namespace=\"$namespace\", pod=\"$pod\"})",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "BEAM Total",
+               "refId": "C"
+            },
+            {
+               "expr": "container_memory_rss{namespace=\"$namespace\", pod=\"$pod\", container=\"\"}",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Pod RSS",
+               "refId": "D"
+            },
+            {
+               "expr": "container_memory_cache{namespace=\"$namespace\", pod=\"$pod\", container=\"\"}",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Pod Cache",
+               "refId": "E"
+            },
+            {
+               "expr": "container_memory_usage_bytes{namespace=\"$namespace\", pod=\"$pod\", container=\"\"}",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Pod Usage",
+               "refId": "F"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Pod Memory",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "bytes",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": 0,
+               "show": true
+            },
+            {
+               "format": "bytes",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": 0,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "Prometheus",
+         "fill": 1,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 5,
+            "w": 12,
+            "x": 12,
+            "y": 0
+         },
+         "id": 7,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "Input",
+               "color": "#73bf69"
+            },
+            {
+               "alias": "Output",
+               "color": "#1f60c4"
+            }
+         ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "irate(erlang_vm_statistics_bytes_received_total{namespace=\"$namespace\", pod=\"$pod\"}[$interval])",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Input",
+               "refId": "A"
+            },
+            {
+               "expr": "-irate(erlang_vm_statistics_bytes_output_total{namespace=\"$namespace\", pod=\"$pod\"}[$interval])",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Output",
+               "refId": "B"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "IO",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "bytes",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "bytes",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "Prometheus",
+         "fill": 1,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 5,
+            "w": 12,
+            "x": 12,
+            "y": 0
+         },
+         "id": 8,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "Run Queues Length",
+               "yaxis": 2,
+               "zindex": 1
+            }
+         ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "erlang_vm_process_count{namespace=\"$namespace\", pod=\"$pod\"}",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Processes",
+               "refId": "A"
+            },
+            {
+               "expr": "erlang_vm_statistics_run_queues_length_total{namespace=\"$namespace\", pod=\"$pod\"}",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Run Queues Length",
+               "refId": "B"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Processes",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": 0,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": 0,
+               "show": true
+            }
+         ]
+      }
+   ],
+   "refresh": "30s",
+   "rows": [ ],
+   "schemaVersion": 14,
+   "style": "dark",
+   "tags": [ ],
+   "templating": {
+      "list": [
+         {
+            "auto": false,
+            "auto_count": 300,
+            "auto_min": "10s",
+            "current": {
+               "text": "1m",
+               "value": "1m"
+            },
+            "hide": 0,
+            "label": "Interval",
+            "name": "interval",
+            "query": "1m,5m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
+            "refresh": 2,
+            "type": "interval"
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "Prometheus",
+            "hide": 0,
+            "includeAll": false,
+            "label": "Namespace",
+            "multi": false,
+            "name": "namespace",
+            "options": [ ],
+            "query": "label_values(erlang_vm_process_count, namespace)",
+            "refresh": 1,
+            "regex": "",
+            "sort": 0,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "Prometheus",
+            "hide": 0,
+            "includeAll": false,
+            "label": "Service",
+            "multi": false,
+            "name": "service",
+            "options": [ ],
+            "query": "label_values(erlang_vm_process_count{namespace=\"$namespace\"}, service)",
+            "refresh": 1,
+            "regex": "",
+            "sort": 0,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "Prometheus",
+            "hide": 0,
+            "includeAll": false,
+            "label": "Pod",
+            "multi": false,
+            "name": "pod",
+            "options": [ ],
+            "query": "label_values(erlang_vm_process_count{namespace=\"$namespace\", service=\"$service\"}, pod)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 0,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         }
+      ]
+   },
+   "time": {
+      "from": "now-3h",
+      "to": "now"
+   },
+   "timepicker": {
+      "refresh_intervals": [
+         "5s",
+         "10s",
+         "30s",
+         "1m",
+         "5m",
+         "15m",
+         "30m",
+         "1h",
+         "2h",
+         "1d"
+      ],
+      "time_options": [
+         "5m",
+         "15m",
+         "1h",
+         "6h",
+         "12h",
+         "24h",
+         "2d",
+         "7d",
+         "30d"
+      ]
+   },
+   "timezone": "browser",
+   "title": "Erlang Instance Overview",
+   "version": 0
+}
