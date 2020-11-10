@@ -281,7 +281,7 @@ FIXTURE=$(cat <<END
         "data": {
             "name": "Fraudbusters",
             "description": "Fraudbusters",
-            "url": "XXX",
+            "url": "http://fraudbusters:8022/fraud_inspector/v1",
             "options": {}
         }
     }}}},
