@@ -77,7 +77,7 @@ data:
         max_ttl="240h"
 
     vault secrets enable kv-v2
-    vault kv put secret/pt-pg user=rbkmoney password=P@ssw0rd
+    vault kv put kv-v2/pt-pg user=rbkmoney password=%SOMEPASSWORDHERE%
 
     vault auth enable kubernetes
     vault write auth/kubernetes/config \
@@ -102,7 +102,7 @@ data:
     path "database/creds/db-app-fbmgmt" {
       capabilities = ["read"]
     }
-    path "secret/data/pt-pg" {
+    path "kv-v2/data/pt-pg" {
       capabilities = ["read"]
     }
     path "database/creds/db-kk" {
