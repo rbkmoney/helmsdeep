@@ -84,9 +84,20 @@ FIXTURE=$(cat <<END
                             "categories": {"value": [
                                 {"id": 1}
                             ]},
-                            "payment_methods": {"value": [
-                                {"id": {"bank_card": {"payment_system": "visa"}}},
-                                {"id": {"bank_card": {"payment_system": "mastercard"}}}
+                            "payment_methods": {"decisions": [
+                                {
+                                    "if_": {"condition": {"party": {"id": "281220eb-a4ef-4d03-b666-bdec4b26c5f7"}}},
+                                    "then_": {"value": [
+                                        {"id": {"bank_card": {"payment_system": "visa"}}},
+                                        {"id": {"bank_card": {"payment_system": "mastercard"}}}
+                                    ]}
+                                },
+                                {
+                                    "if_": {"constant": true},
+                                    "then_": {"value": [
+                                        {"id": {"bank_card": {"payment_system": "dummy"}}}
+                                    ]}
+                                }
                             ]},
                             "cash_limit": {"decisions": [
                                 {
@@ -110,16 +121,38 @@ FIXTURE=$(cat <<END
                                 }
                             ]},
                             "holds": {
-                                "payment_methods": {"value": [
-                                    {"id": {"bank_card": {"payment_system": "visa"}}},
-                                    {"id": {"bank_card": {"payment_system": "mastercard"}}}
+                                "payment_methods": {"decisions": [
+                                    {
+                                        "if_": {"condition": {"party": {"id": "281220eb-a4ef-4d03-b666-bdec4b26c5f7"}}},
+                                        "then_": {"value": [
+                                            {"id": {"bank_card": {"payment_system": "visa"}}},
+                                            {"id": {"bank_card": {"payment_system": "mastercard"}}}
+                                        ]}
+                                    },
+                                    {
+                                        "if_": {"constant": true},
+                                        "then_": {"value": [
+                                            {"id": {"bank_card": {"payment_system": "dummy"}}}
+                                        ]}
+                                    }
                                 ]},
                                 "lifetime": {"value": {"seconds": 10}}
                             },
                             "refunds": {
-                                "payment_methods": {"value": [
-                                    {"id": {"bank_card": {"payment_system": "visa"}}},
-                                    {"id": {"bank_card": {"payment_system": "mastercard"}}}
+                                "payment_methods": {"decisions": [
+                                    {
+                                        "if_": {"condition": {"party": {"id": "281220eb-a4ef-4d03-b666-bdec4b26c5f7"}}},
+                                        "then_": {"value": [
+                                            {"id": {"bank_card": {"payment_system": "visa"}}},
+                                            {"id": {"bank_card": {"payment_system": "mastercard"}}}
+                                        ]}
+                                    },
+                                    {
+                                        "if_": {"constant": true},
+                                        "then_": {"value": [
+                                            {"id": {"bank_card": {"payment_system": "dummy"}}}
+                                        ]}
+                                    }
                                 ]},
                                 "fees": {"value": [
                                 ]}
@@ -170,6 +203,14 @@ FIXTURE=$(cat <<END
         "data": {
             "name": "Mastercard",
             "description": "Mastercard bank cards"
+        }
+    }}}},
+
+    {"insert": {"object": {"payment_method": {
+        "ref": {"id": {"bank_card": {"payment_system": "dummy"}}},
+        "data": {
+            "name": "Dummy",
+            "description": "Dummy bank cards"
         }
     }}}},
 
@@ -283,7 +324,8 @@ FIXTURE=$(cat <<END
                     ]},
                     "payment_methods": {"value": [
                         {"id": {"bank_card": {"payment_system": "visa"}}},
-                        {"id": {"bank_card": {"payment_system": "mastercard"}}}
+                        {"id": {"bank_card": {"payment_system": "mastercard"}}},
+                        {"id": {"bank_card": {"payment_system": "dummy"}}}
                     ]},
                     "cash_limit": {"value": {
                         "lower": {"inclusive": {"amount": 1000, "currency": {"symbolic_code": "RUB"}}},
@@ -310,6 +352,23 @@ FIXTURE=$(cat <<END
                         {
                             "if_": {"condition":
                                 {"payment_tool": {"bank_card": {"definition": {"payment_system_is": "mastercard"}}}}
+                            },
+                            "then_": {"value": [
+                                {
+                                    "source": {"provider": "settlement"},
+                                    "destination": {"merchant": "settlement"},
+                                    "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "operation_amount"}}
+                                },
+                                {
+                                    "source": {"system": "settlement"},
+                                    "destination": {"provider": "settlement"},
+                                    "volume": {"share": {"parts": {"p": 18, "q": 1000}, "of": "operation_amount"}}
+                                }
+                            ]}
+                        },
+                        {
+                            "if_": {"condition":
+                                {"payment_tool": {"bank_card": {"definition": {"payment_system_is": "dummy"}}}}
                             },
                             "then_": {"value": [
                                 {
