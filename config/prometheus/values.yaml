@@ -32,6 +32,35 @@ grafana:
 
   plugins:
     - vertamedia-clickhouse-datasource
+    - grafana-piechart-panel
+
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: standoff-clickhouse
+          type: vertamedia-clickhouse-datasource
+          access: proxy
+          url: http://clickhouse.default.svc.cluster.local:8123
+
+          # <bool> enable/disable basic auth
+          basicAuth: true
+          # <string> basic auth username
+          basicAuthUser: standoff
+          # <string> basic auth password
+          basicAuthPassword: SecretPassword
+          # <bool> enable/disable with credentials headers
+          withCredentials: false
+          # <bool> mark as default datasource. Max one per org
+          isDefault: false
+          # <map> fields that will be converted to json and stored in json_data
+          jsonData:
+              # <bool> enable/disable sending 'add_http_cors_header=1' parameter
+              addCorsHeader: false
+              # <bool> enable/disable using POST method for sending queries
+              usePOST: false
+              # <string> default database name
+              defaultDatabase: fraud
 
   ingress:
     ## If true, Grafana Ingress will be created
