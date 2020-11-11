@@ -4,6 +4,9 @@ ingress:
   enabled: true
   annotations:
     kubernetes.io/ingress.class: nginx
+    nginx.org/hsts: "False"
+    nginx.org/location-snippets: |
+       add_header Content-Security-Policy "frame-ancestors 'self' http://*.standoff.city https://*.standoff.city *";
   host: checkout.rbkmoney.standoff.city
   path: /
   tls:
