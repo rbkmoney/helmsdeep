@@ -27,6 +27,21 @@ prometheus:
 grafana:
   enabled: true
 
+  admin:
+    existingSecret: rbkmoney-grafana-admin-user
+    userKey: admin-user
+    passwordKey: admin-password
+
+  envValueFrom:
+    CH_PASSWORD:
+      secretKeyRef:
+        name: rbkmoney-clickhouse-readonly-user
+        key: password
+    CH_USERNAME:
+      secretKeyRef:
+        name: rbkmoney-clickhouse-readonly-user
+        key: username
+
   env:
     GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: vertamedia-clickhouse-datasource
 
@@ -46,9 +61,9 @@ grafana:
           # <bool> enable/disable basic auth
           basicAuth: true
           # <string> basic auth username
-          basicAuthUser: standoff
+          basicAuthUser: $CH_USERNAME
           # <string> basic auth password
-          basicAuthPassword: SecretPassword
+          basicAuthPassword: $CH_PASSWORD
           # <bool> enable/disable with credentials headers
           withCredentials: false
           # <bool> mark as default datasource. Max one per org
@@ -90,3 +105,14 @@ grafana:
     - secretName: "stand-wild"
       hosts:
       - grafana.rbkmoney.standoff.city
+
+  persistence:
+    type: pvc
+    enabled: true
+    # storageClassName: default
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+    # annotations: {}
+    finalizers:
+      - kubernetes.io/pvc-protection
