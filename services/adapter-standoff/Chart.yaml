@@ -1,0 +1,6 @@
+apiVersion: v2
+name: adapter-standoff
+description: Adapter Standoff
+type: application
+version: 0.1.0
+appVersion: 3534302207b28b013725ff5250a2a599f1a1819a

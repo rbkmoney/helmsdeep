@@ -1,0 +1,15 @@
+replicaCount: 1
+
+podAnnotations:
+  vault.hashicorp.com/role: "db-app"
+  vault.hashicorp.com/agent-inject: "true"
+  vault.hashicorp.com/agent-inject-secret-application.properties: "secret/data/pt-pg"
+  vault.hashicorp.com/agent-inject-template-application.properties: |
+    {{- with secret "secret/data/pt-pg" -}}
+    spring.datasource.url=jdbc:postgresql://172.21.22.34:5432/absrbk?sslmode=disable
+    spring.datasource.username={{ .Data.data.user }}
+    spring.datasource.password={{ .Data.data.password }}
+    spring.flyway.url=jdbc:postgresql://172.21.22.34:5432/absrbk?sslmode=disable
+    spring.flyway.user={{ .Data.data.user }}
+    spring.flyway.password={{ .Data.data.password }}
+    {{- end }}
