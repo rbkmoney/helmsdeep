@@ -23,3 +23,36 @@ prometheus:
         - port: "management"
           path: /actuator/prometheus
           scheme: http
+
+grafana:
+  enabled: true
+
+  ingress:
+    ## If true, Grafana Ingress will be created
+    ##
+    enabled: true
+
+    ## Annotations for Grafana Ingress
+    ##
+    annotations:
+      kubernetes.io/ingress.class: internal_waf
+      # kubernetes.io/tls-acme: "true"
+
+    ## Labels to be added to the Ingress
+    ##
+    labels: {}
+
+    ## Hostnames.
+    ## Must be provided if Ingress is enable.
+    ##
+    # hosts:
+    #   - grafana.domain.com
+    hosts:
+      - grafana.rbkmoney.standoff.city
+    path: /
+
+    tls:
+    - secretName: "stand-wild"
+      hosts:
+      - grafana.rbkmoney.standoff.city
+

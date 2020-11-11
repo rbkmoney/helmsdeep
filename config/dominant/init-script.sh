@@ -57,6 +57,17 @@ FIXTURE=$(cat <<END
         }
     }}}},
 
+    {"insert": {"object": {"inspector": {
+        "ref": {"id": 5},
+        "data": {
+            "name": "Fraudbusters",
+            "description": "Fraudbusters!",
+            "proxy": {
+                "ref": {"id": 5}
+            }
+        }
+    }}}},
+
     {"insert": {"object": {"term_set_hierarchy": {
         "ref": {"id": 1},
         "data": {
@@ -266,6 +277,16 @@ FIXTURE=$(cat <<END
     }}}},
 
     {"insert": {"object": {"proxy": {
+        "ref": {"id": 5},
+        "data": {
+            "name": "Fraudbusters",
+            "description": "Fraudbusters",
+            "url": "http://fraudbusters:8022/fraud_inspector/v1",
+            "options": {}
+        }
+    }}}},
+
+    {"insert": {"object": {"proxy": {
         "ref": {"id": 100},
         "data": {
             "name": "Mocket Inspector Proxy",
@@ -282,7 +303,7 @@ FIXTURE=$(cat <<END
             "system_account_set": {"value": {"id": 1}},
             "default_contract_template": {"value": {"id": 1}},
             "providers": {"value": [{"id": 1}]},
-            "inspector": {"value": {"id": 1}},
+            "inspector": {"value": {"id": 5}},
             "realm": "test",
             "residences": ["rus", "aus", "jpn"]
         }

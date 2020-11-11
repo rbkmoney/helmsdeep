@@ -6,10 +6,31 @@ elastic:
         esnode: "true"
       containers:
         - name: elasticsearch
+          env:
+            - name: ES_JAVA_OPTS
+              value: -Xms1800m -Xmx1800m
+            - name: READINESS_PROBE_TIMEOUT
+              value: "10"
+          resources:
+            requests:
+              memory: 5Gi
+            limits:
+              memory: 5Gi
           securityContext:
             capabilities:
               add:
               - SYS_CHROOT
+          readinessProbe:
+            exec:
+              command:
+              - bash
+              - -c
+              - /mnt/elastic-internal/scripts/readiness-probe-script.sh
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 12
+            successThreshold: 1
+            timeoutSeconds: 12
 
 ingress:
   enabled: true
