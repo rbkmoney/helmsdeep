@@ -65,7 +65,8 @@ FIXTURE=$(cat <<END
             "proxy": {
                 "ref": {"id": 5},
                 "additional": {}
-            }
+            },
+            "fallback_risk_score": "high"
         }
     }}}},
 
