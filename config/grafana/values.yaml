@@ -5,27 +5,18 @@ image:
   sha: ""
   pullPolicy: IfNotPresent
 
-  #extraEmptyDirMounts:
-  #- name: dashboard-dir
-  #  mountPath: /var/lib/grafana/dashboards/general
+extraEmptyDirMounts:
+  - name: dashboard-dir
+    mountPath: /var/lib/grafana/dashboards/general
 
-extraInitContainers: []
-#  - name: dashboard-autosync
-#    image: alpine/git:v2.26.2
-#    imagePullPolicy: IfNotPresent
-#    args: [ "clone", "-b", "{{ .Values.sidecar.autosync.branch }}", "{{ .Values.sidecar.autosync.repos }}", "/git/dashboards" ]
-#    env:
-#      - name: GIT_SSH_COMMAND
-#        value: "ssh -o 'StrictHostKeyChecking no' -i /etc/synckey/synckey"
-#    volumeMounts:
-#      - name: dashboard-dir
-#        mountPath: "/git/dashboards/"
-#      - name: sync-key
-#        mountPath: "/etc/synckey"
-#        readOnly: true
+envValueFrom:
+  ELASTIC_PASS:
+    secretKeyRef:
+      name: rbkmoney-es-elastic-user
+      key: elastic
 
-## Enable an Specify container in extraContainers. This is meant to allow adding an authentication proxy to a grafana pod
-extraContainers: |
+
+extraInitContainers: 
   - name: dashboard-autosync
     image: alpine/git:v2.26.2
     imagePullPolicy: IfNotPresent
@@ -37,30 +28,34 @@ extraContainers: |
     - /git/dashboards  
     env:
       - name: GIT_SSH_COMMAND
-        value: "ssh -o 'StrictHostKeyChecking no' -i /etc/synckey/synckey"
+        value: "$(cat /etc/synckey/synckey > /git/synckey && chmod 400 /git/synckey) && ssh -o 'StrictHostKeyChecking no' -i /git/synckey"
     volumeMounts:
       - name: dashboard-dir
         mountPath: "/git/dashboards"
       - name: sync-key
         mountPath: "/etc/synckey"
-        readOnly: true
- 
-securityContext:
-  runAsUser: 0
-  runAsGroup: 0
-  fsGroup: 0
-  fsGroupChangePolicy: "OnRootMismatch"
+        readOnly: false
+    securityContext:
+     runAsUser: 0
+
 extraContainerVolumes: 
-  - name: dashboard-dir
-    emptyDir: {}
   - name: sync-key
     secret:
       secretName: grafana-env
-      defaultMode: 0600
+      items:
+      - key: synckey
+        path: synckey
+        mode: 0600
 
+#Use your ssh private key for sync dashboard from repo 
 envRenderSecret: 
   synckey: |
-    <your ssh-privat key>
+    <your ssh privat key>
+
+plugins: []
+  # - digrich-bubblechart-panel
+  # - grafana-clock-panel
+
 datasources:
   datasources.yaml:
     apiVersion: 1
@@ -68,15 +63,14 @@ datasources:
     - name: rbkm-elasticsearch
       type: elasticsearch
       database: "filebeat-*"
-      url: https://rbk-es-http:9200
+      url: https://rbkmoney-es-http:9200
       basicAuth: true
       basicAuthUser: elastic
+      basicAuthPassword: $ELASTIC_PASS
       jsonData:
         timeField: "@timestamp"
         esVersion: 70
         tlsSkipVerify: true
-      secureJsonData:
-        basicAuthPassword: $ELASTIC_PASS
 
 dashboardProviders: 
   dashboardproviders.yaml:
@@ -137,30 +131,3 @@ sidecar:
     label: grafana_notifier
     searchNamespace: null
 revisionHistoryLimit: 10
-
-imageRenderer:
-  enabled: false
-  replicas: 1
-  image:
-    repository: grafana/grafana-image-renderer
-    tag: latest
-    sha: ""
-    pullPolicy: Always
-  env:
-    - name: ELASTIC_PASS
-      valueFrom:
-        secretKeyRef:
-          name: rbk-es-elastic-user
-          key: elastic
-  securityContext: {}
-  hostAliases: []
-  priorityClassName: ''
-  service:
-    portName: 'http'
-    port: 8081
-  podPortName: http
-  revisionHistoryLimit: 10
-  networkPolicy:
-    limitIngress: true
-    limitEgress: false
-  resources: {}
