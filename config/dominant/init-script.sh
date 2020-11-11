@@ -63,7 +63,8 @@ FIXTURE=$(cat <<END
             "name": "Fraudbusters",
             "description": "Fraudbusters!",
             "proxy": {
-                "ref": {"id": 5}
+                "ref": {"id": 5},
+                "additional": {}
             }
         }
     }}}},
@@ -258,11 +259,106 @@ FIXTURE=$(cat <<END
         }
     }}}},
 
+    {"insert": {"object": {"provider": {
+        "ref": {"id": 2},
+        "data": {
+            "name": "Standoff",
+            "description": "Standoff",
+            "terminal": {"value": [
+                {"id": 2}
+            ]},
+            "proxy": {
+                "ref": {"id": 2},
+                "additional": {}
+            },
+            "abs_account": "0000000001",
+            "terms": {
+                "payments": {
+                    "currencies": {"value": [
+                        {"symbolic_code": "RUB"}
+                    ]},
+                    "categories": {"value": [
+                        {"id": 1}
+                    ]},
+                    "payment_methods": {"value": [
+                        {"id": {"bank_card": {"payment_system": "visa"}}},
+                        {"id": {"bank_card": {"payment_system": "mastercard"}}}
+                    ]},
+                    "cash_limit": {"value": {
+                        "lower": {"inclusive": {"amount": 1000, "currency": {"symbolic_code": "RUB"}}},
+                        "upper": {"exclusive": {"amount": 10000000, "currency": {"symbolic_code": "RUB"}}}
+                    }},
+                    "cash_flow": {"decisions": [
+                        {
+                            "if_": {"condition":
+                                {"payment_tool": {"bank_card": {"definition": {"payment_system_is": "visa"}}}}
+                            },
+                            "then_": {"value": [
+                                {
+                                    "source": {"provider": "settlement"},
+                                    "destination": {"merchant": "settlement"},
+                                    "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "operation_amount"}}
+                                },
+                                {
+                                    "source": {"system": "settlement"},
+                                    "destination": {"provider": "settlement"},
+                                    "volume": {"share": {"parts": {"p": 15, "q": 1000}, "of": "operation_amount"}}
+                                }
+                            ]}
+                        },
+                        {
+                            "if_": {"condition":
+                                {"payment_tool": {"bank_card": {"definition": {"payment_system_is": "mastercard"}}}}
+                            },
+                            "then_": {"value": [
+                                {
+                                    "source": {"provider": "settlement"},
+                                    "destination": {"merchant": "settlement"},
+                                    "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "operation_amount"}}
+                                },
+                                {
+                                    "source": {"system": "settlement"},
+                                    "destination": {"provider": "settlement"},
+                                    "volume": {"share": {"parts": {"p": 18, "q": 1000}, "of": "operation_amount"}}
+                                }
+                            ]}
+                        }
+                    ]},
+                    "holds": {
+                        "lifetime": {"value": {"seconds": 3600}}
+                    },
+                    "refunds": {
+                        "cash_flow": {"value": [
+                            {
+                                "source": {"merchant": "settlement"},
+                                "destination": {"provider": "settlement"},
+                                "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "operation_amount"}}
+                            }
+                        ]}
+                    }
+                }
+            },
+            "accounts": [
+                {"key": {"symbolic_code": "RUB"}, "value": {
+                    "settlement": $(scripts/dominant/create-account.sh RUB)
+                }}
+            ]
+        }
+    }}}},
+
     {"insert": {"object": {"terminal": {
         "ref": {"id": 1},
         "data": {
             "name": "Mocketbank Test Acquiring",
             "description": "Mocketbank Test Acquiring"
+        }
+    }}}},
+
+    {"insert": {"object": {"terminal": {
+        "ref": {"id": 2},
+        "data": {
+            "name": "Standoff Terminal",
+            "description": "Standoff Terminal"
         }
     }}}},
 
@@ -272,6 +368,16 @@ FIXTURE=$(cat <<END
             "name": "Mocketbank Proxy",
             "description": "Mocked bank proxy for integration test purposes",
             "url": "http://proxy-mocketbank-api:8022/proxy/mocketbank",
+            "options": {}
+        }
+    }}}},
+
+    {"insert": {"object": {"proxy": {
+        "ref": {"id": 2},
+        "data": {
+            "name": "Standoff Proxy",
+            "description": "Standoff proxy for gaming",
+            "url": "http://adapter-standoff:8022//adapter/standoff",
             "options": {}
         }
     }}}},
@@ -302,7 +408,7 @@ FIXTURE=$(cat <<END
             "name": "Test Payment Institution",
             "system_account_set": {"value": {"id": 1}},
             "default_contract_template": {"value": {"id": 1}},
-            "providers": {"value": [{"id": 1}]},
+            "providers": {"value": [{"id": 2}]},
             "inspector": {"value": {"id": 5}},
             "realm": "test",
             "residences": ["rus", "aus", "jpn"]
