@@ -29,6 +29,15 @@ $ ./tools/cold_reset.sh && helmfile sync --concurrency 2
 $ ./tools/quick_reset.sh && helmfile sync --concurrency 2
 ```
 
+Инициализация VAULT и наполнение хранилища:
+
+```
+$ vault operator init
+$ vault operator unseal
+$ export VAULT_TOKEN=<Initial Root Token>
+$ sh /vault-init/init.vault.sh
+```
+
 Пример запуска сервисов:
 
 ```shell
