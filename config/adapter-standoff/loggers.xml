@@ -1,4 +1,6 @@
 <included>
     <logger name="com.rbkmoney" level="INFO"/>
+    <logger name="com.rbkmoney.adapter.standoff.client" level="DEBUG"/>
+    <logger name="com.rbkmoney.adapter.standoff.service" level="DEBUG"/>
     <logger name="com.rbkmoney.woody" level="INFO"/>
 </included>
