@@ -12,3 +12,8 @@ ingress:
   tls:
     enabled: true
     secret: stand-wild
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi

@@ -2,3 +2,8 @@ replicaCount: 3  # Desired quantity of ZooKeeper pods. This should always be (1,
 persistence:
   enabled: true
   #storageClass: "-"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi

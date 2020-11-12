@@ -6,3 +6,8 @@ metrics:
     namespace: monitoring
     additionalLabels:
       release: prometheus
+
+resources:
+  requests:
+    cpu: 500m
+    memory: 256Mi
