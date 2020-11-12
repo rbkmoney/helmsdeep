@@ -1,3 +1,4 @@
+{{- if .Values.cilium.enabled -}}
 ---
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
@@ -26,3 +27,4 @@ spec:
     - ports:
       - protocol: TCP
         port: "8080"
+{{- end -}}

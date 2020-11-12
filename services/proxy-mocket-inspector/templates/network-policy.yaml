@@ -1,3 +1,4 @@
+{{- if .Values.cilium.enabled -}}
 ---
 kind:  CiliumNetworkPolicy
 apiVersion: "cilium.io/v2"
@@ -22,3 +23,4 @@ spec:
           k8s:app.kubernetes.io/name: dominant
       - matchLabels:
           k8s:app.kubernetes.io/name: hellgate
+{{- end -}}

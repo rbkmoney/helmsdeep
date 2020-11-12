@@ -1,3 +1,4 @@
+{{- if .Values.cilium.enabled -}}
 ---
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
@@ -29,3 +30,4 @@ spec:
       - matchLabels:
           k8s:job-name: dominant-initialization-task
           k8s:app.kubernetes.io/instance: dominant
+{{- end -}}

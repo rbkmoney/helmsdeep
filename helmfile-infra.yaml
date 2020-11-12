@@ -1,3 +1,8 @@
+environments:
+  default:
+    values:
+    - default.values.yaml
+
 {{ readFile "hf-templates.yaml" }}
 
 repositories:
@@ -7,6 +12,18 @@ repositories:
   url: https://helm.cilium.io/
 
 releases:
+- name: cilium
+  installed: {{ .Values.cilium.enabled }}
+  <<: *default
+  version: 1.8.5
+  chart: cilium/cilium
+  namespace: kube-system
+- name: netpolicy
+  installed: {{ .Values.cilium.enabled }}
+  <<: *default
+  chart: ./services/netpolicy
+  needs:
+  - kube-system/cilium
 - name: prometheus
   <<: *default
   chart: prometheus-community/kube-prometheus-stack
@@ -17,8 +34,3 @@ releases:
   installed: true
   <<: *default
   chart: ./services/elk
-- name: cilium
-  <<: *default
-  version: 1.8.5
-  chart: cilium/cilium
-  namespace: kube-system

@@ -1,6 +1,0 @@
-{{ readFile "hf-templates.yaml" }}
-
-releases:
-- name: netpolicy
-  <<: *netpolicy
-  chart: ./services/netpolicy

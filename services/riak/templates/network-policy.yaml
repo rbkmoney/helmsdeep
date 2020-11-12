@@ -1,3 +1,4 @@
+{{- if .Values.cilium.enabled -}}
 ---
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
@@ -22,3 +23,4 @@ spec:
           k8s:app.kubernetes.io/name: cds
       - matchLabels:
           k8s:app.kubernetes.io/name: machinegun
+{{- end -}}

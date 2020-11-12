@@ -1,3 +1,4 @@
+{{- if .Values.cilium.enabled -}}
 ---
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
@@ -38,3 +39,4 @@ specs:
       fromEndpoints:
         - matchLabels:
             k8s:app.kubernetes.io/name: test-transaction-gateway
+{{- end -}}
