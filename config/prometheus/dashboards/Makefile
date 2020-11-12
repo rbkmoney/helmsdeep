@@ -7,9 +7,7 @@ DASHBOARDS := $(patsubst src/%.jsonnet,result/%.json,$(SRC_FILES))
 src/grafonnet-lib/.git:
 	git submodule update --init src/grafonnet-lib
 
-src/%.jsonnet: src/grafonnet-lib/.git
-
-result/%.json: src/%.jsonnet
+result/%.json: src/%.jsonnet src/grafonnet-lib/.git
 	jsonnet -o $@ $<
 
 generate: $(DASHBOARDS)
