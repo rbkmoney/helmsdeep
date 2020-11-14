@@ -43,8 +43,8 @@ data:
         GRANT ALL ON schema hook TO \"{{name}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA hook TO \"{{name}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA hook TO \"{{name}}\";" \
-        default_ttl="1h" \
-        max_ttl="24h"
+        default_ttl="10h" \
+        max_ttl="240h"
     vault write database/config/fbmgmt \
         plugin_name=postgresql-database-plugin \
         allowed_roles="*" \
@@ -59,8 +59,8 @@ data:
         GRANT ALL ON schema af TO \"{{name}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA af TO \"{{name}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA af TO \"{{name}}\";" \
-        default_ttl="1h" \
-        max_ttl="24h"
+        default_ttl="10h" \
+        max_ttl="240h"
     vault write database/config/db-kk \
         plugin_name=postgresql-database-plugin \
         allowed_roles="db-kk" \
