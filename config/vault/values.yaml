@@ -24,4 +24,4 @@ server:
 resources:
   requests:
     cpu: 100m
-    memory: 256Mi
+    memory: 128Mi
