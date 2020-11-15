@@ -51,11 +51,12 @@ spec:
             periodSeconds: 60
             timeoutSeconds: 15
           readinessProbe:
-            exec:
-              command: ["riak-admin", "test"]
-            initialDelaySeconds: 30
-            periodSeconds: 20
-            timeoutSeconds: 10
+            httpGet:
+              path: /types/default/props
+              port: http
+            initialDelaySeconds: 200
+            periodSeconds: 30
+            timeoutSeconds: 20
           volumeMounts:
             - name: config-volume
               mountPath: /etc/riak/user.conf
