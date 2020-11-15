@@ -18,7 +18,7 @@ data:
         allowed_roles="*" \
         connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql.default:5432/shumway?sslmode=disable" \
         username="postgres" \
-        password="H@ckM3"
+        password="EQb3iRfZd0y50b"
     vault write database/roles/db-app \
         db_name=shumway \
         creation_statements="Create schema if not exists shm;
@@ -34,7 +34,7 @@ data:
         allowed_roles="*" \
         connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql.default:5432/hook?sslmode=disable" \
         username="postgres" \
-        password="H@ckM3"
+        password="EQb3iRfZd0y50b"
     vault write database/roles/db-app-hook \
         db_name=hook \
         creation_statements="Create schema if not exists hook;
@@ -50,7 +50,7 @@ data:
         allowed_roles="*" \
         connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql.default:5432/fraudbusters?sslmode=disable" \
         username="postgres" \
-        password="H@ckM3"
+        password="EQb3iRfZd0y50b"
     vault write database/roles/db-app-fbmgmt \
         db_name=fbmgmt \
         creation_statements="Create schema if not exists af;
@@ -66,7 +66,7 @@ data:
         allowed_roles="db-kk" \
         connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql.default:5432/keycloak?sslmode=disable" \
         username="postgres" \
-        password="H@ckM3"
+        password="EQb3iRfZd0y50b"
     vault write database/roles/db-kk \
         db_name=db-kk \
         creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';

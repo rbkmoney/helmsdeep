@@ -4,8 +4,8 @@ replicas: 3
 #postgresqlPassword: "H@ckM3"
 global:
   postgresql:
-    password: "H@ckM3"
-    repmgrPassword: "H@ckM3"
+    password: "EQb3iRfZd0y50b"
+    repmgrPassword: "H@ckEQb3iRfZd0y50b"
 
 postgresql:
   initdbScripts:
@@ -14,6 +14,7 @@ postgresql:
        CREATE DATABASE shumway;
        CREATE DATABASE hook;
        CREATE DATABASE fraudbusters;
+       CREATE DATABASE keycloak;
   replicaCount: 3
 pgpool:  
   extraEnvVars:
