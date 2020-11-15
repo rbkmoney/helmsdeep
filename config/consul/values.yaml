@@ -1,1 +1,6 @@
 Replicas: 1
+
+Resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi

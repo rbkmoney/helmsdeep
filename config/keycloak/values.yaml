@@ -46,3 +46,8 @@ ingress:
     - hosts:
         - auth.rbkmoney.standoff.city
       secretName: "stand-wild"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 1024Mi

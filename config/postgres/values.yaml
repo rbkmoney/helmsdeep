@@ -19,3 +19,8 @@ pgpool:
   extraEnvVars:
     - name: PGPOOL_ENABLE_POOL_HBA
       value: "no"
+
+resources:
+  requests:
+    cpu: 1000m
+    memory: 512Mi

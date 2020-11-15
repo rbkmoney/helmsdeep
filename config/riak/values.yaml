@@ -5,3 +5,8 @@ securityContext:
    add: 
    - "SYS_CHROOT"
    - "NET_RAW"
+
+resources:
+  requests:
+    cpu: 2000m
+    memory: 3048Mi

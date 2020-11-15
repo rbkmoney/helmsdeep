@@ -5,3 +5,8 @@ ingress:
   paths:
     - path: /privdoc/v0
     - path: /payres/v0
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
