@@ -7,4 +7,4 @@ data:
   index_template_json: |
     {{- .Files.Get "files/filebeat-index-template.json" | nindent 4 }}
   ilm_policy_json: |
-    {{- .Files.Get "files/filebeat-ilm-policy-16h.json" | nindent 4 }}
+    {{- .Files.Get "files/filebeat-ilm-policy-8h.json" | nindent 4 }}
