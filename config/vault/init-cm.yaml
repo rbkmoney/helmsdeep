@@ -43,8 +43,8 @@ data:
         GRANT ALL ON schema hook TO \"{{name}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA hook TO \"{{name}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA hook TO \"{{name}}\";" \
-        default_ttl="1h" \
-        max_ttl="24h"
+        default_ttl="10h" \
+        max_ttl="240h"
     vault write database/config/fbmgmt \
         plugin_name=postgresql-database-plugin \
         allowed_roles="*" \
@@ -59,11 +59,25 @@ data:
         GRANT ALL ON schema af TO \"{{name}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA af TO \"{{name}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA af TO \"{{name}}\";" \
-        default_ttl="1h" \
-        max_ttl="24h"
+        default_ttl="10h" \
+        max_ttl="240h"
+    vault write database/config/db-kk \
+        plugin_name=postgresql-database-plugin \
+        allowed_roles="db-kk" \
+        connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql.default:5432/keycloak?sslmode=disable" \
+        username="postgres" \
+        password="H@ckM3"
+    vault write database/roles/db-kk \
+        db_name=db-kk \
+        creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
+        GRANT ALL ON schema public TO \"{{name}}\";
+        GRANT ALL ON ALL TABLES IN SCHEMA public TO \"{{name}}\";
+        GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO \"{{name}}\";" \
+        default_ttl="48h" \
+        max_ttl="240h"
 
     vault secrets enable kv-v2
-    vault kv put secret/pt-pg user=rbkmoney password=P@ssw0rd
+    vault kv put kv-v2/pt-pg user=rbkmoney password=%SOMEPASSWORDHERE%
 
     vault auth enable kubernetes
     vault write auth/kubernetes/config \
@@ -88,6 +102,9 @@ data:
     path "database/creds/db-app-fbmgmt" {
       capabilities = ["read"]
     }
-    path "secret/data/pt-pg" {
+    path "kv-v2/data/pt-pg" {
       capabilities = ["read"]
     }
+    path "database/creds/db-kk" {
+      capabilities = ["read"]
+    }   

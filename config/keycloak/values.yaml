@@ -2,6 +2,25 @@
 postgresql:
     enabled: false
 
+podAnnotations:
+  vault.hashicorp.com/role: "db-app"
+  vault.hashicorp.com/agent-inject: "true"
+  vault.hashicorp.com/agent-inject-secret-dbuser: "database/creds/db-kk"
+  vault.hashicorp.com/agent-inject-template-dbuser: |
+    {{`{{- with secret "database/creds/db-kk" -}}
+    {{ .Data.username }}
+    {{- end }}`}}
+  vault.hashicorp.com/agent-inject-secret-dbpass: "database/creds/db-kk"
+  vault.hashicorp.com/agent-inject-template-dbpass: |
+    {{`{{- with secret "database/creds/db-kk" -}}
+    {{ .Data.password }}
+    {{- end }}`}}
+
+
+startupScripts:
+  nenvget.sh: |
+    echo $DB_USER_FILE $DB_PASSWORD_FILE
+
 extraEnv: |
   - name: DB_VENDOR
     value: postgres
@@ -11,10 +30,10 @@ extraEnv: |
     value: "5432"
   - name: DB_DATABASE
     value: keycloak
-  - name: DB_USER
-    value: postgres
-  - name: DB_PASSWORD
-    value: "H@ckM3"
+  - name: DB_USER_FILE
+    value: /vault/secrets/dbuser
+  - name: DB_PASSWORD_FILE
+    value: /vault/secrets/dbpass
   - name: JAVA_OPTS
     value: >-
       -XX:+UseContainerSupport
