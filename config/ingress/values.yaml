@@ -25,8 +25,8 @@ controller:
     externalTrafficPolicy: Cluster
   config:
     entries:
-      main-snippets: |
-        load_module /opt/ptaf/lib/ngx_wrapper.so;
-        env POD_IP=127.0.0.1;
-      http-snippets: |
-        ptaf_config "tcp://eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJ0b2tlbl9pZCI6IjBiMmY4YWY2LTZlZWMtNGU3NC1iOTQ5LWE5YWM0OTgwODY0MyIsInRlbmFudF9pZCI6IjlmNmYzMzMzLWUwY2MtNDI5Ni1iNDZkLTkwZWRjNjc5MzcxMCIsInJvbGVzIjpbImNvcmUiLCJ3c2MtYWdlbnQiXX0.ccChlkf2EMMkBYi-B5OeW1GnIc62llXzWKP2aNZWwaD3oGs5tqZCvUtpj9Ny-aJzJd3XqE-41wE4XHUteT30LA@172.21.22.237:8443";
+      # main-snippets: |
+      #   load_module /opt/ptaf/lib/ngx_wrapper.so;
+      #   env POD_IP=127.0.0.1;
+      # http-snippets: |
+      #   ptaf_config "tcp://eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJ0b2tlbl9pZCI6IjBiMmY4YWY2LTZlZWMtNGU3NC1iOTQ5LWE5YWM0OTgwODY0MyIsInRlbmFudF9pZCI6IjlmNmYzMzMzLWUwY2MtNDI5Ni1iNDZkLTkwZWRjNjc5MzcxMCIsInJvbGVzIjpbImNvcmUiLCJ3c2MtYWdlbnQiXX0.ccChlkf2EMMkBYi-B5OeW1GnIc62llXzWKP2aNZWwaD3oGs5tqZCvUtpj9Ny-aJzJd3XqE-41wE4XHUteT30LA@172.21.22.237:8443";
