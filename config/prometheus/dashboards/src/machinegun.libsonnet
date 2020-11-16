@@ -3,9 +3,9 @@ local graphPanel = grafana.graphPanel;
 local prometheus = grafana.prometheus;
 
 local percentileColors = {
-  'p50': 'dark-red',
-  'p95': 'yellow',
-  'p99': 'green',
+  p50: 'dark-red',
+  p95: 'yellow',
+  p99: 'green',
 };
 
 {
