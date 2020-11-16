@@ -60,11 +60,11 @@ local prometheus = grafana.prometheus;
         legendFormat='BEAM CPU Time'
       ),
       prometheus.target(
-        expr='irate(container_cpu_usage_seconds_total{namespace="$namespace", pod="$pod", container=""}[$interval]) * 1000 / on (namespace, pod) irate(erlang_vm_statistics_wallclock_time_milliseconds[$interval])',
+        expr='sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{namespace="$namespace", pod="$pod"})',
         legendFormat='Pod CPU Time'
       ),
       prometheus.target(
-        expr='irate(container_cpu_cfs_throttled_periods_total{namespace="$namespace", pod="$pod", container=""}[$interval]) / on (namespace, pod, container) irate(container_cpu_cfs_periods_total[$interval])',
+        expr='max(irate(container_cpu_cfs_throttled_periods_total{namespace="$namespace", pod="$pod", container=""}[$interval]) / on (namespace, pod, container, node, service) irate(container_cpu_cfs_periods_total[$interval]))',
         legendFormat='CPU Throttling'
       ),
     ])
@@ -84,12 +84,12 @@ local prometheus = grafana.prometheus;
     })
     .addSeriesOverride({
       alias: 'BEAM CPU Time',
-      zindex: 1,
+      zindex: 2,
       color: '#3f6833',
     })
     .addSeriesOverride({
       alias: 'Pod CPU Time',
-      zindex: 2,
+      zindex: 1,
       color: '#ef843c',
     })
     .addSeriesOverride({
@@ -126,15 +126,15 @@ local prometheus = grafana.prometheus;
         legendFormat='BEAM Total'
       ),
       prometheus.target(
-        expr='container_memory_rss{namespace="$namespace", pod="$pod", container=""}',
+        expr='max(container_memory_rss{namespace="$namespace", pod="$pod", container=""})',
         legendFormat='Pod RSS'
       ),
       prometheus.target(
-        expr='container_memory_cache{namespace="$namespace", pod="$pod", container=""}',
+        expr='max(container_memory_cache{namespace="$namespace", pod="$pod", container=""})',
         legendFormat='Pod Cache'
       ),
       prometheus.target(
-        expr='container_memory_usage_bytes{namespace="$namespace", pod="$pod", container=""}',
+        expr='max(container_memory_usage_bytes{namespace="$namespace", pod="$pod", container=""})',
         legendFormat='Pod Usage'
       ),
     ])
@@ -157,17 +157,18 @@ local prometheus = grafana.prometheus;
     .addSeriesOverride({
       alias: 'BEAM Total',
       zindex: 1,
-      color: '#ef843c',
+      color: '#3274d9',
       stack: false,
     })
     .addSeriesOverride({
       alias: 'Pod Usage',
-      zindex: -1,
+      zindex: -2,
       color: '#3f6833',
       stack: false,
     })
     .addSeriesOverride({
       alias: 'Pod RSS',
+      zindex: -1,
       stack: 'A',
     }),
 

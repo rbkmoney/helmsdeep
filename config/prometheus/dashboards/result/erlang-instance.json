@@ -178,12 +178,12 @@
             {
                "alias": "BEAM CPU Time",
                "color": "#3f6833",
-               "zindex": 1
+               "zindex": 2
             },
             {
                "alias": "Pod CPU Time",
                "color": "#ef843c",
-               "zindex": 2
+               "zindex": 1
             },
             {
                "alias": "CPU Throttling",
@@ -221,14 +221,14 @@
                "refId": "C"
             },
             {
-               "expr": "irate(container_cpu_usage_seconds_total{namespace=\"$namespace\", pod=\"$pod\", container=\"\"}[$interval]) * 1000 / on (namespace, pod) irate(erlang_vm_statistics_wallclock_time_milliseconds[$interval])",
+               "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{namespace=\"$namespace\", pod=\"$pod\"})",
                "format": "time_series",
                "intervalFactor": 2,
                "legendFormat": "Pod CPU Time",
                "refId": "D"
             },
             {
-               "expr": "irate(container_cpu_cfs_throttled_periods_total{namespace=\"$namespace\", pod=\"$pod\", container=\"\"}[$interval]) / on (namespace, pod, container) irate(container_cpu_cfs_periods_total[$interval])",
+               "expr": "max(irate(container_cpu_cfs_throttled_periods_total{namespace=\"$namespace\", pod=\"$pod\", container=\"\"}[$interval]) / on (namespace, pod, container, node, service) irate(container_cpu_cfs_periods_total[$interval]))",
                "format": "time_series",
                "intervalFactor": 2,
                "legendFormat": "CPU Throttling",
@@ -524,7 +524,7 @@
             },
             {
                "alias": "BEAM Total",
-               "color": "#ef843c",
+               "color": "#3274d9",
                "stack": false,
                "zindex": 1
             },
@@ -532,11 +532,12 @@
                "alias": "Pod Usage",
                "color": "#3f6833",
                "stack": false,
-               "zindex": -1
+               "zindex": -2
             },
             {
                "alias": "Pod RSS",
-               "stack": "A"
+               "stack": "A",
+               "zindex": -1
             }
          ],
          "spaceLength": 10,
@@ -565,21 +566,21 @@
                "refId": "C"
             },
             {
-               "expr": "container_memory_rss{namespace=\"$namespace\", pod=\"$pod\", container=\"\"}",
+               "expr": "max(container_memory_rss{namespace=\"$namespace\", pod=\"$pod\", container=\"\"})",
                "format": "time_series",
                "intervalFactor": 2,
                "legendFormat": "Pod RSS",
                "refId": "D"
             },
             {
-               "expr": "container_memory_cache{namespace=\"$namespace\", pod=\"$pod\", container=\"\"}",
+               "expr": "max(container_memory_cache{namespace=\"$namespace\", pod=\"$pod\", container=\"\"})",
                "format": "time_series",
                "intervalFactor": 2,
                "legendFormat": "Pod Cache",
                "refId": "E"
             },
             {
-               "expr": "container_memory_usage_bytes{namespace=\"$namespace\", pod=\"$pod\", container=\"\"}",
+               "expr": "max(container_memory_usage_bytes{namespace=\"$namespace\", pod=\"$pod\", container=\"\"})",
                "format": "time_series",
                "intervalFactor": 2,
                "legendFormat": "Pod Usage",

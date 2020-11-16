@@ -31,3 +31,6 @@ grafana:
       erlang-instance:
         json: |
           {{- readFile "dashboards/result/erlang-instance.json" | nindent 10 }}
+      machinegun-namespace:
+        json: |
+          {{- readFile "dashboards/result/machinegun-namespace.json" | nindent 10 }}
