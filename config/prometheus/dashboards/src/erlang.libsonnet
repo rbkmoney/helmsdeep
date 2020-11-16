@@ -72,6 +72,7 @@ local prometheus = grafana.prometheus;
       alias: 'CPU Limit',
       bars: false,
       fill: 0,
+      zindex: 3,
       lines: true,
       color: '#890f02',
     })
@@ -79,6 +80,7 @@ local prometheus = grafana.prometheus;
       alias: 'CPU Requests',
       bars: false,
       fill: 0,
+      zindex: 3,
       lines: true,
       color: '#f2495c',
     })
@@ -141,17 +143,19 @@ local prometheus = grafana.prometheus;
     .addSeriesOverride({
       alias: 'Memory Limit',
       bars: false,
-      fill: 0,
       lines: true,
       stack: false,
+      fill: 0,
+      zindex: 3,
       color: '#890f02',
     })
     .addSeriesOverride({
       alias: 'Memory Requests',
       bars: false,
-      fill: 0,
       lines: true,
       stack: false,
+      fill: 0,
+      zindex: 3,
       color: '#f2495c',
     })
     .addSeriesOverride({

@@ -449,14 +449,16 @@
                "bars": false,
                "color": "#890f02",
                "fill": 0,
-               "lines": true
+               "lines": true,
+               "zindex": 3
             },
             {
                "alias": "CPU Requests",
                "bars": false,
                "color": "#f2495c",
                "fill": 0,
-               "lines": true
+               "lines": true,
+               "zindex": 3
             },
             {
                "alias": "BEAM CPU Time",
@@ -795,7 +797,8 @@
                "color": "#890f02",
                "fill": 0,
                "lines": true,
-               "stack": false
+               "stack": false,
+               "zindex": 3
             },
             {
                "alias": "Memory Requests",
@@ -803,7 +806,8 @@
                "color": "#f2495c",
                "fill": 0,
                "lines": true,
-               "stack": false
+               "stack": false,
+               "zindex": 3
             },
             {
                "alias": "BEAM Total",
@@ -2011,7 +2015,8 @@
                      "color": "#890f02",
                      "fill": 0,
                      "lines": true,
-                     "stack": false
+                     "stack": false,
+                     "zindex": 3
                   }
                ],
                "spaceLength": 10,
@@ -2499,7 +2504,8 @@
                      "color": "#890f02",
                      "fill": 0,
                      "lines": true,
-                     "stack": false
+                     "stack": false,
+                     "zindex": 3
                   }
                ],
                "spaceLength": 10,
