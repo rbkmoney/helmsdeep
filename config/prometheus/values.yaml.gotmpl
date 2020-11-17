@@ -1,0 +1,36 @@
+# Look for reference at https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L2008
+prometheus:
+  additionalServiceMonitors:
+    - name: "rbk-java-service"
+      selector:
+        matchLabels:
+          prometheus.metrics.java.enabled: "true"
+      namespaceSelector:
+        matchNames:
+          - default
+      endpoints:
+        - port: "management"
+          path: /actuator/prometheus
+          scheme: http
+
+grafana:
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+      - name: 'rbk-dashboards'
+        orgId: 1
+        folder: 'Processing'
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/rbk-dashboards
+  dashboards:
+    rbk-dashboards:
+      erlang-instance:
+        json: |
+          {{- readFile "dashboards/result/erlang-instance.json" | nindent 10 }}
+      machinegun-namespace:
+        json: |
+          {{- readFile "dashboards/result/machinegun-namespace.json" | nindent 10 }}
