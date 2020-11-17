@@ -1,0 +1,6 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+entrypoint: |
+  {{- readFile "entrypoint.sh" | nindent 2 }}

@@ -12,4 +12,4 @@ data:
     -sname {{ include "dominant.fullname" . }}
     -setcookie {{ include "dominant.fullname" . }}_cookie
   erl_inetrc: |
-    {{- .Values.vmConfig | nindent 4 }}
+    {{- .Values.erlInetrc | nindent 4 }}

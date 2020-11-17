@@ -1,4 +1,9 @@
+# -*- mode: yaml -*-
+
 replicaCount: 1
+
+appConfig: |
+  {{- readFile "config.yaml" | nindent 2 }}
 
 metrics:
   serviceMonitor:
