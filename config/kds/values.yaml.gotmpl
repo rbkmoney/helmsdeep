@@ -1,0 +1,22 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+initializationTask:
+  create: true
+
+appConfig: |
+  {{- readFile "sys.config" | nindent 2 }}
+caCrt: |
+  {{- readFile "ca.crt" | nindent 2 }}
+serverCrt: |
+  {{- readFile "server.pem" | nindent 2 }}
+erlInetrc: |
+  {{- readFile "../vm/erl_inetrc" | nindent 2 }}
+
+metrics:
+  serviceMonitor:
+    enabled: true
+    namespace: monitoring
+    additionalLabels:
+      release: prometheus
