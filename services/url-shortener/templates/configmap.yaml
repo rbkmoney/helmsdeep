@@ -13,4 +13,4 @@ data:
     -setcookie {{ include "url-shortener.fullname" . }}_cookie
     -kernel inetrc '"./erl_inetrc"''
   erl_inetrc: |
-    {{- .Values.vmConfig | nindent 4 }}
+    {{- .Values.erlInetrc | nindent 4 }}

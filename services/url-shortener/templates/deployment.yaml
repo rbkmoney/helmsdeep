@@ -46,11 +46,11 @@ spec:
               port: api
           volumeMounts:
             - name: config-volume
-              mountPath: /opt/shortener/releases/0.1.0/sys.config
+              mountPath: /opt/shortener/releases/0.1/sys.config
               subPath: sys.config
               readOnly: true
             - name: config-volume
-              mountPath: /opt/shortener/releases/0.1.0/vm.args
+              mountPath: /opt/shortener/releases/0.1/vm.args
               subPath: vm.args
               readOnly: true
             - name: config-volume

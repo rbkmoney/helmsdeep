@@ -1,0 +1,25 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+appConfig: |
+  {{- readFile "sys.config" | nindent 2 }}
+erlInetrc: |
+  {{- readFile "../vm/erl_inetrc" | nindent 2 }}
+fetchKeycloakPubkey: |
+  {{- readFile "../api-common/fetch-keycloak-pubkey.sh" | nindent 2 }}
+oopsBody1: |
+  {{- readFile "../api-common/oops-bodies/sad-kitty1" | nindent 2 }}
+oopsBody2: |
+  {{- readFile "../api-common/oops-bodies/sad-kitty2" | nindent 2 }}
+tokenEncryptionKey1: |
+  {{- readFile "../api-common/token-encryption-keys/1.jwk" | nindent 2 }}
+capiPrivkey: |
+  {{- readFile "../api-common/capi.privkey.pem" | nindent 2 }}
+
+metrics:
+  serviceMonitor:
+    enabled: true
+    namespace: monitoring
+    additionalLabels:
+      release: prometheus

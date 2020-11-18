@@ -1,0 +1,7 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+config:
+  user: |
+    {{- readFile "user.yaml" | nindent 4 }}

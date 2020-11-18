@@ -3,4 +3,4 @@ name: capi-v1
 description: Common API service (v1)
 type: application
 version: 0.1.0
-appVersion: 084fd94928b83ad2c349273a355a70953cc1a7b8
+appVersion: b2b15a5b620cd7061f9e81fa44955e824ffdf806
