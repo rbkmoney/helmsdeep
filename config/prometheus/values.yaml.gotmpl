@@ -1,8 +1,17 @@
-# -*- mode: yaml -*-
-
 # Look for reference at https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L2008
 prometheus:
   additionalServiceMonitors:
+    - name: "rbk-erlang-service"
+      selector:
+        matchLabels:
+          prometheus.metrics.erlang.enabled: "true"
+      namespaceSelector:
+        matchNames:
+          - default
+      endpoints:
+        - port: "api"
+          path: /metrics
+          scheme: http
     - name: "rbk-java-service"
       selector:
         matchLabels:
@@ -16,18 +25,107 @@ prometheus:
           scheme: http
 
 grafana:
+  enabled: true
+  replicas: 1
+  
+  create: true
+  ## Use an existing ClusterRole/Role (depending on rbac.namespaced false/true)
+  # useExistingRole: name-of-some-(cluster)role
+  rbac:
+    create: true
+    pspEnabled: true
+    pspUseAppArmor: true
+    namespaced: false
+    extraClusterRoleRules:
+    - apiGroups: [""]
+      resources: ["configmaps", "secrets"]
+      verbs: ["get", "watch", "list"]
+  
+  image:
+    repository: grafana/grafana
+    tag: 7.2.1
+    sha: ""
+    pullPolicy: IfNotPresent
+
+  extraEmptyDirMounts:
+    - name: dashboard-dir
+      mountPath: /var/lib/grafana/dashboards/general
+  
+  envValueFrom:
+    ELASTIC_PASS:
+      secretKeyRef:
+        name: rbkmoney-es-elastic-user
+        key: elastic
+
+
+  extraInitContainers:
+    - name: dashboard-autosync
+      image: alpine/git:v2.26.2
+      imagePullPolicy: IfNotPresent
+      args:
+      - clone
+      - -b
+      - dashboard/release
+      - git@github.com:rbkmoney/grafana-jsonnet.git
+      - /git/dashboards
+      env:
+        - name: GIT_SSH_COMMAND
+          value: "$(cat /etc/synckey/synckey > /git/synckey && chmod 400 /git/synckey) && ssh -o 'StrictHostKeyChecking no' -i /git/synckey"
+      volumeMounts:
+        - name: dashboard-dir
+          mountPath: "/git/dashboards"
+        - name: sync-key
+          mountPath: "/etc/synckey"
+          readOnly: false
+      securityContext:
+       runAsUser: 0
+
+  extraContainerVolumes:
+    - name: sync-key
+      secret:
+        secretName: prometheus-grafana-env
+        items:
+        - key: synckey
+          path: synckey
+          mode: 0600
+
+  #Use your ssh private key for sync dashboard from repo
+  envRenderSecret:
+    synckey: |
+      <ssh-private-key>
+  plugins: []
+    # - digrich-bubblechart-panel
+    # - grafana-clock-panel
+
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+      - name: rbkm-elasticsearch
+        type: elasticsearch
+        database: "filebeat-*"
+        url: https://rbkmoney-es-http.default.svc.cluster.local:9200
+        basicAuth: true
+        basicAuthUser: elastic
+        basicAuthPassword: $ELASTIC_PASS
+        jsonData:
+          timeField: "@timestamp"
+          esVersion: 70
+          tlsSkipVerify: true
+
   dashboardProviders:
     dashboardproviders.yaml:
       apiVersion: 1
       providers:
-      - name: 'rbk-dashboards'
+      - name: 'general'
         orgId: 1
-        folder: 'Processing'
+        folder: ''
         type: file
         disableDeletion: false
         editable: true
         options:
-          path: /var/lib/grafana/dashboards/rbk-dashboards
+          path: /var/lib/grafana/dashboards
+
   dashboards:
     rbk-dashboards:
       erlang-instance:
@@ -36,3 +134,51 @@ grafana:
       machinegun-namespace:
         json: |
           {{- readFile "dashboards/result/machinegun-namespace.json" | nindent 10 }}
+
+  grafana.ini:
+    paths:
+      data: /var/lib/grafana/data
+      logs: /var/log/grafana
+      plugins: /var/lib/grafana/plugins
+      provisioning: /etc/grafana/provisioning
+    analytics:
+      check_for_updates: true
+    log:
+      mode: console
+    grafana_net:
+      url: https://grafana.net
+
+  sidecar:
+    image:
+      repository: kiwigrid/k8s-sidecar
+      tag: 1.1.0
+      sha: ""
+    imagePullPolicy: IfNotPresent
+    resources: {}
+    enableUniqueFilenames: false
+    dashboards:
+      enabled: false
+      SCProvider: true
+      label: grafana_dashboard
+      folder: /tmp/dashboards
+      defaultFolderName: null
+      searchNamespace: null
+      folderAnnotation: null
+      provider:
+        name: sidecarProvider
+        orgid: 1
+        folder: ''
+        type: file
+        disableDelete: false
+        allowUiUpdates: false
+        foldersFromFilesStructure: false
+    datasources:
+      enabled: false
+      label: grafana_datasource
+      searchNamespace: null
+    notifiers:
+      enabled: false
+      label: grafana_notifier
+      searchNamespace: null
+  revisionHistoryLimit: 10
+
