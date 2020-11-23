@@ -91,7 +91,7 @@ grafana:
   #Use your ssh private key for sync dashboard from repo
   envRenderSecret:
     synckey: |
-      <your ssh-privat-key>
+      <your ssh private key>
   plugins: []
   # - digrich-bubblechart-panel
     # - grafana-clock-panel
@@ -148,37 +148,5 @@ grafana:
     grafana_net:
       url: https://grafana.net
 
-  sidecar:
-    image:
-      repository: kiwigrid/k8s-sidecar
-      tag: 1.1.0
-      sha: ""
-    imagePullPolicy: IfNotPresent
-    resources: {}
-    enableUniqueFilenames: false
-    dashboards:
-      enabled: false
-      SCProvider: true
-      label: grafana_dashboard
-      folder: /tmp/dashboards
-      defaultFolderName: null
-      searchNamespace: null
-      folderAnnotation: null
-      provider:
-        name: sidecarProvider
-        orgid: 1
-        folder: ''
-        type: file
-        disableDelete: false
-        allowUiUpdates: false
-        foldersFromFilesStructure: false
-    datasources:
-      enabled: false
-      label: grafana_datasource
-      searchNamespace: null
-    notifiers:
-      enabled: false
-      label: grafana_notifier
-      searchNamespace: null
   revisionHistoryLimit: 10
 
