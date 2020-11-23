@@ -1,4 +1,4 @@
-version: v0.130.1
+version: v0.132.0
 dependencies:
 - name: consul
   repository: https://charts.helm.sh/stable
