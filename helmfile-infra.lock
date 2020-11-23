@@ -2,9 +2,9 @@ version: v0.131.0
 dependencies:
 - name: cilium
   repository: https://helm.cilium.io/
-  version: 1.8.5
+  version: 1.9.0
 - name: kube-prometheus-stack
   repository: https://prometheus-community.github.io/helm-charts
   version: 10.1.0
-digest: sha256:ca0b074c29131825616df097f8579afae011e7a77b1cf3eb61104818a17a1213
-generated: "2020-11-11T10:40:24.051001762+03:00"
+digest: sha256:4292c2a8f7a7c96fec5b0c81347c7a2237e14a101e5fd40e570d3b40836eea57
+generated: "2020-11-23T15:38:56.99101995+03:00"

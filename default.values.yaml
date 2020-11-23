@@ -1,4 +1,4 @@
 cilium:
   enabled: true
-elk:
+logs:
   enabled: true
