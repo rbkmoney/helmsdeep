@@ -183,7 +183,7 @@ grafana доступна в браузере https://localhost:3000. Получ�
 kubectl get secret --namespace monitoring prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 ```
 
-Для того чтобы синхронизировать dashboards из репозитория, неоьходмо поместить свой приватный ssh ключ в `config/prometheus/values.yaml.gotmpl`:
+Для того, чтобы синхронизировать dashboards из репозитория, необходимо поместить свой приватный ssh ключ в `config/prometheus/values.yaml.gotmpl`:
 ```
 ...
 envRenderSecret: 
