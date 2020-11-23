@@ -188,6 +188,6 @@ kubectl get secret --namespace monitoring prometheus-grafana -o jsonpath="{.data
 ...
 envRenderSecret: 
   synckey: |
-    <your ssh privat key>
+    <your ssh private key>
 ...
 ```
