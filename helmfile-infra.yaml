@@ -15,9 +15,11 @@ releases:
 - name: cilium
   installed: {{ .Values.cilium.enabled }}
   <<: *default
-  version: 1.8.5
+  version: 1.9.0
   chart: cilium/cilium
   namespace: kube-system
+  wait: true
+  timeout: 60
 - name: netpolicy
   installed: {{ .Values.cilium.enabled }}
   <<: *default
