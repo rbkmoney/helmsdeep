@@ -15,7 +15,7 @@ releases:
 #  - default/logs
 - name: logs
   # Change to installed: true if you need ECK installed
-  installed: true
+  installed: false
   <<: *default
   namespace: monitoring
   chart: ./services/elk
