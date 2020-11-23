@@ -57,7 +57,6 @@ grafana:
         name: rbkmoney-es-elastic-user
         key: elastic
 
-
   extraInitContainers:
     - name: dashboard-autosync
       image: alpine/git:v2.26.2
@@ -92,9 +91,9 @@ grafana:
   #Use your ssh private key for sync dashboard from repo
   envRenderSecret:
     synckey: |
-      <ssh-private-key>
+      <your ssh-privat-key>
   plugins: []
-    # - digrich-bubblechart-panel
+  # - digrich-bubblechart-panel
     # - grafana-clock-panel
 
   datasources:
@@ -103,15 +102,16 @@ grafana:
       datasources:
       - name: rbkm-elasticsearch
         type: elasticsearch
-        database: "filebeat-*"
-        url: https://rbkmoney-es-http.default.svc.cluster.local:9200
+        database: "filebeat-rbkmoney-processing-*"
+        url: https://rbkmoney-es-http:9200
         basicAuth: true
         basicAuthUser: elastic
-        basicAuthPassword: $ELASTIC_PASS
         jsonData:
           timeField: "@timestamp"
           esVersion: 70
           tlsSkipVerify: true
+        secureJsonData:
+          basicAuthPassword: $ELASTIC_PASS
 
   dashboardProviders:
     dashboardproviders.yaml:
