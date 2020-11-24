@@ -13,14 +13,14 @@ spec:
     - ports:
       - protocol: TCP
         port: "9092"
-      #rules:
-        #kafka:
-          #- role: consume
-            #topic: mg-events-ff-destination
-          #- role: consume
-            #topic: mg-events-ff-wallet
-          #- role: consume
-            #topic: mg-events-ff-withdrawal
+      rules:
+        kafka:
+          - role: consume
+            topic: mg-events-ff-destination
+          - role: consume
+            topic: mg-events-ff-wallet
+          - role: consume
+            topic: mg-events-ff-withdrawal
     fromEndpoints:
       - matchLabels:
           k8s:app.kubernetes.io/name: wallets-hooker-kafka

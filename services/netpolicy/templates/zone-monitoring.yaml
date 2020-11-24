@@ -6,14 +6,18 @@ metadata:
   namespace: monitoring
 specs:
   - endpointSelector:
-      k8s:io.kubernetes.pod.namespace: monitoring
+      matchLabels:
+        k8s:io.kubernetes.pod.namespace: monitoring
     ingress:
     - fromEndpoints:
       - matchLabels:
           k8s:io.kubernetes.pod.namespace: monitoring
+      - matchLabels:
+          k8s:io.kubernetes.pod.namespace: kube-system
   - endpointSelector:
-      k8s:io.kubernetes.pod.namespace: monitoring
-      k8s:app: prometheus
+      matchLabels:
+        k8s:io.kubernetes.pod.namespace: monitoring
+        k8s:app: prometheus
     ingress:
     - fromEndpoints:
       - matchLabels:

@@ -16,3 +16,6 @@ spec:
     - ports:
       - port: "53"
         protocol: ANY
+    - ports:
+      - port: "9153"
+        protocol: ANY

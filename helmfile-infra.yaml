@@ -18,14 +18,6 @@ releases:
   version: 1.9.0
   chart: cilium/cilium
   namespace: kube-system
-  wait: true
-  timeout: 60
-- name: netpolicy
-  installed: {{ .Values.cilium.enabled }}
-  <<: *default
-  chart: ./services/netpolicy
-  needs:
-  - kube-system/cilium
 - name: prometheus
   <<: *default
   chart: prometheus-community/kube-prometheus-stack
@@ -33,6 +25,12 @@ releases:
   namespace: monitoring
 - name: logs
   # Change to installed: true if you need ECK installed
-  installed: {{ .Values.logs.enabled }}
+  installed: {{ .Values.elk.enabled }}
   <<: *default
   chart: ./services/elk
+- name: netpolicy
+  installed: {{ .Values.cilium.enabled }}
+  <<: *default
+  chart: ./services/netpolicy
+  needs:
+  - kube-system/cilium
