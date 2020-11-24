@@ -65,17 +65,11 @@ grafana:
       - clone
       - -b
       - dashboard/release
-      - git@github.com:rbkmoney/grafana-jsonnet.git
+      - https://github.com/rbkmoney/grafana-dashboards-common.git
       - /git/dashboards
-      env:
-        - name: GIT_SSH_COMMAND
-          value: "$(cat /etc/synckey/synckey > /git/synckey && chmod 400 /git/synckey) && ssh -o 'StrictHostKeyChecking no' -i /git/synckey"
       volumeMounts:
         - name: dashboard-dir
           mountPath: "/git/dashboards"
-        - name: sync-key
-          mountPath: "/etc/synckey"
-          readOnly: false
       securityContext:
        runAsUser: 0
 
@@ -88,10 +82,6 @@ grafana:
           path: synckey
           mode: 0600
 
-  #Use your ssh private key for sync dashboard from repo
-  envRenderSecret:
-    synckey: |
-      <your ssh private key>
   plugins: []
   # - digrich-bubblechart-panel
     # - grafana-clock-panel
