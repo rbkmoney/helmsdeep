@@ -1,0 +1,4 @@
+[submodule "config/prometheus/dashboards/src/grafonnet-lib"]
+	path = config/prometheus/dashboards/src/grafonnet-lib
+	url = https://github.com/grafana/grafonnet-lib.git
+	branch = master

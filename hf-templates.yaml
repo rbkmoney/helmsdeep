@@ -4,7 +4,8 @@ templates:
     namespace: default
     missingFileHandler: Warn
     values:
+      - default.values.yaml[
       - config/_common/logging.yaml.gotmpl
       - config/{{ .Release.Name }}/values.yaml
-      - default.values.yaml
+      - config/{{ .Release.Name }}/values.yaml.gotmpl
     timeout: 900

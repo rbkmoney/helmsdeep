@@ -16,4 +16,4 @@ data:
     {{- end }}
     # -kernel inetrc '"./erl_inetrc"''
   erl_inetrc: |
-    {{- .Values.vmConfig | nindent 4 }}
+    {{- .Values.erlInetrc | nindent 4 }}

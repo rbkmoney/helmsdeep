@@ -1,7 +1,10 @@
 {
-    "use": "enc",
-    "kty": "oct",
-    "kid": "1",
-    "alg": "dir",
-    "k": "ampDc1BaTUZtbVprQ2Q3RjNlRm9mU2hQNTNaVWlVODU"
+  "use": "enc",
+  "kty": "EC",
+  "kid": "yx4bq8apE13Sv4R69YrAioQr2b7QhLovSiu2Pt7hdoA",
+  "crv": "P-256",
+  "alg": "ECDH-ES",
+  "x": "5SKZ7tAdtxIRMp6BTbUs535xklduymk1kM_rxzstok4",
+  "y": "5kjB7foc65yJ3sHshwH3pAwaXX5I6shs4t90Lv6mDkk",
+  "d": "0rJc5gYA7LcrnUlVZ40KdVclUINexqKx3GJM1cRox_4"
 }

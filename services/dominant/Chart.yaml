@@ -3,4 +3,4 @@ name: dominant
 description: Domain configuration service
 type: application
 version: 0.1.0
-appVersion: 0b783b639cb33e629066df63509e8dd68642a649
+appVersion: de2a937b3b92eb4fa6888be5aef3bde7d3c8b409
