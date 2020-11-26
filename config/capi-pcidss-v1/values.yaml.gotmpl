@@ -13,9 +13,9 @@ oopsBody1: |
 oopsBody2: |
   {{- readFile "../api-common/oops-bodies/sad-kitty2" | nindent 2 }}
 tokenEncryptionKey1: |
-  {{- readFile "../api-common/token-encryption-keys/1.jwk" | nindent 2 }}
+  {{- readFile "../api-common/keys/token-encryption-keys/1.jwk" | nindent 2 }}
 capiPrivkey: |
-  {{- readFile "../api-common/capi.privkey.pem" | nindent 2 }}
+  {{- readFile "../api-common/keys/capi.privkey.pem" | nindent 2 }}
 
 metrics:
   serviceMonitor:
