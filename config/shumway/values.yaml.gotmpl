@@ -14,6 +14,7 @@ podAnnotations:
   vault.hashicorp.com/agent-inject: "true"
   vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app"
   vault.hashicorp.com/agent-inject-template-application.properties: |
+    {{`
     {{- with secret "database/creds/db-app" -}}
     spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/shumway?sslmode=disable
     spring.datasource.username={{ .Data.username }}
@@ -22,3 +23,4 @@ podAnnotations:
     spring.flyway.user={{ .Data.username }}
     spring.flyway.password={{ .Data.password }}
     {{- end }}
+    `}}
