@@ -34,7 +34,7 @@ releases:
 - name: postgres
   <<: *default
   chart: bitnami/postgresql
-  version: 9.2.0
+  #version: 9.2.0
   wait: true
 - name: vault
   <<: *default
