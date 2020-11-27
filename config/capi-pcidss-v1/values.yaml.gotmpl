@@ -19,6 +19,9 @@ configMap:
       {{- readFile "../api-common/oops-bodies/sad-kitty1" | nindent 6 }}
     oopsBody2: |
       {{- readFile "../api-common/oops-bodies/sad-kitty2" | nindent 6 }}
+    vm.args: |
+      -sname {{ include "stateless.fullname" . }}
+      -setcookie {{ include "stateless.fullname" . }}_cookie
 
 secret:
   data:
@@ -84,9 +87,20 @@ volumes:
   - name: keycloak-pubkey
     emptyDir: {}
 
+service:
+  type: ClusterIP
+  ports:
+    - name: api
+      port: 8022
+
 metrics:
   serviceMonitor:
     enabled: false
     namespace: monitoring
     additionalLabels:
       release: prometheus
+
+ingress:
+  enabled: true
+  host: api.rbk.dev
+  path: /v1/processing/payment-resources
