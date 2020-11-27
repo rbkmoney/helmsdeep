@@ -22,11 +22,11 @@ podSecurityContext: {}
 
 podAnnotations: {}
 
-configMap:
-  data: ""
+configMap: {}
+#  data: ""
 
-secret:
-  data: ""
+secret: {}
+#  data: ""
 
 volumes: ""
 

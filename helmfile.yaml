@@ -107,6 +107,9 @@ releases:
   wait: true
 - name: binbase
   <<: *default
+  chart: ./generic_charts/stateless
+  values:
+    - config/binbase/values.yaml.gotmpl
 - name: proxy-mocketbank
   <<: *default
   labels:
@@ -133,6 +136,7 @@ releases:
     - default/dominant
 - name: capi-pcidss-v2
   <<: *default
+  chart: ./generic_charts/stateless/
   labels:
     logfmt: json
   #needs:
@@ -148,12 +152,14 @@ releases:
   <<: *default
 - name: capi-v1
   <<: *default
+  chart: ./generic_charts/stateless/
   labels:
     logfmt: json
   needs:
     - default/keycloak
 - name: capi-v2
   <<: *default
+  chart: ./generic_charts/stateless/
   labels:
     logfmt: json
   needs:

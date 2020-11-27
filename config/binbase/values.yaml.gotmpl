@@ -2,5 +2,28 @@
 
 replicaCount: 1
 
-entrypoint: |
-  {{- readFile "entrypoint.sh" | nindent 2 }}
+image:
+  repository: docker.io/rbkmoney/binbase-test-data
+  tag: 53e611d5881405f796f59abef843bcc8178a1343
+  pullPolicy: IfNotPresent
+
+runopts:
+  command : ["/opt/binbase/entrypoint.sh"]
+
+configMap:
+ data:
+   entrypoint.sh: |
+     {{- readFile "entrypoint.sh" | nindent 6 }}
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/binbase/entrypoint.sh
+    subPath: entrypoint.sh
+    readOnly: true
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+
