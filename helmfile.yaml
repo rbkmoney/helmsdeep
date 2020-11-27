@@ -54,6 +54,7 @@ releases:
   wait: true
 - name: holmes
   <<: *default
+  chart: ./generic_charts/stateless/
 - name: riak
   <<: *default
   labels:
@@ -95,9 +96,10 @@ releases:
   wait: true
 - name: hooker
   <<: *default
-  needs:
-  - default/vault
-  - default/kafka
+  chart: ./generic_charts/stateless/
+  #needs:
+  #- default/vault
+  #- default/kafka
 - name: dominant
   <<: *default
   labels:
