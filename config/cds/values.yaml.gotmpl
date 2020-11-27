@@ -2,14 +2,52 @@
 
 replicaCount: 1
 
-appConfig: |
-  {{- readFile "sys.config" | nindent 2 }}
-caCrt: |
-  {{- readFile "ca.crt" | nindent 2 }}
-clientCrt: |
-  {{- readFile "client.pem" | nindent 2 }}
-erlInetrc: |
-  {{- readFile "../vm/erl_inetrc" | nindent 2 }}
+image:
+  repository: docker.io/rbkmoney/cds
+  tag: 5cb8147a84bd446b0c9377994aadec866d16426e
+  pullPolicy: IfNotPresent
+
+configMap:
+  data
+    sys.config: |
+      {{- readFile "sys.config" | nindent 2 }}
+    erl_inetrc: |
+      {{- readFile "../vm/erl_inetrc" | nindent 2 }}
+    vm.args: |
+      -sname {{ .Release.Name }}
+      -setcookie {{ .Release.Name }}_cookie
+
+secret:
+  data:
+    caCrt: |
+      {{- readFile "ca.crt" | nindent 2 }}
+    clientCrt: |
+      {{- readFile "client.pem" | nindent 2 }}
+
+volumeMounts:
+  - name: config-volume
+     mountPath: /opt/cds/releases/0.1.0/sys.config
+     subPath: sys.config
+     readOnly: true
+   - name: config-volume
+     mountPath: /opt/cds/releases/0.1.0/vm.args
+     subPath: vm.args
+     readOnly: true
+   - name: config-volume
+     mountPath: /opt/cds/erl_inetrc
+     subPath: erl_inetrc
+     readOnly: true
+   - name: secret
+     mountPath: /var/lib/cds/
+     readOnly: true
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+  - name: secret
+    secret:
+      secretName: {{ .Release.Name }}
 
 metrics:
   serviceMonitor:

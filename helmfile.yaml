@@ -81,6 +81,7 @@ releases:
     logfmt: json
 - name: cds
   <<: *default
+  chart: ./generic_charts/stateless/
   labels:
     logfmt: json
   needs:
@@ -182,9 +183,7 @@ releases:
     - default/keycloak
 - name: payform
   <<: *default
-  set:
-  - name: appconfig
-    file: config/payform/appConfig.json
+  chart: ./generic_charts/stateless/
 - name: test-transaction
   <<: *default
   needs:
