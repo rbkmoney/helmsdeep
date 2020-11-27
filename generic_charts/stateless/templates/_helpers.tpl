@@ -3,7 +3,7 @@
 Expand the name of the chart.
 */}}
 {{- define "stateless.name" -}}
-{{- default .Release.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -16,7 +16,6 @@ If release name contains chart name it will be used as a full name.
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
 {{- .Release.Name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
 {{- end -}}
 {{- end -}}
 

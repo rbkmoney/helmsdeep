@@ -22,7 +22,17 @@ podSecurityContext: {}
 
 podAnnotations: {}
 
-initContainers: ""
+configMap:
+  data: ""
+
+secret:
+  data: ""
+
+volumes: ""
+
+volumeMounts: ""
+
+initContainers: []
 # - name: fetch-keycloack-pubkey
 #   image: busybox:1.32
 #   env:

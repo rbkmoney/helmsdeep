@@ -2,24 +2,91 @@
 
 replicaCount: 1
 
-appConfig: |
-  {{- readFile "sys.config" | nindent 2 }}
-erlInetrc: |
-  {{- readFile "../vm/erl_inetrc" | nindent 2 }}
-fetchKeycloakPubkey: |
-  {{- readFile "../api-common/fetch-keycloak-pubkey.sh" | nindent 2 }}
-oopsBody1: |
-  {{- readFile "../api-common/oops-bodies/sad-kitty1" | nindent 2 }}
-oopsBody2: |
-  {{- readFile "../api-common/oops-bodies/sad-kitty2" | nindent 2 }}
-tokenEncryptionKey1: |
-  {{- readFile "../api-common/token-encryption-keys/1.jwk" | nindent 2 }}
-capiPrivkey: |
-  {{- readFile "../api-common/capi.privkey.pem" | nindent 2 }}
+image:
+  repository: docker.io/rbkmoney/capi_pcidss-v1
+  tag: 3007bbf74504d9f9c709d5ace37cbcfce85c0f4e
+  pullPolicy: IfNotPresent
+
+configMap:
+  data:
+    appConfig: |
+      {{- readFile "sys.config" | nindent 6 }}
+    erlInetrc: |
+      {{- readFile "../vm/erl_inetrc" | nindent 6 }}
+    fetchKeycloakPubkey: |
+      {{- readFile "../api-common/fetch-keycloak-pubkey.sh" | nindent 6 }}
+    oopsBody1: |
+      {{- readFile "../api-common/oops-bodies/sad-kitty1" | nindent 6 }}
+    oopsBody2: |
+      {{- readFile "../api-common/oops-bodies/sad-kitty2" | nindent 6 }}
+
+secret:
+  data:
+    tokenEncryptionKey1: |
+      {{- readFile "../api-common/keys/token-encryption-keys/1.jwk" | nindent 6 }}
+    capiPrivkey: |
+      {{- readFile "../api-common/keys/capi.privkey.pem" | nindent 6 }}
+
+initContainers:
+  - name: fetch-keycloack-pubkey
+    image: busybox:1.32
+    env:
+    - name: TARGET
+      value: "/var/keycloak/keycloak.pubkey.pem"
+    command:
+      - /bin/sh
+      - -c
+      - /opt/keycloak/fetch-keycloak-pubkey.sh
+    volumeMounts:
+      - name: config-volume
+        mountPath: /opt/keycloak/fetch-keycloak-pubkey.sh
+        subPath: fetchKeycloakPubkey
+        readOnly: true
+      - name: keycloak-pubkey
+        mountPath: /var/keycloak
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/capi_pcidss/releases/0.1.0/sys.config
+    subPath: sys.config
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/capi_pcidss/releases/0.1.0/vm.args
+    subPath: vm.args
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/capi_pcidss/erl_inetrc
+    subPath: erl_inetrc
+    readOnly: true
+  - name: config-volume
+    mountPath: /var/lib/capi/oops-bodies/oopsBody1
+    subPath: oopsBody1
+    readOnly: true
+  - name: config-volume
+    mountPath: /var/lib/capi/oops-bodies/oopsBody2
+    subPath: oopsBody2
+    readOnly: true
+  - name: secret
+    mountPath: /var/lib/capi/keys
+    readOnly: true
+  - name: keycloak-pubkey
+    mountPath: /var/lib/capi/keys/keycloak
+    readOnly: true
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+  - name: secret
+    secret:
+      secretName: {{ .Release.Name }}
+  - name: keycloak-pubkey
+    emptyDir: {}
 
 metrics:
   serviceMonitor:
-    enabled: true
+    enabled: false
     namespace: monitoring
     additionalLabels:
       release: prometheus
