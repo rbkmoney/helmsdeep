@@ -55,19 +55,19 @@ securityContext: {}
 service:
   type: ClusterIP
   ports:
-    - name: http
+    - name: api
       port: 8022
     # - name: api
     #   port: 8080
 
 livenessProbe:
   httpGet:
-    path: /
-    port: http
+    path: /health
+    port: api
 readinessProbe:
   httpGet:
-    path: /
-    port: http
+    path: /health
+    port: api
 
 ingress:
   enabled: false
@@ -105,6 +105,6 @@ metrics:
     # ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
     additionalLabels: {}
     endpoints:
-      - port: "http"
+      - port: "api"
         path: /metrics
         scheme: http
