@@ -1,0 +1,39 @@
+# -*- mode: yaml -*-
+replicaCount: 1
+
+image:
+  repository: docker.io/rbkmoney/payform
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+
+configMap:
+  data:
+    appConfig.json: |
+      {{- readFile "appConfig.json" | nindent 6 }}
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /usr/share/nginx/html/appConfig.json
+    subPath: appConfig.json
+    readOnly: true
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+
+ingress:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: api.rbk.dev
+      paths: 
+        - /web(/|$)(.*)
+  servicePort: 8080
