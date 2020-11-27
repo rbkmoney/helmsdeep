@@ -97,9 +97,9 @@ releases:
 - name: hooker
   <<: *default
   chart: ./generic_charts/stateless/
-  #needs:
-  #- default/vault
-  #- default/kafka
+  needs:
+  - default/vault
+  - default/kafka
 - name: dominant
   <<: *default
   labels:
