@@ -2,10 +2,20 @@
 
 replicaCount: 1
 
-appConfig: |
-  {{- readFile "sys.config" | nindent 2 }}
-erlInetrc: |
-  {{- readFile "../vm/erl_inetrc" | nindent 2 }}
+image:
+  repository: docker.io/rbkmoney/hellgate
+  tag: efe0b67a7a048bfa17cac871ff2e7b797ea13796
+  pullPolicy: IfNotPresent
+
+configMap:
+  data:
+    sys.config: |
+      {{- readFile "sys.config" | nindent 6 }}
+    erl_inetrc: |
+      {{- readFile "../vm/erl_inetrc" | nindent 6 }}
+    vm.args: |
+      -sname {{ .Release.Name }}
+      -setcookie {{ .Release.Name }}_cookie
 
 metrics:
   serviceMonitor:
@@ -13,3 +23,25 @@ metrics:
     namespace: monitoring
     additionalLabels:
       release: prometheus
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/hellgate/releases/0.1/sys.config
+    subPath: sys.config
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/hellgate/releases/0.1/vm.args
+    subPath: vm.args
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/hellgate/erl_inetrc
+    subPath: erl_inetrc
+    readOnly: true
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+
+
+
