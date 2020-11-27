@@ -45,6 +45,13 @@ spec:
               containerPort: {{ .port }}
               protocol: TCP
           {{- end }}
+        {{- if .Values.runopts.command }}
+          command: {{ .Values.runopts.command}}
+        {{- with .Values.runopts.args }}
+          args:
+            {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- end }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:

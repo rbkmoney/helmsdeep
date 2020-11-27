@@ -60,6 +60,13 @@ service:
     # - name: api
     #   port: 8080
 
+runopts:
+  command: []
+  args: []
+    # - -jar
+    # - /opt/binbase/binbase.jar
+    # - --management.security.enabled=false
+
 livenessProbe:
   httpGet:
     path: /health
