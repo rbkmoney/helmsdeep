@@ -12,9 +12,9 @@ repositories:
 - name: codecentric
   url: https://codecentric.github.io/helm-charts
 
-#helmfiles:
-#- # Path to the helmfile state file being processed BEFORE releases in this state file
-#  path: helmfile-infra.yaml
+helmfiles:
+# Path to the helmfile state file being processed BEFORE releases in this state file
+-  path: helmfile-infra.yaml
 
 releases:
 - name: zookeeper

@@ -2,8 +2,6 @@
 
 replicaCount: 1
 
-entrypoint: |
-  {{- readFile "entrypoint.sh" | nindent 2 }}
 knownCards: |
   {{- readFile "cards.csv" | nindent 2 }}
 errorMapping: |

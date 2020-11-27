@@ -8,11 +8,11 @@ image:
   pullPolicy: IfNotPresent
 
 configMap:
-  data
+  data:
     sys.config: |
-      {{- readFile "sys.config" | nindent 2 }}
+      {{- readFile "sys.config" | nindent 6 }}
     erl_inetrc: |
-      {{- readFile "../vm/erl_inetrc" | nindent 2 }}
+      {{- readFile "../vm/erl_inetrc" | nindent 6 }}
     vm.args: |
       -sname {{ .Release.Name }}
       -setcookie {{ .Release.Name }}_cookie
@@ -20,12 +20,12 @@ configMap:
 secret:
   data:
     caCrt: |
-      {{- readFile "ca.crt" | nindent 2 }}
+      {{- readFile "ca.crt" | nindent 6 }}
     clientCrt: |
-      {{- readFile "client.pem" | nindent 2 }}
+      {{- readFile "client.pem" | nindent 6 }}
 
 volumeMounts:
-  - name: config-volume
+   - name: config-volume
      mountPath: /opt/cds/releases/0.1.0/sys.config
      subPath: sys.config
      readOnly: true

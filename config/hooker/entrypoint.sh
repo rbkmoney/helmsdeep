@@ -3,8 +3,6 @@ set -ue
 
 java \
     "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
-    ${@} \
-    --spring.config.additional-location=/vault/secrets/application.properties \
     -jar \
     /opt/hooker/hooker.jar \
     --logging.config=/opt/hooker/logback.xml \
@@ -20,5 +18,7 @@ java \
     --kafka.topics.invoice.concurrency=7 \
     --kafka.topics.customer.concurrency=2 \
     --kafka.topics.invoice.id=mg-events-invoice \
-    --kafka.topics.customer.id=mg-events-customer
+    --kafka.topics.customer.id=mg-events-customer \
+    ${@} \
+    --spring.config.additional-location=/vault/secrets/application.properties \
 

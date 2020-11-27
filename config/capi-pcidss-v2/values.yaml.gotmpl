@@ -9,9 +9,9 @@ image:
 
 configMap:
   data:
-    appConfig: |
+    sys.config: |
       {{- readFile "sys.config" | nindent 6 }}
-    erlInetrc: |
+    erl_inetrc: |
       {{- readFile "../vm/erl_inetrc" | nindent 6 }}
     fetchKeycloakPubkey: |
       {{- readFile "../api-common/fetch-keycloak-pubkey.sh" | nindent 6 }}
@@ -20,14 +20,14 @@ configMap:
     oopsBody2: |
       {{- readFile "../api-common/oops-bodies/sad-kitty2" | nindent 6 }}
     vm.args: |
-      -sname {{ include "stateless.fullname" . }}
-      -setcookie {{ include "stateless.fullname" . }}_cookie
+      -sname {{ .Release.Name }}
+      -setcookie {{ .Release.Name }}_cookie
 
 secret:
   data:
-    tokenEncryptionKey1: |
+    token_encryption_key1.jwk: |
       {{- readFile "../api-common/keys/token-encryption-keys/1.jwk" | nindent 6 }}
-    capiPrivkey: |
+    capi.privkey.pem: |
       {{- readFile "../api-common/keys/capi.privkey.pem" | nindent 6 }}
 
 initContainers:
