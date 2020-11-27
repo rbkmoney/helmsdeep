@@ -102,5 +102,8 @@ metrics:
 
 ingress:
   enabled: true
-  host: api.rbk.dev
-  path: /v2/processing/payment-resources
+  hosts:
+    - host: api.rbk.dev
+      paths: 
+        - /v2/processing/payment-resources
+  servicePort: 8080

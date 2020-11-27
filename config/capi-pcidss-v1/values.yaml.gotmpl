@@ -20,8 +20,8 @@ configMap:
     oopsBody2: |
       {{- readFile "../api-common/oops-bodies/sad-kitty2" | nindent 6 }}
     vm.args: |
-      -sname {{ include "stateless.fullname" . }}
-      -setcookie {{ include "stateless.fullname" . }}_cookie
+      -sname {{ .Release.Name }}
+      -setcookie {{ .Release.Name }}_cookie
 
 secret:
   data:
@@ -102,5 +102,8 @@ metrics:
 
 ingress:
   enabled: true
-  host: api.rbk.dev
-  path: /v1/processing/payment-resources
+  hosts:
+    - host: api.rbk.dev
+      paths: 
+        - /v1/processing/payment-resources
+  servicePort: 8080

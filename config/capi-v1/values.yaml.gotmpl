@@ -92,6 +92,7 @@ service:
   ports:
     - name: api
       port: 8080
+      ingressPort: 8080
 
 metrics:
   serviceMonitor:
@@ -102,5 +103,8 @@ metrics:
 
 ingress:
   enabled: true
-  host: api.rbk.dev
-  path: /v1
+  hosts:
+    - host: api.rbk.dev
+      paths: 
+        - /v1
+  servicePort: 8080
