@@ -151,6 +151,7 @@ releases:
   #  - default/keycloak
 - name: url-shortener
   <<: *default
+  chart: ./generic_charts/stateless/
 - name: capi-v1
   <<: *default
   chart: ./generic_charts/stateless/
