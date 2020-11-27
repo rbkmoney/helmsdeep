@@ -57,6 +57,7 @@ service:
   ports:
     - name: api
       port: 8022
+      ingressPort: 8022
     # - name: api
     #   port: 8080
 
@@ -84,7 +85,7 @@ ingress:
   hosts:
     - host: chart-example.local
       paths: []
-
+  servicePort: 8022
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
