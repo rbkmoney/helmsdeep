@@ -28,6 +28,19 @@ volumes:
     configMap:
       name: {{ .Release.Name }}
 
+livenessProbe:
+  httpGet:
+    path: /appConfig.json
+    port: http
+  initialDelaySeconds: 30
+  timeoutSeconds: 3
+readinessProbe:
+  httpGet:
+    path: /appConfig.json
+    port: http
+  initialDelaySeconds: 30
+  timeoutSeconds: 3
+
 ingress:
   enabled: true
   annotations:
