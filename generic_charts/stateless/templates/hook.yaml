@@ -14,7 +14,8 @@ spec:
     metadata:
       name: "{{ .Release.Name }}"
       labels:
-    {{ include "stateless.labels" . | indent 6 }}
+        app.kubernetes.io/name: {{ include "stateless.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -24,5 +25,8 @@ spec:
       containers:
         - name: {{ .Release.Name }}-init-job
           image: "{{ .Values.hook.image.repository }}:{{ .Values.hook.image.tag }}"
-          command: "{{ .Values.hook.command }}"
+          command: 
+          - /bin/bash
+          - -c
+          - {{ .Values.hook.command }}
 {{- end }}

@@ -14,7 +14,7 @@ hook:
     tag: 07f58e297c03bcd50dc4695ddbcfa4eb30c9928e
     pullPolicy: IfNotPresent
   kind: post-install
-  command: ["sh","-c","/opt/holmes/scripts/cds/keyring.py -a kds init"]
+  command: "/opt/holmes/scripts/cds/keyring.py -a kds init"
 
 configMap:
   data:
@@ -41,6 +41,15 @@ service:
       port: 8022
     - name: storage
       port: 8023
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: management
+readinessProbe:
+  httpGet:
+    path: /health
+    port: management
 
 volumeMounts:
   - name: config-volume
