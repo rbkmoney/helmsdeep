@@ -2,8 +2,37 @@
 
 replicaCount: 1
 
-appConfig: |
-  {{- readFile "config.yaml" | nindent 2 }}
+image:
+  repository: docker.io/rbkmoney/machinegun
+  tag: 93624bcff131d76288f51dceb6102975a1455cbc
+  pullPolicy: IfNotPresent
+
+configMap:
+  data:
+    config.yaml: |
+    {{- readFile "config.yaml" | nindent 6 }}
+
+secret:
+  data:
+    cookie: {{ .Values.cookie.value | default (randAlphaNum 32) | quote }}
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.name }}
+  - name: cookie-secret
+    secret:
+      secretName: {{ .Release.name }}-cookie
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/machinegun/etc/config.yaml
+    subPath: config.yaml
+    readOnly: true
+  - name: cookie-secret
+    mountPath: /opt/machinegun/etc/cookie
+    subPath: cookie
+    readOnly: true
 
 metrics:
   serviceMonitor:

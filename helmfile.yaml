@@ -65,6 +65,7 @@ releases:
     file: config/riak/user.yaml
 - name: machinegun
   <<: *default
+  chart: ./generic_charts/stateless/
   labels:
     logfmt: json
   needs:
