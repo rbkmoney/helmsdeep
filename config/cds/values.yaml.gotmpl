@@ -19,9 +19,9 @@ configMap:
 
 secret:
   data:
-    caCrt: |
+    ca.crt: |
       {{- readFile "ca.crt" | nindent 6 }}
-    clientCrt: |
+    client.pem: |
       {{- readFile "client.pem" | nindent 6 }}
 
 volumeMounts:
