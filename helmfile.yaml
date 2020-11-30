@@ -111,7 +111,7 @@ releases:
     logfmt: json
   needs:
   - default/shumway
-  wait: true
+  #wait: true
 - name: binbase
   <<: *default
   chart: ./generic_charts/stateless/
@@ -147,15 +147,15 @@ releases:
   chart: ./generic_charts/stateless/
   labels:
     logfmt: json
-  #needs:
-  #  - default/keycloak
+  needs:
+    - default/keycloak
 - name: capi-pcidss-v1
   <<: *default
   chart: ./generic_charts/stateless/
   labels:
     logfmt: json
-  #needs:
-  #  - default/keycloak
+  needs:
+    - default/keycloak
 - name: url-shortener
   <<: *default
   chart: ./generic_charts/stateless/
