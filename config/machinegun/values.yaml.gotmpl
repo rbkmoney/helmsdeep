@@ -14,15 +14,15 @@ configMap:
 
 secret:
   data:
-    cookie: {{ .Values.cookie.value | default (randAlphaNum 32) | quote }}
+    cookie: {{ default (randAlphaNum 32) | quote }}
 
 volumes:
   - name: config-volume
     configMap:
-      name: {{ .Release.name }}
+      name: {{ .Release.Name }}
   - name: cookie-secret
     secret:
-      secretName: {{ .Release.name }}-cookie
+      secretName: {{ .Release.Name }}
 
 volumeMounts:
   - name: config-volume
