@@ -32,6 +32,11 @@ volumes: ""
 
 volumeMounts: ""
 
+pvc:
+  enabled: false
+  name: {{ .Release.Name }}-pvc
+  storage: 3Mi
+
 initContainers: []
 # - name: fetch-keycloack-pubkey
 #   image: busybox:1.32
