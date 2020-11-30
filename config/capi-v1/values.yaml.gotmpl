@@ -50,15 +50,15 @@ initContainers:
 
 volumeMounts:
   - name: config-volume
-    mountPath: /opt/capi_pcidss/releases/0.1.0/sys.config
+    mountPath: /opt/capi/releases/0.1.0/sys.config
     subPath: sys.config
     readOnly: true
   - name: config-volume
-    mountPath: /opt/capi_pcidss/releases/0.1.0/vm.args
+    mountPath: /opt/capi/releases/0.1.0/vm.args
     subPath: vm.args
     readOnly: true
   - name: config-volume
-    mountPath: /opt/capi_pcidss/erl_inetrc
+    mountPath: /opt/capi/erl_inetrc
     subPath: erl_inetrc
     readOnly: true
   - name: config-volume
@@ -92,7 +92,6 @@ service:
   ports:
     - name: api
       port: 8080
-      ingressPort: 8080
 
 metrics:
   serviceMonitor:
