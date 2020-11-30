@@ -2,7 +2,50 @@
 
 replicaCount: 1
 
-entrypoint: |
-  {{- readFile "entrypoint.sh" | nindent 2 }}
-knownCards: |
-  {{- readFile "cards.csv" | nindent 2 }}
+image:
+  repository: docker.io/rbkmoney/proxy-mocketbank-mpi
+  tag: e43b6f00eca01eb57a6e917704bff608de57336a
+  pullPolicy: IfNotPresent
+
+configMap:
+  data:
+    entrypoint.sh: |
+      {{- readFile "entrypoint.sh" | nindent 6 }}
+    cards.csv: |
+      {{- readFile "cards.csv" | nindent 6 }}
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/proxy-mocketbank-mpi/entrypoint.sh
+    subPath: entrypoint.sh
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/proxy-mocketbank-mpi/fixture/cards.csv
+    subPath: cards.csv
+    readOnly: true
+
+runopts:
+  command: ["/opt/proxy-mocketbank-mpi/entrypoint.sh"]
+
+service:
+  type: ClusterIP
+  ports:
+    - name: api
+      port: 8022
+    - name: callback
+      port: 8080
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: api
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: api

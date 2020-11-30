@@ -114,15 +114,17 @@ releases:
   wait: true
 - name: binbase
   <<: *default
-  chart: ./generic_charts/stateless
+  chart: ./generic_charts/stateless/
 - name: proxy-mocketbank
   <<: *default
+  chart: ./generic_charts/stateless/
   labels:
     logfmt: json
   needs:
     - default/hellgate
 - name: proxy-mocketbank-mpi
   <<: *default
+  chart: ./generic_charts/stateless/
   labels:
     logfmt: json
   needs:
