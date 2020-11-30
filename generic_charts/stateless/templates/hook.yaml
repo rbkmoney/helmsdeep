@@ -1,0 +1,28 @@
+{{- if .Values.hook.enabled -}}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-init-task"
+  labels:
+{{ include "stateless.labels" . | indent 4 }}
+  annotations:
+    "helm.sh/hook": {{ .Values.hook.kind }}
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    metadata:
+      name: "{{ .Release.Name }}"
+      labels:
+    {{ include "stateless.labels" . | indent 6 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Never
+      containers:
+        - name: {{ .Release.Name }}-init-job
+          image: "{{ .Values.hook.image.repository }}:{{ .Values.hook.image.tag }}"
+          command: "{{ .Values.hook.command }}"
+{{- end -}}

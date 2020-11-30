@@ -68,6 +68,15 @@ runopts:
     # - /opt/binbase/binbase.jar
     # - --management.security.enabled=false
 
+hook:
+  enabled: false
+  kind: post-install
+  image:
+    repository: alpine
+    tag: stable
+    pullPolicy: IfNotPresent
+  command: []
+
 livenessProbe:
   httpGet:
     path: /health
