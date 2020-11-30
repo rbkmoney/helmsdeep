@@ -60,14 +60,16 @@ podAnnotations:
   vault.hashicorp.com/agent-inject: "true"
   vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-hook"
   vault.hashicorp.com/agent-inject-template-application.properties: |
-    {{`{{- with secret "database/creds/db-app-hook" -}}
+    {{`
+    {{- with secret "database/creds/db-app-hook" -}}
     spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/hook?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
     spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/hook?sslmode=disable
     spring.flyway.user={{ .Data.username }}
     spring.flyway.password={{ .Data.password }}
-    {{- end }}`}}
+    {{- end }}
+    `}}
 
 metrics:
   serviceMonitor:
@@ -76,3 +78,4 @@ metrics:
       - port: "management"
         path: /actuator/prometheus
         scheme: http
+
