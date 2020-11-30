@@ -73,6 +73,8 @@ runopts:
     # - /opt/binbase/binbase.jar
     # - --management.security.enabled=false
 
+env: []
+
 hook:
   enabled: false
   kind: post-install
