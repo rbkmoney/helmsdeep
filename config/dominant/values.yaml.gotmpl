@@ -6,15 +6,14 @@ initializationTask:
   create: true
   script: |
     {{- readFile "init-script.sh" | nindent 4 }}
-
 appConfig: |
   {{- readFile "sys.config" | nindent 2 }}
 erlInetrc: |
   {{- readFile "../vm/erl_inetrc" | nindent 2 }}
-
 metrics:
   serviceMonitor:
     enabled: true
     namespace: monitoring
     additionalLabels:
       release: prometheus
+
