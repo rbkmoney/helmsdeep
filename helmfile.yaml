@@ -131,6 +131,7 @@ releases:
     - default/proxy-mocketbank
 - name: proxy-mocket-inspector
   <<: *default
+  chart: ./generic_charts/stateless/
   labels:
     logfmt: json
   needs:
