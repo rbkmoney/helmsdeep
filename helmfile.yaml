@@ -90,6 +90,7 @@ releases:
     - default/riak
 - name: shumway
   <<: *default
+  chart: ./generic_charts/stateless/
   labels:
     logfmt: json
   needs:
