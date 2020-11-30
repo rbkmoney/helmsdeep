@@ -1,4 +1,4 @@
-{{- if .Values.hook.enabled -}}
+{{- if .Values.hook.enabled }}
 ---
 apiVersion: batch/v1
 kind: Job
@@ -25,4 +25,4 @@ spec:
         - name: {{ .Release.Name }}-init-job
           image: "{{ .Values.hook.image.repository }}:{{ .Values.hook.image.tag }}"
           command: "{{ .Values.hook.command }}"
-{{- end -}}
+{{- end }}
