@@ -2,10 +2,21 @@
 
 replicaCount: 1
 
-appConfig: |
-  {{- readFile "sys.config" | nindent 2 }}
-erlInetrc: |
-  {{- readFile "../vm/erl_inetrc" | nindent 2 }}
+image:
+  repository: docker.io/rbkmoney/bender
+  tag: b0eea3098f05606fa244cc8ffc1fa20d101d42b7
+  pullPolicy: IfNotPresent
+
+configMap:
+  data:
+    sys.config: |
+      {{- readFile "sys.config" | nindent 6 }}
+    erl_inetrc: |
+      {{- readFile "../vm/erl_inetrc" | nindent 6 }}
+    vm.args: |
+      -sname {{ .Release.Name }}
+      -setcookie {{ .Release.Name }}_cookie
+      -kernel inetrc '"./erl_inetrc"''
 
 metrics:
   serviceMonitor:
@@ -13,3 +24,23 @@ metrics:
     namespace: monitoring
     additionalLabels:
       release: prometheus
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/bender/releases/1.0.0/sys.config
+    subPath: sys.config
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/bender/releases/1.0.0/vm.args
+    subPath: vm.args
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/bender/erl_inetrc
+    subPath: erl_inetrc
+    readOnly: true
+

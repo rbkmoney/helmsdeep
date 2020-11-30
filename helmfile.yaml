@@ -74,6 +74,7 @@ releases:
   - default/kafka
 - name: bender
   <<: *default
+  chart: ./generic_charts/stateless/
   labels:
     logfmt: json
 - name: kds
