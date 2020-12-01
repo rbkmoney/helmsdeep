@@ -270,7 +270,7 @@ FIXTURE=$(cat <<END
         "data": {
             "name": "Mocket Inspector Proxy",
             "description": "Mocked inspector proxy for integration test purposes",
-            "url": "http://proxy-mocket-inspector-api:8022/proxy/mocket/inspector",
+            "url": "http://proxy-mocket-inspector:8022/proxy/mocket/inspector",
             "options": {"risk_score": "high"}
         }
     }}}},
