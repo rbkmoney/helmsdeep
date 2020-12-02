@@ -75,6 +75,8 @@ hook:
     tag: stable
     pullPolicy: IfNotPresent
   command: []
+  volumes: []
+  volumeMounts: []
 
 livenessProbe:
   httpGet:
@@ -124,3 +126,7 @@ metrics:
       - port: "api"
         path: /metrics
         scheme: http
+
+logs:
+  enabled: true
+  json: false

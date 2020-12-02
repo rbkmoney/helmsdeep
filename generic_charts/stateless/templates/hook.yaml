@@ -29,4 +29,14 @@ spec:
           - /bin/bash
           - -c
           - {{ .Values.hook.command }}
+          {{- with .Values.hook.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.hook.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+
 {{- end }}
