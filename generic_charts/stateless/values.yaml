@@ -37,17 +37,10 @@ pvc:
   name: data-pvc
   storage: 3Mi
 
-initContainers: []
-# - name: fetch-keycloack-pubkey
-#   image: busybox:1.32
-#   env:
-#   - name: TARGET
-#     value: "/var/keycloak/keycloak.pubkey.pem"
-#   command:
-#     - /bin/sh
-#     - -c
-#     - /opt/keycloak/fetch-keycloak-pubkey.sh
+apiInitContainers:
+  enabled: false
 
+extraInitContainers: []
 
 securityContext: {}
   # capabilities:
@@ -62,7 +55,6 @@ service:
   ports:
     - name: api
       port: 8022
-      ingressPort: 8022
     # - name: api
     #   port: 8080
 

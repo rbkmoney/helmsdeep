@@ -27,9 +27,27 @@ spec:
       serviceAccountName: {{ template "stateless.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-    {{- if .Values.initContainers }}
-    {{- with .Values.initContainers }}
+    {{- if or .Values.extraInitContainers .Values.apiInitContainers.enabled }}
       initContainers:
+    {{- if .Values.apiInitContainers.enabled }}
+        - name: fetch-keycloack-pubkey
+          image: busybox:1.32
+          env:
+          - name: TARGET
+            value: "/var/keycloak/keycloak.pubkey.pem"
+          command:
+            - /bin/sh
+            - -c
+            - /opt/keycloak/fetch-keycloak-pubkey.sh
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/keycloak/fetch-keycloak-pubkey.sh
+              subPath: fetchKeycloakPubkey
+              readOnly: true
+            - name: keycloak-pubkey
+              mountPath: /var/keycloak
+    {{- end }}
+    {{- with .Values.extrainitContainers }}
         {{- toYaml . | nindent 8 }}
     {{- end }}
     {{- end }}

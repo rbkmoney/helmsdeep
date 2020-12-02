@@ -30,23 +30,8 @@ secret:
     capi.privkey.pem: |
       {{- readFile "../api-common/keys/capi.privkey.pem" | nindent 6 }}
 
-initContainers:
-  - name: fetch-keycloack-pubkey
-    image: busybox:1.32
-    env:
-    - name: TARGET
-      value: "/var/keycloak/keycloak.pubkey.pem"
-    command:
-      - /bin/sh
-      - -c
-      - /opt/keycloak/fetch-keycloak-pubkey.sh
-    volumeMounts:
-      - name: config-volume
-        mountPath: /opt/keycloak/fetch-keycloak-pubkey.sh
-        subPath: fetchKeycloakPubkey
-        readOnly: true
-      - name: keycloak-pubkey
-        mountPath: /var/keycloak
+apiInitContainers:
+  enabled: true
 
 volumeMounts:
   - name: config-volume
