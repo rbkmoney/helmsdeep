@@ -18,14 +18,8 @@ helmfiles:
 
 releases:
 #External releases
-- name: zookeeper
-  <<: *default
-  chart: incubator/zookeeper
-  version: 2.1.3
 - name: kafka
   <<: *default
-  needs:
-  - default/zookeeper
   chart: incubator/kafka
   version: 0.21.2
 - name: consul
