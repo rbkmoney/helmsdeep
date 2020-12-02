@@ -17,6 +17,7 @@ helmfiles:
 -  path: helmfile-infra.yaml
 
 releases:
+#External releases
 - name: zookeeper
   <<: *default
   chart: incubator/zookeeper
@@ -52,146 +53,94 @@ releases:
   needs:
   - default/postgres
   wait: true
+#Rbkmoney processing releases
 - name: holmes
-  <<: *default
-  chart: ./generic_charts/stateless/
+  <<: *generic
 - name: riak
-  <<: *default
-  labels:
-    logfmt: json
+  <<: *default_json
   chart: ./services/riak
   set:
   - name: config.user
     file: config/riak/user.yaml
 - name: machinegun
-  <<: *default
-  chart: ./generic_charts/stateless/
-  labels:
-    logfmt: json
+  <<: *generic_json
   needs:
   - default/consul
   - default/riak
   - default/kafka
 - name: bender
-  <<: *default
-  chart: ./generic_charts/stateless/
-  labels:
-    logfmt: json
+  <<: *generic_json
 - name: kds
-  <<: *default
-  chart: ./generic_charts/stateless/
-  labels:
-    logfmt: json
+  <<: *generic_json
 - name: cds
-  <<: *default
-  chart: ./generic_charts/stateless/
-  labels:
-    logfmt: json
+  <<: *generic_json
   needs:
     - default/kds
     - default/riak
 - name: shumway
-  <<: *default
-  chart: ./generic_charts/stateless/
-  labels:
-    logfmt: json
+  <<: *generic_json
   needs:
   - default/vault
   - default/postgres
   wait: true
 - name: hooker
-  <<: *default
-  chart: ./generic_charts/stateless/
+  <<: *generic
   needs:
   - default/vault
   - default/kafka
 - name: dominant
-  <<: *default
-  labels:
-    logfmt: json
+  <<: *generic_json
   needs:
   - default/shumway
-  #wait: true
+  wait: true
 - name: binbase
-  <<: *default
-  chart: ./generic_charts/stateless/
+  <<: *generic
 - name: proxy-mocketbank
-  <<: *default
-  chart: ./generic_charts/stateless/
-  labels:
-    logfmt: json
+  <<: *generic_json
   needs:
     - default/hellgate
 - name: proxy-mocketbank-mpi
-  <<: *default
-  chart: ./generic_charts/stateless/
-  labels:
-    logfmt: json
+  <<: *generic_json
   needs:
     - default/proxy-mocketbank
 - name: proxy-mocket-inspector
-  <<: *default
-  chart: ./generic_charts/stateless/
-  labels:
-    logfmt: json
+  <<: *generic_json
   needs:
     - default/hellgate
 - name: hellgate
-  <<: *default
-  chart: ./generic_charts/stateless/
-  labels:
-    logfmt: json
+  <<: *generic_json
   needs:
     - default/dominant
 - name: capi-pcidss-v2
-  <<: *default
-  chart: ./generic_charts/stateless/
-  labels:
-    logfmt: json
+  <<: *generic_json
   needs:
     - default/keycloak
 - name: capi-pcidss-v1
-  <<: *default
-  chart: ./generic_charts/stateless/
-  labels:
-    logfmt: json
+  <<: *generic_json
   needs:
     - default/keycloak
 - name: url-shortener
-  <<: *default
-  chart: ./generic_charts/stateless/
+  <<: *generic
 - name: capi-v1
-  <<: *default
-  chart: ./generic_charts/stateless/
-  labels:
-    logfmt: json
+  <<: *generic_json
   needs:
     - default/keycloak
 - name: capi-v2
-  <<: *default
-  chart: ./generic_charts/stateless/
-  labels:
-    logfmt: json
+  <<: *generic_json
   needs:
     - default/keycloak
 - name: wapi-pcidss-v0
   installed: false
-  <<: *default
-  labels:
-    logfmt: json
+  <<: *generic_json
+  needs:
+   - default/keycloak
+- name: wapi
+  installed: false
+  <<: *generic_json
   needs:
     - default/keycloak
-- name: wapi
-  #installed: false
-  <<: *default
-  chart: ./generic_charts/stateless/
-  labels:
-    logfmt: json
-  needs:
-  #  - default/keycloak
 - name: payform
-  <<: *default
-  chart: ./generic_charts/stateless/
+  <<: *generic
 - name: test-transaction
   <<: *default
   needs:
