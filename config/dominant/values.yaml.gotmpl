@@ -2,18 +2,67 @@
 
 replicaCount: 1
 
-initializationTask:
-  create: true
-  script: |
-    {{- readFile "init-script.sh" | nindent 4 }}
-appConfig: |
-  {{- readFile "sys.config" | nindent 2 }}
-erlInetrc: |
-  {{- readFile "../vm/erl_inetrc" | nindent 2 }}
+image:
+  repository: docker.io/rbkmoney/dominant
+  tag: de2a937b3b92eb4fa6888be5aef3bde7d3c8b409
+  pullPolicy: IfNotPresent
+
+configMap:
+  data:
+    sys.config: |
+      {{- readFile "sys.config" | nindent 6 }}
+    erl_inetrc: |
+      {{- readFile "../vm/erl_inetrc" | nindent 6 }}
+    vm.args: |
+      -sname {{ .Release.Name }}
+      -setcookie {{ .Release.Name }}_cookie
+    init-script.sh: |
+      {{- readFile "init-script.sh" | nindent 6 }}
+
+hook:
+  enabled: true
+  image:
+    repository: docker.io/rbkmoney/holmes
+    tag: 07f58e297c03bcd50dc4695ddbcfa4eb30c9928e
+    pullPolicy: IfNotPresent
+  kind: post-install
+  command: "/opt/initdominant/init-script.sh"
+  volumes:
+    - name: dom-init
+      configMap:
+        name: {{ .Release.Name }}
+        defaultMode: 0755
+  volumeMounts:
+    - name: dom-init
+      mountPath: /opt/initdominant/init-script.sh
+      subPath: init-script.sh
+      readOnly: true
+
 metrics:
   serviceMonitor:
     enabled: true
     namespace: monitoring
     additionalLabels:
       release: prometheus
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+        
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/dominant/releases/0.1/sys.config
+    subPath: sys.config
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/dominant/releases/0.1/vm.args
+    subPath: vm.args
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/dominant/erl_inetrc
+    subPath: erl_inetrc
+    readOnly: true
+
 
