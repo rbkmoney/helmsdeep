@@ -182,12 +182,13 @@ releases:
   needs:
     - default/keycloak
 - name: wapi
-  installed: false
+  #installed: false
   <<: *default
+  chart: ./generic_charts/stateless/
   labels:
     logfmt: json
   needs:
-    - default/keycloak
+  #  - default/keycloak
 - name: payform
   <<: *default
   chart: ./generic_charts/stateless/
