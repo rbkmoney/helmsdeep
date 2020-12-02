@@ -16,9 +16,22 @@ spec:
         app.kubernetes.io/name: {{ include "stateless.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
       annotations:
-        {{- with .Values.podAnnotations }}
+      {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-        {{- end }}
+      {{- end }}
+      {{- if .Values.logs.enabled }}
+        co.elastic.logs/enabled: "true"
+      {{- end }}
+      {{- if .Values.logs.json }}
+        co.elastic.logs/json.keys_under_root: "true"
+        co.elastic.logs/json.overwrite_keys: "true"
+        co.elastic.logs/json.add_error_key: "true"
+        co.elastic.logs/processors.1.decode_json_fields.fields: "log"
+        co.elastic.logs/processors.1.decode_json_fields.max_depth: "5"
+        co.elastic.logs/processors.1.decode_json_fields.target: ""
+        co.elastic.logs/processors.1.decode_json_fields.overwrite_keys: "true"
+        co.elastic.logs/processors.1.decode_json_fields.add_error_key: "true"
+      {{- end }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
