@@ -12,8 +12,14 @@ dependencies:
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 9.2.0
+- name: riak
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.1
+- name: test-transaction
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.1
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.7.0
-digest: sha256:75439f5f532172b9fa9a9cf0ea62916ec9171196a4cc4d4b74c20e7c135bbcd0
-generated: "2020-12-02T19:40:26.451348+03:00"
+digest: sha256:b8fd43c6783a8c706fcf22e69b9cf83c2f68754b83c8ba27058e8d8d0affebd5
+generated: "2020-12-04T15:59:18.667566+03:00"

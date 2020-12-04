@@ -3,6 +3,8 @@
 repositories:
 - name: prometheus-community
   url: https://prometheus-community.github.io/helm-charts
+- name: rbkmoney
+  url: https://rbkmoney.github.io/charts
 
 releases:
 - name: prometheus
@@ -14,4 +16,4 @@ releases:
   # Change to installed: true if you need ECK installed
   installed: false
   <<: *default
-  chart: ./services/elk
+  chart: rbkmoney/elk
