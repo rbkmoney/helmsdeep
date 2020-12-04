@@ -17,10 +17,6 @@ configMap:
       -sname {{ .Release.Name }}
       -setcookie {{ .Release.Name }}_cookie
       -kernel inetrc '"./erl_inetrc"''
-
-env:
-  - name: MACHINEIDTMP
-    value: bender-0
     
 metrics:
   serviceMonitor:

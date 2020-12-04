@@ -51,7 +51,7 @@ releases:
   wait: true
 #Rbkmoney processing releases
 - name: holmes
-  <<: *generic
+  <<: *generic_stateless
 - name: riak
   <<: *default_json
   chart: rbkmoney/riak
@@ -59,84 +59,85 @@ releases:
   - name: config.user
     file: config/riak/user.yaml
 - name: machinegun
-  <<: *generic_json
+  <<: *generic_stateless_json
   needs:
   - default/consul
   - default/riak
   - default/kafka
 - name: bender
-  <<: *generic_json
+  <<: *generic_stateless_json
+  chart: rbkmoney/statefull
 - name: kds
-  <<: *generic_json
+  <<: *generic_stateless_json
 - name: cds
-  <<: *generic_json
+  <<: *generic_stateless_json
   needs:
     - default/kds
     - default/riak
 - name: shumway
-  <<: *generic_json
+  <<: *generic_stateless_json
   needs:
   - default/vault
   - default/postgres
   wait: true
 - name: hooker
-  <<: *generic
+  <<: *generic_stateless
   needs:
   - default/vault
   - default/kafka
 - name: dominant
-  <<: *generic_json
+  <<: *generic_stateless_json
   needs:
   - default/shumway
   wait: true
 - name: binbase
-  <<: *generic
+  <<: *generic_stateless
 - name: proxy-mocketbank
-  <<: *generic_json
+  <<: *generic_stateless_json
   needs:
     - default/hellgate
 - name: proxy-mocketbank-mpi
-  <<: *generic_json
+  <<: *generic_stateless_json
   needs:
     - default/proxy-mocketbank
 - name: proxy-mocket-inspector
-  <<: *generic_json
+  <<: *generic_stateless_json
   needs:
     - default/hellgate
 - name: hellgate
-  <<: *generic_json
+  <<: *generic_stateless_json
   needs:
     - default/dominant
 - name: capi-pcidss-v2
-  <<: *generic_json
+  <<: *generic_stateless_json
   needs:
     - default/keycloak
 - name: capi-pcidss-v1
-  <<: *generic_json
+  <<: *generic_stateless_json
   needs:
     - default/keycloak
 - name: url-shortener
-  <<: *generic
+  <<: *generic_stateless
 - name: capi-v1
-  <<: *generic_json
+  <<: *generic_stateless_json
   needs:
     - default/keycloak
 - name: capi-v2
-  <<: *generic_json
+  <<: *generic_stateless_json
   needs:
     - default/keycloak
 - name: wapi-pcidss-v0
   installed: false
-  <<: *generic_json
+  <<: *generic_stateless_json
   needs:
    - default/keycloak
 - name: wapi
   installed: false
-  <<: *generic_json
+  <<: *generic_stateless_json
   needs:
     - default/keycloak
 - name: payform
-  <<: *generic
+  <<: *generic_stateless
 - name: test-transaction
   <<: *default
   chart: rbkmoney/test-transaction

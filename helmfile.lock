@@ -15,11 +15,17 @@ dependencies:
 - name: riak
   repository: https://rbkmoney.github.io/charts
   version: 0.1.1
+- name: statefull
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.4
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.2
 - name: test-transaction
   repository: https://rbkmoney.github.io/charts
   version: 0.1.1
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.7.0
-digest: sha256:b8fd43c6783a8c706fcf22e69b9cf83c2f68754b83c8ba27058e8d8d0affebd5
-generated: "2020-12-04T15:59:18.667566+03:00"
+digest: sha256:562ba98c1e98c9f1388e4edff7b9ab0500f7fa82de462f155760251dcf9d0fd8
+generated: "2020-12-04T18:58:34.003364+03:00"
