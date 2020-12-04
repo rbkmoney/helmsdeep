@@ -1,6 +1,0 @@
-apiVersion: v2
-name: hellgate
-description: Core payment service
-type: application
-version: 0.1.0
-appVersion: efe0b67a7a048bfa17cac871ff2e7b797ea13796

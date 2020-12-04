@@ -1,9 +1,0 @@
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "riak.fullname" . }}-user-config
-data:
-  user.conf: |
-    ## Config should be configured in values
-    {{ .Values.config.user | nindent 4 }}
