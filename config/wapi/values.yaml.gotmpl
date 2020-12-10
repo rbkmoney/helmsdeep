@@ -88,17 +88,6 @@ readinessProbe:
     path: /health
     port: management
 
-metrics:
-  serviceMonitor:
-    enabled: true
-    namespace: monitoring
-    additionalLabels:
-      release: prometheus
-    endpoints:
-      - port: "management"
-        path: /actuator/prometheus
-        scheme: http
-
 ingress:
   enabled: true
   hosts:

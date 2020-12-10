@@ -69,11 +69,4 @@ podAnnotations:
     spring.flyway.password={{ .Data.password }}
     {{- end }}`}}
 
-metrics:
-  serviceMonitor:
-    enabled: true
-    endpoints:
-      - port: "management"
-        path: /actuator/prometheus
-        scheme: http
 

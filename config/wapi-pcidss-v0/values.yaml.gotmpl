@@ -58,13 +58,6 @@ volumes:
   - name: keycloak-pubkey
     emptyDir: {}
 
-metrics:
-  serviceMonitor:
-    enabled: true
-    namespace: monitoring
-    additionalLabels:
-      release: prometheus
-
 ingress:
   enabled: true
   hosts:
