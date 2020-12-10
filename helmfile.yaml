@@ -53,11 +53,7 @@ releases:
 - name: holmes
   <<: *generic_stateless
 - name: riak
-  <<: *default_json
-  chart: rbkmoney/riak
-  set:
-  - name: config.user
-    file: config/riak/user.yaml
+  <<: *generic_statefull_json
 - name: machinegun
   <<: *generic_stateless_json
   needs:
@@ -65,8 +61,7 @@ releases:
   - default/riak
   - default/kafka
 - name: bender
-  <<: *generic_stateless_json
-  chart: rbkmoney/statefull
+  <<: *generic_statefull_json
 - name: kds
   <<: *generic_stateless_json
 - name: cds

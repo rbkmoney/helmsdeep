@@ -2,6 +2,66 @@
 
 replicaCount: 1
 
-config:
-  user: |
-    {{- readFile "user.yaml" | nindent 4 }}
+image:
+  repository: docker.io/rbkmoney/riak-base
+  tag: f5b757c2ec73c7db1460c94a17a20a3b5799fde6
+
+configMap:
+  data: 
+    user.conf: |
+      {{- readFile "user.yaml" | nindent 6 }}
+
+service:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8098
+    - name: protobuf
+      port: 8087
+
+livenessProbe:
+  httpGet: null
+  exec:
+    command: ["riak", "ping"]
+  initialDelaySeconds: 60
+  periodSeconds: 20
+  timeoutSeconds: 15
+readinessProbe:
+  httpGet:
+    path: /types/default/props
+    port: http
+  initialDelaySeconds: 60
+  periodSeconds: 15
+  timeoutSeconds: 5
+      
+env:
+  - name: CLUSTER_NAME
+    value: "riak"
+  - name: COORDINATOR_NODE
+    value: {{ .Release.Name }}-0.{{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local
+      
+volumeMounts:
+  - name: config-volume
+    mountPath: /etc/riak/user.conf
+    subPath: user.conf
+    readOnly: true
+  - name: data
+    mountPath: /var/lib/riak
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+  - name: data
+    emptyDir: {}
+
+storage:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: "hostpath"
+  resources:
+     requests:
+       storage: 3Gi
+
+podSecurityContext:
+  fsGroup: 102
+
