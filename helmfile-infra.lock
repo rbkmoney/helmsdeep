@@ -1,4 +1,4 @@
-version: v0.132.1
+version: v0.135.0
 dependencies:
 - name: elk
   repository: https://rbkmoney.github.io/charts
@@ -7,4 +7,4 @@ dependencies:
   repository: https://prometheus-community.github.io/helm-charts
   version: 10.1.0
 digest: sha256:cafce8ba3e55bfbf5eaa01ce5850eeb6346947034c478195f005d06998951d2c
-generated: "2020-12-04T15:58:52.827613+03:00"
+generated: "2020-12-10T16:43:38.639705+03:00"

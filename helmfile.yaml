@@ -14,8 +14,8 @@ repositories:
 - name: rbkmoney
   url: https://rbkmoney.github.io/charts
 
-helmfiles:
 # Path to the helmfile state file being processed BEFORE releases in this state file
+helmfiles:
 -  path: helmfile-infra.yaml
 
 releases:

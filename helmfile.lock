@@ -1,4 +1,4 @@
-version: v0.132.1
+version: v0.135.0
 dependencies:
 - name: consul
   repository: https://charts.helm.sh/stable
@@ -17,15 +17,12 @@ dependencies:
   version: 0.1.1
 - name: statefull
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.4
-- name: stateless
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.2
+  version: 0.1.5
 - name: test-transaction
   repository: https://rbkmoney.github.io/charts
   version: 0.1.1
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.7.0
-digest: sha256:562ba98c1e98c9f1388e4edff7b9ab0500f7fa82de462f155760251dcf9d0fd8
-generated: "2020-12-04T18:58:34.003364+03:00"
+digest: sha256:955aad7e26252e73a7811f1ff100b7753199ecf691122beac122b5cd202c79ed
+generated: "2020-12-10T16:44:58.452938+03:00"
