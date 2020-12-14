@@ -1,0 +1,24 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: zone.monitoring
+  namespace: monitoring
+specs:
+  - endpointSelector:
+      matchLabels:
+        k8s:io.kubernetes.pod.namespace: monitoring
+    ingress:
+    - fromEndpoints:
+      - matchLabels:
+          k8s:io.kubernetes.pod.namespace: monitoring
+      - matchLabels:
+          k8s:io.kubernetes.pod.namespace: kube-system
+  - endpointSelector:
+      matchLabels:
+        k8s:io.kubernetes.pod.namespace: monitoring
+        k8s:app: prometheus
+    ingress:
+    - fromEndpoints:
+      - matchLabels:
+          k8s:io.kubernetes.pod.namespace: default

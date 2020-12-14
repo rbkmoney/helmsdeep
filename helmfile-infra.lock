@@ -1,10 +1,13 @@
 version: v0.135.0
 dependencies:
+- name: cilium
+  repository: https://helm.cilium.io/
+  version: 1.9.0
 - name: elk
   repository: https://rbkmoney.github.io/charts
   version: 0.1.0
 - name: kube-prometheus-stack
   repository: https://prometheus-community.github.io/helm-charts
   version: 10.1.0
-digest: sha256:cafce8ba3e55bfbf5eaa01ce5850eeb6346947034c478195f005d06998951d2c
-generated: "2020-12-10T19:52:55.302677+03:00"
+digest: sha256:a241b3e1fdb7ece443afcaab11590c8831553ec9ca6bfa37f513700d469769a4
+generated: "2020-12-13T21:36:52.84008015+03:00"

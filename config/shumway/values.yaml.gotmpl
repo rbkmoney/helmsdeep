@@ -68,3 +68,15 @@ podAnnotations:
     spring.flyway.user={{ .Data.username }}
     spring.flyway.password={{ .Data.password }}
     {{- end }}`}}
+
+ciliumPolicies:
+- filters:
+  - port: 8200
+    type: TCP
+  name: vault
+  namespace: default
+- filters:
+  - port: 5432
+    type: TCP
+  name: postgresql
+  namespace: default

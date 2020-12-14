@@ -5,6 +5,7 @@ templates:
     missingFileHandler: Warn
     timeout: 900
     values:
+      - default.values.yaml
       - config/{{ .Release.Name }}/values.yaml
       - config/{{ .Release.Name }}/values.yaml.gotmpl
 

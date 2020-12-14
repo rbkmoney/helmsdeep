@@ -1,0 +1,19 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: default.ingress
+  namespace: default
+spec:
+  endpointSelector:
+    matchLabels: {}
+  ingress:
+  - toPorts:
+    - ports:
+      - protocol: TCP
+        port: "8080"
+    fromEndpoints:
+      - matchLabels:
+          k8s:io.kubernetes.pod.namespace: kube-system
+      - matchLabels:
+          k8s:app.kubernetes.io/name: ingress-nginx

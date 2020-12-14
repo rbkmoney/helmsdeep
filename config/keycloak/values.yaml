@@ -34,3 +34,10 @@ extraVolumeMounts: |
   - name: keycloak-realms-volume
     mountPath: "/realm/"
     readOnly: true
+
+ciliumPolicies:
+- filters:
+  - port: 5432
+    type: TCP
+  name: postgresql
+  namespace: default

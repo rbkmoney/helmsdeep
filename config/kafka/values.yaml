@@ -9,3 +9,15 @@ zookeeper:
   # url: "zookeeper"
   # port: 2181
   replicaCount: 1
+
+ciliumPolicies:
+- filters:
+  - port: 2181
+    type: TCP
+  name: zookeeper
+  namespace: default
+- filters:
+  - port: 9092
+    type: TCP
+  name: kafka
+  namespace: default

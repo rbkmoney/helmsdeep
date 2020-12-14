@@ -15,6 +15,66 @@ dependencies:
 - name: statefull
   repository: https://rbkmoney.github.io/charts
   version: 0.1.9
+- name: statefull
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.9
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.7
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.7
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.7
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.7
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.7
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.7
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.7
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.7
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.7
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.7
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.7
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.7
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.7
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.7
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.7
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.7
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.7
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.7
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.7
 - name: stateless
   repository: https://rbkmoney.github.io/charts
   version: 0.1.7
@@ -24,5 +84,5 @@ dependencies:
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.7.0
-digest: sha256:7f5c54f3ccc56364d74ce465a046e3b521283984c8e18d39530a0a9f61dde72c
-generated: "2020-12-10T21:58:34.902532+03:00"
+digest: sha256:63a2a54a4ef516648e5a985cb68951fdffa2cb078c301361b9c6783585d29444
+generated: "2020-12-14T13:34:43.884265571+03:00"

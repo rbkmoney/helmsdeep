@@ -40,3 +40,67 @@ metrics:
     namespace: monitoring
     additionalLabels:
       release: prometheus
+
+ciliumPolicies:
+- filters:
+  - port: 8500
+    type: TCP
+  name: consul
+  namespace: default
+- filters:
+  - port: 9092
+    rules:
+      kafka:
+        produce:
+        - mg-events-cashreg
+        - mg-events-customer
+        - mg-events-ff-deposit
+        - mg-events-ff-destination
+        - mg-events-ff-identity
+        - mg-events-ff-p2p-template
+        - mg-events-ff-p2p-transfer
+        - mg-events-ff-p2p-transfer-session
+        - mg-events-ff-source
+        - mg-events-ff-w2w-transfer
+        - mg-events-ff-wallet
+        - mg-events-ff-withdrawal
+        - mg-events-ff-withdrawal-session
+        - mg-events-invoice
+        - mg-events-invoice-template
+        - mg-events-party
+        - mg-events-rates
+        - mg-events-recurrent-paytools
+        - mg-events-schedulers
+    type: TCP
+  name: kafka
+  namespace: default
+- filters:
+  - port: 8087
+    type: TCP
+  name: riak
+  namespace: default
+- filters:
+  - port: 8022
+    type: TCP
+  name: bender
+  namespace: default
+- filters:
+  - port: 8022
+    type: TCP
+  name: url-shortener
+  namespace: default
+- filters:
+  - port: 8022
+    type: TCP
+  name: machinegun
+  namespace: default
+- filters:
+  - port: 8022
+    type: TCP
+  name: dominant
+  namespace: default
+- filters:
+  - port: 8022
+    type: TCP
+  name: hellgate
+  namespace: default

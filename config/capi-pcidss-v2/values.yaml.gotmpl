@@ -92,3 +92,20 @@ ingress:
       paths: 
         - /v2/processing/payment-resources
   servicePort: 8080
+
+ciliumPolicies:
+- filters:
+  - port: 8022
+    type: TCP
+  name: binbase
+  namespace: default
+- filters:
+  - port: 8022
+    type: TCP
+  name: bender
+  namespace: default
+- filters:
+  - port: 8022
+    type: TCP
+  name: cds
+  namespace: default

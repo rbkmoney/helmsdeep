@@ -44,3 +44,10 @@ volumeMounts:
     subPath: erl_inetrc
     readOnly: true
 
+
+ciliumPolicies:
+- filters:
+  - port: 8022
+    type: TCP
+  name: machinegun
+  namespace: default

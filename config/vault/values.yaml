@@ -20,3 +20,10 @@ server:
     - /bin/sh
     - -c
     - "/vault-init/init.vault.sh"
+
+ciliumPolicies:
+- filters:
+  - port: 5432
+    type: TCP
+  name: postgresql
+  namespace: default

@@ -1,3 +1,8 @@
+environments:
+  default:
+    values:
+    - default.values.yaml
+
 {{ readFile "hf-templates.yaml" }}
 
 repositories:
@@ -5,15 +10,28 @@ repositories:
   url: https://prometheus-community.github.io/helm-charts
 - name: rbkmoney
   url: https://rbkmoney.github.io/charts
+- name: cilium
+  url: https://helm.cilium.io/
 
 releases:
+- name: cilium
+  installed: {{ .Values.cilium.enabled }}
+  <<: *default
+  version: 1.9.0
+  chart: cilium/cilium
+  namespace: kube-system
 - name: prometheus
   <<: *default
   chart: prometheus-community/kube-prometheus-stack
   version: 10.1.0
   namespace: monitoring
 - name: logs
-  # Change to installed: true if you need ECK installed
-  installed: false
+  installed: {{ .Values.elk.enabled }}
   <<: *default
   chart: rbkmoney/elk
+- name: netpolicy
+  installed: {{ .Values.cilium.enabled }}
+  <<: *default
+  chart: ./services/netpolicy
+  needs:
+  - kube-system/cilium
