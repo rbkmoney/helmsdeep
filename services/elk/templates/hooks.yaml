@@ -29,17 +29,17 @@ spec:
           image: curlimages/curl
           env:
             - name: KB_USERNAME
-              value: default-filebeat-beat-kb-user
+              value: {{ .Release.Namespace }}-filebeat-beat-kb-user
             - name: KB_PASS
               valueFrom:
                 secretKeyRef:
                   name: filebeat-beat-kb-user
-                  key: default-filebeat-beat-kb-user
+                  key: {{ .Release.Namespace }}-filebeat-beat-kb-user
           command:
             - /bin/sh
             - -c
             - |
-              curl -XPOST https://{{- .Values.kibana.nameref -}}-kb-http.default.svc:5601/api/saved_objects/index-pattern/filebeat-rbkmoney-processing?overwrite=true \
+              curl -XPOST https://{{- .Values.kibana.nameref -}}-kb-http.{{ .Release.Namespace }}.svc:5601/api/saved_objects/index-pattern/filebeat-rbkmoney-processing?overwrite=true \
               -H 'kbn-xsrf: true' -H 'Content-Type: application/json' \
               -u ${KB_USERNAME}:${KB_PASS} -k -d '
               {
