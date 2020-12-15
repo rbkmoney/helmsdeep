@@ -33,4 +33,3 @@ specs:
         - ports:
           - port: "9153"
             protocol: ANY
-        

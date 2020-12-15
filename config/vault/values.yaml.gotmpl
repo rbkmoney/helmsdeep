@@ -1,4 +1,6 @@
 server:
+  extraLabels: 
+    selector.cilium.rbkmoney/release: {{ .Release.Name }}
   dev:
     enabled: true
   readinessProbe:
@@ -25,5 +27,5 @@ ciliumPolicies:
 - filters:
   - port: 5432
     type: TCP
-  name: postgresql
+  name: postgres
   namespace: default

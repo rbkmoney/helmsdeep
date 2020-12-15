@@ -1,6 +1,8 @@
-
 postgresql:
     enabled: false
+
+podLabels:
+  selector.cilium.rbkmoney/release: {{ .Release.Name }}
 
 extraEnv: |
   - name: DB_VENDOR
@@ -39,5 +41,5 @@ ciliumPolicies:
 - filters:
   - port: 5432
     type: TCP
-  name: postgresql
+  name: postgres
   namespace: default

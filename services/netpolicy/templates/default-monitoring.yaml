@@ -25,7 +25,11 @@ specs:
       matchLabels:
         k8s:io.kubernetes.pod.namespace: default
     ingress:
-    - toPorts:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: monitoring
+            k8s:app: prometheus
+      toPorts:
       - ports:
         - protocol: TCP
           port: "8080"
@@ -39,7 +43,4 @@ specs:
             path: "/metrics"
           - method: "GET"
             path: "/actuator/prometheus"
-      fromEndpoints:
-        - matchLabels:
-            k8s:io.kubernetes.pod.namespace: monitoring
-            k8s:app: prometheus
+      

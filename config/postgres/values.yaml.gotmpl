@@ -8,3 +8,7 @@ initdbScripts:
      CREATE DATABASE keycloak;
      CREATE DATABASE shumway;
      CREATE DATABASE hook;
+
+master:
+  podLabels:
+    selector.cilium.rbkmoney/release: {{ .Release.Name }}
