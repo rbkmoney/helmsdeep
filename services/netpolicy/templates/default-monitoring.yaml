@@ -3,7 +3,6 @@ apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
   name: zone.monitoring
-  namespace: monitoring
 specs:
   - endpointSelector:
       matchLabels:

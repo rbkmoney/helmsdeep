@@ -1,4 +1,4 @@
 cilium:
   enabled: true
 elk:
-  enabled: false
+  enabled: true

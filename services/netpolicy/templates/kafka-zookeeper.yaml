@@ -4,15 +4,26 @@ kind: CiliumNetworkPolicy
 metadata:
   name: "allow-kafka-zookeeper"
   namespace: default
-spec:
-  endpointSelector:
-    matchLabels:
-      k8s:app: zookeeper
-  ingress:
-  - fromEndpoints:
-    - matchLabels:
-        k8s:app.kubernetes.io/name: kafka 
-    toPorts:
-    - ports:
-      - port: "2181"
-        protocol: TCP
+specs:
+  - endpointSelector:
+      matchLabels:
+        k8s:app: zookeeper
+    ingress:
+    - fromEndpoints:
+      - matchLabels:
+          k8s:app.kubernetes.io/name: kafka 
+      toPorts:
+      - ports:
+        - port: "2181"
+          protocol: TCP
+  - endpointSelector:
+      matchLabels:
+        k8s:app.kubernetes.io/name: kafka
+    egress:
+    - toEndpoints:
+      - matchLabels:
+          k8s:app: zookeeper
+      toPorts:
+      - ports:
+        - port: "2181"
+          protocol: TCP

@@ -16,3 +16,11 @@ spec:
     - ports:
       - port: "9092"
         protocol: TCP
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        k8s:app.kubernetes.io/name: kafka
+    toPorts:
+    - ports:
+      - port: "9092"
+        protocol: TCP
