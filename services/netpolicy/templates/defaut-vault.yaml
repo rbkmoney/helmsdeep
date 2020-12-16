@@ -2,24 +2,46 @@
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
-  name: "vault-rules"
+  name: "vault-postgres"
   namespace: default
-spec:
-  endpointSelector:
-    matchLabels:
-      k8s:app.kubernetes.io/name: vault-agent-injector
-  ingress:
-  - fromEntities:
-      - host
-    toPorts:
-    - ports:
-      - protocol: TCP
-        port: "8090"
-  egress:
-  - toEntities:
-      - host
-    toPorts:
-    - ports:
-      - protocol: TCP
-        port: "8443"
-    
+specs:
+  - endpointSelector:
+      matchLabels:
+        k8s:selector.cilium.rbkmoney/release: vault
+    egress:
+    - toEndpoints:
+      - matchLabels:
+          k8s:selector.cilium.rbkmoney/release: postgresql
+      toPorts:
+      - ports:
+        - protocol: TCP
+          port: "5432"
+  - endpointSelector:
+      matchLabels:
+        k8s:selector.cilium.rbkmoney/release: postgresql
+    ingress:
+    - fromEndpoints:
+      - matchLabels:
+          k8s:selector.cilium.rbkmoney/release: vault
+      toPorts:
+      - ports:
+        - protocol: TCP
+          port: "5432"
+  - endpointSelector:
+      matchLabels:
+        k8s:app.kubernetes.io/name: vault-agent-injector
+    ingress:
+    - fromEntities:
+        - host
+      toPorts:
+      - ports:
+        - protocol: TCP
+          port: "8090"
+    egress:
+    - toEntities:
+        - host
+      toPorts:
+      - ports:
+        - protocol: TCP
+          port: "8443"
+      

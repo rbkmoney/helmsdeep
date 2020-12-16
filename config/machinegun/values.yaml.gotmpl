@@ -51,7 +51,8 @@ ciliumPolicies:
   - port: 9092
     rules:
       kafka:
-        produce:
+      - role: produce
+        topics:
         - mg-events-cashreg
         - mg-events-customer
         - mg-events-ff-deposit
