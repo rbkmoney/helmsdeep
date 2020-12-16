@@ -11,14 +11,14 @@ specs:
     ingress:
     - fromEndpoints:
       - matchLabels:
-          k8s:app.kubernetes.io/name: kafka 
+          k8s:selector.cilium.rbkmoney/release: kafka 
       toPorts:
       - ports:
         - port: "2181"
           protocol: TCP
   - endpointSelector:
       matchLabels:
-        k8s:app.kubernetes.io/name: kafka
+        k8s:selector.cilium.rbkmoney/release: kafka
     egress:
     - toEndpoints:
       - matchLabels:

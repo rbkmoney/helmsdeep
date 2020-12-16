@@ -2,6 +2,9 @@
 
 replicaCount: 1
 
+podLabels:
+  selector.cilium.rbkmoney/release: {{ .Release.Name }}
+
 image:
   repository: docker.io/rbkmoney/machinegun
   tag: 93624bcff131d76288f51dceb6102975a1455cbc

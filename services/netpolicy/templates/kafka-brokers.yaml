@@ -7,11 +7,11 @@ metadata:
 spec:
   endpointSelector:
     matchLabels:
-      k8s:app.kubernetes.io/name: kafka
+      k8s:selector.cilium.rbkmoney/release: kafka
   ingress:
   - fromEndpoints:
     - matchLabels:
-        k8s:app.kubernetes.io/name: kafka
+        k8s:selector.cilium.rbkmoney/release: kafka
     toPorts:
     - ports:
       - port: "9092"
@@ -19,7 +19,7 @@ spec:
   egress:
   - toEndpoints:
     - matchLabels:
-        k8s:app.kubernetes.io/name: kafka
+        k8s:selector.cilium.rbkmoney/release: kafka
     toPorts:
     - ports:
       - port: "9092"

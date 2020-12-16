@@ -1,0 +1,18 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: default.consul
+  namespace: default
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:cselector.cilium.rbkmoney/release: consul
+  egress:
+  - fromEndpoints:
+      - matchLabels:
+          k8s:app.kubernetes.io/name: machinegun
+    toPorts:
+    - ports:
+      - protocol: TCP
+        port: "8500"
