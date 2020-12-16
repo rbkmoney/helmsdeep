@@ -2,27 +2,27 @@
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
-  name: "keycloack-postgres"
+  name: "keycloak-postgres"
   namespace: default
 specs:
   - endpointSelector:
       matchLabels:
-        k8s:selector.cilium.rbkmoney/release: keycloack
+        k8s:selector.cilium.rbkmoney/release: keycloak
     egress:
     - toEndpoints:
       - matchLabels:
-          k8s:selector.cilium.rbkmoney/release: postgresql
+          k8s:selector.cilium.rbkmoney/release: postgres
       toPorts:
       - ports:
         - protocol: TCP
           port: "5432"
   - endpointSelector:
       matchLabels:
-        k8s:selector.cilium.rbkmoney/release: postgresql
+        k8s:selector.cilium.rbkmoney/release: postgres
     ingress:
     - fromEndpoints:
       - matchLabels:
-          k8s:selector.cilium.rbkmoney/release: keycloack
+          k8s:selector.cilium.rbkmoney/release: keycloak
       toPorts:
       - ports:
         - protocol: TCP
