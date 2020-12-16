@@ -4,11 +4,18 @@ kind: CiliumNetworkPolicy
 metadata:
   name: default.consul
   namespace: default
-spec:
-  endpointSelector:
-    matchLabels:
-      k8s:selector.cilium.rbkmoney/release: consul
-  egress:
-  - toEndpoints:
-      - matchLabels:
-          k8s:app.kubernetes.io/name: machinegun
+specs:
+  - endpointSelector:
+      matchLabels:
+        k8s:selector.cilium.rbkmoney/release: consul
+    egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:selector.cilium.rbkmoney/release: machinegun
+  - endpointSelector:
+      matchLabels:
+        k8s:selector.cilium.rbkmoney/release: machinegun
+    ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:selector.cilium.rbkmoney/release: consul
