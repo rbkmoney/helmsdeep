@@ -18,6 +18,13 @@ specs:
       - ports:
         - protocol: TCP
           port: "9200"
+    - fromEndpoints:
+        - matchLabels:
+            k8s:job-name: logs-create-index-pattern
+      toPorts:
+      - ports:
+        - protocol: TCP
+          port: "5601"
     - fromEntities:
         - host
       toPorts:
@@ -35,3 +42,10 @@ specs:
       - ports:
         - protocol: TCP
           port: "9200"
+    - toEndpoints:
+        - matchLabels:
+            k8s:job-name: logs-create-index-pattern
+      toPorts:
+      - ports:
+        - protocol: TCP
+          port: "5601"

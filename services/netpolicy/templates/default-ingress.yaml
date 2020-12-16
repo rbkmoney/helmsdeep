@@ -4,16 +4,64 @@ kind: CiliumNetworkPolicy
 metadata:
   name: default.ingress
   namespace: default
-spec:
-  endpointSelector:
-    matchLabels: {}
-  ingress:
-  - toPorts:
-    - ports:
-      - protocol: TCP
-        port: "8080"
-    fromEndpoints:
-      - matchLabels:
-          k8s:io.kubernetes.pod.namespace: kube-system
-      - matchLabels:
-          k8s:app.kubernetes.io/name: ingress-nginx
+specs:
+  - endpointSelector:
+      matchLabels: 
+        k8s:selector.cilium.rbkmoney/release: capi-v1
+    ingress:
+    - toPorts:
+      - ports:
+        - protocol: TCP
+          port: "8080"
+      fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+        - matchLabels:
+            k8s:app.kubernetes.io/name: ingress-nginx
+        - matchLabels:
+            k8s:app.kubernetes.io/name: test-transaction-gateway
+  - endpointSelector:
+      matchLabels: 
+        k8s:selector.cilium.rbkmoney/release: capi-v2
+    ingress:
+    - toPorts:
+      - ports:
+        - protocol: TCP
+          port: "8080"
+      fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+        - matchLabels:
+            k8s:app.kubernetes.io/name: ingress-nginx
+        - matchLabels:
+            k8s:app.kubernetes.io/name: test-transaction-gateway
+  - endpointSelector:
+      matchLabels: 
+        k8s:selector.cilium.rbkmoney/release: capi-pcidss-v1
+    ingress:
+    - toPorts:
+      - ports:
+        - protocol: TCP
+          port: "8080"
+      fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+        - matchLabels:
+            k8s:app.kubernetes.io/name: ingress-nginx
+        - matchLabels:
+            k8s:app.kubernetes.io/name: test-transaction-gateway
+  - endpointSelector:
+      matchLabels: 
+        k8s:selector.cilium.rbkmoney/release: capi-pcidss-v2
+    ingress:
+    - toPorts:
+      - ports:
+        - protocol: TCP
+          port: "8080"
+      fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+        - matchLabels:
+            k8s:app.kubernetes.io/name: ingress-nginx
+        - matchLabels:
+            k8s:app.kubernetes.io/name: test-transaction-gateway
