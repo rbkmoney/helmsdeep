@@ -16,6 +16,12 @@ specs:
       - ports:
         - protocol: TCP
           port: "5432"
+    - toEntities:
+        - host
+      toPorts:
+      - ports:
+        - protocol: TCP
+          port: "8443"
   - endpointSelector:
       matchLabels:
         k8s:selector.cilium.rbkmoney/release: postgres
@@ -30,16 +36,16 @@ specs:
   - endpointSelector:
       matchLabels:
         k8s:app.kubernetes.io/name: vault-agent-injector
-    ingress:
-    - fromEntities:
-        - host
-      toPorts:
-      - ports:
-        - protocol: TCP
-          port: "8090"
+#    ingress:
+#    - fromEntities:
+#        - host
+#      toPorts:
+#      - ports:
+#        - protocol: TCP
+#          port: "8090"
     egress:
     - toEntities:
-        - host
+      - host
       toPorts:
       - ports:
         - protocol: TCP

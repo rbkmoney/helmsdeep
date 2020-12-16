@@ -95,6 +95,10 @@ ingress:
 
 ciliumPolicies:
 - filters:
+  - port: 8080
+    type: TCP
+  name: keycloak
+- filters:
   - port: 8022
     type: TCP
   name: binbase

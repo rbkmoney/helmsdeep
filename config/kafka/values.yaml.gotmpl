@@ -1,5 +1,8 @@
 replicas: 1
 
+podLabels:
+  selector.cilium.rbkmoney/release: {{ .Release.Name }}
+
 zookeeper:
   ## If true, install the Zookeeper chart alongside Kafka
   ## ref: https://github.com/kubernetes/charts/tree/master/incubator/zookeeper

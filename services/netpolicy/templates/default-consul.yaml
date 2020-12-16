@@ -7,12 +7,8 @@ metadata:
 spec:
   endpointSelector:
     matchLabels:
-      k8s:cselector.cilium.rbkmoney/release: consul
+      k8s:selector.cilium.rbkmoney/release: consul
   egress:
-  - fromEndpoints:
+  - toEndpoints:
       - matchLabels:
           k8s:app.kubernetes.io/name: machinegun
-    toPorts:
-    - ports:
-      - protocol: TCP
-        port: "8500"
