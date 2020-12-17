@@ -1,0 +1,81 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+image:
+  repository: docker.io/rbkmoney/binapi
+  tag: bc5d6fd206c740a3075fd33228561928763d0995
+  pullPolicy: IfNotPresent
+
+configMap:
+  data:
+    sys.config: |
+      {{- readFile "sys.config" | nindent 6 }}
+    erl_inetrc: |
+      {{- readFile "../vm/erl_inetrc" | nindent 6 }}
+    fetchKeycloakPubkey: |
+      {{- readFile "../api-common/fetch-keycloak-pubkey.sh" | nindent 6 }}
+    oopsBody1: |
+      {{- readFile "../api-common/oops-bodies/sad-kitty1" | nindent 6 }}
+    oopsBody2: |
+      {{- readFile "../api-common/oops-bodies/sad-kitty2" | nindent 6 }}
+    vm.args: |
+      -sname {{ .Release.Name }}
+      -setcookie {{ .Release.Name }}_cookie
+
+apiInitContainers:
+  enabled: true
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/binapi/releases/0.1.0/sys.config
+    subPath: sys.config
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/binapi/releases/0.1.0/vm.args
+    subPath: vm.args
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/binapi/erl_inetrc
+    subPath: erl_inetrc
+    readOnly: true
+  - name: config-volume
+    mountPath: /var/lib/binapi/oops-bodies/oopsBody1
+    subPath: oopsBody1
+    readOnly: true
+  - name: config-volume
+    mountPath: /var/lib/binapi/oops-bodies/oopsBody2
+    subPath: oopsBody2
+    readOnly: true
+  - name: keycloak-pubkey
+    mountPath: /var/lib/binapi/keys/keycloak
+    readOnly: true
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+  - name: keycloak-pubkey
+    emptyDir: {}
+
+service:
+  type: ClusterIP
+  ports:
+    - name: api
+      port: 8080
+
+metrics:
+  serviceMonitor:
+    enabled: true
+    namespace: monitoring
+    additionalLabels:
+      release: prometheus
+
+ingress:
+  enabled: true
+  hosts:
+    - host: api.rbk.dev
+      paths:
+        - /binbase/v1
+  servicePort: 8080
