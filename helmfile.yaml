@@ -145,3 +145,7 @@ releases:
   <<: *generic_stateless_json
   needs:
     - default/keycloak
+- name: binapi
+  <<: *generic_stateless_json
+  needs:
+    - default/keycloak
