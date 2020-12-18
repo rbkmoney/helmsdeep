@@ -10,10 +10,13 @@ releases:
 - name: prometheus
   <<: *default
   chart: prometheus-community/kube-prometheus-stack
-  version: 10.1.0
+  version: 12.1.0
   namespace: monitoring
+  needs:
+    - monitoring/logs
 - name: logs
   # Change to installed: true if you need ECK installed
   installed: false
   <<: *default
+  namespace: monitoring
   chart: rbkmoney/elk
