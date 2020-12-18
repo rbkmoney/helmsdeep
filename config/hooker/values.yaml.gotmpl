@@ -72,24 +72,24 @@ podAnnotations:
 
 
 ciliumPolicies:
-- filters:
-  - port: 8200
-    type: TCP
-  name: vault
-  namespace: default
-- filters:
-  - port: 5432
-    type: TCP
-  name: postgres
-  namespace: default
-- filters:
-  - port: 9092
-    rules:
-      kafka:
-      - role: consume
-        topics:
-        - mg-events-customer
-        - mg-events-invoice
-    type: TCP
-  name: kafka
-  namespace: default
+  - filters:
+    - port: 8200
+      type: TCP
+    name: vault
+    namespace: default
+  - filters:
+    - port: 5432
+      type: TCP
+    name: postgres
+    namespace: default
+  - filters:
+    - port: 9092
+      rules:
+        kafka:
+        - role: consume
+          topics:
+            - mg-events-customer
+            - mg-events-invoice
+      type: TCP
+    name: kafka
+    namespace: default

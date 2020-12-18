@@ -14,75 +14,75 @@ dependencies:
   version: 9.2.0
 - name: statefull
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.10
+  version: 0.1.13
 - name: statefull
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.10
+  version: 0.1.13
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.8
+  version: 0.1.11
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.8
+  version: 0.1.11
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.8
+  version: 0.1.11
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.8
+  version: 0.1.11
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.8
+  version: 0.1.11
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.8
+  version: 0.1.11
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.8
+  version: 0.1.11
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.8
+  version: 0.1.11
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.8
+  version: 0.1.11
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.8
+  version: 0.1.11
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.8
+  version: 0.1.11
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.8
+  version: 0.1.11
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.8
+  version: 0.1.11
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.8
+  version: 0.1.11
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.8
+  version: 0.1.11
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.8
+  version: 0.1.11
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.8
+  version: 0.1.11
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.8
+  version: 0.1.11
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.8
+  version: 0.1.11
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.8
+  version: 0.1.11
 - name: test-transaction
   repository: https://rbkmoney.github.io/charts
   version: 0.1.1
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.7.0
-digest: sha256:e61fc041cf9b8d692f0925ef0350c5499d25d6f743f87aafa3673c04c951daa3
-generated: "2020-12-16T18:53:38.256101077+03:00"
+digest: sha256:be06b79bc360d8994866630d68b0299f42ec332e4668bd695df6d2d4c723a396
+generated: "2020-12-17T15:14:58.667399355+03:00"

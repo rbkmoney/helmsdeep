@@ -68,28 +68,28 @@ volumeMounts:
 
 
 ciliumPolicies:
-- filters:
-  - port: 8022
-    type: TCP
-  name: shumway
-  namespace: default
-- filters:
-  - port: 8022
-    type: TCP
-  name: machinegun
-  namespace: default
-- filters:
-  - port: 8022
-    type: TCP
-  name: dominant
-  namespace: default
-- filters:
-  - port: 8022
-    type: TCP
-  name: proxy-mocket-inspector
-  namespace: default
-- filters:
-  - port: 8022
-    type: TCP
-  name: proxy-mocketbank
-  namespace: default
+  - filters:
+    - port: 8022
+      type: TCP
+    name: shumway
+    namespace: default
+  - filters:
+    - port: 8022
+      type: TCP
+    name: machinegun
+    namespace: default
+  - filters:
+    - port: 8022
+      type: TCP
+    name: dominant
+    namespace: default
+  - filters:
+    - port: 8022
+      type: TCP
+    name: proxy-mocket-inspector
+    namespace: default
+  - filters:
+    - port: 8022
+      type: TCP
+    name: proxy-mocketbank
+    namespace: default

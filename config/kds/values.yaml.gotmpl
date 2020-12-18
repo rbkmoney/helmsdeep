@@ -98,10 +98,10 @@ metrics:
         scheme: http
 
 ciliumPolicies:
-- filters:
-  - port: 8022
-    type: TCP
-  - port: 8023
-    type: TCP
-  name: kds
-  namespace: default
+  - filters:
+    - port: 8022
+      type: TCP
+    - port: 8023
+      type: TCP
+    name: kds
+    namespace: default

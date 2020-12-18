@@ -14,13 +14,13 @@ zookeeper:
   replicaCount: 1
 
 ciliumPolicies:
-- filters:
-  - port: 2181
-    type: TCP
-  name: zookeeper
-  namespace: default
-- filters:
-  - port: 9092
-    type: TCP
-  name: kafka
-  namespace: default
+  - filters:
+    - port: 2181
+      type: TCP
+    name: zookeeper
+    namespace: default
+  - filters:
+    - port: 9092
+      type: TCP
+    name: kafka
+    namespace: default

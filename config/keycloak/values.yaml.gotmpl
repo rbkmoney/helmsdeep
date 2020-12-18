@@ -38,8 +38,8 @@ extraVolumeMounts: |
     readOnly: true
 
 ciliumPolicies:
-- filters:
-  - port: 5432
-    type: TCP
-  name: postgres
-  namespace: default
+  - filters:
+    - port: 5432
+      type: TCP
+    name: postgres
+    namespace: default

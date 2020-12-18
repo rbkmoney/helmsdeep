@@ -46,8 +46,8 @@ volumeMounts:
 
 
 ciliumPolicies:
-- filters:
-  - port: 8022
-    type: TCP
-  name: machinegun
-  namespace: default
+  - filters:
+    - port: 8022
+      type: TCP
+    name: machinegun
+    namespace: default

@@ -94,28 +94,28 @@ ingress:
   servicePort: 8080
 
 ciliumPolicies:
-- filters:
-  - port: 8080
-    type: TCP
-  name: keycloak
-  namespace: default
-- filters:
-  - port: 8022
-    type: TCP
-  name: bender
-  namespace: default
-- filters:
-  - port: 8022
-    type: TCP
-  name: shumway
-  namespace: default
-- filters:
-  - port: 8022
-    type: TCP
-  name: dominant
-  namespace: default
-- filters:
-  - port: 8022
-    type: TCP
-  name: hellgate
-  namespace: default
+  - filters:
+    - port: 8080
+      type: TCP
+    name: keycloak
+    namespace: default
+  - filters:
+    - port: 8022
+      type: TCP
+    name: bender
+    namespace: default
+  - filters:
+    - port: 8022
+      type: TCP
+    name: shumway
+    namespace: default
+  - filters:
+    - port: 8022
+      type: TCP
+    name: dominant
+    namespace: default
+  - filters:
+    - port: 8022
+      type: TCP
+    name: hellgate
+    namespace: default

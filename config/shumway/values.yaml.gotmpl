@@ -70,13 +70,13 @@ podAnnotations:
     {{- end }}`}}
 
 ciliumPolicies:
-- filters:
-  - port: 8200
-    type: TCP
-  name: vault
-  namespace: default
-- filters:
-  - port: 5432
-    type: TCP
-  name: postgres
-  namespace: default
+  - filters:
+    - port: 8200
+      type: TCP
+    name: vault
+    namespace: default
+  - filters:
+    - port: 5432
+      type: TCP
+    name: postgres
+    namespace: default
