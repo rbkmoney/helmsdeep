@@ -1,52 +1,10 @@
 # Look for reference at https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L2008
-prometheus:
-  additionalServiceMonitors:
-    - name: "rbk-erlang-service"
-      selector:
-        matchLabels:
-          prometheus.metrics.erlang.enabled: "true"
-      namespaceSelector:
-        matchNames:
-          - default
-      endpoints:
-        - port: "api"
-          path: /metrics
-          scheme: http
-    - name: "rbk-java-service"
-      selector:
-        matchLabels:
-          prometheus.metrics.java.enabled: "true"
-      namespaceSelector:
-        matchNames:
-          - default
-      endpoints:
-        - port: "management"
-          path: /actuator/prometheus
-          scheme: http
 
 grafana:
   enabled: true
   replicas: 1
   
   create: true
-  ## Use an existing ClusterRole/Role (depending on rbac.namespaced false/true)
-  # useExistingRole: name-of-some-(cluster)role
-  rbac:
-    create: true
-    pspEnabled: true
-    pspUseAppArmor: true
-    namespaced: false
-    extraClusterRoleRules:
-    - apiGroups: [""]
-      resources: ["configmaps", "secrets"]
-      verbs: ["get", "watch", "list"]
-  
-  image:
-    repository: grafana/grafana
-    tag: 7.2.1
-    sha: ""
-    pullPolicy: IfNotPresent
-
   extraEmptyDirMounts:
     - name: dashboard-dir
       mountPath: /var/lib/grafana/dashboards/general
@@ -81,10 +39,6 @@ grafana:
         - key: synckey
           path: synckey
           mode: 0600
-
-  plugins: []
-  # - digrich-bubblechart-panel
-    # - grafana-clock-panel
 
   datasources:
     datasources.yaml:
@@ -125,18 +79,4 @@ grafana:
         json: |
           {{- readFile "dashboards/result/machinegun-namespace.json" | nindent 10 }}
 
-  grafana.ini:
-    paths:
-      data: /var/lib/grafana/data
-      logs: /var/log/grafana
-      plugins: /var/lib/grafana/plugins
-      provisioning: /etc/grafana/provisioning
-    analytics:
-      check_for_updates: true
-    log:
-      mode: console
-    grafana_net:
-      url: https://grafana.net
-
-  revisionHistoryLimit: 10
 
