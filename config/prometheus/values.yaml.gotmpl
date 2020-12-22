@@ -1,33 +1,74 @@
-# -*- mode: yaml -*-
-
 # Look for reference at https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L2008
-prometheus:
-  additionalServiceMonitors:
-    - name: "rbk-java-service"
-      selector:
-        matchLabels:
-          prometheus.metrics.java.enabled: "true"
-      namespaceSelector:
-        matchNames:
-          - default
-      endpoints:
-        - port: "management"
-          path: /actuator/prometheus
-          scheme: http
 
 grafana:
+  enabled: true
+  replicas: 1
+  
+  extraEmptyDirMounts:
+    - name: dashboard-dir
+      mountPath: /var/lib/grafana/dashboards/general
+  
+  envValueFrom:
+    ELASTIC_PASS:
+      secretKeyRef:
+        name: rbkmoney-es-elastic-user
+        key: elastic
+
+  extraInitContainers:
+    - name: dashboard-autosync
+      image: alpine/git:v2.26.2
+      imagePullPolicy: IfNotPresent
+      args:
+      - clone
+      - -b
+      - dashboard/release
+      - https://github.com/rbkmoney/grafana-dashboards-common.git
+      - /git/dashboards
+      volumeMounts:
+        - name: dashboard-dir
+          mountPath: "/git/dashboards"
+      securityContext:
+       runAsUser: 0
+
+  extraContainerVolumes:
+    - name: sync-key
+      secret:
+        secretName: prometheus-grafana-env
+        items:
+        - key: synckey
+          path: synckey
+          mode: 0600
+
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+      - name: rbkm-elasticsearch
+        type: elasticsearch
+        database: "filebeat-rbkmoney-processing-*"
+        url: https://rbkmoney-es-http:9200
+        basicAuth: true
+        basicAuthUser: elastic
+        jsonData:
+          timeField: "@timestamp"
+          esVersion: 70
+          tlsSkipVerify: true
+        secureJsonData:
+          basicAuthPassword: $ELASTIC_PASS
+
   dashboardProviders:
     dashboardproviders.yaml:
       apiVersion: 1
       providers:
-      - name: 'rbk-dashboards'
+      - name: 'general'
         orgId: 1
-        folder: 'Processing'
+        folder: ''
         type: file
         disableDeletion: false
         editable: true
         options:
-          path: /var/lib/grafana/dashboards/rbk-dashboards
+          path: /var/lib/grafana/dashboards
+
   dashboards:
     rbk-dashboards:
       erlang-instance:
@@ -36,3 +77,5 @@ grafana:
       machinegun-namespace:
         json: |
           {{- readFile "dashboards/result/machinegun-namespace.json" | nindent 10 }}
+
+
