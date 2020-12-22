@@ -4,7 +4,6 @@ grafana:
   enabled: true
   replicas: 1
   
-  create: true
   extraEmptyDirMounts:
     - name: dashboard-dir
       mountPath: /var/lib/grafana/dashboards/general
