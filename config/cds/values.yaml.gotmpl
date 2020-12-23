@@ -55,3 +55,17 @@ metrics:
     namespace: monitoring
     additionalLabels:
       release: prometheus
+
+ciliumPolicies:
+  - filters:
+    - port: 8087
+      type: TCP
+    name: riak
+    namespace: default
+  - filters:
+    - port: 8022
+      type: TCP
+    - port: 8023
+      type: TCP
+    name: kds
+    namespace: default

@@ -66,3 +66,15 @@ ingress:
         - /privdoc/v0
         - /payres/v0
 
+
+ciliumPolicies:
+  - filters:
+    - port: 8022
+      type: TCP
+    name: bender
+    namespace: default
+  - filters:
+    - port: 8022
+      type: TCP
+    name: cds
+    namespace: default

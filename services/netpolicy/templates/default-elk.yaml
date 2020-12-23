@@ -1,0 +1,51 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: default.elasticsearch
+  namespace: default
+specs:
+  - endpointSelector:
+      matchLabels:
+        k8s:common.k8s.elastic.co/type: elasticsearch
+    ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: default
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: elastic-system          
+      toPorts:
+      - ports:
+        - protocol: TCP
+          port: "9200"
+    - fromEndpoints:
+        - matchLabels:
+            k8s:job-name: logs-create-index-pattern
+      toPorts:
+      - ports:
+        - protocol: TCP
+          port: "5601"
+    - fromEntities:
+        - host
+      toPorts:
+      - ports:
+        - protocol: TCP
+          port: "9200"
+  - endpointSelector:
+      matchLabels:
+        k8s:io.kubernetes.pod.namespace: default
+    egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:common.k8s.elastic.co/type: elasticsearch
+      toPorts:
+      - ports:
+        - protocol: TCP
+          port: "9200"
+    - toEndpoints:
+        - matchLabels:
+            k8s:job-name: logs-create-index-pattern
+      toPorts:
+      - ports:
+        - protocol: TCP
+          port: "5601"

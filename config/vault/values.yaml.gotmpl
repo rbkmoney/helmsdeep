@@ -1,4 +1,6 @@
 server:
+  extraLabels: 
+    selector.cilium.rbkmoney/release: {{ .Release.Name }}
   dev:
     enabled: true
   readinessProbe:
@@ -20,3 +22,10 @@ server:
     - /bin/sh
     - -c
     - "/vault-init/init.vault.sh"
+
+ciliumPolicies:
+  - filters:
+    - port: 5432
+      type: TCP
+    name: postgres
+    namespace: default

@@ -1,5 +1,8 @@
 replicas: 1
 
+podLabels:
+  selector.cilium.rbkmoney/release: {{ .Release.Name }}
+
 zookeeper:
   ## If true, install the Zookeeper chart alongside Kafka
   ## ref: https://github.com/kubernetes/charts/tree/master/incubator/zookeeper
@@ -9,3 +12,15 @@ zookeeper:
   # url: "zookeeper"
   # port: 2181
   replicaCount: 1
+
+ciliumPolicies:
+  - filters:
+    - port: 2181
+      type: TCP
+    name: zookeeper
+    namespace: default
+  - filters:
+    - port: 9092
+      type: TCP
+    name: kafka
+    namespace: default

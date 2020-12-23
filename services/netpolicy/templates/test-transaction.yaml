@@ -1,0 +1,61 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "test-transaction"
+  namespace: default
+specs:
+  - endpointSelector:
+      matchLabels:
+        k8s:app.kubernetes.io/name: test-transaction
+    egress:
+    - toEndpoints:
+      - matchLabels:
+          k8s:selector.cilium.rbkmoney/release: keycloak
+      toPorts:
+      - ports:
+        - protocol: TCP
+          port: "8080"
+    - toEndpoints:
+      - matchLabels:
+          k8s:app.kubernetes.io/name: test-transaction-gateway
+      toPorts:
+      - ports:
+        - protocol: TCP
+          port: "80"
+  - endpointSelector:
+      matchLabels:
+        k8s:selector.cilium.rbkmoney/release: keycloak
+    ingress:
+    - fromEndpoints:
+      - matchLabels:
+          k8s:app.kubernetes.io/name: test-transaction
+      toPorts:
+      - ports:
+        - protocol: TCP
+          port: "8080"
+  - endpointSelector:
+      matchLabels:
+        k8s:app.kubernetes.io/name: test-transaction-gateway
+    ingress:
+    - fromEndpoints:
+      - matchLabels:
+          k8s:app.kubernetes.io/name: test-transaction
+      toPorts:
+      - ports:
+        - protocol: TCP
+          port: "80"
+    egress:
+    - toEndpoints:
+      - matchLabels:
+          k8s:selector.cilium.rbkmoney/release: capi-v1
+      - matchLabels:
+          k8s:selector.cilium.rbkmoney/release: capi-v2
+      - matchLabels:
+          k8s:selector.cilium.rbkmoney/release: capi-pcidss-v1
+      - matchLabels:
+          k8s:selector.cilium.rbkmoney/release: capi-pcidss-v2
+      toPorts:
+      - ports:
+        - protocol: TCP
+          port: "8080"

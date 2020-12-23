@@ -1,6 +1,8 @@
-
 postgresql:
     enabled: false
+
+podLabels:
+  selector.cilium.rbkmoney/release: {{ .Release.Name }}
 
 extraEnv: |
   - name: DB_VENDOR
@@ -34,3 +36,10 @@ extraVolumeMounts: |
   - name: keycloak-realms-volume
     mountPath: "/realm/"
     readOnly: true
+
+ciliumPolicies:
+  - filters:
+    - port: 5432
+      type: TCP
+    name: postgres
+    namespace: default

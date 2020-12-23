@@ -1,5 +1,8 @@
 version: v0.135.0
 dependencies:
+- name: cilium
+  repository: https://helm.cilium.io/
+  version: 1.9.0
 - name: elk
   repository: https://rbkmoney.github.io/charts
   version: 0.1.1
