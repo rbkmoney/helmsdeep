@@ -141,3 +141,11 @@ releases:
     - default/dominant
     - default/cds
     - default/keycloak
+- name: anapi
+  <<: *generic_stateless_json
+  needs:
+    - default/keycloak
+- name: binapi
+  <<: *generic_stateless_json
+  needs:
+    - default/keycloak

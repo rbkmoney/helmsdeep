@@ -5,9 +5,9 @@ dependencies:
   version: 1.9.0
 - name: elk
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.0
+  version: 0.1.1
 - name: kube-prometheus-stack
   repository: https://prometheus-community.github.io/helm-charts
-  version: 10.1.0
-digest: sha256:a241b3e1fdb7ece443afcaab11590c8831553ec9ca6bfa37f513700d469769a4
-generated: "2020-12-16T17:51:37.103912921+03:00"
+  version: 12.1.0
+digest: sha256:4dfa2d67ba8a87d88e930b40f5612deb93f36d7380c116dfb671792cfac347dc
+generated: "2020-12-18T10:20:38.57414826+03:00"
