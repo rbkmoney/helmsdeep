@@ -9,6 +9,7 @@ initdbScripts:
      CREATE DATABASE shumway;
      CREATE DATABASE hook;
 
+#TODO: If bump version, change master to primary
 master:
   podLabels:
     selector.cilium.rbkmoney/release: {{ .Release.Name }}
