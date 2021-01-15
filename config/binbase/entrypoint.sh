@@ -13,7 +13,7 @@ java \
     /opt/binbase/binbase.jar \
     --management.security.enabled=false \
     --spring.batch.job.enabled=false \
-    --client.cds.url=http://cds.default.svc.cluster.local:8022/v2/storage \
+    --client.cds.url=http://cds:8022/v2/storage \
     --spring.flyway.enabled=false \
     --spring.batch.initialize-schema=never \
     ${@}

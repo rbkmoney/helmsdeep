@@ -38,7 +38,7 @@ releases:
   chart: hashicorp/vault
   version: 0.7.0
   needs:
-  - default/postgres
+  - {{ .Namespace | default "default" }}/postgres
   wait: true
 - name: keycloak-realms
   <<: *default
@@ -47,7 +47,7 @@ releases:
   chart: codecentric/keycloak
   version: 9.0.1
   needs:
-  - default/postgres
+  - {{ .Namespace | default "default" }}/postgres
   wait: true
 #Rbkmoney processing releases
 - name: holmes
@@ -57,9 +57,9 @@ releases:
 - name: machinegun
   <<: *generic_stateless_json
   needs:
-  - default/consul
-  - default/riak
-  - default/kafka
+  - {{ .Namespace | default "default" }}/consul
+  - {{ .Namespace | default "default" }}/riak
+  - {{ .Namespace | default "default" }}/kafka
 - name: bender
   <<: *generic_statefull_json
 - name: kds
@@ -67,85 +67,85 @@ releases:
 - name: cds
   <<: *generic_stateless_json
   needs:
-    - default/kds
-    - default/riak
+    - {{ .Namespace | default "default" }}/kds
+    - {{ .Namespace | default "default" }}/riak
 - name: shumway
   <<: *generic_stateless_json
   needs:
-  - default/vault
-  - default/postgres
+  - {{ .Namespace | default "default" }}/vault
+  - {{ .Namespace | default "default" }}/postgres
   wait: true
 - name: hooker
   <<: *generic_stateless
   needs:
-  - default/vault
-  - default/kafka
+  - {{ .Namespace | default "default" }}/vault
+  - {{ .Namespace | default "default" }}/kafka
 - name: dominant
   <<: *generic_stateless_json
   needs:
-  - default/shumway
+  - {{ .Namespace | default "default" }}/shumway
   wait: true
 - name: binbase
   <<: *generic_stateless
 - name: proxy-mocketbank
   <<: *generic_stateless_json
   needs:
-    - default/hellgate
+    - {{ .Namespace | default "default" }}/hellgate
 - name: proxy-mocketbank-mpi
   <<: *generic_stateless_json
   needs:
-    - default/proxy-mocketbank
+    - {{ .Namespace | default "default" }}/proxy-mocketbank
 - name: proxy-mocket-inspector
   <<: *generic_stateless_json
   needs:
-    - default/hellgate
+    - {{ .Namespace | default "default" }}/hellgate
 - name: hellgate
   <<: *generic_stateless_json
   needs:
-    - default/dominant
+    - {{ .Namespace | default "default" }}/dominant
 - name: capi-pcidss-v2
   <<: *generic_stateless_json
   needs:
-    - default/keycloak
+    - {{ .Namespace | default "default" }}/keycloak
 - name: capi-pcidss-v1
   <<: *generic_stateless_json
   needs:
-    - default/keycloak
+    - {{ .Namespace | default "default" }}/keycloak
 - name: url-shortener
   <<: *generic_stateless
 - name: capi-v1
   <<: *generic_stateless_json
   needs:
-    - default/keycloak
+    - {{ .Namespace | default "default" }}/keycloak
 - name: capi-v2
   <<: *generic_stateless_json
   needs:
-    - default/keycloak
+    - {{ .Namespace | default "default" }}/keycloak
 - name: wapi-pcidss-v0
   installed: false
   <<: *generic_stateless_json
   needs:
-   - default/keycloak
+   - {{ .Namespace | default "default" }}/keycloak
 - name: wapi
   installed: false
   <<: *generic_stateless_json
   needs:
-    - default/keycloak
+    - {{ .Namespace | default "default" }}/keycloak
 - name: payform
   <<: *generic_stateless
 - name: test-transaction
   <<: *default
   chart: rbkmoney/test-transaction
   needs:
-    - default/shumway
-    - default/dominant
-    - default/cds
-    - default/keycloak
+    - {{ .Namespace | default "default" }}/shumway
+    - {{ .Namespace | default "default" }}/dominant
+    - {{ .Namespace | default "default" }}/cds
+    - {{ .Namespace | default "default" }}/keycloak
 - name: anapi
   <<: *generic_stateless_json
   needs:
-    - default/keycloak
+    - {{ .Namespace | default "default" }}/keycloak
 - name: binapi
   <<: *generic_stateless_json
   needs:
-    - default/keycloak
+    - {{ .Namespace | default "default" }}/keycloak

@@ -1,11 +1,18 @@
 templates:
   default: &default
     chart: ./services/{{ .Release.Name }}
-    namespace: default
+    namespace: '{{ .Namespace | default "default" }}'
     missingFileHandler: Warn
     timeout: 900
     values:
       - default.values.yaml
+      - config/{{ .Release.Name }}/values.yaml
+      - config/{{ .Release.Name }}/values.yaml.gotmpl
+
+  infra: &infra_default
+    missingFileHandler: Warn
+    timeout: 900
+    values:
       - config/{{ .Release.Name }}/values.yaml
       - config/{{ .Release.Name }}/values.yaml.gotmpl
 

@@ -16,12 +16,12 @@ repositories:
 releases:
 - name: cilium
   installed: {{ .Values.cilium.enabled }}
-  <<: *default
+  <<: *infra_default
   version: 1.9.0
   chart: cilium/cilium
   namespace: kube-system
 - name: prometheus
-  <<: *default
+  <<: *infra_default
   chart: prometheus-community/kube-prometheus-stack
   version: 12.1.0
   namespace: monitoring
@@ -29,12 +29,12 @@ releases:
     - monitoring/logs
 - name: logs
   installed: {{ .Values.elk.enabled }}
-  <<: *default
+  <<: *infra_default
   namespace: monitoring
   chart: rbkmoney/elk
 - name: netpolicy
   installed: {{ .Values.cilium.enabled }}
-  <<: *default
+  <<: *infra_default
   chart: ./services/netpolicy
   needs:
   - kube-system/cilium

@@ -1,4 +1,4 @@
-version: v0.135.0
+version: v0.137.0
 dependencies:
 - name: consul
   repository: https://charts.helm.sh/stable
@@ -15,66 +15,6 @@ dependencies:
 - name: statefull
   repository: https://rbkmoney.github.io/charts
   version: 0.1.13
-- name: statefull
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.13
-- name: stateless
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.11
-- name: stateless
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.11
-- name: stateless
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.11
-- name: stateless
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.11
-- name: stateless
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.11
-- name: stateless
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.11
-- name: stateless
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.11
-- name: stateless
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.11
-- name: stateless
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.11
-- name: stateless
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.11
-- name: stateless
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.11
-- name: stateless
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.11
-- name: stateless
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.11
-- name: stateless
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.11
-- name: stateless
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.11
-- name: stateless
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.11
-- name: stateless
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.11
-- name: stateless
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.11
-- name: stateless
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.11
 - name: stateless
   repository: https://rbkmoney.github.io/charts
   version: 0.1.11
@@ -84,5 +24,5 @@ dependencies:
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.7.0
-digest: sha256:9385fa07293106752ccc144e6bffe3e1b7ce7d4f19820eec9bbeeb7e8a447045
-generated: "2020-12-17T17:26:46.591636545+03:00"
+digest: sha256:02b52b44ae162c8decfed30f8c1f6117551a02f3f30fae72e2f24de55b42b3a7
+generated: "2021-01-12T11:21:25.807426+03:00"
