@@ -1,0 +1,124 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "magista-kafka.fullname" . }}
+  labels:
+    {{- include "magista-kafka.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "magista-kafka.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+      {{- include "magista-kafka.selectorLabels" . | nindent 8 }}
+      annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        magista-kafka/properties-hash: {{ include "magista-kafka.propertiesHash" . }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "magista-kafka.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: api
+              containerPort: {{ .Values.service.ports.api }}
+              protocol: TCP
+            - name: management
+              containerPort: {{ .Values.service.ports.management }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: management
+            initialDelaySeconds: 120
+            timeoutSeconds: 3
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: management
+            initialDelaySeconds: 120
+            timeoutSeconds: 3
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/magista-kafka/entrypoint.sh
+              subPath: entrypoint.sh
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/magista-kafka/logback.xml
+              subPath: logback.xml
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/magista-kafka/loggers.xml
+              subPath: loggers.xml
+              readOnly: true
+          command: ["/opt/magista-kafka/entrypoint.sh"]
+          args:
+            - -jar
+            - /opt/magista/magista.jar
+            - --logging.config=/opt/magista-kafka/logback.xml
+            - --spring.application.name=magista-kafka
+            - --spring.datasource.hikari.maximum-pool-size={{ .Values.datasource.poolsize }}
+            - --spring.datasource.hikari.data-source-properties.prepareThreshold=0
+            - --spring.datasource.hikari.leak-detection-threshold=5300
+            - --spring.datasource.hikari.max-lifetime=300000
+            - --spring.datasource.hikari.idle-timeout=30000
+            - --spring.datasource.hikari.minimum-idle=2
+            - --flyway.schemas=mst
+            - --payouter.pooling.url=http://payouter:8022/repo
+            - --hellgate.url=http://hellgate:8022/v1/processing/partymgmt
+            - --hellgate.timeout=30000
+            - --columbus.url=http://columbus:8022/repo
+            - --retry-policy.maxAttempts=-1
+            - --kafka.bootstrap-servers={{ .Values.kafka.bootstrapServers }}
+            - --kafka.topics.invoicing={{ .Values.kafka.topicInvoiceName }}
+            - --kafka.client-id=magista
+            - --kafka.consumer.group-id=magista-invoicing-1
+            - --kafka.consumer.concurrency=7
+          env:
+            - name: LOGBACK_SERVICE_NAME
+              value: "magista-kafka"
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "magista-kafka.fullname" . }}
+            items:
+              - key: entrypoint.sh
+                path: entrypoint.sh
+                mode: 0755
+              - key: logback.xml
+                path: logback.xml
+              - key: loggers.xml
+                path: loggers.xml
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

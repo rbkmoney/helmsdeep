@@ -1,0 +1,6 @@
+apiVersion: v2
+name: magista-kafka
+description: Magista service (event statistics)
+type: application
+version: 2.0.12
+appVersion: c89d5cae8cf397014828067bcca7e1db1b7078e8

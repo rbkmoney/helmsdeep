@@ -98,6 +98,15 @@ releases:
   needs:
   - default/vault
   - default/kafka
+- name: magista-kafka
+  <<: *default
+  labels:
+    logfmt: json
+  needs:
+    - default/vault
+    - default/postgres
+    - default/kafka
+  wait: true
 - name: dominant
   <<: *default
   labels:
