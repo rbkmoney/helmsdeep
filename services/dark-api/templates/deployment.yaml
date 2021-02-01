@@ -1,0 +1,131 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dark-api.fullname" . }}
+  labels:
+    {{- include "dark-api.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "dark-api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+      {{- include "dark-api.selectorLabels" . | nindent 8 }}
+      annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        dark-api/properties-hash: {{ include "dark-api.propertiesHash" . }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "dark-api.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: api
+              containerPort: {{ .Values.service.ports.api }}
+              protocol: TCP
+            - name: management
+              containerPort: {{ .Values.service.ports.management }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /dark-api/v1/actuator/health
+              port: management
+            initialDelaySeconds: 120
+            timeoutSeconds: 3
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /dark-api/v1/actuator/health
+              port: management
+            initialDelaySeconds: 120
+            timeoutSeconds: 3
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/dark-api/entrypoint.sh
+              subPath: entrypoint.sh
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/dark-api/logback.xml
+              subPath: logback.xml
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/dark-api/loggers.xml
+              subPath: loggers.xml
+              readOnly: true
+          command: ["/opt/dark-api/entrypoint.sh"]
+          args:
+            - -jar
+            - /opt/dark-api/dark-api.jar
+            - --logging.config=/opt/dark-api/logback.xml
+            - --magista.client.adapter.url={{ .Values.clients.magista.client.adapter.url }}
+            - --magista.client.adapter.networkTimeout={{ .Values.clients.magista.client.adapter.networkTimeout }}
+            - --claimmanagement.client.adapter.url={{ .Values.clients.claimmanagement.client.adapter.url }}
+            - --claimmanagement.client.adapter.networkTimeout={{ .Values.clients.claimmanagement.client.adapter.networkTimeout }}
+            - --conversations.url={{ .Values.clients.conversations.url }}
+            - --conversations.networkTimeout={{ .Values.clients.conversations.networkTimeout }}
+            - --questionary-aggr-proxy.url={{ .Values.clients.questionary-aggr-proxy.url }}
+            - --questionary-aggr-prox.networkTimeout={{ .Values.clients.questionary-aggr-prox.networkTimeout }}
+            - --questionary.url={{ .Values.clients.questionary.url }}
+            - --questionary.networkTimeout={{ .Values.clients.questionary.networkTimeout }}
+            - --filestorage.client.adapter.url={{ .Values.clients.filestorage.client.adapter.url }}
+            - --filestorage.client.adapter.networkTimeout={{ .Values.clients.filestorage.client.adapter.networkTimeout }}
+            - --partyManagement.url={{ .Values.clients.partyManagement.url }}
+            - --partyManagement.networkTimeout={{ .Values.clients.partyManagement.networkTimeout }}
+            - --cabi.url={{ .Values.clients.cabi.url }}
+            - --cabi.networkTimeout={{ .Values.clients.cabi.networkTimeout }}
+            - --dominant.url={{ .Values.clients.dominant.url }}
+            - --dominant.networkTimeout={{ .Values.clients.dominant.networkTimeout }}
+            - --dudoser.url={{ .Values.clients.dudoser.url }}
+            - --dudoser.networkTimeout={{ .Values.clients.dudoser.networkTimeout }}
+            - --keycloak.auth-server-url={{ .Values.keycloak.auth-server-url }} \
+            - --keycloak.realm-public-key.file-path="/opt/dark-api/secret" \
+            - --keycloak.realm=external \
+            - --keycloak.resource=common-api \
+            - --server.servlet.context-path=/dark-api/v1 \
+          env:
+            - name: LOGBACK_SERVICE_NAME
+              value: "dark-api"
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "dark-api.fullname" . }}
+            items:
+              - key: entrypoint.sh
+                path: entrypoint.sh
+                mode: 0755
+              - key: logback.xml
+                path: logback.xml
+              - key: loggers.xml
+                path: loggers.xml
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

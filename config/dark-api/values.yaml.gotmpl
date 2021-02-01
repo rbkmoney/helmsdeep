@@ -1,0 +1,10 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+entrypoint: |
+  {{- readFile "entrypoint.sh" | nindent 2 }}
+loggers: |
+  {{- readFile "loggers.xml" | nindent 2 }}
+logback: |
+  {{- readFile "../logs/logback.xml" | nindent 2 }}

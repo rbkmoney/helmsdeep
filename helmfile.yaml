@@ -98,6 +98,12 @@ releases:
   needs:
   - default/vault
   - default/kafka
+- name: dark-api
+  <<: *default
+  labels:
+    logfmt: json
+  needs:
+    - default/keycloak
 - name: dominant
   <<: *default
   labels:

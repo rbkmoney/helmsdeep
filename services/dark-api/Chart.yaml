@@ -1,0 +1,6 @@
+apiVersion: v2
+name: dark-api
+description: Dark-api service
+type: application
+version: 0.1.11
+appVersion: 7c23f823e4914981ac1acf194056d727d615a1e4

@@ -1,0 +1,100 @@
+image:
+  repository: docker.io/rbkmoney/dark-api
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: ""
+
+podSecurityContext: {}
+# fsGroup: 2000
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podLabels:
+  prometheus.metrics.java.enabled: "true"
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+# runAsUser: 1000
+
+service:
+  type: ClusterIP
+  ports:
+    api: 8022
+    management: 8023
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+#   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+clients:
+  magista:
+    client:
+      adapter:
+        url: http://magista.default.svc.cluster.local:8022/v2/stat
+        networkTimeout: 90000
+  claimmanagement:
+    client:
+      adapter:
+        url: http://claim-management.default.svc.cluster.local:8022/v1/cm
+        networkTimeout: 30000
+  conversations:
+    url: http://messages.default.svc.cluster.local:8022:/v1/messages
+    networkTimeout: 30000
+  questionary-aggr-proxy:
+    url: http://questionary-aggr-proxy.default.svc.cluster.local:8022/v1/questionary/proxy
+    networkTimeout: 30000
+  questionary:
+    url: http://questionary.default.svc.cluster.local:8022/v1/questionary
+    networkTimeout: 30000
+  filestorage:
+    client:
+      adapter:
+        url: http://file-storage.default.svc.cluster.local:8022/file_storage
+        networkTimeout: 30000
+  partyManagement:
+    url: http://hellgate.default.svc.cluster.local:8022/v1/processing/partymgmt
+    networkTimeout: 30000
+  cabi:
+    url: http://cabi.default.svc.cluster.local:8022/v1/cabi
+    networkTimeout: 30000
+  dominant:
+    url: http://dominant.default.svc.cluster.local:8022/v1/domain/repository_client
+    networkTimeout: 30000
+  dudoser:
+    url: http://dudoser.default.svc.cluster.local:8022/dudos
+    networkTimeout: 30000
+
+keycloak:
+  auth-server-url: http://auth.default.svc.cluster.local:8022/auth
