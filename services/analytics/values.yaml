@@ -66,6 +66,18 @@ kafka:
   topicPayoutName: payout
   topicPartyName: mg-events-party
 
+columbus:
+  url: http://columbus.default.svc.cluster.local:8022/repo
+  networkTimeout: 60000
+hellgate:
+  url: http://hellgate.default.svc.cluster.local:8022/v1/processing/invoicing
+  networkTimeout: 60000
+payouter:
+  url: http://payouter.default.svc.cluster.local:8022/payout/management
+  networkTimeout: 60000
+dominant:
+  url: http://dominant.default.svc.cluster.local:8022/v1/domain/repository_client
+  networkTimeout: 60000
 
 datasource:
   poolsize: 20
