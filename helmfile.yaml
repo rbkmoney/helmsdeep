@@ -93,6 +93,18 @@ releases:
   - default/vault
   - default/postgres
   wait: true
+- name: analytics
+  <<: *default
+  needs:
+    - default/vault
+    - default/postgres
+    - default/kafka
+    - default/clickhouse
+    - default/columbus
+    - default/hellgate
+    - default/payouter
+    - default/dominant
+  wait: true
 - name: hooker
   <<: *default
   needs:

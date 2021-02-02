@@ -60,10 +60,12 @@ affinity: {}
 
 kafka:
   bootstrapServers: kafka-headless:9092
-  topicInvoiceConcurrency: 7
-  topicCustomerConcurrency: 2
+  topicConcurrency: 7
+  topicPrefix: analytics-v10
   topicInvoiceName: mg-events-invoice
-  topicCustomerName: mg-events-customer
+  topicPayoutName: payout
+  topicPartyName: mg-events-party
+
 
 datasource:
   poolsize: 20

@@ -12,15 +12,21 @@ logback: |
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
-  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-hook"
+  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-analytics"
   vault.hashicorp.com/agent-inject-template-application.properties: |
     {{`
-    {{- with secret "database/creds/db-app-hook" -}}
-    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/hook?sslmode=disable
+    {{- with secret "database/creds/db-app-analytics" -}}
+    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/analytics?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
-    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/hook?sslmode=disable
+    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/analytics?sslmode=disable
     spring.flyway.user={{ .Data.username }}
     spring.flyway.password={{ .Data.password }}
+    postgres.db.url=jdbc:postgresql://postgres-postgresql:5432/analytics?sslmode=disable
+    postgres.db.user={{ .Data.username }}
+    postgres.db.password={{ .Data.password }}
+    clickhouse.db.url=jdbc:clickhouse://clickhouse:8123/analytics
+    clickhouse.db.user={{ .Data.clickhouse.username }}
+    clickhouse.db.password={{ .Data.clickhouse.password }}
     {{- end }}
     `}}
