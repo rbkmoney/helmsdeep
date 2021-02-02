@@ -25,7 +25,7 @@ podAnnotations:
     postgres.db.url=jdbc:postgresql://postgres-postgresql:5432/analytics?sslmode=disable
     postgres.db.user={{ .Data.username }}
     postgres.db.password={{ .Data.password }}
-    clickhouse.db.url=jdbc:clickhouse://clickhouse:8123/analytics
+    clickhouse.db.url=jdbc:clickhouse://clickhouse:8123/analytic
     clickhouse.db.user={{ .Data.clickhouse.username }}
     clickhouse.db.password={{ .Data.clickhouse.password }}
     {{- end }}
