@@ -3,4 +3,4 @@ name: analytics
 description: Service for analytics
 type: application
 version: 0.0.1-SNAPSHOT
-appVersion: c7adaba7f35e5198649d7a7d71f697f29cecf593
+appVersion: 09b7cedb8bb9e10ae5eacd12c3b3b99a7f7ce75c
