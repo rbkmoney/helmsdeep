@@ -22,8 +22,8 @@ releases:
 #External releases
 - name: kafka
   <<: *default
-  chart: incubator/kafka
-  version: 0.21.2
+  chart: bitnami/kafka
+  version: 12.7.3
 - name: consul
   <<: *default
   chart: stable/consul
