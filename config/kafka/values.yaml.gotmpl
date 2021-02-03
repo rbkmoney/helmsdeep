@@ -1,5 +1,9 @@
 replicas: 1
 
+persistence:
+#  enabled: false
+  storageClass: "hostpath"
+
 podLabels:
   selector.cilium.rbkmoney/release: {{ .Release.Name }}
 
@@ -12,6 +16,8 @@ zookeeper:
   # url: "zookeeper"
   # port: 2181
   replicaCount: 1
+  persistence:
+    enabled: false
 
 ciliumPolicies:
   - filters:
