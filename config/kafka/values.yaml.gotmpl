@@ -1,9 +1,5 @@
 replicas: 1
 
-persistence:
-#  enabled: false
-  storageClass: "hostpath"
-
 podLabels:
   selector.cilium.rbkmoney/release: {{ .Release.Name }}
 
