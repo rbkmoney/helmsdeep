@@ -4,8 +4,8 @@ dependencies:
   repository: https://charts.helm.sh/stable
   version: 3.9.5
 - name: kafka
-  repository: https://charts.helm.sh/incubator
-  version: 0.21.2
+  repository: https://charts.bitnami.com/bitnami
+  version: 12.7.3
 - name: keycloak
   repository: https://codecentric.github.io/helm-charts
   version: 9.0.1
@@ -17,12 +17,12 @@ dependencies:
   version: 0.1.13
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.11
+  version: 0.1.13
 - name: test-transaction
   repository: https://rbkmoney.github.io/charts
   version: 0.1.1
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.7.0
-digest: sha256:02b52b44ae162c8decfed30f8c1f6117551a02f3f30fae72e2f24de55b42b3a7
-generated: "2021-01-12T11:21:25.807426+03:00"
+digest: sha256:fccd86badf75028ffd6d4fc55f16e78a4542dd67a64f7815d9c8e0d3ef59f969
+generated: "2021-02-02T16:35:02.331818894+03:00"
