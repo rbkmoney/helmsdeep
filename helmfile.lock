@@ -15,9 +15,12 @@ dependencies:
 - name: raw
   repository: https://rbkmoney.github.io/charts
   version: 0.1.1
+- name: raw
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.1
 - name: statefull
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.16
+  version: 0.1.17
 - name: stateless
   repository: https://rbkmoney.github.io/charts
   version: 0.1.13
@@ -27,5 +30,5 @@ dependencies:
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.7.0
-digest: sha256:6a9c0ccf73029039e2f70e78e397b1447f9cae8daeafe761f4f8f3bb690cbf27
-generated: "2021-02-16T11:20:06.187129+03:00"
+digest: sha256:56e9201e3c92a99e632e74489bc1dffab6b4d17aed4ef076a260284c0f3f2f6c
+generated: "2021-02-16T18:03:16.661645+03:00"
