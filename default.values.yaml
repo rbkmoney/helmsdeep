@@ -1,4 +1,6 @@
 cilium:
-  enabled: true
+  enabled: false
 elk:
   enabled: false
+
+keycloakExtUrl: "https://some-site.example.com"
