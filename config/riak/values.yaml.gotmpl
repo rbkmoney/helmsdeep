@@ -10,6 +10,8 @@ configMap:
   data: 
     user.conf: |
       {{- readFile "user.yaml" | nindent 6 }}
+    riak-cluster.sh: |
+      {{- readFile "cm.yaml" | nindent 6 }}
 
 service:
   type: ClusterIP
@@ -40,6 +42,10 @@ env:
     value: "riak"
   - name: COORDINATOR_NODE
     value: {{ .Release.Name }}-0.{{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local
+  - name: ipv6
+    value: yep
+  - name: WAIT_FOR_ERLANG
+    value: 400
       
 volumeMounts:
   - name: config-volume
@@ -48,11 +54,15 @@ volumeMounts:
     readOnly: true
   - name: data
     mountPath: /var/lib/riak
-
+  - name: config-volume
+    mountPath: /riak-cluster.sh
+    subPath: riak-cluster.sh
+    readOnly: true
 volumes:
   - name: config-volume
     configMap:
       name: {{ .Release.Name }}
+      defaultMode: 0755
   - name: data
     emptyDir: {}
 
