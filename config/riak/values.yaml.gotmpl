@@ -13,6 +13,7 @@ configMap:
 
 service:
   type: ClusterIP
+  headless: true
   ports:
     - name: http
       port: 8098
@@ -57,7 +58,6 @@ volumes:
 
 storage:
   accessModes: ["ReadWriteOnce"]
-  storageClassName: "hostpath"
   resources:
      requests:
        storage: 3Gi
@@ -65,3 +65,8 @@ storage:
 podSecurityContext:
   fsGroup: 102
 
+securityContext:
+ capabilities:
+   add: 
+   - "SYS_CHROOT"
+   - "NET_RAW"
