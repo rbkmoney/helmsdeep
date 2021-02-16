@@ -168,3 +168,19 @@ Login as the elastic user. The password can be obtained with the following comma
 ```
 kubectl get secret rbk-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo
 ```
+
+Доступ к grafana и синк dashboards
+-----------
+
+Используем kubectl port-forward
+
+```
+kubectl -n monitoring port-forward <grafana-pod> 3000
+```
+grafana доступна в браузере https://localhost:3000. Получить пароль для входа:
+
+```
+kubectl get secret --namespace monitoring prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+```
+
+```
