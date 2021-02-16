@@ -1,0 +1,61 @@
+configmap:
+  data:
+    init.vault.sh: |
+      # TODO WHACK! Replace line below with helm hook
+      # to ensure init.vault.sh run AFTER Vault has been started
+      sleep 15
+      vault secrets enable database
+      sleep 15
+      vault write database/config/shumway \
+          plugin_name=postgresql-database-plugin \
+          allowed_roles="*" \
+          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql.default:5432/shumway?sslmode=disable" \
+          username="postgres" \
+          password="H@ckM3"
+      vault write database/roles/db-app \
+          db_name=shumway \
+          creation_statements="Create schema if not exists shm;
+          CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
+          GRANT CREATE ON DATABASE shumway TO \"{{name}}\";
+          GRANT ALL ON schema shm TO \"{{name}}\";
+          GRANT ALL ON ALL TABLES IN SCHEMA shm TO \"{{name}}\";
+          GRANT ALL ON ALL SEQUENCES IN SCHEMA shm TO \"{{name}}\";" \
+          default_ttl="1h" \
+          max_ttl="240h"
+      vault write database/config/hook \
+          plugin_name=postgresql-database-plugin \
+          allowed_roles="*" \
+          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql.default:5432/hook?sslmode=disable" \
+          username="postgres" \
+          password="H@ckM3"
+      vault write database/roles/db-app-hook \
+          db_name=hook \
+          creation_statements="Create schema if not exists hook;
+          CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
+          GRANT CREATE ON DATABASE hook TO \"{{name}}\";
+          GRANT ALL ON schema hook TO \"{{name}}\";
+          GRANT ALL ON ALL TABLES IN SCHEMA hook TO \"{{name}}\";
+          GRANT ALL ON ALL SEQUENCES IN SCHEMA hook TO \"{{name}}\";" \
+          default_ttl="1h" \
+          max_ttl="24h"
+  
+      vault auth enable kubernetes
+      vault write auth/kubernetes/config \
+             token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+             kubernetes_host=https://${KUBERNETES_PORT_443_TCP_ADDR}:443 \
+             kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+  
+      vault write auth/kubernetes/role/db-app \
+          bound_service_account_names="*" \
+          bound_service_account_namespaces=default \
+          policies=db-app \
+          ttl=1h
+  
+      vault policy write db-app /vault-init/db-policy.hcl
+    db-policy.hcl: |
+      path "database/creds/db-app" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-hook" {
+        capabilities = ["read"]
+      }

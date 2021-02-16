@@ -1,10 +1,16 @@
+bases:
+  - environments.yaml
+---
+
+{{ if .Values.cilium.enabled }}
 {{ readFile "hf-templates.yaml" }}
+{{ else }}
+{{ readFile "hf-templates-cnp-disabled.yaml" }}
+{{ end }}
 
 repositories:
 - name: stable
   url: https://charts.helm.sh/stable
-- name: incubator
-  url: https://charts.helm.sh/incubator
 - name: bitnami
   url: https://charts.bitnami.com/bitnami
 - name: hashicorp
@@ -33,21 +39,27 @@ releases:
   chart: bitnami/postgresql
   version: 9.2.0
   wait: true
+- name: vault-cm
+  <<: *default
+  chart: rbkmoney/raw  
 - name: vault
   <<: *default
   chart: hashicorp/vault
   version: 0.7.0
   needs:
   - {{ .Namespace | default "default" }}/postgres
+  - {{ .Namespace | default "default" }}/vault-cm
   wait: true
 - name: keycloak-realms
   <<: *default
+  chart: rbkmoney/raw
 - name: keycloak
   <<: *default
   chart: codecentric/keycloak
   version: 9.0.1
   needs:
   - {{ .Namespace | default "default" }}/postgres
+  - {{ .Namespace | default "default" }}/keycloak-realms
   wait: true
 #Rbkmoney processing releases
 - name: holmes

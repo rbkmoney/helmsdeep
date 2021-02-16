@@ -1,0 +1,6 @@
+# -*- mode: yaml -*-
+configMap:
+  data:
+    realms.json: |
+      {{- tpl (readFile "realms.json.gotmpl") . | nindent 6 }}
+
