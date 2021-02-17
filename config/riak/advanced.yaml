@@ -100,5 +100,11 @@
             ]
       }
     ]
-}
+  },
+  %% Extra Erlang VM parameters
+  {vm_args,
+   [
+     {'-proto_dist', 'inet6_tcp'}
+   ]
+  }
 ].
