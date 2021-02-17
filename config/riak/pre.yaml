@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Add standard config items
+cat <<END >>$RIAK_CONF
+nodename = $CLUSTER_NAME@$HOST
+distributed_cookie = $CLUSTER_NAME
+listener.protobuf.internal = $HOSTIP:$PB_PORT
+listener.http.internal = $HOSTIP:$HTTP_PORT
+mdc.cluster_manager = $HOSTIP:9080
+END
+
+sed -i 's/{cluster_mgr, {"0.0.0.0", 9080 } }/{cluster_mgr, {"0.0.0.0", 9080 } },\n   {handoff_ip,"0.0.0.0"}/' /etc/riak/advanced.config
+sed -i "s/0.0.0.0/$HOSTIP/g" /etc/riak/advanced.config
+
+# Maybe add user config items
+if [ -s $USER_CONF ]; then
+  cat $USER_CONF >>$RIAK_CONF
+fi

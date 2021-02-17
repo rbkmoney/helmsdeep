@@ -29,42 +29,20 @@ export HTTP_PORT=${HTTP_PORT:-8098}
 export CLUSTER_NAME=${CLUSTER_NAME:-riak}
 
 # The COORDINATOR_NODE is the first node in a cluster to which other nodes will eventually join
-export COORDINATOR_NODE=${COORDINATOR_NODE:-$HOSTNAME}
+export COORDINATOR_NODE=${COORDINATOR_NODE:-$(hostname -s).riak-headless}
 if [[ ! -z "$ipv6" ]]; then
 export COORDINATOR_NODE_HOST=$(ping -c1 $COORDINATOR_NODE | awk '/^PING/ {print $3}' | sed -r 's/\((.*)\):/\1/g')||'::1'
 else
 export COORDINATOR_NODE_HOST=$(ping -c1 $COORDINATOR_NODE | awk '/^PING/ {print $3}' | sed -r 's/\((.*)\):/\1/g')||'127.0.0.1'
 fi
 # Use ping to discover our HOSTNAME because it's easier and more reliable than other methods
-export HOST=${HOSTNAME:-$(hostname -s)}
-export HOSTIP=$(ping -c1 $COORDINATOR_NODE | awk '/^PING/ {print $3}' | sed -r 's/\((.*)\):/\1/g')
+export HOST=${NODENAME:-$(hostname -s).riak-headless}
+export HOSTIP=$(ping -c1 $HOST | awk '/^PING/ {print $3}' | sed -r 's/\((.*)\):/\1/g')
 # Run all prestart scripts
 PRESTART=$(find /etc/riak/prestart.d -name *.sh -print | sort)
 for s in $PRESTART; do
   . $s
 done
 # Start the node and wait until fully up
-$RIAK start
-$RIAK_ADMIN wait-for-service riak_kv
-
-# Run all poststart scripts
-POSTSTART=$(find /etc/riak/poststart.d -name *.sh -print | sort)
-for s in $POSTSTART; do
-  . $s
-done
-
-# Trap SIGTERM and SIGINT and tail the log file indefinitely
-tail -n 1024 -f /var/log/riak/console.log &
-PID=$!
-trap "$RIAK stop; kill $PID" SIGTERM SIGINT
-
-# avoid log spamming and unnecessary exit once `riak ping` fails
-set +ex
-while :
-do
-  riak ping >/dev/null 2>&1
-  if [ $? -ne 0 ]; then
-    exit 1
-  fi
-  sleep 10
-done
+#
+sleep 5000
