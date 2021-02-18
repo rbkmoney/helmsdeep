@@ -4,3 +4,7 @@ elk:
   enabled: false
 
 keycloakExtUrl: "https://some-site.example.com"
+
+services:
+  global:
+    ipv6only: true
