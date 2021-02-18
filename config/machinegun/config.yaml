@@ -25,7 +25,7 @@ consuela:
   presence:
     check_interval: 5s
   registry:
-    nodename: consul-0
+    nodename: consul-server-0
     session_ttl: 30s
     session_renewal_interval: 10s
   discovery:
@@ -37,7 +37,7 @@ logging:
 # Consul client settings.
 # Required when distributed machine registry is enabled.
 consul:
-  url: http://consul:8500
+  url: http://consul-server:8500
   connect_timeout: 200ms
   recv_timeout: 1s
 
