@@ -7,10 +7,27 @@ distributed_cookie = $CLUSTER_NAME
 listener.protobuf.internal = $HOSTIP:$PB_PORT
 listener.http.internal = $HOSTIP:$HTTP_PORT
 mdc.cluster_manager = $HOSTIP:9080
+handoff.ip = $HOSTIP
 END
 
-sed -i 's/{cluster_mgr, {"0.0.0.0", 9080 } }/{cluster_mgr, {"0.0.0.0", 9080 } },\n   {handoff_ip,"0.0.0.0"}/' /etc/riak/advanced.config
-sed -i "s/0.0.0.0/$HOSTIP/g" /etc/riak/advanced.config
+rm /etc/riak/advanced.config
+cat<< END > /etc/riak/vm.args
++scl false
++sfwi 500
++P 256000
++e 256000
+-env ERL_CRASH_DUMP /var/log/riak/erl_crash.dump
+-env ERL_FULLSWEEP_AFTER 0
++Q 262144
++A 64
+-setcookie riak
+-name $CLUSTER_NAME@$HOST
++K true
++W w
+-smp enable
++zdbbl 32768
+-proto_dist inet6_tcp
+END
 
 # Maybe add user config items
 if [ -s $USER_CONF ]; then

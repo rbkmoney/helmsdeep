@@ -1,11 +1,6 @@
 server:
   extraLabels: 
     selector.cilium.rbkmoney/release: {{ .Release.Name }}
-  dev:
-    enabled: true
-  readinessProbe:
-    enabled: true
-    path: "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
   volumes:
     - name: vault-init
       configMap:
@@ -18,14 +13,11 @@ server:
     - mountPath: /vault-init
       name: vault-init
 
-  postStart:
-    - /bin/sh
-    - -c
-    - "/vault-init/init.vault.sh"
-
 ciliumPolicies:
   - filters:
     - port: 5432
       type: TCP
     name: postgres
     namespace: default
+
+
