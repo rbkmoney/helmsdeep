@@ -44,5 +44,27 @@ for s in $PRESTART; do
   . $s
 done
 # Start the node and wait until fully up
-#
-sleep 5000
+$RIAK start
+$RIAK_ADMIN wait-for-service riak_kv
+
+# Run all poststart scripts
+POSTSTART=$(find /etc/riak/poststart.d -name *.sh -print | sort)
+for s in $POSTSTART; do
+  . $s
+done
+
+# Trap SIGTERM and SIGINT and tail the log file indefinitely
+tail -n 1024 -f /var/log/riak/console.log &
+PID=$!
+trap "$RIAK stop; kill $PID" SIGTERM SIGINT
+
+# avoid log spamming and unnecessary exit once `riak ping` fails
+set +ex
+while :
+do
+  riak ping >/dev/null 2>&1
+  if [ $? -ne 0 ]; then
+    exit 1
+  fi
+  sleep 10
+done
