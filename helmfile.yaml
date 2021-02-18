@@ -32,8 +32,7 @@ releases:
   version: 12.7.3
 - name: consul
   <<: *default
-  chart: stable/consul
-  version: 3.9.5
+  chart: hashicorp/consul
 - name: postgres
   <<: *default
   chart: bitnami/postgresql
