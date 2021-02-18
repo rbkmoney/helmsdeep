@@ -21,7 +21,8 @@ extraEnv: |
     value: >-
       -XX:+UseContainerSupport
       -XX:MaxRAMPercentage=50.0
-      -Djava.net.preferIPv4Stack=true
+      -Djava.net.preferIPv4Stack=false
+      -Djava.net.preferIPv6Addresses=true
       -Djboss.modules.system.pkgs=$JBOSS_MODULES_SYSTEM_PKGS
       -Djava.awt.headless=true
   - name: KEYCLOAK_IMPORT
