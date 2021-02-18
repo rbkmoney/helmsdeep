@@ -18,9 +18,7 @@ configMap:
     oopsBody2: |
       {{- readFile "../api-common/oops-bodies/sad-kitty2" | nindent 6 }}
     vm.args: |
-      -sname {{ .Release.Name }}
-      -setcookie {{ .Release.Name }}_cookie
-      -kernel inetrc '"./erl_inetrc"''
+      {{- tpl (readFile "../vm/erl_vm_args.gotmpl") . | nindent 6 }}
 
 secret:
   data:

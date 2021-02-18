@@ -1,0 +1,5 @@
+-sname {{ .Release.Name }}
+-setcookie {{ .Release.Name }}_cookie
+
+-proto_dist inet6_tcp
+-kernel inetrc '"./erl_inetrc"'

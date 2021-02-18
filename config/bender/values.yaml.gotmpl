@@ -14,9 +14,7 @@ configMap:
     erl_inetrc: |
       {{- readFile "../vm/erl_inetrc" | nindent 6 }}
     vm.args: |
-      -sname {{ .Release.Name }}
-      -setcookie {{ .Release.Name }}_cookie
-      -kernel inetrc '"./erl_inetrc"''
+      {{- tpl (readFile "../vm/erl_vm_args.gotmpl") . | nindent 6 }}
     
 metrics:
   serviceMonitor:

@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: docker.io/rbkmoney/cds
-  tag: 5cb8147a84bd446b0c9377994aadec866d16426e
+  tag: c0661c4d5abb85f7728bd0e816760670aa248251
   pullPolicy: IfNotPresent
 
 configMap:
@@ -14,8 +14,7 @@ configMap:
     erl_inetrc: |
       {{- readFile "../vm/erl_inetrc" | nindent 6 }}
     vm.args: |
-      -sname {{ .Release.Name }}
-      -setcookie {{ .Release.Name }}_cookie
+      {{- tpl (readFile "../vm/erl_vm_args.gotmpl") . | nindent 6 }}
 
 secret:
   data:

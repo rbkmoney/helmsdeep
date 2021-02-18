@@ -14,8 +14,7 @@ configMap:
     fetchKeycloakPubkey: |
       {{- readFile "../api-common/fetch-keycloak-pubkey.sh" | nindent 6 }}
     vm.args: |
-      -sname {{ .Release.Name }}
-      -setcookie {{ .Release.Name }}_cookie
+      {{- tpl (readFile "../vm/erl_vm_args.gotmpl") . | nindent 6 }}
 
 secret:
   data:
