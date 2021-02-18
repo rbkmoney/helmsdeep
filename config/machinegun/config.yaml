@@ -1,10 +1,12 @@
 service_name: machinegun
 
 erlang:
+  ipv6: true
+  disable_dns_cache: true
   secret_cookie_file: /opt/machinegun/etc/cookie
 
 woody_server:
-  ip: "0.0.0.0"
+  ip: "::"
   port: 8022
   max_concurrent_connections: 8000
   http_keep_alive_timeout: 3000ms
