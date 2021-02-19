@@ -36,7 +36,7 @@ releases:
 - name: postgres
   <<: *default
   chart: bitnami/postgresql
-  version: 9.2.0
+  version: 9.7.2
   wait: true
 - name: vault-cm
   <<: *default
@@ -44,7 +44,6 @@ releases:
 - name: vault
   <<: *default
   chart: hashicorp/vault
-  version: 0.7.0
   needs:
   - {{ .Namespace | default "default" }}/postgres
   - {{ .Namespace | default "default" }}/vault-cm
@@ -55,7 +54,6 @@ releases:
 - name: keycloak
   <<: *default
   chart: codecentric/keycloak
-  version: 9.0.1
   needs:
   - {{ .Namespace | default "default" }}/postgres
   - {{ .Namespace | default "default" }}/keycloak-realms
@@ -146,7 +144,7 @@ releases:
   <<: *generic_stateless
 - name: test-transaction
   <<: *default
-  chart: rbkmoney/test-transaction
+  chart: ../charts/charts/test-transaction
   needs:
     - {{ .Namespace | default "default" }}/shumway
     - {{ .Namespace | default "default" }}/dominant

@@ -10,14 +10,21 @@ repositories:
 - name: rbkmoney
   url: https://rbkmoney.github.io/charts
 
+{{ if .Values.elk.enabled }}
 releases:
 - name: prometheus
   <<: *infra_default
   chart: prometheus-community/kube-prometheus-stack
-  version: 12.1.0
   namespace: monitoring
   needs:
     - monitoring/logs
+{{ else }}
+releases:
+- name: prometheus
+  <<: *infra_default
+  chart: prometheus-community/kube-prometheus-stack
+  namespace: monitoring
+{{ end }}
 - name: logs
   installed: {{ .Values.elk.enabled }}
   <<: *infra_default
