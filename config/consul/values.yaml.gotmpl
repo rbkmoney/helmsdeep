@@ -1,0 +1,15 @@
+# -*- mode: yaml -*-
+
+global:
+  name: "consul"
+
+client:
+  enabled: false
+
+server:
+  replicas: 1
+  extraLabels: 
+    selector.cilium.rbkmoney/release: {{ .Release.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: {{ .Release.Name }}

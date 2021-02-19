@@ -1,6 +1,0 @@
-apiVersion: v2
-name: holmes
-description: Management shell
-type: application
-version: 0.1.0
-appVersion: 07f58e297c03bcd50dc4695ddbcfa4eb30c9928e

@@ -1,6 +1,0 @@
-apiVersion: v2
-name: cds
-description: Card Data Storage Service
-type: application
-version: 0.1.0
-appVersion: 5cb8147a84bd446b0c9377994aadec866d16426e

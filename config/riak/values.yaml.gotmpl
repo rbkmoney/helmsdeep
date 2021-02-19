@@ -2,6 +2,87 @@
 
 replicaCount: 1
 
-config:
-  user: |
-    {{- readFile "user.yaml" | nindent 4 }}
+image:
+  repository: docker.io/rbkmoney/riak-base
+  tag: f5b757c2ec73c7db1460c94a17a20a3b5799fde6
+
+configMap:
+  data: 
+    user.conf: |
+      {{- readFile "user.yaml" | nindent 6 }}
+    riak-cluster.sh: |
+      {{- readFile "cm.yaml" | nindent 6 }}
+    00-update-riak-conf.sh: |
+      {{- readFile "pre.yaml" | nindent 6 }}   
+
+service:
+  type: ClusterIP
+  headless: true
+  ports:
+    - name: http
+      port: 8098
+    - name: protobuf
+      port: 8087
+
+livenessProbe:
+  httpGet: null
+  exec:
+    command: ["riak", "ping"]
+  initialDelaySeconds: 60
+  periodSeconds: 20
+  timeoutSeconds: 15
+readinessProbe:
+  httpGet:
+    path: /types/default/props
+    port: http
+  initialDelaySeconds: 60
+  periodSeconds: 15
+  timeoutSeconds: 5
+      
+env:
+  - name: CLUSTER_NAME
+    value: "riak"
+  - name: COORDINATOR_NODE
+    value: {{ .Release.Name }}-0.{{ .Release.Name }}-headless
+  - name: ipv6
+    value: yep
+  - name: WAIT_FOR_ERLANG
+    value: 400
+      
+volumeMounts:
+  - name: config-volume
+    mountPath: /etc/riak/user.conf
+    subPath: user.conf
+    readOnly: true
+  - name: data
+    mountPath: /var/lib/riak
+  - name: config-volume
+    mountPath: /riak-cluster.sh
+    subPath: riak-cluster.sh
+    readOnly: true
+  - name: config-volume
+    mountPath: /etc/riak/prestart.d/00-update-riak-conf.sh
+    subPath: 00-update-riak-conf.sh
+    readOnly: true
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+  - name: data
+    emptyDir: {}
+
+storage:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+     requests:
+       storage: 3Gi
+
+podSecurityContext:
+  fsGroup: 102
+
+securityContext:
+ capabilities:
+   add: 
+   - "SYS_CHROOT"
+   - "NET_RAW"

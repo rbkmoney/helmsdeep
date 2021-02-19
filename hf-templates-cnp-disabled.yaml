@@ -1,0 +1,35 @@
+templates:
+  default: &default
+    chart: ./services/{{ .Release.Name }}
+    namespace: '{{ .Namespace | default "default" }}'
+    missingFileHandler: Warn
+    values:
+      - config/{{ .Release.Name }}/values.yaml
+      - config/{{ .Release.Name }}/values.yaml.gotmpl
+      - ciliumPolicies: []
+
+  default_generic: &generic_stateless
+    <<: *default
+    chart: rbkmoney/stateless
+
+  generic_json: &generic_stateless_json
+    <<: *default
+    chart: rbkmoney/stateless
+    values:
+      - config/{{ .Release.Name }}/values.yaml.gotmpl
+      - logs:
+          json: true
+      - ciliumPolicies: []
+
+  generic_statefull: &generic_statefull
+    <<: *default
+    chart: rbkmoney/statefull
+
+  generic_statefull_json: &generic_statefull_json
+    <<: *default
+    chart: rbkmoney/statefull
+    values:
+      - config/{{ .Release.Name }}/values.yaml.gotmpl
+      - logs:
+          json: true
+      - ciliumPolicies: []

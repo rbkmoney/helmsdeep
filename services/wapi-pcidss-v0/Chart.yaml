@@ -1,6 +1,0 @@
-apiVersion: v2
-name: wapi-pcidss-v0
-description: Wallet api pcidss
-type: application
-version: 0.1.0
-appVersion: d115d1933b58fcc2e94c1af7df5a58e1e04dc364

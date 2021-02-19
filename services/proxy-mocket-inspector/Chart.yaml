@@ -1,6 +1,0 @@
-apiVersion: v2
-name: proxy-mocket-inspector
-description: Mocket inspector
-type: application
-version: 0.1.0
-appVersion: 0ea276f2bb2ff2d25ba69c3c729552b81a75ece2

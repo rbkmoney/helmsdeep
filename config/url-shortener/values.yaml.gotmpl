@@ -2,10 +2,38 @@
 
 replicaCount: 1
 
-appConfig: |
-  {{- readFile "sys.config" | nindent 2 }}
-erlInetrc: |
-  {{- readFile "../vm/erl_inetrc" | nindent 2 }}
+image:
+  repository: docker.io/rbkmoney/url-shortener
+  tag: bf8673d8ed5629c393ae9c9b7f7f4c54689008bb
+  pullPolicy: IfNotPresent
+
+configMap:
+  data:
+    sys.config: |
+      {{- readFile "sys.config" | nindent 6 }}
+    erl_inetrc: |
+      {{- readFile "../vm/erl_inetrc" | nindent 6 }}
+    vm.args: |
+      {{- tpl (readFile "../vm/erl_vm_args.gotmpl") . | nindent 6 }}
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/shortener/releases/0.1/sys.config
+    subPath: sys.config
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/shortener/releases/0.1/vm.args
+    subPath: vm.args
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/shortener/erl_inetrc
+    subPath: erl_inetrc
+    readOnly: true
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
 
 metrics:
   serviceMonitor:
@@ -13,3 +41,10 @@ metrics:
     namespace: monitoring
     additionalLabels:
       release: prometheus
+
+ciliumPolicies:
+  - filters:
+    - port: 8022
+      type: TCP
+    name: machinegun
+    namespace: default

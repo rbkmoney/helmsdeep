@@ -2,25 +2,81 @@
 
 replicaCount: 1
 
-entrypoint: |
-  {{- readFile "entrypoint.sh" | nindent 2 }}
-loggers: |
-  {{- readFile "loggers.xml" | nindent 2 }}
-logback: |
-  {{- readFile "../logs/logback.xml" | nindent 2 }}
+image:
+  repository: docker.io/rbkmoney/shumway
+  tag: 13ad29447e8d8057b28d15905fad77b3299655c2
+  pullPolicy: IfNotPresent
+
+runopts:
+  command : ["/opt/shumway/entrypoint.sh"]
+configMap:
+  data:
+    entrypoint.sh: |
+      {{- readFile "entrypoint.sh" | nindent 6 }}
+    loggers.xml: |
+      {{- readFile "loggers.xml" | nindent 6 }}
+    logback.xml: |
+      {{- readFile "../logs/logback.xml" | nindent 6 }}
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/shumway/entrypoint.sh
+    subPath: entrypoint.sh
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/shumway/logback.xml
+    subPath: logback.xml
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/shumway/loggers.xml
+    subPath: loggers.xml
+    readOnly: true
+
+service:
+  type: ClusterIP
+  ports:
+    - name: api
+      port: 8022
+    - name: management
+      port: 8023
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: management
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: management
 
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
   vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app"
   vault.hashicorp.com/agent-inject-template-application.properties: |
-    {{`
-    {{- with secret "database/creds/db-app" -}}
+    {{`{{- with secret "database/creds/db-app" -}}
     spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/shumway?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
     spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/shumway?sslmode=disable
     spring.flyway.user={{ .Data.username }}
     spring.flyway.password={{ .Data.password }}
-    {{- end }}
-    `}}
+    {{- end }}`}}
+
+ciliumPolicies:
+  - filters:
+    - port: 8200
+      type: TCP
+    name: vault
+    namespace: default
+  - filters:
+    - port: 5432
+      type: TCP
+    name: postgres
+    namespace: default

@@ -2,17 +2,87 @@
 
 replicaCount: 1
 
-initializationTask:
-  create: true
+image:
+  repository: docker.io/rbkmoney/kds
+  tag: df8a550af175177486ec49cf3bdab64cf5db2d33
+  pullPolicy: IfNotPresent
 
-appConfig: |
-  {{- readFile "sys.config" | nindent 2 }}
-caCrt: |
-  {{- readFile "ca.crt" | nindent 2 }}
-serverCrt: |
-  {{- readFile "server.pem" | nindent 2 }}
-erlInetrc: |
-  {{- readFile "../vm/erl_inetrc" | nindent 2 }}
+hook:
+  enabled: true
+  image:
+    repository: docker.io/rbkmoney/holmes
+    tag: 07f58e297c03bcd50dc4695ddbcfa4eb30c9928e
+    pullPolicy: IfNotPresent
+  kind: post-install
+  command: "/opt/holmes/scripts/cds/keyring.py -a kds init"
+
+configMap:
+  data:
+    sys.config: |
+      {{- readFile "sys.config" | nindent 6 }}
+    erl_inetrc: |
+      {{- readFile "../vm/erl_inetrc" | nindent 6 }}
+    vm.args: |
+      {{- tpl (readFile "../vm/erl_vm_args.gotmpl") . | nindent 6 }}
+
+secret:
+  data:
+    ca.crt: |
+      {{- readFile "ca.crt" | nindent 6 }}
+    server.pem: |
+      {{- readFile "server.pem" | nindent 6 }}
+
+service:
+  type: ClusterIP
+  ports:
+    - name: management
+      port: 8022
+    - name: storage
+      port: 8023
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: management
+readinessProbe:
+  httpGet:
+    path: /health
+    port: management
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/kds/releases/0.1.0/sys.config
+    subPath: sys.config
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/kds/releases/0.1.0/vm.args
+    subPath: vm.args
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/kds/erl_inetrc
+    subPath: erl_inetrc
+    readOnly: true
+  - name: secret
+    mountPath: /var/lib/kds/
+    readOnly: true
+  - name: keyring
+    mountPath: /opt/kds/state/
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+  - name: secret
+    secret:
+      secretName: {{ .Release.Name }}
+  - name: keyring
+    persistentVolumeClaim:
+      claimName: "{{ .Release.Name }}-keyring"
+
+pvc:
+  enabled: true
+  name: "{{ .Release.Name }}-keyring"
+  storage: 3Mi
 
 metrics:
   serviceMonitor:
@@ -20,3 +90,16 @@ metrics:
     namespace: monitoring
     additionalLabels:
       release: prometheus
+    endpoints:
+      - port: "management"
+        path: /metrics
+        scheme: http
+
+ciliumPolicies:
+  - filters:
+    - port: 8022
+      type: TCP
+    - port: 8023
+      type: TCP
+    name: kds
+    namespace: default

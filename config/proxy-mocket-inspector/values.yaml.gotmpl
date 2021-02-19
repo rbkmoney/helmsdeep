@@ -1,0 +1,41 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+image:
+  repository: docker.io/rbkmoney/proxy-mocket-inspector
+  tag: 0ea276f2bb2ff2d25ba69c3c729552b81a75ece2
+  pullPolicy: IfNotPresent
+
+configMap:
+  data:
+    entrypoint.sh: |
+      {{- readFile "entrypoint.sh" | nindent 6 }}
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/proxy-mocket-inspector/entrypoint.sh
+    subPath: entrypoint.sh
+    readOnly: true
+
+runopts:
+  command: ["/opt/proxy-mocket-inspector/entrypoint.sh"]
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: api
+  initialDelaySeconds: 30
+  timeoutSeconds: 3
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: api
+  initialDelaySeconds: 30
+  timeoutSeconds: 3

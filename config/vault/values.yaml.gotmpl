@@ -1,0 +1,36 @@
+server:
+  standalone:
+    enabled: true
+    config: |
+      api_addr = "http://POD_IP:8200"
+    
+      listener "tcp" {
+        tls_disable = 1
+        address     = "[::]:8200"
+      }
+    
+      storage "file" {
+        path = "/vault/data"
+      }
+  extraLabels: 
+    selector.cilium.rbkmoney/release: {{ .Release.Name }}
+  volumes:
+    - name: vault-init
+      configMap:
+        name: vault-cm
+        defaultMode: 0775
+ # volumeMounts is a list of volumeMounts for the main server container. These are rendered
+ # via toYaml rather than pre-processed like the extraVolumes value.
+ # The purpose is to make it easy to share volumes between containers.
+  volumeMounts:
+    - mountPath: /vault-init
+      name: vault-init
+
+ciliumPolicies:
+  - filters:
+    - port: 5432
+      type: TCP
+    name: postgres
+    namespace: default
+
+

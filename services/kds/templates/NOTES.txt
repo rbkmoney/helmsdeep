@@ -1,4 +1,0 @@
-Use {{ template "kds.fullname" . }}:{{ .Values.service.ports.managementPort }} to connect to the KDS woody interface.
-
-*NOTE* You may need unlock KDS after restart!
-

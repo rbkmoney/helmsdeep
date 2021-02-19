@@ -1,10 +1,12 @@
 service_name: machinegun
 
 erlang:
+  ipv6: true
+  disable_dns_cache: true
   secret_cookie_file: /opt/machinegun/etc/cookie
 
 woody_server:
-  ip: "0.0.0.0"
+  ip: "::"
   port: 8022
   max_concurrent_connections: 8000
   http_keep_alive_timeout: 3000ms
@@ -25,7 +27,7 @@ consuela:
   presence:
     check_interval: 5s
   registry:
-    nodename: consul-0
+    nodename: consul-server-0
     session_ttl: 30s
     session_renewal_interval: 10s
   discovery:
@@ -37,7 +39,7 @@ logging:
 # Consul client settings.
 # Required when distributed machine registry is enabled.
 consul:
-  url: http://consul:8500
+  url: http://consul-server:8500
   connect_timeout: 200ms
   recv_timeout: 1s
 

@@ -2,7 +2,60 @@
 
 replicaCount: 1
 
-knownCards: |
-  {{- readFile "cards.csv" | nindent 2 }}
-errorMapping: |
-  {{- readFile "errors.json" | nindent 2 }}
+image:
+  repository: docker.io/rbkmoney/proxy-mocketbank
+  tag: 91953e1e9874a851816474b47ad0f123c7c936d1
+  pullPolicy: IfNotPresent
+
+configMap:
+  data:
+    entrypoint.sh: |
+      {{- readFile "entrypoint.sh" | nindent 6 }}
+    cards.csv: |
+      {{- readFile "cards.csv" | nindent 6 }}
+    errors.json: |
+      {{- readFile "errors.json" | nindent 6 }}
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/proxy-mocketbank/entrypoint.sh
+    subPath: entrypoint.sh
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/proxy-mocketbank/fixture/errors.json
+    subPath: errors.json
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/proxy-mocketbank/fixture/cards.csv
+    subPath: cards.csv
+    readOnly: true
+
+runopts:
+  command: ["/opt/proxy-mocketbank/entrypoint.sh"]
+
+service:
+  type: ClusterIP
+  ports:
+    - name: api
+      port: 8022
+    - name: callback
+      port: 8080
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: api
+  initialDelaySeconds: 30
+  timeoutSeconds: 3
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: api
+  initialDelaySeconds: 30
+  timeoutSeconds: 3

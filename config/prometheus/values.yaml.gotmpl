@@ -47,6 +47,7 @@ grafana:
     sha: ""
     pullPolicy: IfNotPresent
 
+  {{- if .Values.elk.enabled }}
   extraEmptyDirMounts:
     - name: dashboard-dir
       mountPath: /var/lib/grafana/dashboards/general
@@ -81,10 +82,6 @@ grafana:
         - key: synckey
           path: synckey
           mode: 0600
-
-  plugins: []
-  # - digrich-bubblechart-panel
-    # - grafana-clock-panel
 
   datasources:
     datasources.yaml:
@@ -124,6 +121,7 @@ grafana:
       machinegun-namespace:
         json: |
           {{- readFile "dashboards/result/machinegun-namespace.json" | nindent 10 }}
+{{- end }}
 
   grafana.ini:
     paths:

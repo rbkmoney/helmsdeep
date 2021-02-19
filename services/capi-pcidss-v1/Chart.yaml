@@ -1,6 +1,0 @@
-apiVersion: v2
-name: capi-pcidss-v1
-description: Common api pcidss
-type: application
-version: 0.1.0
-appVersion: 3007bbf74504d9f9c709d5ace37cbcfce85c0f4e

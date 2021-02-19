@@ -1,0 +1,7 @@
+-sname {{ .Release.Name }}
+-setcookie {{ .Release.Name }}_cookie
+
+{{- if .Values.services.global.ipv6only }}
+-proto_dist inet6_tcp
+{{- end }}
+-kernel inetrc '"./erl_inetrc"'

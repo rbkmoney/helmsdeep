@@ -2,20 +2,80 @@
 
 replicaCount: 1
 
-appConfig: |
-  {{- readFile "sys.config" | nindent 2 }}
-erlInetrc: |
-  {{- readFile "../vm/erl_inetrc" | nindent 2 }}
-fetchKeycloakPubkey: |
-  {{- readFile "../api-common/fetch-keycloak-pubkey.sh" | nindent 2 }}
-oopsBody1: |
-  {{- readFile "../api-common/oops-bodies/sad-kitty1" | nindent 2 }}
-oopsBody2: |
-  {{- readFile "../api-common/oops-bodies/sad-kitty2" | nindent 2 }}
-tokenEncryptionKey1: |
-  {{- readFile "../api-common/keys/token-encryption-keys/1.jwk" | nindent 2 }}
-capiPrivkey: |
-  {{- readFile "../api-common/keys/capi.privkey.pem" | nindent 2 }}
+image:
+  repository: docker.io/rbkmoney/capi_pcidss-v2
+  tag: 54dde2dd6a7ce75437be334ee3adfcfb9b590d19
+  pullPolicy: IfNotPresent
+
+configMap:
+  data:
+    sys.config: |
+      {{- readFile "sys.config" | nindent 6 }}
+    erl_inetrc: |
+      {{- readFile "../vm/erl_inetrc" | nindent 6 }}
+    fetchKeycloakPubkey: |
+      {{- readFile "../api-common/fetch-keycloak-pubkey.sh" | nindent 6 }}
+    oopsBody1: |
+      {{- readFile "../api-common/oops-bodies/sad-kitty1" | nindent 6 }}
+    oopsBody2: |
+      {{- readFile "../api-common/oops-bodies/sad-kitty2" | nindent 6 }}
+    vm.args: |
+      {{- tpl (readFile "../vm/erl_vm_args.gotmpl") . | nindent 6 }}
+
+secret:
+  data:
+    token_encryption_key1.jwk: |
+      {{- readFile "../api-common/keys/token-encryption-keys/1.jwk" | nindent 6 }}
+    capi.privkey.pem: |
+      {{- readFile "../api-common/keys/capi.privkey.pem" | nindent 6 }}
+
+apiInitContainers:
+  enabled: true
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/capi_pcidss/releases/0.1.0/sys.config
+    subPath: sys.config
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/capi_pcidss/releases/0.1.0/vm.args
+    subPath: vm.args
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/capi_pcidss/erl_inetrc
+    subPath: erl_inetrc
+    readOnly: true
+  - name: config-volume
+    mountPath: /var/lib/capi/oops-bodies/oopsBody1
+    subPath: oopsBody1
+    readOnly: true
+  - name: config-volume
+    mountPath: /var/lib/capi/oops-bodies/oopsBody2
+    subPath: oopsBody2
+    readOnly: true
+  - name: secret
+    mountPath: /var/lib/capi/keys
+    readOnly: true
+  - name: keycloak-pubkey
+    mountPath: /var/lib/capi/keys/keycloak
+    readOnly: true
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+  - name: secret
+    secret:
+      secretName: {{ .Release.Name }}
+  - name: keycloak-pubkey
+    emptyDir: {}
+
+service:
+  type: ClusterIP
+  ports:
+    - name: api
+      port: 8080
 
 metrics:
   serviceMonitor:
@@ -23,3 +83,32 @@ metrics:
     namespace: monitoring
     additionalLabels:
       release: prometheus
+
+ingress:
+  enabled: true
+  hosts:
+    - host: api.rbk.dev
+      paths: 
+        - /v2/processing/payment-resources
+  servicePort: 8080
+
+ciliumPolicies:
+  - filters:
+    - port: 8080
+      type: TCP
+    name: keycloak
+  - filters:
+    - port: 8022
+      type: TCP
+    name: binbase
+    namespace: default
+  - filters:
+    - port: 8022
+      type: TCP
+    name: bender
+    namespace: default
+  - filters:
+    - port: 8022
+      type: TCP
+    name: cds
+    namespace: default
