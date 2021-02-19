@@ -37,7 +37,7 @@ configmap:
           GRANT ALL ON ALL TABLES IN SCHEMA hook TO \"{{name}}\";
           GRANT ALL ON ALL SEQUENCES IN SCHEMA hook TO \"{{name}}\";" \
           default_ttl="1h" \
-          max_ttl="24h"
+          max_ttl="240h"
   
       vault auth enable kubernetes
       vault write auth/kubernetes/config \

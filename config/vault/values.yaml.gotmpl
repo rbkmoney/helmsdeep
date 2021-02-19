@@ -1,4 +1,17 @@
 server:
+  standalone:
+    enabled: true
+    config: |
+      api_addr = "http://POD_IP:8200"
+    
+      listener "tcp" {
+        tls_disable = 1
+        address     = "[::]:8200"
+      }
+    
+      storage "file" {
+        path = "/vault/data"
+      }
   extraLabels: 
     selector.cilium.rbkmoney/release: {{ .Release.Name }}
   volumes:
