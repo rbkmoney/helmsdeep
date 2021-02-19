@@ -1,11 +1,8 @@
-configmap:
+configMap:
   data:
     init.vault.sh: |
-      # TODO WHACK! Replace line below with helm hook
-      # to ensure init.vault.sh run AFTER Vault has been started
-      sleep 10
       vault secrets enable database
-      sleep 3
+      sleep 1
       vault write database/config/shumway \
           plugin_name=postgresql-database-plugin \
           allowed_roles="*" \
