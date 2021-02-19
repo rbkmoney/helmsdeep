@@ -144,7 +144,7 @@ releases:
   <<: *generic_stateless
 - name: test-transaction
   <<: *default
-  chart: ../charts/charts/test-transaction
+  chart: rbkmoney/test-transaction
   needs:
     - {{ .Namespace | default "default" }}/shumway
     - {{ .Namespace | default "default" }}/dominant
