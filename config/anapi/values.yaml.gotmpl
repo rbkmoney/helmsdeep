@@ -74,7 +74,13 @@ metrics:
 ingress:
   enabled: true
   hosts:
-    - host: api.rbk.dev
+    - host: api.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
       paths:
         - /lk/v1
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
+      hosts:
+        - api.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+{{- end }}
   servicePort: 8080

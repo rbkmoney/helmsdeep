@@ -89,9 +89,15 @@ readinessProbe:
 ingress:
   enabled: true
   hosts:
-    - host: api.rbk.dev
-      paths: 
+    - host: api.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+      paths:
         - /wapi
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
+      hosts:
+        - api.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+{{- end }}
   servicePort: 8080
 
 
