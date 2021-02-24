@@ -10,7 +10,7 @@ image:
 configMap:
   data:
     config.yaml: |
-      {{- readFile "config.yaml" | nindent 6 }}
+      {{- tpl (readFile "config.yaml.gotmpl") . | nindent 6 }}
 
 secret:
   data:
