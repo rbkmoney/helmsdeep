@@ -3,8 +3,19 @@ cilium:
 elk:
   enabled: false
 
-keycloakExtUrl: "https://some-site.example.com"
-
 services:
   global:
     ipv6only: true
+  
+  vault:
+    dev: true
+
+  keycloak:
+    externalUrl: "https://auth.some-site.com"
+
+  ingress:
+    rootDomain: some-site.com
+    tls: []
+      # enabled: true
+      # secretName: some-site-tls-cert
+

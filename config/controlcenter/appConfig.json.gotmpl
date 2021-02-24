@@ -1,0 +1,7 @@
+{
+{{- if .Values.services.ingress.tls.enabled }}
+    "papiEndpoint": "https://iddqd.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/papi/v1"
+{{- else }}
+    "papiEndpoint": "http://iddqd.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/papi/v1"
+{{- end }}
+}

@@ -1,0 +1,17 @@
+{
+    "apiEndpoint": "https://api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}",
+    "urlShortenerEndpoint": "https://rbk.mn",
+    "checkoutEndpoint": "https://checkout.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}",
+    "ext": {
+        "docsEndpoint": "https://rbkmoney.github.io/docs",
+        "supportEmail": "support@rbkmoney.com",
+        "paymentsApiSpecEndpoint": "https://developer.rbk.money/api/"
+    },
+    "yandexMetrika": {
+        "id": null,
+        "clickmap": true,
+        "trackLinks": true,
+        "accurateTrackBounce": true,
+        "webvisor": true
+    }
+}

@@ -60,10 +60,17 @@ volumes:
 ingress:
   enabled: true
   hosts:
-    - host: api.rbk.dev
+    - host: api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
       paths: 
         - /privdoc/v0
         - /payres/v0
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
+      hosts:
+        - api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+{{- end }}
+  servicePort: 8080
 
 
 ciliumPolicies:
