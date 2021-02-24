@@ -1,0 +1,7 @@
+{
+    "realm": "internal",
+    "auth-server-url": "https://auth.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}/auth/",
+    "ssl-required": "external",
+    "resource": "control-center",
+    "public-client": true
+}

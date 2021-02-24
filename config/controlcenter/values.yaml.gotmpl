@@ -1,0 +1,68 @@
+# -*- mode: yaml -*-
+replicaCount: 1
+
+image:
+  repository: docker.io/rbkmoney/control-center
+  tag: 520bccc8dee1dfb23c6ca0fd96f960e3e00750a2
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+
+configMap:
+  data:
+    appConfig.json: |
+      {{- tpl (readFile "appConfig.json.gotmpl") . | nindent 6 }}
+    authConfig.json: |
+      {{- tpl (readFile "authConfig.json.gotmpl") . | nindent 6 }}
+    control-center.conf: |
+      {{- readFile "vhost.conf" | nindent 6 }}
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /usr/share/nginx/html/assets/appConfig.json
+    subPath: appConfig.json
+    readOnly: true
+  - name: config-volume
+    mountPath: /usr/share/nginx/html/assets/authConfig.json
+    subPath: appConfig.json
+    readOnly: true
+  - name: config-volume
+    mountPath: /etc/nginx/vhosts.d/control-center.conf
+    subPath: control-center.conf
+    readOnly: true
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+
+livenessProbe:
+  httpGet:
+    path: /assets/appConfig.json
+    port: http
+  initialDelaySeconds: 30
+  timeoutSeconds: 3
+readinessProbe:
+  httpGet:
+    path: /assets/appConfig.json
+    port: http
+  initialDelaySeconds: 30
+  timeoutSeconds: 3
+
+ingress:
+  enabled: true
+  hosts:
+    - host: iddqd.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+      paths:
+        - /
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
+      hosts:
+        - iddqd.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+{{- end }}
+  servicePort: 8080
