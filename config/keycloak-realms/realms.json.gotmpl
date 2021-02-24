@@ -1529,10 +1529,10 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "{{ .Values.keycloakExtUrl }}/*"
+        "{{ .Values.services.keycloak.externalUrl }}/*"
       ],
       "webOrigins": [
-        "{{ .Values.keycloakExtUrl }}"
+        "{{ .Values.services.keycloak.externalUrl }}"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -2225,10 +2225,10 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "{{ .Values.keycloakExtUrl }}/*"
+        "{{ .Values.services.keycloak.externalUrl }}/*"
       ],
       "webOrigins": [
-        "{{ .Values.keycloakExtUrl }}"
+        "{{ .Values.services.keycloak.externalUrl }}"
       ],
       "notBefore": 0,
       "bearerOnly": false,

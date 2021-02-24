@@ -50,13 +50,13 @@ readinessProbe:
 ingress:
   enabled: true
   hosts:
-    - host: checkout.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+    - host: checkout.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
       paths:
         - /
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
     - secretName: {{ .Values.services.ingress.tls.secretName }}
       hosts:
-        - checkout.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+        - checkout.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080

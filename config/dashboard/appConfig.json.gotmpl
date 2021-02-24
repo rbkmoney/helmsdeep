@@ -1,7 +1,7 @@
 {
-    "apiEndpoint": "https://api.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}",
+    "apiEndpoint": "https://api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}",
     "urlShortenerEndpoint": "https://rbk.mn",
-    "checkoutEndpoint": "https://checkout.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}",
+    "checkoutEndpoint": "https://checkout.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}",
     "ext": {
         "docsEndpoint": "https://rbkmoney.github.io/docs",
         "supportEmail": "support@rbkmoney.com",

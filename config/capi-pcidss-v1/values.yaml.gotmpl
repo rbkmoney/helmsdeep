@@ -87,14 +87,14 @@ metrics:
 ingress:
   enabled: true
   hosts:
-    - host: api.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+    - host: api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
       paths:
         - /v1/processing/payment-resources
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
     - secretName: {{ .Values.services.ingress.tls.secretName }}
       hosts:
-        - api.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+        - api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080
 

@@ -53,13 +53,13 @@ ingress:
     # nginx.ingress.kubernetes.io/proxy-buffer-size: 128k
 
   rules:
-    - host: 'auth.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}'
+    - host: 'auth.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}'
       paths:
         - /
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
     - hosts:
-        - 'auth.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}'
+        - 'auth.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}'
       secretName: {{ .Values.services.ingress.tls.secretName }}
 {{- end }}
 

@@ -56,13 +56,13 @@ readinessProbe:
 ingress:
   enabled: true
   hosts:
-    - host: dashboard.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+    - host: dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
       paths:
         - /
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
     - secretName: {{ .Values.services.ingress.tls.secretName }}
       hosts:
-        - dashboard.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+        - dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080

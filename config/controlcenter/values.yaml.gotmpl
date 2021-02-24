@@ -56,13 +56,13 @@ readinessProbe:
 ingress:
   enabled: true
   hosts:
-    - host: iddqd.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+    - host: iddqd.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
       paths:
         - /
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
     - secretName: {{ .Values.services.ingress.tls.secretName }}
       hosts:
-        - iddqd.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+        - iddqd.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080
