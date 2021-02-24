@@ -1,17 +1,24 @@
+fullnameOverride: {{ .Release.Name }}-{{ .Release.Namespace}}
 server:
+{{- if and .Values.services.global.ipv6only (not .Values.services.vault.dev) }}
   standalone:
     enabled: true
-    config: |
-      api_addr = "http://POD_IP:8200"
-    
-      listener "tcp" {
-        tls_disable = 1
-        address     = "[::]:8200"
-      }
-    
-      storage "file" {
-        path = "/vault/data"
-      }
+  dataStorage:
+    enabled: true
+    size: 10Gi
+    mountPath: "/vault/data"
+    storageClass: null
+    accessMode: ReadWriteOnce
+{{- end }}
+{{- if .Values.services.vault.dev }}
+  dev:
+    enabled: true
+
+  postStart:
+    - /bin/sh
+    - -c
+    - /vault-init/init.vault.sh
+{{- end }}
   extraLabels: 
     selector.cilium.rbkmoney/release: {{ .Release.Name }}
   volumes:
