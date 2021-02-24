@@ -15,7 +15,7 @@ service:
 configMap:
   data:
     appConfig.json: |
-      {{- readFile "appConfig.json" | nindent 6 }}
+      {{- tpl (readFile "appConfig.json.gotmpl") . | nindent 6 }}
     payform.conf: |
       {{- readFile "vhost.conf" | nindent 6 }}
 
@@ -49,11 +49,14 @@ readinessProbe:
 
 ingress:
   enabled: true
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
-    # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: api.rbk.dev
-      paths: 
-        - /web(/|$)(.*)
+    - host: checkout.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+      paths:
+        - /
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
+      hosts:
+        - checkout.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+{{- end }}
   servicePort: 8080
