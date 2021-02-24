@@ -1,0 +1,68 @@
+# -*- mode: yaml -*-
+replicaCount: 1
+
+image:
+  repository: docker.io/rbkmoney/dashboard
+  tag: 380a2e2464ccec1e624d8972381622fcb3b5789a
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+
+configMap:
+  data:
+    appConfig.json: |
+      {{- tpl (readFile "appConfig.json.gotmpl") . | nindent 6 }}
+    authConfig.json: |
+      {{- tpl (readFile "authConfig.json.gotmpl") . | nindent 6 }}
+    dashboard.conf: |
+      {{- readFile "vhost.conf" | nindent 6 }}
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /usr/share/nginx/html/appConfig.json
+    subPath: appConfig.json
+    readOnly: true
+  - name: config-volume
+    mountPath: /usr/share/nginx/html/authConfig.json
+    subPath: authConfig.json
+    readOnly: true
+  - name: config-volume
+    mountPath: /etc/nginx/vhosts.d/dashboard.conf
+    subPath: dashboard.conf
+    readOnly: true
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+
+livenessProbe:
+  httpGet:
+    path: /appConfig.json
+    port: http
+  initialDelaySeconds: 30
+  timeoutSeconds: 3
+readinessProbe:
+  httpGet:
+    path: /appConfig.json
+    port: http
+  initialDelaySeconds: 30
+  timeoutSeconds: 3
+
+ingress:
+  enabled: true
+  hosts:
+    - host: dashboard.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+      paths:
+        - /
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
+      hosts:
+        - dashboard.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+{{- end }}
+  servicePort: 8080
