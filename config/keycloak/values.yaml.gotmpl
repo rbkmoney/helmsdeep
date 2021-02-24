@@ -5,6 +5,8 @@ podLabels:
   selector.cilium.rbkmoney/release: {{ .Release.Name }}
 
 extraEnv: |
+  - name: PROXY_ADDRESS_FORWARDING
+    value: "true"
   - name: DB_VENDOR
     value: postgres
   - name: DB_ADDR
@@ -41,6 +43,25 @@ extraVolumeMounts: |
   - name: keycloak-realms-volume
     mountPath: "/realm/"
     readOnly: true
+
+ingress:
+  enabled: true
+  servicePort: http
+  annotations: {}
+    ## Resolve HTTP 502 error using ingress-nginx:
+    ## See https://www.ibm.com/support/pages/502-error-ingress-keycloak-response
+    # nginx.ingress.kubernetes.io/proxy-buffer-size: 128k
+
+  rules:
+    - host: 'auth.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}'
+      paths:
+        - /
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - 'auth.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}'
+      secretName: {{ .Values.services.ingress.tls.secretName }}
+{{- end }}
 
 ciliumPolicies:
   - filters:
