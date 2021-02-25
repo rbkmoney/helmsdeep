@@ -22,7 +22,11 @@ repositories:
 
 # Path to the helmfile state file being processed BEFORE releases in this state file
 helmfiles:
--  path: helmfile-infra.yaml
+  - path: helmfile-infra.yaml
+{{- if and (eq .Values.prometheus.enabled true) ( eq .Namespace "") }}
+  - path: helmfile-prometheus.yaml
+{{- end }}
+
 
 releases:
 #External releases
