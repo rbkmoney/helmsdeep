@@ -106,34 +106,34 @@ ciliumPolicies:
     - port: 8080
       type: TCP
     name: keycloak
-    namespace: default
+    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: binbase
-    namespace: default
+    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: cds
-    namespace: default
+    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: shumway
-    namespace: default
+    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: machinegun
-    namespace: default
+    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: dominant
-    namespace: default
+    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: hellgate
-    namespace: default
+    namespace: {{ .Release.Namespace }}
