@@ -1,8 +1,8 @@
 configMap:
   data:
     init.vault.sh: |
+      sleep 2
       vault secrets enable database
-      sleep 1
       vault write database/config/shumway \
           plugin_name=postgresql-database-plugin \
           allowed_roles="*" \

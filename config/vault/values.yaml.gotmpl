@@ -33,9 +33,14 @@ server:
     - mountPath: /vault-init
       name: vault-init
 
+injector:
+  namespaceSelector:
+    matchLabels:
+      vaultname: {{ .Release.Namespace }}
+
 ciliumPolicies:
   - filters:
     - port: 5432
       type: TCP
     name: postgres
-    namespace: default
+    namespace: {{ .Release.Namespace }}
