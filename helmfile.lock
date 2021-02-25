@@ -23,9 +23,9 @@ dependencies:
   version: 0.1.14
 - name: test-transaction
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.3
+  version: 0.1.5
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.9.1
-digest: sha256:d1e02e88710768403a343ba3a6060c91ac5a699b10a4a9da62bc587767c94ae0
-generated: "2021-02-26T00:09:15.879261+03:00"
+digest: sha256:6024b13b9c612be2c25d5287790726612c7171ae6d7ce20028882f4265cae030
+generated: "2021-02-26T01:31:59.291688+03:00"
