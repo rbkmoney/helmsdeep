@@ -78,9 +78,9 @@ ciliumPolicies:
     - port: 8022
       type: TCP
     name: bender
-    namespace: default
+    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: cds
-    namespace: default
+    namespace: {{ .Release.Namespace }}

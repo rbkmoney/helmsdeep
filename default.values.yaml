@@ -2,6 +2,8 @@ cilium:
   enabled: false
 elk:
   enabled: false
+prometheus:
+  enabled: true
 
 services:
   global:
@@ -15,7 +17,7 @@ services:
 
   ingress:
     rootDomain: some-site.com
-    tls: []
-      # enabled: true
-      # secretName: some-site-tls-cert
+    tls:
+      enabled: false
+      secretName: some-site-tls-cert
 

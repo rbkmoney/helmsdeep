@@ -38,7 +38,7 @@ volumes:
 metrics:
   serviceMonitor:
     enabled: true
-    namespace: monitoring
+    namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus
 
@@ -47,4 +47,4 @@ ciliumPolicies:
     - port: 8022
       type: TCP
     name: machinegun
-    namespace: default
+    namespace: {{ .Release.Namespace }}

@@ -5,26 +5,10 @@ bases:
 {{ readFile "hf-templates.yaml" }}
 
 repositories:
-- name: prometheus-community
-  url: https://prometheus-community.github.io/helm-charts
 - name: rbkmoney
   url: https://rbkmoney.github.io/charts
 
-{{ if .Values.elk.enabled }}
 releases:
-- name: prometheus
-  <<: *infra_default
-  chart: prometheus-community/kube-prometheus-stack
-  namespace: monitoring
-  needs:
-    - monitoring/logs
-{{ else }}
-releases:
-- name: prometheus
-  <<: *infra_default
-  chart: prometheus-community/kube-prometheus-stack
-  namespace: monitoring
-{{ end }}
 - name: logs
   installed: {{ .Values.elk.enabled }}
   <<: *infra_default

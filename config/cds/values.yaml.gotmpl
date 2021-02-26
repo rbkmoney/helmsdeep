@@ -51,7 +51,7 @@ volumes:
 metrics:
   serviceMonitor:
     enabled: true
-    namespace: monitoring
+    namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus
 
@@ -60,11 +60,11 @@ ciliumPolicies:
     - port: 8087
       type: TCP
     name: riak
-    namespace: default
+    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     - port: 8023
       type: TCP
     name: kds
-    namespace: default
+    namespace: {{ .Release.Namespace }}

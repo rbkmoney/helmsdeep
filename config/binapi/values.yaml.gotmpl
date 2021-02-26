@@ -67,7 +67,7 @@ service:
 metrics:
   serviceMonitor:
     enabled: true
-    namespace: monitoring
+    namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus
 

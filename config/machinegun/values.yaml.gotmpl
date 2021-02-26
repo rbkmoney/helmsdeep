@@ -37,7 +37,7 @@ volumeMounts:
 metrics:
   serviceMonitor:
     enabled: true
-    namespace: monitoring
+    namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus
 
@@ -46,7 +46,7 @@ ciliumPolicies:
     - port: 8500
       type: TCP
     name: consul
-    namespace: default
+    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 9092
       rules:
@@ -74,34 +74,34 @@ ciliumPolicies:
             - mg-events-schedulers
       type: TCP
     name: kafka
-    namespace: default
+    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8087
       type: TCP
     name: riak
-    namespace: default
+    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: bender
-    namespace: default
+    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: url-shortener
-    namespace: default
+    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: machinegun
-    namespace: default
+    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: dominant
-    namespace: default
+    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: hellgate
-    namespace: default
+    namespace: {{ .Release.Namespace }}
