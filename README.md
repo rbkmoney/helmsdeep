@@ -166,7 +166,7 @@ Open https://localhost:5601 in your browser. Your browser will show a warning be
 Login as the elastic user. The password can be obtained with the following command:
 
 ```
-kubectl get secret rbk-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo
+kubectl get secret -n monitoring rbkmoney-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo
 ```
 
 Доступ к grafana и синк dashboards
@@ -180,7 +180,7 @@ kubectl -n monitoring port-forward <grafana-pod> 3000
 grafana доступна в браузере https://localhost:3000. Получить пароль для входа:
 
 ```
-kubectl get secret --namespace monitoring prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+kubectl get secret -n monitoring prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 ```
 
 ```

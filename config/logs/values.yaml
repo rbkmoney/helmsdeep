@@ -1,2 +1,149 @@
+elastic:
+  master:
+    replicas: 1
+    podTemplate:
+      spec:
+        nodeSelector: {}
+        containers:
+          - name: elasticsearch
+            env:
+              - name: ES_JAVA_OPTS
+                value: -Xms1G -Xmx1G
+              - name: READINESS_PROBE_TIMEOUT
+                value: "10"
+            resources:
+              requests:
+                memory: 2Gi
+              limits:
+                memory: 2Gi
+            securityContext:
+              capabilities:
+                add:
+                - SYS_CHROOT
+            readinessProbe:
+              exec:
+                command:
+                - bash
+                - -c
+                - /mnt/elastic-internal/scripts/readiness-probe-script.sh
+              failureThreshold: 3
+              initialDelaySeconds: 10
+              periodSeconds: 12
+              successThreshold: 1
+              timeoutSeconds: 12
+  cold:
+    replicas: 6
+    podTemplate:
+      spec:
+        nodeSelector:
+          esnode: "true"
+        containers:
+          - name: elasticsearch
+            env:
+              - name: ES_JAVA_OPTS
+                value: -Xms16G -Xmx16G
+              - name: READINESS_PROBE_TIMEOUT
+                value: "10"
+              - name: path.data
+                value: "/usr/share/elasticsearch/data1,/usr/share/elasticsearch/data2,/usr/share/elasticsearch/data3,/usr/share/elasticsearch/data4,/usr/share/elasticsearch/data5,/usr/share/elasticsearch/data6"
+            resources:
+              requests:
+                memory: 24Gi
+              limits:
+                memory: 24Gi
+            securityContext:
+              capabilities:
+                add:
+                - SYS_CHROOT
+            readinessProbe:
+              exec:
+                command:
+                - bash
+                - -c
+                - /mnt/elastic-internal/scripts/readiness-probe-script.sh
+              failureThreshold: 3
+              initialDelaySeconds: 10
+              periodSeconds: 12
+              successThreshold: 1
+              timeoutSeconds: 12
+            volumeMounts:
+              - name: data1
+                mountPath: /usr/share/elasticsearch/data1
+              - name: data2
+                mountPath: /usr/share/elasticsearch/data2
+              - name: data3
+                mountPath: /usr/share/elasticsearch/data3
+              - name: data4
+                mountPath: /usr/share/elasticsearch/data4
+              - name: data5
+                mountPath: /usr/share/elasticsearch/data5
+              - name: data6
+                mountPath: /usr/share/elasticsearch/data6
+        volumes:
+          - name: data1
+            hostPath:
+              path: /var/lib/elasticsearch/data1
+          - name: data2
+            hostPath:
+              path: /var/lib/elasticsearch/data2
+          - name: data3
+            hostPath:
+              path: /var/lib/elasticsearch/data3
+          - name: data4
+            hostPath:
+              path: /var/lib/elasticsearch/data4
+          - name: data5
+            hostPath:
+              path: /var/lib/elasticsearch/data5
+          - name: data6
+            hostPath:
+              path: /var/lib/elasticsearch/data6
+
+  hot:
+    replicas: 1
+    podTemplate:
+      spec:
+        nodeSelector: {}
+        containers:
+          - name: elasticsearch
+            env:
+              - name: ES_JAVA_OPTS
+                value: -Xms4G -Xmx4G
+              - name: READINESS_PROBE_TIMEOUT
+                value: "10"
+            resources:
+              requests:
+                memory: 8Gi
+              limits:
+                memory: 8Gi
+            securityContext:
+              capabilities:
+                add:
+                - SYS_CHROOT
+            readinessProbe:
+              exec:
+                command:
+                - bash
+                - -c
+                - /mnt/elastic-internal/scripts/readiness-probe-script.sh
+              failureThreshold: 3
+              initialDelaySeconds: 10
+              periodSeconds: 12
+              successThreshold: 1
+              timeoutSeconds: 12
+
+ingress:
+  enabled: true
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: hw-connie.bst3.rbkmoney.com
+      paths:
+        - /
+  tls:
+   - secretName: stand-wild
+     hosts:
+       - hw-connie.bst3.rbkmoney.com
 filebeat:
     enabled: true

@@ -1,6 +1,6 @@
 cilium:
   enabled: false
 elk:
-  enabled: false
+  enabled: true
 
 keycloakExtUrl: "https://some-site.example.com"
