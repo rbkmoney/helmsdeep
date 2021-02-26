@@ -35,7 +35,23 @@ configMap:
           GRANT ALL ON ALL SEQUENCES IN SCHEMA hook TO \"{{name}}\";" \
           default_ttl="1h" \
           max_ttl="240h"
-  
+      vault write database/config/analytics \
+          plugin_name=postgresql-database-plugin \
+          allowed_roles="*" \
+          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/analytics?sslmode=disable" \
+          username="postgres" \
+          password="H@ckM3"
+      vault write database/roles/db-app-analytics \
+          db_name=analytics \
+          creation_statements="Create schema if not exists analytics;
+          CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
+          GRANT CREATE ON DATABASE analytics TO \"{{name}}\";
+          GRANT ALL ON schema analytics TO \"{{name}}\";
+          GRANT ALL ON ALL TABLES IN SCHEMA analytics TO \"{{name}}\";
+          GRANT ALL ON ALL SEQUENCES IN SCHEMA analytics TO \"{{name}}\";" \
+          default_ttl="1h" \
+          max_ttl="240h"
+
       vault auth enable kubernetes
       vault write auth/kubernetes/config \
              token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
@@ -54,5 +70,8 @@ configMap:
         capabilities = ["read"]
       }
       path "database/creds/db-app-hook" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-analytics" {
         capabilities = ["read"]
       }
