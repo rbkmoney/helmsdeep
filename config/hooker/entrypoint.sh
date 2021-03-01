@@ -12,7 +12,7 @@ java \
     --spring.datasource.hikari.idle-timeout=30000 \
     --spring.datasource.hikari.minimum-idle=2 \
     --spring.datasource.hikari.maximum-pool-size=20 \
-    --kafka.bootstrap-servers=kafka-headless:9092 \
+    --kafka.bootstrap-servers=kafka:9092 \
     --kafka.topics.invoice.enabled=true \
     --kafka.topics.customer.enabled=true \
     --kafka.topics.invoice.concurrency=7 \

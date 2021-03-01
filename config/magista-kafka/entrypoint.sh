@@ -19,7 +19,7 @@ java \
     --hellgate.timeout=30000 \
     --columbus.url=http://columbus:8022/repo \
     --retry-policy.maxAttempts=-1 \
-    --kafka.bootstrap-servers=kafka-headless:9092 \
+    --kafka.bootstrap-servers=kafka:9092 \
     --kafka.topics.invoicing=mg-events-invoice \
     --kafka.client-id=magista \
     --kafka.consumer.group-id=magista-invoicing-1 \

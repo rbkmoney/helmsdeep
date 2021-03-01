@@ -42,7 +42,7 @@ configMap:
           username="postgres" \
           password="H@ckM3"
       vault write database/roles/db-app-magista-kafka \
-          db_name=mst \
+          db_name=magista-kafka \
           creation_statements="Create schema if not exists mst;
           CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
           GRANT CREATE ON DATABASE mst TO \"{{name}}\";
