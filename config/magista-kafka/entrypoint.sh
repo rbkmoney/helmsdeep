@@ -4,7 +4,7 @@ set -ue
 java \
     "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
     -jar \
-    /opt/magista-kafka/magista-kafka.jar \
+    /opt/magista/magista.jar \
     --logging.config=/opt/magista-kafka/logback.xml \
     --spring.application.name=magista-kafka \
     --spring.datasource.hikari.maximum-pool-size=mg-events-invoice \
