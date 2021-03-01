@@ -76,12 +76,12 @@ ciliumPolicies:
     - port: 8200
       type: TCP
     name: vault
-    namespace: default
+    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 5432
       type: TCP
     name: postgres
-    namespace: default
+    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 9092
       rules:
@@ -92,4 +92,4 @@ ciliumPolicies:
             - mg-events-invoice
       type: TCP
     name: kafka
-    namespace: default
+    namespace: {{ .Release.Namespace }}

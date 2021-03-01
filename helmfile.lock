@@ -8,7 +8,7 @@ dependencies:
   version: 12.7.3
 - name: keycloak
   repository: https://codecentric.github.io/helm-charts
-  version: 9.9.3
+  version: 9.9.5
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 9.7.2
@@ -17,15 +17,15 @@ dependencies:
   version: 0.1.1
 - name: statefull
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.18
+  version: 0.1.19
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.13
+  version: 0.1.14
 - name: test-transaction
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.2
+  version: 0.1.5
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.9.1
-digest: sha256:876b3658a8a67fd25b08119565e480f92b0e73453ba6c21cd7a76711a9783ac7
-generated: "2021-02-19T14:18:35.150327+03:00"
+digest: sha256:6024b13b9c612be2c25d5287790726612c7171ae6d7ce20028882f4265cae030
+generated: "2021-02-26T01:31:59.291688+03:00"

@@ -87,7 +87,7 @@ pvc:
 metrics:
   serviceMonitor:
     enabled: true
-    namespace: monitoring
+    namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus
     endpoints:
@@ -102,4 +102,4 @@ ciliumPolicies:
     - port: 8023
       type: TCP
     name: kds
-    namespace: default
+    namespace: {{ .Release.Namespace }}
