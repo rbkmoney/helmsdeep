@@ -33,10 +33,6 @@ extraEnv: |
       -Djava.awt.headless=true
   - name: KEYCLOAK_IMPORT
     value: /realm/realms.json
-  - name: CH_VENDOR
-    value: clickhouse
-  - name: CH_ADDR
-    value: clickhouse-clickhousesql
 
 extraVolumes: |
   - name: keycloak-realms-volume

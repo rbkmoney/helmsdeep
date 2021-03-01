@@ -70,33 +70,43 @@ podAnnotations:
     postgres.db.url=jdbc:postgresql://postgres-postgresql:5432/analytics?sslmode=disable
     postgres.db.user={{ .Data.username }}
     postgres.db.password={{ .Data.password }}
-#    clickhouse.db.url=jdbc:clickhouse://clickhouse.default.svc.cluster.local:8123/analytic
-    clickhouse.db.url=jdbc:clickhouse://clickhouse-clickhousesql:8123/analytic
+    clickhouse.db.url=jdbc:clickhouse://clickhouse:8123/analytic
     clickhouse.db.user={{ .Data.clickhouse.username }}
     clickhouse.db.password={{ .Data.clickhouse.password }}
-#    {% if kafka.ssl.get('enable', False) %}
-#    --kafka.ssl.enabled={{ kafka.ssl.enable }}
-#    --kafka.ssl.key-store-location=/opt/{{ service_name }}/kafka-keystore.p12
-#    --kafka.ssl.key-store-password="{{ service.keystore.pass }}"
-#    --kafka.ssl.key-password="{{ service.keystore.pass }}"
-#    --kafka.ssl.trust-store-location=/opt/{{ service_name }}/kafka-truststore.p12
-#    --kafka.ssl.trust-store-password="{{ kafka.truststore.java.pass }}"
-#    {% endif %}
+{{- /*
+    {% if kafka.ssl.get('enable', False) %}
+    --kafka.ssl.enabled={{ kafka.ssl.enable }}
+    --kafka.ssl.key-store-location=/opt/{{ service_name }}/kafka-keystore.p12
+    --kafka.ssl.key-store-password="{{ service.keystore.pass }}"
+    --kafka.ssl.key-password="{{ service.keystore.pass }}"
+    --kafka.ssl.trust-store-location=/opt/{{ service_name }}/kafka-truststore.p12
+    --kafka.ssl.trust-store-password="{{ kafka.truststore.java.pass }}"
+    {% endif %}
+*/ -}}
     {{- end }}`}}
 
-podLabels:
-  prometheus.metrics.java.enabled: "true"
+metrics:
+  serviceMonitor:
+    enabled: true
+    namespace: {{ .Release.Namespace }}
+    additionalLabels:
+      release: prometheus
+    endpoints:
+      - port: "management"
+        path: /actuator/prometheus
+        scheme: http
+
 
 ciliumPolicies:
-  - filters:
-    - port: 8200
-      type: TCP
-    name: vault
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 5432
       type: TCP
     name: postgres
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8200
+      type: TCP
+    name: vault
     namespace: {{ .Release.Namespace }}
   - filters:
     - port: 9092
@@ -109,4 +119,29 @@ ciliumPolicies:
             - mg-events-party
       type: TCP
     name: kafka
+    namespace: {{ .Release.Namespace }}
+  - filters:
+     - port: 8123
+       type: TCP
+     name: clickhouse
+     namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: columbus
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: hellgate
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: payouter
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: dominant
     namespace: {{ .Release.Namespace }}
