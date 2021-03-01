@@ -26,7 +26,7 @@ java \
     --dominant.networkTimeout=30000 \
     --dudoser.url=http://dudoser:8022/dudos \
     --dudoser.networkTimeout=30000 \
-    --keycloak.auth-server-url=http://keycloak:8022/auth \
+    --keycloak.auth-server-url=http://keycloak-http:80/8443/auth \
     --keycloak.realm-public-key.file-path="/opt/dark-api/secret" \
     --keycloak.realm=external \
     --keycloak.resource=common-api \

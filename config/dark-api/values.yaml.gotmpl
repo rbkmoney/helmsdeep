@@ -18,6 +18,9 @@ configMap:
       {{- readFile "loggers.xml" | nindent 6 }}
     logback.xml: |
       {{- readFile "../logs/logback.xml" | nindent 6 }}
+env:
+  - name: LOGBACK_SERVICE_NAME
+    value: "dark-api"
 
 livenessProbe:
   httpGet:
@@ -118,7 +121,7 @@ ciliumPolicies:
     name: dudoser
     namespace: {{ .Release.Namespace }}
   - filters:
-    - port: 8022
+    - port: 80
       type: TCP
     name: keycloak
     namespace: {{ .Release.Namespace }}
