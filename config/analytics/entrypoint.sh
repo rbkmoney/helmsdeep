@@ -7,7 +7,7 @@ java \
     /opt/analytics/analytics.jar \
     --logging.config=/opt/analytics/logback.xml \
     --spring.application.name=analytics \
-    --kafka.bootstrap.servers=kafka-headless:9092 \
+    --kafka.bootstrap.servers=kafka:9092 \
     --kafka.topic.event.sink.initial=mg-events-invoice \
     --kafka.topic.payout.initial=payout \
     --kafka.topic.party.initial=mg-events-party \
