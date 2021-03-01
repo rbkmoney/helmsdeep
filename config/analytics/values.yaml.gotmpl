@@ -104,11 +104,6 @@ ciliumPolicies:
     name: postgres
     namespace: {{ .Release.Namespace }}
   - filters:
-    - port: 8200
-      type: TCP
-    name: vault
-    namespace: {{ .Release.Namespace }}
-  - filters:
     - port: 9092
       rules:
         kafka:
@@ -125,6 +120,11 @@ ciliumPolicies:
        type: TCP
      name: clickhouse
      namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8200
+      type: TCP
+    name: vault
+    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
