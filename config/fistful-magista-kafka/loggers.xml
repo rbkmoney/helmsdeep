@@ -1,0 +1,4 @@
+<included>
+    <logger name="com.rbkmoney" level="INFO"/>
+    <logger name="com.rbkmoney.woody" level="INFO"/>
+</included>
