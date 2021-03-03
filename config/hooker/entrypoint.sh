@@ -12,13 +12,20 @@ java \
     --spring.datasource.hikari.idle-timeout=30000 \
     --spring.datasource.hikari.minimum-idle=2 \
     --spring.datasource.hikari.maximum-pool-size=20 \
-    --kafka.bootstrap-servers=kafka-headless:9092 \
-    --kafka.topics.invoice.enabled=true \
-    --kafka.topics.customer.enabled=true \
-    --kafka.topics.invoice.concurrency=7 \
-    --kafka.topics.customer.concurrency=2 \
+    --service.invoicing.url=http://hellgate:8022/v1/processing/invoicing \
+    --service.customer.url=http://hellgate:8022/v1/processing/customer_management \
+    --service.fault-detector.url=http://fault-detector:8022/v1/fault-detector \
+    --kafka.bootstrap-servers=http://kafka:9092 \
     --kafka.topics.invoice.id=mg-events-invoice \
+    --kafka.topics.invoice.enabled=true \
+    --kafka.topics.invoice.concurrency=7 \
     --kafka.topics.customer.id=mg-events-customer \
+    --kafka.topics.customer.enabled=true \
+    --kafka.topics.customer.concurrency=2 \
+    --kafka.client-id=hooker \
+    --kafka.consumer.group-id=Hooker-Invoicing \
+    --kafka.consumer.max-poll-records=500 \
+    --spring.application.name=hooker-kafka \
+    --logging.level.com.rbkmoney.hooker.scheduler.MessageScheduler=DEBUG \
     ${@} \
     --spring.config.additional-location=/vault/secrets/application.properties \
-

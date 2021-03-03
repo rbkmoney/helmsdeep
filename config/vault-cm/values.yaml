@@ -9,28 +9,28 @@ configMap:
           connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/shumway?sslmode=disable" \
           username="postgres" \
           password="H@ckM3"
-      vault write database/roles/db-app \
+      vault write database/roles/db-app-shumway \
           db_name=shumway \
-          creation_statements="Create schema if not exists shm;
+          creation_statements="CREATE SCHEMA IF NOT EXISTS shm;
           CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
           GRANT CREATE ON DATABASE shumway TO \"{{name}}\";
-          GRANT ALL ON schema shm TO \"{{name}}\";
+          GRANT ALL ON SCHEMA shm TO \"{{name}}\";
           GRANT ALL ON ALL TABLES IN SCHEMA shm TO \"{{name}}\";
           GRANT ALL ON ALL SEQUENCES IN SCHEMA shm TO \"{{name}}\";" \
           default_ttl="1h" \
           max_ttl="240h"
-      vault write database/config/hook \
+      vault write database/config/hooker \
           plugin_name=postgresql-database-plugin \
           allowed_roles="*" \
-          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/hook?sslmode=disable" \
+          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/hooker?sslmode=disable" \
           username="postgres" \
           password="H@ckM3"
-      vault write database/roles/db-app-hook \
-          db_name=hook \
-          creation_statements="Create schema if not exists hook;
+      vault write database/roles/db-app-hooker \
+          db_name=hooker \
+          creation_statements="CREATE SCHEMA IF NOT EXISTS hook;
           CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
-          GRANT CREATE ON DATABASE hook TO \"{{name}}\";
-          GRANT ALL ON schema hook TO \"{{name}}\";
+          GRANT CREATE ON DATABASE hooker TO \"{{name}}\";
+          GRANT ALL ON SCHEMA hook TO \"{{name}}\";
           GRANT ALL ON ALL TABLES IN SCHEMA hook TO \"{{name}}\";
           GRANT ALL ON ALL SEQUENCES IN SCHEMA hook TO \"{{name}}\";" \
           default_ttl="1h" \
@@ -50,9 +50,9 @@ configMap:
   
       vault policy write db-app /vault-init/db-policy.hcl
     db-policy.hcl: |
-      path "database/creds/db-app" {
+      path "database/creds/db-app-shumway" {
         capabilities = ["read"]
       }
-      path "database/creds/db-app-hook" {
+      path "database/creds/db-app-hooker" {
         capabilities = ["read"]
       }

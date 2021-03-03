@@ -9,6 +9,7 @@ image:
 
 runopts:
   command : ["/opt/shumway/entrypoint.sh"]
+
 configMap:
   data:
     entrypoint.sh: |
@@ -50,17 +51,18 @@ livenessProbe:
   httpGet:
     path: /actuator/health
     port: management
+
 readinessProbe:
   httpGet:
     path: /actuator/health
     port: management
 
 podAnnotations:
-  vault.hashicorp.com/role: "db-app"
+  vault.hashicorp.com/role: "db-app-shumway"
   vault.hashicorp.com/agent-inject: "true"
-  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app"
+  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-shumway"
   vault.hashicorp.com/agent-inject-template-application.properties: |
-    {{`{{- with secret "database/creds/db-app" -}}
+    {{`{{- with secret "database/creds/db-app-shumway" -}}
     spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/shumway?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
@@ -69,14 +71,25 @@ podAnnotations:
     spring.flyway.password={{ .Data.password }}
     {{- end }}`}}
 
-ciliumPolicies:
-  - filters:
-    - port: 8200
-      type: TCP
-    name: vault
+metrics:
+  serviceMonitor:
+    enabled: true
     namespace: {{ .Release.Namespace }}
+    additionalLabels:
+      release: prometheus
+    endpoints:
+      - port: "management"
+        path: /actuator/prometheus
+        scheme: http
+
+ciliumPolicies:
   - filters:
     - port: 5432
       type: TCP
     name: postgres
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8200
+      type: TCP
+    name: vault
     namespace: {{ .Release.Namespace }}
