@@ -38,15 +38,15 @@ configMap:
       vault write database/config/magista-kafka \
           plugin_name=postgresql-database-plugin \
           allowed_roles="*" \
-          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/mst?sslmode=disable" \
+          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/magista-kafka?sslmode=disable" \
           username="postgres" \
           password="H@ckM3"
       vault write database/roles/db-app-magista-kafka \
           db_name=magista-kafka \
-          creation_statements="Create schema if not exists mst;
+          creation_statements="CREATE SCHEMA IF NOT EXISTS mst;
           CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
-          GRANT CREATE ON DATABASE mst TO \"{{name}}\";
-          GRANT ALL ON schema mst TO \"{{name}}\";
+          GRANT CREATE ON DATABASE magista-kafka TO \"{{name}}\";
+          GRANT ALL ON SCHEMA mst TO \"{{name}}\";
           GRANT ALL ON ALL TABLES IN SCHEMA mst TO \"{{name}}\";
           GRANT ALL ON ALL SEQUENCES IN SCHEMA mst TO \"{{name}}\";" \
           default_ttl="1h" \

@@ -61,10 +61,10 @@ podAnnotations:
   vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-magista-kafka"
   vault.hashicorp.com/agent-inject-template-application.properties: |
     {{`{{- with secret "database/creds/db-app-magista-kafka" }}
-    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/mst?sslmode=disable
+    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/magista-kafka?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
-    flyway.url=jdbc:postgresql://postgres-postgresql:5432/mst?sslmode=disable
+    flyway.url=jdbc:postgresql://postgres-postgresql:5432/magista-kafka?sslmode=disable
     flyway.user={{ .Data.username }}
     flyway.password={{ .Data.password }}
 {{- /*
