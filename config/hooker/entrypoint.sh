@@ -15,7 +15,7 @@ java \
     --service.invoicing.url=http://hellgate:8022/v1/processing/invoicing \
     --service.customer.url=http://hellgate:8022/v1/processing/customer_management \
     --service.fault-detector.url=http://fault-detector:8022/v1/fault-detector \
-    --kafka.bootstrap-servers=http://kafka:9092 \
+    --kafka.bootstrap-servers=kafka:9092 \
     --kafka.topics.invoice.id=mg-events-invoice \
     --kafka.topics.invoice.enabled=true \
     --kafka.topics.invoice.concurrency=7 \
