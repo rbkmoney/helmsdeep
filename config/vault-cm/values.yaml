@@ -43,10 +43,10 @@ configMap:
           password="H@ckM3"
       vault write database/roles/db-app-claim-management \
           db_name=claim-management \
-          creation_statements="Create schema if not exists cm;
+          creation_statements="CREATE SCHEMA IF NOT EXISTS cm;
           CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
           GRANT CREATE ON DATABASE claim-management TO \"{{name}}\";
-          GRANT ALL ON schema cm TO \"{{name}}\";
+          GRANT ALL ON SCHEMA cm TO \"{{name}}\";
           GRANT ALL ON ALL TABLES IN SCHEMA cm TO \"{{name}}\";
           GRANT ALL ON ALL SEQUENCES IN SCHEMA cm TO \"{{name}}\";" \
           default_ttl="1h" \
@@ -70,5 +70,8 @@ configMap:
         capabilities = ["read"]
       }
       path "database/creds/db-app-hook" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-claim-management" {
         capabilities = ["read"]
       }
