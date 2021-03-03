@@ -170,3 +170,5 @@ releases:
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/keycloak
+- name: questionary-aggr-proxy
+  <<: *generic_stateless
