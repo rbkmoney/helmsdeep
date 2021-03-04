@@ -1,0 +1,77 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+image:
+  repository: docker.io/rbkmoney/file-storage
+  tag: 25506ff3def2e9a629f2056d514e84ecd3ecb2b3
+  pullPolicy: IfNotPresent
+
+runopts:
+  command: ["/opt/file-storage/entrypoint.sh"]
+
+configMap:
+  data: 
+    entrypoint.sh: |
+      {{- readFile "entrypoint.sh" | nindent 6 }}
+    loggers.xml: |
+      {{- readFile "loggers.xml" | nindent 6 }}
+    logback.xml: |
+      {{- readFile "../logs/logback.xml" | nindent 6 }}
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/file-storage/entrypoint.sh
+    subPath: entrypoint.sh
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/file-storage/logback.xml
+    subPath: logback.xml
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/file-storage/loggers.xml
+    subPath: loggers.xml
+    readOnly: true
+
+service:
+  ports:
+    - name: api
+      port: 8022
+    - name: management
+      port: 8023
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: management
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: management
+
+metrics:
+  serviceMonitor:
+    enabled: true
+    namespace: {{ .Release.Namespace }}
+    additionalLabels:
+      release: prometheus
+    endpoints:
+      - port: "management"
+        path: /actuator/prometheus
+        scheme: http
+
+ciliumPolicies:
+{{- /*
+  - filters:
+    - port: 80
+      type: TCP
+    name: ceph
+    namespace: {{ .Release.Namespace }}
+*/ -}}
