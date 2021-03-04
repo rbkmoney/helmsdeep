@@ -23,9 +23,9 @@ java \
     --kafka.max-session-timeout-ms=300000 \
     --kafka.max-poll-interval-ms=300000 \
     --kafka.ssl.enabled=false \
-    --kafka.ssl.key-store-location=/opt/hooker/kafka-keystore.p12 \
+    --kafka.ssl.key-store-location=/opt/fistful-reporter-kafka/kafka-keystore.p12 \
     --kafka.ssl.key-store-password=test \
-    --kafka.ssl.trust-store-location=/opt/hooker/kafka-truststore.p12 \
+    --kafka.ssl.trust-store-location=/opt/fistful-reporter-kafka/kafka-truststore.p12 \
     --kafka.ssl.trust-store-password=test \
     --kafka.ssl.key-password=test \
     --kafka.topic.deposit.name=mg-events-ff-deposit \
