@@ -1,0 +1,46 @@
+#!/bin/sh
+set -ue
+
+java \
+    "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
+    -jar \
+    /opt/fistful-reporter/fistful-reporter.jar \
+    --logging.config=/opt/fistful-reporter-kafka/logback.xml \
+    --spring.datasource.hikari.data-source-properties.prepareThreshold=0 \
+    --spring.datasource.hikari.leak-detection-threshold=5300 \
+    --spring.datasource.hikari.max-lifetime=300000 \
+    --spring.datasource.hikari.idle-timeout=30000 \
+    --spring.datasource.hikari.minimum-idle=2 \
+    --spring.datasource.hikari.maximum-pool-size=20 \
+    --flyway.schemas=fr \
+    --partymanagement.url=http://hellgate:8022/v1/processing/partymgmt \
+    --partymanagement.timeout=30000 \
+    --spring.application.name=fistful-reporter-kafka \
+    --kafka.bootstrap-servers=kafka:9092 \
+    --kafka.consumer.group-id=fistful-reporter \
+    --kafka.consumer.concurrency=7 \
+    --kafka.max-poll-records=20 \
+    --kafka.max-session-timeout-ms=300000 \
+    --kafka.max-poll-interval-ms=300000 \
+    --kafka.ssl.enabled=false \
+    --kafka.ssl.key-store-location=/opt/hooker/kafka-keystore.p12 \
+    --kafka.ssl.key-store-password=test \
+    --kafka.ssl.trust-store-location=/opt/hooker/kafka-truststore.p12 \
+    --kafka.ssl.trust-store-password=test \
+    --kafka.ssl.key-password=test \
+    --kafka.topic.deposit.name=mg-events-ff-deposit \
+    --kafka.topic.deposit.listener.enabled=true \
+    --kafka.topic.destination.name=mg-events-ff-destination \
+    --kafka.topic.destination.listener.enabled=true \
+    --kafka.topic.identity.name=mg-events-ff-identity \
+    --kafka.topic.identity.listener.enabled=true \
+    --kafka.topic.wallet.name=mg-events-ff-wallet \
+    --kafka.topic.wallet.listener.enabled=true \
+    --kafka.topic.withdrawal.name=mg-events-ff-withdrawal \
+    --kafka.topic.withdrawal.listener.enabled=true \
+    --kafka.topic.source.name=mg-events-ff-source \
+    --kafka.topic.source.listener.enabled=true \
+    --reporting.pollingEnable=true \
+    --filestorage.url=http://file-storage:8022/file_storage \
+    ${@} \
+    --spring.config.additional-location=/vault/secrets/application.properties \
