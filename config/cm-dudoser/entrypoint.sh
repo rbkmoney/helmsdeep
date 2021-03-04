@@ -1,0 +1,52 @@
+#!/bin/sh
+set -ue
+
+java \
+    "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
+    -jar \
+    /opt/cm-dudoser/cm-dudoser.jar \
+    --logging.config=/opt/cm-dudoser/cm-dudoser.xml \
+    --spring.output.ansi.enabled=never \
+    --kafka.bootstrap.servers=kafka:9092 \
+    --kafka.topics.claim-event-sink.id=claim-event-sink \
+    --kafka.topics.claim-event-sink.enabled=true \
+    --kafka.consumer.concurrency=5 \
+    --kafka.consumer.client-id=cm-dudoser \
+    --kafka.consumer.group-id=cm-dudoser-group-1 \
+    --kafka.consumer.enable-auto-commit=false \
+    --kafka.consumer.auto-offset-reset=latest \
+    --kafka.consumer.max-poll-records=20 \
+    --kafka.consumer.connections-max-idle-ms=300000 \
+    --kafka.consumer.session-timeout-ms=300000 \
+    --kafka.error-handler.sleep-time-seconds=5 \
+    --kafka.error-handler.maxAttempts=-1 \
+    --kafka.ssl.enabled=false \
+    --kafka.ssl.key-store-location=/opt/cm-dudoser/kafka-keystore.p12 \
+    --kafka.ssl.key-store-password=test \
+    --kafka.ssl.trust-store-location=/opt/cm-dudoser/kafka-truststore.p12 \
+    --kafka.ssl.trust-store-password=test \
+    --kafka.ssl.key-password=test \
+    --mail.host=mr.rbkmoney.net \
+    --mail.port=25 \
+    --mail.from=noreply@rbkmoney.com \
+    --mail.protocol=smtp \
+    --mail.retry.max.attempts=3 \
+    --mail.retry.backoff.period=1000 \
+    --mail.smtp.auth=false \
+    --mail.smtp.timeout=30000 \
+    --mail.smtp.starttls.enable=true \
+    --claimmanagement.client.adapter.url=http://claim-management:8022/v1/cm \
+    --claimmanagement.client.adapter.networkTimeout=30000 \
+    --conversations.client.adapter.url=http://messages:8022/v1/messages \
+    --conversations.client.adapter.networkTimeout=30000 \
+    --filestorage.client.adapter.url=http://file-storage:8022/file_storage \
+    --filestorage.client.adapter.networkTimeout=30000 \
+    --questionary.client.adapter.url=http://questionary:8022/v1/questionary \
+    --questionary.client.adapter.networkTimeout=30000 \
+    --telegram.enable=true \
+    --telegram.token=token \
+    --telegram.chatId=1208034847 \
+    --telegram.files.send.enable=false \
+    --filter.test.party-ids='' \
+    ${@} \
+    --spring.config.additional-location=/vault/secrets/application.properties \

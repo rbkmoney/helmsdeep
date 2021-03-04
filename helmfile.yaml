@@ -171,3 +171,10 @@ releases:
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/keycloak
+- name: cm-dudoser
+  <<: *generic_stateless
+#  needs:
+#    - {{ .Namespace | default "default" }}/claim-management
+#    - {{ .Namespace | default "default" }}/messages
+#    - {{ .Namespace | default "default" }}/file-storage
+#    - {{ .Namespace | default "default" }}/questionary
