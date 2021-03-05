@@ -19,17 +19,17 @@ configMap:
           GRANT ALL ON ALL SEQUENCES IN SCHEMA shm TO \"{{name}}\";" \
           default_ttl="1h" \
           max_ttl="240h"
-      vault write database/config/hooker-kafka \
+      vault write database/config/hooker \
           plugin_name=postgresql-database-plugin \
           allowed_roles="*" \
-          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/hooker-kafka?sslmode=disable" \
+          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/hooker?sslmode=disable" \
           username="postgres" \
           password="H@ckM3"
-      vault write database/roles/db-app-hooker-kafka \
-          db_name=hooker-kafka \
+      vault write database/roles/db-app-hooker \
+          db_name=hooker \
           creation_statements="CREATE SCHEMA IF NOT EXISTS hook;
           CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
-          GRANT CREATE ON DATABASE hooker-kafka TO \"{{name}}\";
+          GRANT CREATE ON DATABASE hooker TO \"{{name}}\";
           GRANT ALL ON SCHEMA hook TO \"{{name}}\";
           GRANT ALL ON ALL TABLES IN SCHEMA hook TO \"{{name}}\";
           GRANT ALL ON ALL SEQUENCES IN SCHEMA hook TO \"{{name}}\";" \
@@ -53,6 +53,6 @@ configMap:
       path "database/creds/db-app-shumway" {
         capabilities = ["read"]
       }
-      path "database/creds/db-app-hooker-kafka" {
+      path "database/creds/db-app-hooker" {
         capabilities = ["read"]
       }

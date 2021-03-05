@@ -8,7 +8,7 @@ image:
   pullPolicy: IfNotPresent
 
 runopts:
-  command: ["/opt/hooker-kafka/entrypoint.sh"]
+  command: ["/opt/hooker/entrypoint.sh"]
 
 configMap:
   data: 
@@ -27,15 +27,15 @@ volumes:
 
 volumeMounts:
   - name: config-volume
-    mountPath: /opt/hooker-kafka/entrypoint.sh
+    mountPath: /opt/hooker/entrypoint.sh
     subPath: entrypoint.sh
     readOnly: true
   - name: config-volume
-    mountPath: /opt/hooker-kafka/logback.xml
+    mountPath: /opt/hooker/logback.xml
     subPath: logback.xml
     readOnly: true
   - name: config-volume
-    mountPath: /opt/hooker-kafka/loggers.xml
+    mountPath: /opt/hooker/loggers.xml
     subPath: loggers.xml
     readOnly: true
 
@@ -59,13 +59,13 @@ readinessProbe:
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
-  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-hooker-kafka"
+  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-hooker"
   vault.hashicorp.com/agent-inject-template-application.properties: |
-    {{`{{- with secret "database/creds/db-app-hooker-kafka" }}
-    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/hooker-kafka?sslmode=disable
+    {{`{{- with secret "database/creds/db-app-hooker" }}
+    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/hooker?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
-    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/hooker-kafka?sslmode=disable
+    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/hooker?sslmode=disable
     spring.flyway.user={{ .Data.username }}
     spring.flyway.password={{ .Data.password }}
     {{- end }}`}}

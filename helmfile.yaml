@@ -87,7 +87,7 @@ releases:
   needs:
   - {{ .Namespace | default "default" }}/vault
   wait: true
-- name: hooker-kafka
+- name: hooker
   <<: *generic_stateless
   needs:
   - {{ .Namespace | default "default" }}/vault

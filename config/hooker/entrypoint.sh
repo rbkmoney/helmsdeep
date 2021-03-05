@@ -5,7 +5,7 @@ java \
     "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
     -jar \
     /opt/hooker/hooker.jar \
-    --logging.config=/opt/hooker-kafka/logback.xml \
+    --logging.config=/opt/hooker/logback.xml \
     --spring.datasource.hikari.data-source-properties.prepareThreshold=0 \
     --spring.datasource.hikari.leak-detection-threshold=5300 \
     --spring.datasource.hikari.max-lifetime=300000 \
@@ -26,12 +26,12 @@ java \
     --kafka.consumer.group-id=Hooker-Invoicing \
     --kafka.consumer.max-poll-records=500 \
     --kafka.ssl.enabled=false \
-    --kafka.ssl.key-store-location=/opt/hooker-kafka/kafka-keystore.p12 \
+    --kafka.ssl.key-store-location=/opt/hooker/kafka-keystore.p12 \
     --kafka.ssl.key-store-password=test \
-    --kafka.ssl.trust-store-location=/opt/hooker-kafka/kafka-truststore.p12 \
+    --kafka.ssl.trust-store-location=/opt/hooker/kafka-truststore.p12 \
     --kafka.ssl.trust-store-password=test \
     --kafka.ssl.key-password=test \
-    --spring.application.name=hooker-kafka \
+    --spring.application.name=hooker \
     --logging.level.com.rbkmoney.hooker.scheduler.MessageScheduler=DEBUG \
     ${@} \
     --spring.config.additional-location=/vault/secrets/application.properties \
