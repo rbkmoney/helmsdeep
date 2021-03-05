@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: docker.io/rbkmoney/questionary
-  tag: 3588fd5c93284114854086f50e8f2469427a5d10
+  tag: 954dbc039eb011f32d6edf661d874eca9cea9c77
   pullPolicy: IfNotPresent
 
 runopts:
@@ -18,6 +18,7 @@ configMap:
       {{- readFile "loggers.xml" | nindent 6 }}
     logback.xml: |
       {{- readFile "../logs/logback.xml" | nindent 6 }}
+
 volumes:
   - name: config-volume
     configMap:
@@ -60,7 +61,7 @@ podAnnotations:
   vault.hashicorp.com/agent-inject: "true"
   vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-questionary"
   vault.hashicorp.com/agent-inject-template-application.properties: |
-    {{`{{- with secret "database/creds/db-app-questionary" }}
+    {{`{{- with secret "database/creds/db-app-questionary" -}}
     spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/questionary?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
