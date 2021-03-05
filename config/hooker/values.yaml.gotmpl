@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: docker.io/rbkmoney/hooker
-  tag: dc15f448d473c03b7c379a9f0338e8210bc1606a
+  tag: aeffeedb13a8f5125962bfe3e0e734ba4104d876
   pullPolicy: IfNotPresent
 
 runopts:
@@ -68,16 +68,6 @@ podAnnotations:
     spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/hooker?sslmode=disable
     spring.flyway.user={{ .Data.username }}
     spring.flyway.password={{ .Data.password }}
-{{- /*
-    {% if kafka.ssl.get('enable', False) %}
-    --kafka.ssl.enabled={{ kafka.ssl.enable }}
-    --kafka.ssl.key-store-location=/opt/{{ service_name }}/kafka-keystore.p12
-    --kafka.ssl.key-store-password="{{ service.keystore.pass }}"
-    --kafka.ssl.key-password="{{ service.keystore.pass }}"
-    --kafka.ssl.trust-store-location=/opt/{{ service_name }}/kafka-truststore.p12
-    --kafka.ssl.trust-store-password="{{ kafka.truststore.java.pass }}"
-    {% endif %}
-*/ -}}
     {{- end }}`}}
 
 metrics:
@@ -98,11 +88,6 @@ ciliumPolicies:
     name: postgres
     namespace: {{ .Release.Namespace }}
   - filters:
-    - port: 8200
-      type: TCP
-    name: vault
-    namespace: {{ .Release.Namespace }}
-  - filters:
     - port: 9092
       rules:
         kafka:
@@ -112,6 +97,11 @@ ciliumPolicies:
             - mg-events-invoice
       type: TCP
     name: kafka
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8200
+      type: TCP
+    name: vault
     namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
