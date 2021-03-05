@@ -60,7 +60,7 @@ podAnnotations:
   vault.hashicorp.com/agent-inject: "true"
   vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-analytics"
   vault.hashicorp.com/agent-inject-template-application.properties: |
-    {{`{{- with secret "database/creds/db-app-analytics" }}
+    {{`{{- with secret "database/creds/db-app-analytics" -}}
     spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/analytics?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
@@ -73,16 +73,6 @@ podAnnotations:
     clickhouse.db.url=jdbc:clickhouse://clickhouse:8123/analytic
     clickhouse.db.user={{ .Data.clickhouse.username }}
     clickhouse.db.password={{ .Data.clickhouse.password }}
-{{- /*
-    {% if kafka.ssl.get('enable', False) %}
-    --kafka.ssl.enabled={{ kafka.ssl.enable }}
-    --kafka.ssl.key-store-location=/opt/{{ service_name }}/kafka-keystore.p12
-    --kafka.ssl.key-store-password="{{ service.keystore.pass }}"
-    --kafka.ssl.key-password="{{ service.keystore.pass }}"
-    --kafka.ssl.trust-store-location=/opt/{{ service_name }}/kafka-truststore.p12
-    --kafka.ssl.trust-store-password="{{ kafka.truststore.java.pass }}"
-    {% endif %}
-*/ -}}
     {{- end }}`}}
 
 metrics:
@@ -116,10 +106,10 @@ ciliumPolicies:
     name: kafka
     namespace: {{ .Release.Namespace }}
   - filters:
-     - port: 8123
-       type: TCP
-     name: clickhouse
-     namespace: {{ .Release.Namespace }}
+    - port: 8123
+      type: TCP
+    name: clickhouse
+    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8200
       type: TCP
@@ -145,3 +135,13 @@ ciliumPolicies:
       type: TCP
     name: dominant
     namespace: {{ .Release.Namespace }}
+
+##In case of kafka mTLS auth move it to vault template
+# {{- /*
+#      kafka.ssl.enabled={{ kafka.ssl.enable }}
+#      kafka.ssl.key-store-location=/opt/{{ service_name }}/kafka-keystore.p12
+#      kafka.ssl.key-store-password="{{ service.keystore.pass }}"
+#      kafka.ssl.key-password="{{ service.keystore.pass }}"
+#      kafka.ssl.trust-store-location=/opt/{{ service_name }}/kafka-truststore.p12
+#      kafka.ssl.trust-store-password="{{ kafka.truststore.java.pass }}"
+# */ -}}
