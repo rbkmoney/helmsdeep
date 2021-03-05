@@ -25,12 +25,6 @@ java \
     --kafka.client-id=hooker \
     --kafka.consumer.group-id=Hooker-Invoicing \
     --kafka.consumer.max-poll-records=500 \
-    --kafka.ssl.enabled=false \
-    --kafka.ssl.key-store-location=/opt/hooker/kafka-keystore.p12 \
-    --kafka.ssl.key-store-password=test \
-    --kafka.ssl.trust-store-location=/opt/hooker/kafka-truststore.p12 \
-    --kafka.ssl.trust-store-password=test \
-    --kafka.ssl.key-password=test \
     --spring.application.name=hooker \
     --logging.level.com.rbkmoney.hooker.scheduler.MessageScheduler=DEBUG \
     ${@} \

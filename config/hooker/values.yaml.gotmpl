@@ -115,3 +115,13 @@ ciliumPolicies:
     name: fault-detector
     namespace: {{ .Release.Namespace }}
 */ -}}
+
+##In case of kafka mTLS auth move it to vault template
+# {{- /*
+#      kafka.ssl.enabled={{ kafka.ssl.enable }}
+#      kafka.ssl.key-store-location=/opt/{{ service_name }}/kafka-keystore.p12
+#      kafka.ssl.key-store-password="{{ service.keystore.pass }}"
+#      kafka.ssl.key-password="{{ service.keystore.pass }}"
+#      kafka.ssl.trust-store-location=/opt/{{ service_name }}/kafka-truststore.p12
+#      kafka.ssl.trust-store-password="{{ kafka.truststore.java.pass }}"
+# */ -}}
