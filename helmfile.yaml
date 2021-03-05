@@ -186,6 +186,6 @@ releases:
   needs:
     - {{ .Namespace | default "default" }}/vault
     - {{ .Namespace | default "default" }}/kafka
-    - {{ .Namespace | default "default" }}/columbus
+#    - {{ .Namespace | default "default" }}/columbus
     - {{ .Namespace | default "default" }}/hellgate
-    - {{ .Namespace | default "default" }}/payouter
+#    - {{ .Namespace | default "default" }}/payouter

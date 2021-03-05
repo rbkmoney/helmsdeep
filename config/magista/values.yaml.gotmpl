@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: docker.io/rbkmoney/magista
-  tag: ac07385bcb8fdbcd0a59509f325b09d74b38e7ea
+  tag: 84f2ad8875317497db97ee6902bb624e47906164
   pullPolicy: IfNotPresent
 
 runopts:
@@ -19,21 +19,11 @@ configMap:
     logback.xml: |
       {{- readFile "../logs/logback.xml" | nindent 6 }}
 
-livenessProbe:
-  httpGet:
-    path: /actuator/health
-    port: management
-readinessProbe:
-  httpGet:
-    path: /actuator/health
-    port: management
-
-service:
-  ports:
-    - name: api
-      port: 8022
-    - name: management
-      port: 8023
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
 
 volumeMounts:
   - name: config-volume
@@ -49,18 +39,29 @@ volumeMounts:
     subPath: loggers.xml
     readOnly: true
 
-volumes:
-  - name: config-volume
-    configMap:
-      name: {{ .Release.Name }}
-      defaultMode: 0755
+service:
+  ports:
+    - name: api
+      port: 8022
+    - name: management
+      port: 8023
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: management
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: management
 
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
   vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-magista"
   vault.hashicorp.com/agent-inject-template-application.properties: |
-    {{`{{- with secret "database/creds/db-app-magista" }}
+    {{`{{- with secret "database/creds/db-app-magista" -}}
     spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/magista?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
@@ -79,7 +80,6 @@ metrics:
       - port: "management"
         path: /actuator/prometheus
         scheme: http
-
 
 ciliumPolicies:
   - filters:
