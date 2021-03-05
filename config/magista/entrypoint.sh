@@ -5,14 +5,14 @@ java \
     "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
     -jar \
     /opt/magista/magista.jar \
-    --logging.config=/opt/magista-kafka/logback.xml \
-    --spring.application.name=magista-kafka \
-    --spring.datasource.hikari.maximum-pool-size=mg-events-invoice \
+    --logging.config=/opt/magista/logback.xml \
+    --spring.application.name=magista \
     --spring.datasource.hikari.data-source-properties.prepareThreshold=0 \
     --spring.datasource.hikari.leak-detection-threshold=5300 \
     --spring.datasource.hikari.max-lifetime=300000 \
     --spring.datasource.hikari.idle-timeout=30000 \
     --spring.datasource.hikari.minimum-idle=2 \
+    --spring.datasource.hikari.maximum-pool-size=20 \
     --flyway.schemas=mst \
     --payouter.pooling.url=http://payouter:8022/repo \
     --hellgate.url=http://hellgate:8022/v1/processing/partymgmt \

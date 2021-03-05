@@ -8,7 +8,7 @@ image:
   pullPolicy: IfNotPresent
 
 runopts:
-  command: ["/opt/magista-kafka/entrypoint.sh"]
+  command: ["/opt/magista/entrypoint.sh"]
 
 configMap:
   data:
@@ -37,15 +37,15 @@ service:
 
 volumeMounts:
   - name: config-volume
-    mountPath: /opt/magista-kafka/entrypoint.sh
+    mountPath: /opt/magista/entrypoint.sh
     subPath: entrypoint.sh
     readOnly: true
   - name: config-volume
-    mountPath: /opt/magista-kafka/logback.xml
+    mountPath: /opt/magista/logback.xml
     subPath: logback.xml
     readOnly: true
   - name: config-volume
-    mountPath: /opt/magista-kafka/loggers.xml
+    mountPath: /opt/magista/loggers.xml
     subPath: loggers.xml
     readOnly: true
 
@@ -58,13 +58,13 @@ volumes:
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
-  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-magista-kafka"
+  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-magista"
   vault.hashicorp.com/agent-inject-template-application.properties: |
-    {{`{{- with secret "database/creds/db-app-magista-kafka" }}
-    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/magista-kafka?sslmode=disable
+    {{`{{- with secret "database/creds/db-app-magista" }}
+    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/magista?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
-    flyway.url=jdbc:postgresql://postgres-postgresql:5432/magista-kafka?sslmode=disable
+    flyway.url=jdbc:postgresql://postgres-postgresql:5432/magista?sslmode=disable
     flyway.user={{ .Data.username }}
     flyway.password={{ .Data.password }}
     {{- end }}`}}
