@@ -67,6 +67,22 @@ configMap:
           GRANT ALL ON ALL SEQUENCES IN SCHEMA qs TO \"{{name}}\";" \
           default_ttl="1h" \
           max_ttl="240h"
+      vault write database/config/claim-management \
+          plugin_name=postgresql-database-plugin \
+          allowed_roles="*" \
+          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/claim-management?sslmode=disable" \
+          username="postgres" \
+          password="H@ckM3"
+      vault write database/roles/db-app-claim-management \
+          db_name=claim-management \
+          creation_statements="CREATE SCHEMA IF NOT EXISTS cm;
+          CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
+          GRANT CREATE ON DATABASE claim-management TO \"{{name}}\";
+          GRANT ALL ON SCHEMA cm TO \"{{name}}\";
+          GRANT ALL ON ALL TABLES IN SCHEMA cm TO \"{{name}}\";
+          GRANT ALL ON ALL SEQUENCES IN SCHEMA cm TO \"{{name}}\";" \
+          default_ttl="1h" \
+          max_ttl="240h"
 
       vault auth enable kubernetes
       vault write auth/kubernetes/config \
@@ -92,5 +108,8 @@ configMap:
         capabilities = ["read"]
       }
       path "database/creds/db-app-questionary" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-claim-management" {
         capabilities = ["read"]
       }

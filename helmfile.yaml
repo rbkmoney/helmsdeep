@@ -185,3 +185,10 @@ releases:
   <<: *generic_stateless
   needs:
     - {{ .Namespace | default "default" }}/vault
+- name: claim-management
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/vault
+    - {{ .Namespace | default "default" }}/kafka
+    - {{ .Namespace | default "default" }}/hellgate
+#    - {{ .Namespace | default "default" }}/cashier
