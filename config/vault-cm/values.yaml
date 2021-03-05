@@ -51,7 +51,6 @@ configMap:
           GRANT ALL ON ALL SEQUENCES IN SCHEMA analytics TO \"{{name}}\";" \
           default_ttl="1h" \
           max_ttl="240h"
-
       vault write database/config/questionary \
           plugin_name=postgresql-database-plugin \
           allowed_roles="*" \
