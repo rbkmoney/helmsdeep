@@ -1,0 +1,147 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+image:
+  repository: docker.io/rbkmoney/analytics
+  tag: b9da0376e15b3aabf89141b1343e7c68f3b5af05
+  pullPolicy: IfNotPresent
+
+runopts:
+  command: ["/opt/analytics/entrypoint.sh"]
+
+configMap:
+  data: 
+    entrypoint.sh: |
+      {{- readFile "entrypoint.sh" | nindent 6 }}
+    loggers.xml: |
+      {{- readFile "loggers.xml" | nindent 6 }}
+    logback.xml: |
+      {{- readFile "../logs/logback.xml" | nindent 6 }}
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/analytics/entrypoint.sh
+    subPath: entrypoint.sh
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/analytics/logback.xml
+    subPath: logback.xml
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/analytics/loggers.xml
+    subPath: loggers.xml
+    readOnly: true
+
+service:
+  ports:
+    - name: api
+      port: 8022
+    - name: management
+      port: 8023
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: management
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: management
+
+podAnnotations:
+  vault.hashicorp.com/role: "db-app"
+  vault.hashicorp.com/agent-inject: "true"
+  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-analytics"
+  vault.hashicorp.com/agent-inject-template-application.properties: |
+    {{`{{- with secret "database/creds/db-app-analytics" -}}
+    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/analytics?sslmode=disable
+    spring.datasource.username={{ .Data.username }}
+    spring.datasource.password={{ .Data.password }}
+    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/analytics?sslmode=disable
+    spring.flyway.user={{ .Data.username }}
+    spring.flyway.password={{ .Data.password }}
+    postgres.db.url=jdbc:postgresql://postgres-postgresql:5432/analytics?sslmode=disable
+    postgres.db.user={{ .Data.username }}
+    postgres.db.password={{ .Data.password }}
+    clickhouse.db.url=jdbc:clickhouse://clickhouse:8123/analytic
+    clickhouse.db.user={{ .Data.clickhouse.username }}
+    clickhouse.db.password={{ .Data.clickhouse.password }}
+    {{- end }}`}}
+
+metrics:
+  serviceMonitor:
+    enabled: true
+    namespace: {{ .Release.Namespace }}
+    additionalLabels:
+      release: prometheus
+    endpoints:
+      - port: "management"
+        path: /actuator/prometheus
+        scheme: http
+
+ciliumPolicies:
+  - filters:
+    - port: 5432
+      type: TCP
+    name: postgres
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 9092
+      rules:
+        kafka:
+        - role: consume
+          topics:
+            - mg-events-invoice
+            - payout
+            - mg-events-party
+      type: TCP
+    name: kafka
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8123
+      type: TCP
+    name: clickhouse
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8200
+      type: TCP
+    name: vault
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: columbus
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: hellgate
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: payouter
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: dominant
+    namespace: {{ .Release.Namespace }}
+
+##In case of kafka mTLS auth move it to vault template
+# {{- /*
+#      kafka.ssl.enabled={{ kafka.ssl.enable }}
+#      kafka.ssl.key-store-location=/opt/{{ service_name }}/kafka-keystore.p12
+#      kafka.ssl.key-store-password="{{ service.keystore.pass }}"
+#      kafka.ssl.key-password="{{ service.keystore.pass }}"
+#      kafka.ssl.trust-store-location=/opt/{{ service_name }}/kafka-truststore.p12
+#      kafka.ssl.trust-store-password="{{ kafka.truststore.java.pass }}"
+# */ -}}
