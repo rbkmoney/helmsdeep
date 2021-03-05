@@ -181,6 +181,10 @@ releases:
     - {{ .Namespace | default "default" }}/hellgate
 #    - {{ .Namespace | default "default" }}/payouter
     - {{ .Namespace | default "default" }}/dominant
+- name: questionary
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/vault
 - name: claim-management
   <<: *generic_stateless
   needs:
