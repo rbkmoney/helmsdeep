@@ -192,3 +192,5 @@ releases:
     - {{ .Namespace | default "default" }}/kafka
     - {{ .Namespace | default "default" }}/hellgate
 #    - {{ .Namespace | default "default" }}/cashier
+- name: questionary-aggr-proxy
+  <<: *generic_stateless
