@@ -85,14 +85,15 @@ releases:
 - name: shumway
   <<: *generic_stateless_json
   needs:
-  - {{ .Namespace | default "default" }}/vault
-  - {{ .Namespace | default "default" }}/postgres
+    - {{ .Namespace | default "default" }}/vault
   wait: true
 - name: hooker
   <<: *generic_stateless
   needs:
-  - {{ .Namespace | default "default" }}/vault
-  - {{ .Namespace | default "default" }}/kafka
+    - {{ .Namespace | default "default" }}/vault
+    - {{ .Namespace | default "default" }}/kafka
+    - {{ .Namespace | default "default" }}/hellgate
+#    - {{ .Namespace | default "default" }}/fault-detector
 - name: dominant
   <<: *generic_stateless_json
   needs:
