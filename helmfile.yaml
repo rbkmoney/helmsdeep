@@ -201,3 +201,4 @@ releases:
 #    - {{ .Namespace | default "default" }}/messages
 #    - {{ .Namespace | default "default" }}/file-storage
     - {{ .Namespace | default "default" }}/questionary
+    - {{ .Namespace | default "default" }}/kafka
