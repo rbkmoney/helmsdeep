@@ -3,12 +3,12 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/hooker
-  tag: aeffeedb13a8f5125962bfe3e0e734ba4104d876
+  repository: docker.io/rbkmoney/analytics
+  tag: b9da0376e15b3aabf89141b1343e7c68f3b5af05
   pullPolicy: IfNotPresent
 
 runopts:
-  command: ["/opt/hooker/entrypoint.sh"]
+  command: ["/opt/analytics/entrypoint.sh"]
 
 configMap:
   data: 
@@ -27,15 +27,15 @@ volumes:
 
 volumeMounts:
   - name: config-volume
-    mountPath: /opt/hooker/entrypoint.sh
+    mountPath: /opt/analytics/entrypoint.sh
     subPath: entrypoint.sh
     readOnly: true
   - name: config-volume
-    mountPath: /opt/hooker/logback.xml
+    mountPath: /opt/analytics/logback.xml
     subPath: logback.xml
     readOnly: true
   - name: config-volume
-    mountPath: /opt/hooker/loggers.xml
+    mountPath: /opt/analytics/loggers.xml
     subPath: loggers.xml
     readOnly: true
 
@@ -59,15 +59,21 @@ readinessProbe:
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
-  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-hooker"
+  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-analytics"
   vault.hashicorp.com/agent-inject-template-application.properties: |
-    {{`{{- with secret "database/creds/db-app-hooker" }}
-    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/hooker?sslmode=disable
+    {{`{{- with secret "database/creds/db-app-analytics" -}}
+    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/analytics?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
-    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/hooker?sslmode=disable
+    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/analytics?sslmode=disable
     spring.flyway.user={{ .Data.username }}
     spring.flyway.password={{ .Data.password }}
+    postgres.db.url=jdbc:postgresql://postgres-postgresql:5432/analytics?sslmode=disable
+    postgres.db.user={{ .Data.username }}
+    postgres.db.password={{ .Data.password }}
+    clickhouse.db.url=jdbc:clickhouse://clickhouse:8123/analytic
+    clickhouse.db.user={{ .Data.clickhouse.username }}
+    clickhouse.db.password={{ .Data.clickhouse.password }}
     {{- end }}`}}
 
 metrics:
@@ -93,10 +99,16 @@ ciliumPolicies:
         kafka:
         - role: consume
           topics:
-            - mg-events-customer
             - mg-events-invoice
+            - payout
+            - mg-events-party
       type: TCP
     name: kafka
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8123
+      type: TCP
+    name: clickhouse
     namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8200
@@ -106,15 +118,23 @@ ciliumPolicies:
   - filters:
     - port: 8022
       type: TCP
-    name: hellgate
+    name: columbus
     namespace: {{ .Release.Namespace }}
-{{- /*
   - filters:
     - port: 8022
       type: TCP
-    name: fault-detector
+    name: hellgate
     namespace: {{ .Release.Namespace }}
-*/ -}}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: payouter
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: dominant
+    namespace: {{ .Release.Namespace }}
 
 ##In case of kafka mTLS auth move it to vault template
 # {{- /*
