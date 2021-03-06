@@ -194,7 +194,7 @@ releases:
 #    - {{ .Namespace | default "default" }}/cashier
 - name: questionary-aggr-proxy
   <<: *generic_stateless
-- name: fistful-reporter-kafka
+- name: fistful-reporter
   <<: *generic_stateless
   needs:
     - {{ .Namespace | default "default" }}/vault

@@ -84,17 +84,17 @@ configMap:
           default_ttl="1h" \
           max_ttl="240h"
 
-      vault write database/config/fistful-reporter-kafka \
+      vault write database/config/fistful-reporter \
           plugin_name=postgresql-database-plugin \
           allowed_roles="*" \
-          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/fistful-reporter-kafka?sslmode=disable" \
+          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/fistful-reporter?sslmode=disable" \
           username="postgres" \
           password="H@ckM3"
-      vault write database/roles/db-app-fistful-reporter-kafka \
-          db_name=fistful-reporter-kafka \
+      vault write database/roles/db-app-fistful-reporter \
+          db_name=fistful-reporter \
           creation_statements="CREATE SCHEMA IF NOT EXISTS fr;
           CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
-          GRANT CREATE ON DATABASE fistful-reporter-kafka TO \"{{name}}\";
+          GRANT CREATE ON DATABASE fistful-reporter TO \"{{name}}\";
           GRANT ALL ON SCHEMA fr TO \"{{name}}\";
           GRANT ALL ON ALL TABLES IN SCHEMA fr TO \"{{name}}\";
           GRANT ALL ON ALL SEQUENCES IN SCHEMA fr TO \"{{name}}\";" \
@@ -130,6 +130,6 @@ configMap:
       path "database/creds/db-app-claim-management" {
         capabilities = ["read"]
       }
-      path "database/creds/db-app-fistful-reporter-kafka" {
+      path "database/creds/db-app-fistful-reporter" {
         capabilities = ["read"]
       }

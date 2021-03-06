@@ -4,11 +4,11 @@ replicaCount: 1
 
 image:
   repository: docker.io/rbkmoney/fistful-reporter
-  tag: 2f810070f46bd553eec1dc54241ee0b4ceb369c2
+  tag: 2698873b8ad88793bed2cc42a7ffedf7f1325dad
   pullPolicy: IfNotPresent
 
 runopts:
-  command: ["/opt/fistful-reporter-kafka/entrypoint.sh"]
+  command: ["/opt/fistful-reporter/entrypoint.sh"]
 
 configMap:
   data: 
@@ -27,15 +27,15 @@ volumes:
 
 volumeMounts:
   - name: config-volume
-    mountPath: /opt/fistful-reporter-kafka/entrypoint.sh
+    mountPath: /opt/fistful-reporter/entrypoint.sh
     subPath: entrypoint.sh
     readOnly: true
   - name: config-volume
-    mountPath: /opt/fistful-reporter-kafka/logback.xml
+    mountPath: /opt/fistful-reporter/logback.xml
     subPath: logback.xml
     readOnly: true
   - name: config-volume
-    mountPath: /opt/fistful-reporter-kafka/loggers.xml
+    mountPath: /opt/fistful-reporter/loggers.xml
     subPath: loggers.xml
     readOnly: true
 
@@ -59,13 +59,13 @@ readinessProbe:
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
-  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-fistful-reporter-kafka"
+  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-fistful-reporter"
   vault.hashicorp.com/agent-inject-template-application.properties: |
-    {{`{{- with secret "database/creds/db-app-fistful-reporter-kafka" }}
-    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/fistful-reporter-kafka?sslmode=disable
+    {{`{{- with secret "database/creds/db-app-fistful-reporter" -}}
+    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/fistful-reporter?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
-    flyway.url=jdbc:postgresql://postgres-postgresql:5432/fistful-reporter-kafka?sslmode=disable
+    flyway.url=jdbc:postgresql://postgres-postgresql:5432/fistful-reporter?sslmode=disable
     flyway.user={{ .Data.username }}
     flyway.password={{ .Data.password }}
     {{- end }}`}}
@@ -112,10 +112,18 @@ ciliumPolicies:
       type: TCP
     name: hellgate
     namespace: {{ .Release.Namespace }}
-{{- /*
   - filters:
     - port: 8022
       type: TCP
     name: file-storage
     namespace: {{ .Release.Namespace }}
-*/ -}}
+
+##In case of kafka mTLS auth move it to vault template
+# {{- /*
+#      kafka.ssl.enabled={{ kafka.ssl.enable }}
+#      kafka.ssl.key-store-location=/opt/{{ service_name }}/kafka-keystore.p12
+#      kafka.ssl.key-store-password="{{ service.keystore.pass }}"
+#      kafka.ssl.key-password="{{ service.keystore.pass }}"
+#      kafka.ssl.trust-store-location=/opt/{{ service_name }}/kafka-truststore.p12
+#      kafka.ssl.trust-store-password="{{ kafka.truststore.java.pass }}"
+# */ -}}

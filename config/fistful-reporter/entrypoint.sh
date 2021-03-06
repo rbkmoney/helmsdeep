@@ -5,7 +5,7 @@ java \
     "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
     -jar \
     /opt/fistful-reporter/fistful-reporter.jar \
-    --logging.config=/opt/fistful-reporter-kafka/logback.xml \
+    --logging.config=/opt/fistful-reporter/logback.xml \
     --spring.datasource.hikari.data-source-properties.prepareThreshold=0 \
     --spring.datasource.hikari.leak-detection-threshold=5300 \
     --spring.datasource.hikari.max-lifetime=300000 \
@@ -15,19 +15,13 @@ java \
     --flyway.schemas=fr \
     --partymanagement.url=http://hellgate:8022/v1/processing/partymgmt \
     --partymanagement.timeout=30000 \
-    --spring.application.name=fistful-reporter-kafka \
+    --spring.application.name=fistful-reporter \
     --kafka.bootstrap-servers=kafka:9092 \
     --kafka.consumer.group-id=fistful-reporter \
     --kafka.consumer.concurrency=7 \
     --kafka.max-poll-records=20 \
     --kafka.max-session-timeout-ms=300000 \
     --kafka.max-poll-interval-ms=300000 \
-    --kafka.ssl.enabled=false \
-    --kafka.ssl.key-store-location=/opt/fistful-reporter-kafka/kafka-keystore.p12 \
-    --kafka.ssl.key-store-password=test \
-    --kafka.ssl.trust-store-location=/opt/fistful-reporter-kafka/kafka-truststore.p12 \
-    --kafka.ssl.trust-store-password=test \
-    --kafka.ssl.key-password=test \
     --kafka.topic.deposit.name=mg-events-ff-deposit \
     --kafka.topic.deposit.listener.enabled=true \
     --kafka.topic.destination.name=mg-events-ff-destination \
