@@ -61,7 +61,7 @@ podAnnotations:
   vault.hashicorp.com/agent-inject: "true"
   vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-fistful-magista"
   vault.hashicorp.com/agent-inject-template-application.properties: |
-    {{`{{- with secret "database/creds/db-app-fistful-magista" }}
+    {{`{{- with secret "database/creds/db-app-fistful-magista" -}}
     spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/fistful-magista?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
