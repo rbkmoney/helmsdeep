@@ -6,6 +6,14 @@ java \
     -jar \
     /opt/cm-dudoser/cm-dudoser.jar \
     --logging.config=/opt/cm-dudoser/cm-dudoser.xml \
+    --management.security.flag=false \
+    --management.metrics.export.statsd.flavor=etsy \
+    --management.metrics.export.statsd.enabled=true \
+    --management.metrics.export.prometheus.enabled=true \
+    --management.endpoint.health.show-details=always \
+    --management.endpoint.metrics.enabled=true \
+    --management.endpoint.prometheus.enabled=true \
+    --management.endpoints.web.exposure.include=health,info,prometheus \
     --spring.output.ansi.enabled=never \
     --kafka.bootstrap.servers=kafka:9092 \
     --kafka.topics.claim-event-sink.id=claim-event-sink \
