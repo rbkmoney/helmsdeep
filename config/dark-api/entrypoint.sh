@@ -6,6 +6,14 @@ java \
     -jar \
     /opt/dark-api/dark-api.jar \
     --logging.config=/opt/dark-api/logback.xml \
+    --management.security.flag=false \
+    --management.metrics.export.statsd.flavor=etsy \
+    --management.metrics.export.statsd.enabled=true \
+    --management.metrics.export.prometheus.enabled=true \
+    --management.endpoint.health.show-details=always \
+    --management.endpoint.metrics.enabled=true \
+    --management.endpoint.prometheus.enabled=true \
+    --management.endpoints.web.exposure.include=health,info,prometheus \
     --magista.client.adapter.url=http://magista:8022/v2/stat \
     --magista.client.adapter.networkTimeout=90000 \
     --claimmanagement.client.adapter.url=http://claim-management:8022/v1/cm \
