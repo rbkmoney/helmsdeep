@@ -85,15 +85,15 @@ releases:
 - name: shumway
   <<: *generic_stateless_json
   needs:
-  - {{ .Namespace | default "default" }}/vault
+    - {{ .Namespace | default "default" }}/vault
   wait: true
 - name: hooker
   <<: *generic_stateless
   needs:
-  - {{ .Namespace | default "default" }}/vault
-  - {{ .Namespace | default "default" }}/kafka
-  - {{ .Namespace | default "default" }}/hellgate
-#  - {{ .Namespace | default "default" }}/fault-detector
+    - {{ .Namespace | default "default" }}/vault
+    - {{ .Namespace | default "default" }}/kafka
+    - {{ .Namespace | default "default" }}/hellgate
+#    - {{ .Namespace | default "default" }}/fault-detector
 - name: dominant
   <<: *generic_stateless_json
   needs:
@@ -171,6 +171,29 @@ releases:
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/keycloak
+- name: analytics
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/vault
+    - {{ .Namespace | default "default" }}/kafka
+#    - {{ .Namespace | default "default" }}/clickhouse
+#    - {{ .Namespace | default "default" }}/columbus
+    - {{ .Namespace | default "default" }}/hellgate
+#    - {{ .Namespace | default "default" }}/payouter
+    - {{ .Namespace | default "default" }}/dominant
+- name: questionary
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/vault
+- name: claim-management
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/vault
+    - {{ .Namespace | default "default" }}/kafka
+    - {{ .Namespace | default "default" }}/hellgate
+#    - {{ .Namespace | default "default" }}/cashier
+- name: questionary-aggr-proxy
+  <<: *generic_stateless
 - name: fistful-reporter-kafka
   <<: *generic_stateless
   needs:

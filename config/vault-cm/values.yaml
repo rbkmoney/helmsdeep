@@ -35,6 +35,55 @@ configMap:
           GRANT ALL ON ALL SEQUENCES IN SCHEMA hook TO \"{{name}}\";" \
           default_ttl="1h" \
           max_ttl="240h"
+      vault write database/config/analytics \
+          plugin_name=postgresql-database-plugin \
+          allowed_roles="*" \
+          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/analytics?sslmode=disable" \
+          username="postgres" \
+          password="H@ckM3"
+      vault write database/roles/db-app-analytics \
+          db_name=analytics \
+          creation_statements="CREATE SCHEMA IF NOT EXISTS analytics;
+          CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
+          GRANT CREATE ON DATABASE analytics TO \"{{name}}\";
+          GRANT ALL ON SCHEMA analytics TO \"{{name}}\";
+          GRANT ALL ON ALL TABLES IN SCHEMA analytics TO \"{{name}}\";
+          GRANT ALL ON ALL SEQUENCES IN SCHEMA analytics TO \"{{name}}\";" \
+          default_ttl="1h" \
+          max_ttl="240h"
+      vault write database/config/questionary \
+          plugin_name=postgresql-database-plugin \
+          allowed_roles="*" \
+          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/questionary?sslmode=disable" \
+          username="postgres" \
+          password="H@ckM3"
+      vault write database/roles/db-app-questionary \
+          db_name=questionary \
+          creation_statements="CREATE SCHEMA IF NOT EXISTS qs;
+          CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
+          GRANT CREATE ON DATABASE questionary TO \"{{name}}\";
+          GRANT ALL ON SCHEMA qs TO \"{{name}}\";
+          GRANT ALL ON ALL TABLES IN SCHEMA qs TO \"{{name}}\";
+          GRANT ALL ON ALL SEQUENCES IN SCHEMA qs TO \"{{name}}\";" \
+          default_ttl="1h" \
+          max_ttl="240h"
+      vault write database/config/claim-management \
+          plugin_name=postgresql-database-plugin \
+          allowed_roles="*" \
+          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/claim-management?sslmode=disable" \
+          username="postgres" \
+          password="H@ckM3"
+      vault write database/roles/db-app-claim-management \
+          db_name=claim-management \
+          creation_statements="CREATE SCHEMA IF NOT EXISTS cm;
+          CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
+          GRANT CREATE ON DATABASE claim-management TO \"{{name}}\";
+          GRANT ALL ON SCHEMA cm TO \"{{name}}\";
+          GRANT ALL ON ALL TABLES IN SCHEMA cm TO \"{{name}}\";
+          GRANT ALL ON ALL SEQUENCES IN SCHEMA cm TO \"{{name}}\";" \
+          default_ttl="1h" \
+          max_ttl="240h"
+
       vault write database/config/fistful-reporter-kafka \
           plugin_name=postgresql-database-plugin \
           allowed_roles="*" \
@@ -70,6 +119,15 @@ configMap:
         capabilities = ["read"]
       }
       path "database/creds/db-app-hooker" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-analytics" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-questionary" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-claim-management" {
         capabilities = ["read"]
       }
       path "database/creds/db-app-fistful-reporter-kafka" {

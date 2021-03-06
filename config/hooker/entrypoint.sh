@@ -25,7 +25,7 @@ java \
     --kafka.client-id=hooker \
     --kafka.consumer.group-id=Hooker-Invoicing \
     --kafka.consumer.max-poll-records=500 \
-    --spring.application.name=hooker-kafka \
+    --spring.application.name=hooker \
     --logging.level.com.rbkmoney.hooker.scheduler.MessageScheduler=DEBUG \
     ${@} \
     --spring.config.additional-location=/vault/secrets/application.properties \
