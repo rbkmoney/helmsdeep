@@ -5,14 +5,14 @@ java \
     "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
     -jar \
     /opt/fistful-magista/fistful-magista.jar \
-    --logging.config=/opt/fistful-magista-kafka/logback.xml \
+    --logging.config=/opt/fistful-magista/logback.xml \
     --spring.datasource.hikari.data-source-properties.prepareThreshold=0 \
     --spring.datasource.hikari.leak-detection-threshold=5300 \
     --spring.datasource.hikari.max-lifetime=300000 \
     --spring.datasource.hikari.idle-timeout=30000 \
     --spring.datasource.hikari.minimum-idle=2 \
     --spring.datasource.hikari.maximum-pool-size=20 \
-    --spring.application.name=fistful-magista-kafka \
+    --spring.application.name=fistful-magista \
     --flyway.schemas=mst \
     --identity-management.url=http://wapi:8022/v1/identity \
     --identity-management.timeout=5000 \

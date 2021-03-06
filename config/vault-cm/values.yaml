@@ -83,17 +83,17 @@ configMap:
           GRANT ALL ON ALL SEQUENCES IN SCHEMA cm TO \"{{name}}\";" \
           default_ttl="1h" \
           max_ttl="240h"
-      vault write database/config/fistful-magista-kafka \
+      vault write database/config/fistful-magista \
           plugin_name=postgresql-database-plugin \
           allowed_roles="*" \
-          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/fistful-magista-kafka?sslmode=disable" \
+          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/fistful-magista?sslmode=disable" \
           username="postgres" \
           password="H@ckM3"
-      vault write database/roles/db-app-fistful-magista-kafka \
-          db_name=fistful-magista-kafka \
+      vault write database/roles/db-app-fistful-magista \
+          db_name=fistful-magista \
           creation_statements="CREATE SCHEMA IF NOT EXISTS mst;
           CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
-          GRANT CREATE ON DATABASE fistful-magista-kafka TO \"{{name}}\";
+          GRANT CREATE ON DATABASE fistful-magista TO \"{{name}}\";
           GRANT ALL ON SCHEMA mst TO \"{{name}}\";
           GRANT ALL ON ALL TABLES IN SCHEMA mst TO \"{{name}}\";
           GRANT ALL ON ALL SEQUENCES IN SCHEMA mst TO \"{{name}}\";" \
@@ -129,6 +129,6 @@ configMap:
       path "database/creds/db-app-claim-management" {
         capabilities = ["read"]
       }
-       path "database/creds/db-app-fistful-magista-kafka" {
+       path "database/creds/db-app-fistful-magista" {
          capabilities = ["read"]
        }

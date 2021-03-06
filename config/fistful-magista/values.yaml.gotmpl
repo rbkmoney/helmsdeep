@@ -4,11 +4,11 @@ replicaCount: 1
 
 image:
   repository: docker.io/rbkmoney/fistful-magista
-  tag: 7f10a0bd2d0f13b945038135b762e4e3c1404bcf
+  tag: 5d5170f9d84085c1d89234a0330c45156c084dca
   pullPolicy: IfNotPresent
 
 runopts:
-  command: ["/opt/fistful-magista-kafka/entrypoint.sh"]
+  command: ["/opt/fistful-magista/entrypoint.sh"]
 
 configMap:
   data:
@@ -18,6 +18,7 @@ configMap:
       {{- readFile "loggers.xml" | nindent 6 }}
     logback.xml: |
       {{- readFile "../logs/logback.xml" | nindent 6 }}
+
 volumes:
   - name: config-volume
     configMap:
@@ -26,15 +27,15 @@ volumes:
 
 volumeMounts:
   - name: config-volume
-    mountPath: /opt/fistful-magista-kafka/entrypoint.sh
+    mountPath: /opt/fistful-magista/entrypoint.sh
     subPath: entrypoint.sh
     readOnly: true
   - name: config-volume
-    mountPath: /opt/fistful-magista-kafka/logback.xml
+    mountPath: /opt/fistful-magista/logback.xml
     subPath: logback.xml
     readOnly: true
   - name: config-volume
-    mountPath: /opt/fistful-magista-kafka/loggers.xml
+    mountPath: /opt/fistful-magista/loggers.xml
     subPath: loggers.xml
     readOnly: true
 
@@ -58,25 +59,15 @@ readinessProbe:
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
-  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-fistful-magista-kafka"
+  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-fistful-magista"
   vault.hashicorp.com/agent-inject-template-application.properties: |
-    {{`{{- with secret "database/creds/db-app-fistful-magista-kafka" }}
-    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/fistful-magista-kafka?sslmode=disable
+    {{`{{- with secret "database/creds/db-app-fistful-magista" }}
+    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/fistful-magista?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
-    flyway.url=jdbc:postgresql://postgres-postgresql:5432/fistful-magista-kafka?sslmode=disable
+    flyway.url=jdbc:postgresql://postgres-postgresql:5432/fistful-magista?sslmode=disable
     flyway.user={{ .Data.username }}
     flyway.password={{ .Data.password }}
-{{- /*
-    {% if kafka.ssl.get('enable', False) %}
-    --kafka.ssl.enabled={{ kafka.ssl.enable }}
-    --kafka.ssl.key-store-location=/opt/{{ service_name }}/kafka-keystore.p12
-    --kafka.ssl.key-store-password="{{ service.keystore.pass }}"
-    --kafka.ssl.key-password="{{ service.keystore.pass }}"
-    --kafka.ssl.trust-store-location=/opt/{{ service_name }}/kafka-truststore.p12
-    --kafka.ssl.trust-store-password="{{ kafka.truststore.java.pass }}"
-    {% endif %}
-*/ -}}
     {{- end }}`}}
 
 metrics:
@@ -119,3 +110,13 @@ ciliumPolicies:
       type: TCP
     name: wapi
     namespace: {{ .Release.Namespace }}
+
+##In case of kafka mTLS auth move it to vault template
+# {{- /*
+#      kafka.ssl.enabled={{ kafka.ssl.enable }}
+#      kafka.ssl.key-store-location=/opt/{{ service_name }}/kafka-keystore.p12
+#      kafka.ssl.key-store-password="{{ service.keystore.pass }}"
+#      kafka.ssl.key-password="{{ service.keystore.pass }}"
+#      kafka.ssl.trust-store-location=/opt/{{ service_name }}/kafka-truststore.p12
+#      kafka.ssl.trust-store-password="{{ kafka.truststore.java.pass }}"
+# */ -}}
