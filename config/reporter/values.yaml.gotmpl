@@ -61,7 +61,7 @@ podAnnotations:
   vault.hashicorp.com/agent-inject: "true"
   vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-reporter"
   vault.hashicorp.com/agent-inject-template-application.properties: |
-    {{`{{- with secret "database/creds/db-app-reporter" }}
+    {{`{{- with secret "database/creds/db-app-reporter" -}}
     spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/reporter?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
