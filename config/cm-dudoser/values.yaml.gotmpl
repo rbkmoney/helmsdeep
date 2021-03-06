@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: docker.io/rbkmoney/cm-dudoser
-  tag: 472a66e6464cfd67661c613bdb17e40e7fa2d6f1
+  tag: 6926fc4418f39aab55e4f2589043b2ef3433925a
   pullPolicy: IfNotPresent
 
 runopts:
@@ -68,7 +68,6 @@ metrics:
         scheme: http
 
 ciliumPolicies:
-{{- /*
   - filters:
     - port: 8022
       type: TCP
@@ -89,4 +88,3 @@ ciliumPolicies:
       type: TCP
     name: questionary
     namespace: {{ .Release.Namespace }}
-*/ -}}

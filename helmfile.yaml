@@ -196,8 +196,8 @@ releases:
   <<: *generic_stateless
 - name: cm-dudoser
   <<: *generic_stateless
-#  needs:
-#    - {{ .Namespace | default "default" }}/claim-management
+  needs:
+    - {{ .Namespace | default "default" }}/claim-management
 #    - {{ .Namespace | default "default" }}/messages
 #    - {{ .Namespace | default "default" }}/file-storage
-#    - {{ .Namespace | default "default" }}/questionary
+    - {{ .Namespace | default "default" }}/questionary
