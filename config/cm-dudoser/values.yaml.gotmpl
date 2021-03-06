@@ -98,6 +98,11 @@ ciliumPolicies:
       type: TCP
     name: kafka
     namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 25
+      type: TCP
+    name: smtp
+    namespace: {{ .Release.Namespace }}
 
 ##In case of kafka mTLS auth move it to vault template
 # {{- /*
