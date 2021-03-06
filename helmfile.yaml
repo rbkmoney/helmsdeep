@@ -199,12 +199,11 @@ releases:
   needs:
     - {{ .Namespace | default "default" }}/magista
     - {{ .Namespace | default "default" }}/claim-management
-    - {{ .Namespace | default "default" }}/messages
+#    - {{ .Namespace | default "default" }}/messages
     - {{ .Namespace | default "default" }}/questionary-aggr-proxy
     - {{ .Namespace | default "default" }}/questionary
-    - {{ .Namespace | default "default" }}/file-storage
+#    - {{ .Namespace | default "default" }}/file-storage
     - {{ .Namespace | default "default" }}/hellgate
-    - {{ .Namespace | default "default" }}/cabi
+#    - {{ .Namespace | default "default" }}/cabi
     - {{ .Namespace | default "default" }}/dominant
-    - {{ .Namespace | default "default" }}/dudoser
-    - {{ .Namespace | default "default" }}/keycloak
+#    - {{ .Namespace | default "default" }}/dudoser
