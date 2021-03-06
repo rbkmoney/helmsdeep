@@ -10,8 +10,6 @@ java \
     --spring.servlet.multipart.max-request-size=10MB \
     --storage.endpoint=ceph:80 \
     --storage.bucketName=test \
-    --storage.accessKey=test \
-    --storage.secretKey=test \
     --storage.signingRegion=RU \
     --storage.clientProtocol=HTTP \
     --storage.clientMaxErrorRetry=10 \

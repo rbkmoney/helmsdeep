@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: docker.io/rbkmoney/file-storage
-  tag: 25506ff3def2e9a629f2056d514e84ecd3ecb2b3
+  tag: d1d6c25f90d571a214eda243559cda5b8b78d9ec
   pullPolicy: IfNotPresent
 
 runopts:
@@ -68,10 +68,13 @@ metrics:
         scheme: http
 
 ciliumPolicies:
-{{- /*
   - filters:
     - port: 80
       type: TCP
     name: ceph
     namespace: {{ .Release.Namespace }}
-*/ -}}
+
+# {{- /*
+#    --storage.accessKey=test \
+#    --storage.secretKey=test \
+# */ -}}
