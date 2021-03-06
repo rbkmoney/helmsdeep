@@ -207,3 +207,4 @@ releases:
 #    - {{ .Namespace | default "default" }}/cabi
     - {{ .Namespace | default "default" }}/dominant
 #    - {{ .Namespace | default "default" }}/dudoser
+    - {{ .Namespace | default "default" }}/keycloak
