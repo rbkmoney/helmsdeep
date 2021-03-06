@@ -83,6 +83,22 @@ configMap:
           GRANT ALL ON ALL SEQUENCES IN SCHEMA cm TO \"{{name}}\";" \
           default_ttl="1h" \
           max_ttl="240h"
+      vault write database/config/webhook-dispatcher \
+          plugin_name=postgresql-database-plugin \
+          allowed_roles="*" \
+          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/webhook-dispatcher?sslmode=disable" \
+          username="postgres" \
+          password="H@ckM3"
+      vault write database/roles/db-app-webhook-dispatcher \
+          db_name=webhook-dispatcher \
+          creation_statements="CREATE SCHEMA IF NOT EXISTS wb_dispatch;
+          CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
+          GRANT CREATE ON DATABASE webhook-dispatcher TO \"{{name}}\";
+          GRANT ALL ON SCHEMA wb_dispatch TO \"{{name}}\";
+          GRANT ALL ON ALL TABLES IN SCHEMA wb_dispatch TO \"{{name}}\";
+          GRANT ALL ON ALL SEQUENCES IN SCHEMA wb_dispatch TO \"{{name}}\";" \
+          default_ttl="1h" \
+          max_ttl="240h"
 
       vault auth enable kubernetes
       vault write auth/kubernetes/config \
@@ -111,5 +127,8 @@ configMap:
         capabilities = ["read"]
       }
       path "database/creds/db-app-claim-management" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-webhook-dispatcher" {
         capabilities = ["read"]
       }
