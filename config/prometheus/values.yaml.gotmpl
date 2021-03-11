@@ -131,7 +131,6 @@ grafana:
         json: |
           {{- readFile "dashboards/result/common-wall.json" | nindent 10 }}
 {{- end }}
-{{- end }}
 
   grafana.ini:
     paths:
