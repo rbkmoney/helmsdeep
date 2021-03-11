@@ -1,0 +1,6002 @@
+{
+   "__inputs": [ ],
+   "__requires": [ ],
+   "annotations": {
+      "list": [ ]
+   },
+   "editable": "true",
+   "gnetId": null,
+   "graphTooltip": 0,
+   "hideControls": false,
+   "id": null,
+   "links": [ ],
+   "panels": [
+      {
+         "collapse": false,
+         "collapsed": false,
+         "gridPos": {
+            "h": 2,
+            "w": 24,
+            "x": 0,
+            "y": 0
+         },
+         "id": 2,
+         "panels": [ ],
+         "repeat": "Host",
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "Main",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 1
+         },
+         "id": 3,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "Created invoices",
+               "bars": false,
+               "color": "#70dbed",
+               "fill": 0,
+               "lines": true,
+               "linewidth": 2,
+               "stack": false,
+               "yaxis": 2
+            },
+            {
+               "alias": "captured",
+               "color": "#629e51"
+            },
+            {
+               "alias": "failed",
+               "color": "#e5ac0e"
+            },
+            {
+               "alias": "cancelled",
+               "color": "#bf1b00"
+            },
+            {
+               "alias": "refunded",
+               "color": "#dedaf7"
+            }
+         ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "invoice_payment_event.status.keyword",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_count",
+                        "size": "0"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 1,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "span_id",
+                     "id": 1,
+                     "meta": { },
+                     "pipelineAgg": "cardinality",
+                     "settings": { },
+                     "type": "cardinality"
+                  }
+               ],
+               "query": "kubernetes.pod.name:hellgate AND NOT invoice_payment_event.status:processed",
+               "refId": "A",
+               "timeField": "@timestamp"
+            },
+            {
+               "alias": "Created invoices",
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "invoice_event.id.keyword",
+                     "meta": { },
+                     "settings": { },
+                     "type": "cardinality"
+                  }
+               ],
+               "query": "kubernetes.pod.name:hellgate AND invoice_event.type:\"invoice_created\"",
+               "refId": "B",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Transactions",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "cacheTimeout": null,
+         "colorBackground": false,
+         "colorValue": false,
+         "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+         ],
+         "datasource": "rbkm-elasticsearch",
+         "format": "none",
+         "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+         },
+         "gridPos": {
+            "h": 2,
+            "w": 2,
+            "x": 8,
+            "y": 1
+         },
+         "id": 4,
+         "interval": null,
+         "links": [ ],
+         "mappingType": 1,
+         "mappingTypes": [
+            {
+               "name": "value to text",
+               "value": 1
+            },
+            {
+               "name": "range to text",
+               "value": 2
+            }
+         ],
+         "maxDataPoints": 100,
+         "nullPointMode": "connected",
+         "nullText": null,
+         "postfix": "",
+         "postfixFontSize": "50%",
+         "prefix": "",
+         "prefixFontSize": "50%",
+         "rangeMaps": [
+            {
+               "from": "null",
+               "text": "N/A",
+               "to": "null"
+            }
+         ],
+         "span": 2,
+         "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+         },
+         "tableColumn": "",
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "invoice_event.id",
+                     "id": "1",
+                     "meta": { },
+                     "settings": { },
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:hellgate AND invoice_event.type:\"invoice_created\"",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": "",
+         "title": "IPM 10m avg",
+         "transparent": true,
+         "type": "singlestat",
+         "valueFontSize": "80%",
+         "valueMaps": [
+            {
+               "op": "=",
+               "text": "N/A",
+               "value": "null"
+            }
+         ],
+         "valueName": "avg"
+      },
+      {
+         "cacheTimeout": null,
+         "colorBackground": false,
+         "colorValue": false,
+         "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+         ],
+         "datasource": "rbkm-elasticsearch",
+         "format": "none",
+         "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+         },
+         "gridPos": {
+            "h": 2,
+            "w": 2,
+            "x": 8,
+            "y": 3
+         },
+         "id": 5,
+         "interval": null,
+         "links": [ ],
+         "mappingType": 1,
+         "mappingTypes": [
+            {
+               "name": "value to text",
+               "value": 1
+            },
+            {
+               "name": "range to text",
+               "value": 2
+            }
+         ],
+         "maxDataPoints": 100,
+         "nullPointMode": "connected",
+         "nullText": null,
+         "postfix": "",
+         "postfixFontSize": "50%",
+         "prefix": "",
+         "prefixFontSize": "50%",
+         "rangeMaps": [
+            {
+               "from": "null",
+               "text": "N/A",
+               "to": "null"
+            }
+         ],
+         "span": 2,
+         "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+         },
+         "tableColumn": "",
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "auto",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:hellgate AND NOT invoice_payment_event.status:processed",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": "",
+         "title": "PPM 10m avg",
+         "transparent": true,
+         "type": "singlestat",
+         "valueFontSize": "80%",
+         "valueMaps": [
+            {
+               "op": "=",
+               "text": "N/A",
+               "value": "null"
+            }
+         ],
+         "valueName": "avg"
+      },
+      {
+         "cacheTimeout": null,
+         "colorBackground": false,
+         "colorValue": false,
+         "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+         ],
+         "datasource": "rbkm-elasticsearch",
+         "format": "none",
+         "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+         },
+         "gridPos": {
+            "h": 2,
+            "w": 2,
+            "x": 8,
+            "y": 5
+         },
+         "id": 6,
+         "interval": null,
+         "links": [ ],
+         "mappingType": 1,
+         "mappingTypes": [
+            {
+               "name": "value to text",
+               "value": 1
+            },
+            {
+               "name": "range to text",
+               "value": 2
+            }
+         ],
+         "maxDataPoints": 100,
+         "nullPointMode": "connected",
+         "nullText": null,
+         "postfix": "",
+         "postfixFontSize": "50%",
+         "prefix": "",
+         "prefixFontSize": "50%",
+         "rangeMaps": [
+            {
+               "from": "null",
+               "text": "N/A",
+               "to": "null"
+            }
+         ],
+         "span": 2,
+         "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+         },
+         "tableColumn": "",
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "auto",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:hellgate AND NOT invoice_payment_event.status:processed",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": "",
+         "title": "PPM 10m max",
+         "transparent": true,
+         "type": "singlestat",
+         "valueFontSize": "80%",
+         "valueMaps": [
+            {
+               "op": "=",
+               "text": "N/A",
+               "value": "null"
+            }
+         ],
+         "valueName": "max"
+      },
+      {
+         "cacheTimeout": null,
+         "colorBackground": false,
+         "colorValue": false,
+         "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+         ],
+         "datasource": "rbkm-elasticsearch",
+         "format": "none",
+         "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+         },
+         "gridPos": {
+            "h": 2,
+            "w": 2,
+            "x": 10,
+            "y": 1
+         },
+         "id": 7,
+         "interval": null,
+         "links": [ ],
+         "mappingType": 1,
+         "mappingTypes": [
+            {
+               "name": "value to text",
+               "value": 1
+            },
+            {
+               "name": "range to text",
+               "value": 2
+            }
+         ],
+         "maxDataPoints": 100,
+         "nullPointMode": "connected",
+         "nullText": null,
+         "postfix": "",
+         "postfixFontSize": "50%",
+         "prefix": "",
+         "prefixFontSize": "50%",
+         "rangeMaps": [
+            {
+               "from": "null",
+               "text": "N/A",
+               "to": "null"
+            }
+         ],
+         "span": 2,
+         "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+         },
+         "tableColumn": "",
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "auto",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:hellgate AND NOT invoice_payment_event.status:failed ",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": "",
+         "title": "Failed PPM 10m avg",
+         "transparent": true,
+         "type": "singlestat",
+         "valueFontSize": "80%",
+         "valueMaps": [
+            {
+               "op": "=",
+               "text": "N/A",
+               "value": "null"
+            }
+         ],
+         "valueName": "avg"
+      },
+      {
+         "cacheTimeout": null,
+         "colorBackground": false,
+         "colorValue": false,
+         "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+         ],
+         "datasource": "rbkm-elasticsearch",
+         "format": "none",
+         "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+         },
+         "gridPos": {
+            "h": 2,
+            "w": 2,
+            "x": 10,
+            "y": 3
+         },
+         "id": 8,
+         "interval": null,
+         "links": [ ],
+         "mappingType": 1,
+         "mappingTypes": [
+            {
+               "name": "value to text",
+               "value": 1
+            },
+            {
+               "name": "range to text",
+               "value": 2
+            }
+         ],
+         "maxDataPoints": 100,
+         "nullPointMode": "connected",
+         "nullText": null,
+         "postfix": "",
+         "postfixFontSize": "50%",
+         "prefix": "",
+         "prefixFontSize": "50%",
+         "rangeMaps": [
+            {
+               "from": "null",
+               "text": "N/A",
+               "to": "null"
+            }
+         ],
+         "span": 2,
+         "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+         },
+         "tableColumn": "",
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "auto",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:hellgate AND invoice_payment_event.status:captured",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": "",
+         "title": "PPM 24h ago",
+         "transparent": true,
+         "type": "singlestat",
+         "valueFontSize": "80%",
+         "valueMaps": [
+            {
+               "op": "=",
+               "text": "N/A",
+               "value": "null"
+            }
+         ],
+         "valueName": "avg"
+      },
+      {
+         "cacheTimeout": null,
+         "colorBackground": false,
+         "colorValue": false,
+         "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+         ],
+         "datasource": "rbkm-elasticsearch",
+         "format": "none",
+         "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+         },
+         "gridPos": {
+            "h": 2,
+            "w": 2,
+            "x": 10,
+            "y": 3
+         },
+         "id": 9,
+         "interval": null,
+         "links": [ ],
+         "mappingType": 1,
+         "mappingTypes": [
+            {
+               "name": "value to text",
+               "value": 1
+            },
+            {
+               "name": "range to text",
+               "value": 2
+            }
+         ],
+         "maxDataPoints": 100,
+         "nullPointMode": "connected",
+         "nullText": null,
+         "postfix": "",
+         "postfixFontSize": "50%",
+         "prefix": "",
+         "prefixFontSize": "50%",
+         "rangeMaps": [
+            {
+               "from": "null",
+               "text": "N/A",
+               "to": "null"
+            }
+         ],
+         "span": 2,
+         "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+         },
+         "tableColumn": "",
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "auto",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:hellgate AND invoice_payment_event.status:captured AND invoice_payment_event.invoice.owner_id:\"281220eb-a4ef-4d03-b666-bdec4b26c5f7\"",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": "",
+         "title": "Test PPM avg",
+         "transparent": true,
+         "type": "singlestat",
+         "valueFontSize": "80%",
+         "valueMaps": [
+            {
+               "op": "=",
+               "text": "N/A",
+               "value": "null"
+            }
+         ],
+         "valueName": "avg"
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 12,
+            "y": 1
+         },
+         "id": 10,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "host.name.keyword",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_count",
+                        "size": "0"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "invoice_payment_event.invoice.id",
+                     "id": "1",
+                     "meta": { },
+                     "settings": { },
+                     "type": "cardinality"
+                  }
+               ],
+               "query": "kubernetes.pod.name:hellgate AND invoice_payment_event.status:captured AND invoice_payment_event.invoice.owner_id:\"281220eb-a4ef-4d03-b666-bdec4b26c5f7\"",
+               "refId": "A",
+               "timeField": "@timestamp"
+            },
+            {
+               "alias": "Invoices",
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "invoice_event.id.keyword",
+                     "id": "1",
+                     "meta": { },
+                     "settings": { },
+                     "type": "cardinality"
+                  }
+               ],
+               "query": "kubernetes.pod.name:hellgate AND invoice_event.type:\"invoice_created\" AND invoice_event.owner_id:\"281220eb-a4ef-4d03-b666-bdec4b26c5f7\"",
+               "refId": "B",
+               "timeField": "@timestamp"
+            },
+            {
+               "alias": "Total captured",
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "invoice_payment_event.invoice.id",
+                     "id": "1",
+                     "meta": { },
+                     "settings": { },
+                     "type": "cardinality"
+                  }
+               ],
+               "query": "kubernetes.pod.name:hellgate AND invoice_payment_event.status:captured AND invoice_payment_event.invoice.owner_id:\"281220eb-a4ef-4d03-b666-bdec4b26c5f7\"",
+               "refId": "C",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "RBKmoney test payments",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 7
+         },
+         "id": 11,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": "ECP captured",
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "invoice_payment_event.invoice.id",
+                     "meta": { },
+                     "settings": { },
+                     "type": "cardinality"
+                  }
+               ],
+               "query": "rpc.server.metadata.user-identity.id=\"157d515e-d4d2-4251-b3b1-dc6dc291f9e5\" AND kubernetes.pod.name:hellgate AND invoice_payment_event.status:captured",
+               "refId": "A",
+               "timeField": "@timestamp"
+            },
+            {
+               "alias": "S2P captured",
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "invoice_payment_event.invoice.id",
+                     "meta": { },
+                     "settings": { },
+                     "type": "cardinality"
+                  }
+               ],
+               "query": "rpc.server.metadata.user-identity.id=\"ecd62927-e643-4f24-878f-51186164c5c1\" AND kubernetes.pod.name:hellgate AND invoice_payment_event.status:captured",
+               "refId": "B",
+               "timeField": "@timestamp"
+            },
+            {
+               "alias": "PayC captured",
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "invoice_payment_event.invoice.id",
+                     "meta": { },
+                     "settings": { },
+                     "type": "cardinality"
+                  }
+               ],
+               "query": "rpc.server.metadata.user-identity.id=\"84f1f881-5305-4796-8dbe-34a9c110dc58\" AND kubernetes.pod.name:hellgate AND invoice_payment_event.status:captured",
+               "refId": "C",
+               "timeField": "@timestamp"
+            },
+            {
+               "alias": "Other captured",
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "invoice_payment_event.invoice.id",
+                     "meta": { },
+                     "settings": { },
+                     "type": "cardinality"
+                  }
+               ],
+               "query": "kubernetes.pod.name:hellgate AND invoice_payment_event.status:captured AND NOT rpc.server.metadata.user-identity.id:(\"84f1f881-5305-4796-8dbe-34a9c110dc58\" OR \"ecd62927-e643-4f24-878f-51186164c5c1\" OR \"157d515e-d4d2-4251-b3b1-dc6dc291f9e5\" OR \"39214738-cdaa-467a-9c20-163a98dc0ad6\")",
+               "refId": "D",
+               "timeField": "@timestamp"
+            },
+            {
+               "alias": "Okko captured",
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "invoice_payment_event.invoice.id",
+                     "meta": { },
+                     "settings": { },
+                     "type": "cardinality"
+                  }
+               ],
+               "query": "kubernetes.pod.name:hellgate  AND invoice_payment_event.status:captured  AND rpc.server.metadata.user-identity.id:(\"39214738-cdaa-467a-9c20-163a98dc0ad6\")",
+               "refId": "E",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Top merchants payments",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 4,
+            "x": 8,
+            "y": 7
+         },
+         "id": 12,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "10m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "request_length",
+                     "inlineScript": null,
+                     "meta": { },
+                     "pipelineAgg": "select metric",
+                     "settings": { },
+                     "type": "count"
+                  }
+               ],
+               "query": "log.file.path:\"/var/lib/docker/conteiners/\" AND status:[500 TO 599]",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Java Kafka consumer lag",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 12,
+            "y": 7
+         },
+         "id": 13,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "invoice_payment_event.error",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_count",
+                        "size": "9"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "span_id",
+                     "id": "1",
+                     "meta": { },
+                     "settings": { },
+                     "type": "cardinality"
+                  }
+               ],
+               "query": "kubernetes.pod.name:hellgate AND  invoice_payment_event.type:invoice_payment_status_changed AND  invoice_payment_event.status:failed",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Payment errors",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 13
+         },
+         "id": 14,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": "{{term service.keyword}}",
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "service.keyword",
+                     "id": "4",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "asc",
+                        "orderBy": "_count",
+                        "size": "0"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "request_length",
+                     "inlineScript": null,
+                     "meta": { },
+                     "pipelineAgg": "select metric",
+                     "settings": { },
+                     "type": "count"
+                  }
+               ],
+               "query": "(/(proxy|adapter|provider)-.*/ OR service:antifraud) AND message:PaymentProxyResult AND message:\"success:Success()\"",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Proxy/adapter success",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 4,
+            "x": 8,
+            "y": 13
+         },
+         "id": 15,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "HG warning",
+               "color": "#e5ac0e"
+            },
+            {
+               "alias": "HG error",
+               "color": "#bf1b00",
+               "zindex": "-1"
+            }
+         ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": "HG {{term @severity.keyword}}",
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "@severity.keyword",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_term",
+                        "size": "10"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:hellgate AND (@severity:warning OR @severity:error)",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "HG warnings and errors ",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 12,
+            "y": 13
+         },
+         "id": 16,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "service.keyword",
+                     "id": "4",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_count",
+                        "size": "0"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "(/(proxy|adapter|provider)-.*/ OR service:antifraud) AND @severity:ERROR",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Proxy/adapter/provider errors",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 4,
+            "x": 20,
+            "y": 13
+         },
+         "id": 17,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "Request",
+               "color": "#629e51"
+            },
+            {
+               "alias": "Response",
+               "color": "#70dbed",
+               "zindex": "-1"
+            }
+         ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": "Response",
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:hooker AND logger_name:\"com.rbkmoney.hooker.service.PostSender\" AND message:\"Response from hook\" AND message:200",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Hooker responses",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 19
+         },
+         "id": 18,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": true,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "Count",
+               "color": "#CA95E5",
+               "fill": 0,
+               "lines": true,
+               "linewidth": 2,
+               "points": false,
+               "yaxis": 2
+            }
+         ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "request_time",
+                     "id": "1",
+                     "meta": { },
+                     "settings": {
+                        "percents": [
+                           "80",
+                           "95",
+                           "98"
+                        ]
+                     },
+                     "type": "percentiles"
+                  }
+               ],
+               "query": "kubernetes.pod.name:capi AND operation_id:CreateInvoice AND (status:[200 TO 299] or status:[500 TO 599])",
+               "refId": "A",
+               "timeField": "@timestamp"
+            },
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "request_time",
+                     "id": "1",
+                     "meta": { },
+                     "settings": { },
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:capi AND operation_id:CreateInvoice AND (status:[200 TO 299] or status:[500 TO 599])",
+               "refId": "B",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "CreateInvoice timings",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 8,
+            "y": 19
+         },
+         "id": 19,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": true,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "Count",
+               "color": "#CA95E5",
+               "fill": 0,
+               "lines": true,
+               "linewidth": 2,
+               "points": false,
+               "yaxis": 2
+            }
+         ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "request_time",
+                     "id": "1",
+                     "meta": { },
+                     "settings": {
+                        "percents": [
+                           "80",
+                           "95",
+                           "98"
+                        ]
+                     },
+                     "type": "percentiles"
+                  }
+               ],
+               "query": "kubernetes.pod.name:capi AND operation_id:CreatePayment AND (status:[200 TO 299] or status:[500 TO 599])",
+               "refId": "A",
+               "timeField": "@timestamp"
+            },
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "request_time",
+                     "id": "1",
+                     "meta": { },
+                     "settings": { },
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:capi AND operation_id:CreatePayment AND (status:[200 TO 299] or status:[500 TO 599])",
+               "refId": "B",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "CreatePayment timings",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 16,
+            "y": 19
+         },
+         "id": 20,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": true,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "Count",
+               "color": "#CA95E5",
+               "fill": 0,
+               "lines": true,
+               "linewidth": 2,
+               "points": false,
+               "yaxis": 2
+            }
+         ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "operation_id",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_term",
+                        "size": "10"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "request_time",
+                     "id": "1",
+                     "meta": { },
+                     "settings": {
+                        "percents": [
+                           "80",
+                           "95",
+                           "98"
+                        ]
+                     },
+                     "type": "percentiles"
+                  }
+               ],
+               "query": "kubernetes.pod.name:capi AND operation_id:CreatePaymentResource AND (status:[200 TO 299] or status:[500 TO 599])",
+               "refId": "A",
+               "timeField": "@timestamp"
+            },
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "operation_id",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_term",
+                        "size": "10"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "request_time",
+                     "id": "1",
+                     "meta": { },
+                     "settings": { },
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:capi AND operation_id:CreatePaymentResource AND (status:[200 TO 299] or status:[500 TO 599])",
+               "refId": "B",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "CreatePaymentResource timings",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 25
+         },
+         "id": 21,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": true,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "Count",
+               "color": "#CA95E5",
+               "fill": 0,
+               "lines": true,
+               "linewidth": 2,
+               "points": false,
+               "yaxis": 2
+            }
+         ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "request_time",
+                     "id": "1",
+                     "meta": { },
+                     "settings": {
+                        "percents": [
+                           "80",
+                           "95",
+                           "98"
+                        ]
+                     },
+                     "type": "percentiles"
+                  }
+               ],
+               "query": "kubernetes.pod.name:capi AND operation_id:GetInvoiceEvents AND (status:[200 TO 299] or status:[500 TO 599])",
+               "refId": "A",
+               "timeField": "@timestamp"
+            },
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "request_time",
+                     "id": "1",
+                     "meta": { },
+                     "settings": { },
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:capi AND operation_id:GetInvoiceEvents AND (status:[200 TO 299] or status:[500 TO 599])",
+               "refId": "B",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "GetInvoiceEvents timings",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 8,
+            "y": 25
+         },
+         "id": 22,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": true,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "Count",
+               "color": "#CA95E5",
+               "fill": 0,
+               "lines": true,
+               "linewidth": 2,
+               "points": false,
+               "yaxis": 2
+            }
+         ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "request_time",
+                     "id": "1",
+                     "meta": { },
+                     "settings": {
+                        "percents": [
+                           "80",
+                           "95",
+                           "98"
+                        ]
+                     },
+                     "type": "percentiles"
+                  }
+               ],
+               "query": "kubernetes.pod.name:capi AND operation_id:GetPaymentByID AND (status:[200 TO 299] or status:[500 TO 599])",
+               "refId": "A",
+               "timeField": "@timestamp"
+            },
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "request_time",
+                     "id": "1",
+                     "meta": { },
+                     "settings": { },
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:capi AND operation_id:GetPaymentByID AND (status:[200 TO 299] or status:[500 TO 599])",
+               "refId": "B",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "GetPaymentByID timings",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 31
+         },
+         "id": 23,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "machine_ns.keyword",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_term",
+                        "size": "0"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:machinegun AND @severity:error AND message:\"machine failed\"",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "MG machine fails",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "cacheTimeout": null,
+         "colorBackground": false,
+         "colorValue": false,
+         "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+         ],
+         "datasource": "rbkm-elasticsearch",
+         "format": "none",
+         "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+         },
+         "gridPos": {
+            "h": 2,
+            "w": 2,
+            "x": 8,
+            "y": 31
+         },
+         "id": 24,
+         "interval": null,
+         "links": [ ],
+         "mappingType": 1,
+         "mappingTypes": [
+            {
+               "name": "value to text",
+               "value": 1
+            },
+            {
+               "name": "range to text",
+               "value": 2
+            }
+         ],
+         "maxDataPoints": 100,
+         "nullPointMode": "connected",
+         "nullText": null,
+         "postfix": "",
+         "postfixFontSize": "50%",
+         "prefix": "",
+         "prefixFontSize": "50%",
+         "rangeMaps": [
+            {
+               "from": "null",
+               "text": "N/A",
+               "to": "null"
+            }
+         ],
+         "span": 2,
+         "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+         },
+         "tableColumn": "",
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "auto",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:machinegun AND @severity:error AND \"machine failed\"",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": "",
+         "title": "Machine fails 24h",
+         "transparent": true,
+         "type": "singlestat",
+         "valueFontSize": "80%",
+         "valueMaps": [
+            {
+               "op": "=",
+               "text": "N/A",
+               "value": "null"
+            }
+         ],
+         "valueName": "avg"
+      },
+      {
+         "cacheTimeout": null,
+         "colorBackground": false,
+         "colorValue": false,
+         "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+         ],
+         "datasource": "rbkm-elasticsearch",
+         "format": "none",
+         "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+         },
+         "gridPos": {
+            "h": 2,
+            "w": 2,
+            "x": 8,
+            "y": 35
+         },
+         "id": 25,
+         "interval": null,
+         "links": [ ],
+         "mappingType": 1,
+         "mappingTypes": [
+            {
+               "name": "value to text",
+               "value": 1
+            },
+            {
+               "name": "range to text",
+               "value": 2
+            }
+         ],
+         "maxDataPoints": 100,
+         "nullPointMode": "connected",
+         "nullText": null,
+         "postfix": "",
+         "postfixFontSize": "50%",
+         "prefix": "",
+         "prefixFontSize": "50%",
+         "rangeMaps": [
+            {
+               "from": "null",
+               "text": "N/A",
+               "to": "null"
+            }
+         ],
+         "span": 2,
+         "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+         },
+         "tableColumn": "",
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "auto",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:machinegun AND @severity:error AND \"machine failed\" AND machine_ns.keyword:invoice",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": "",
+         "title": "Invoice fails 24h",
+         "transparent": true,
+         "type": "singlestat",
+         "valueFontSize": "80%",
+         "valueMaps": [
+            {
+               "op": "=",
+               "text": "N/A",
+               "value": "null"
+            }
+         ],
+         "valueName": "avg"
+      },
+      {
+         "cacheTimeout": null,
+         "colorBackground": false,
+         "colorValue": false,
+         "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+         ],
+         "datasource": "rbkm-elasticsearch",
+         "format": "none",
+         "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+         },
+         "gridPos": {
+            "h": 2,
+            "w": 2,
+            "x": 8,
+            "y": 33
+         },
+         "id": 26,
+         "interval": null,
+         "links": [ ],
+         "mappingType": 1,
+         "mappingTypes": [
+            {
+               "name": "value to text",
+               "value": 1
+            },
+            {
+               "name": "range to text",
+               "value": 2
+            }
+         ],
+         "maxDataPoints": 100,
+         "nullPointMode": "connected",
+         "nullText": null,
+         "postfix": "",
+         "postfixFontSize": "50%",
+         "prefix": "",
+         "prefixFontSize": "50%",
+         "rangeMaps": [
+            {
+               "from": "null",
+               "text": "N/A",
+               "to": "null"
+            }
+         ],
+         "span": 2,
+         "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+         },
+         "tableColumn": "",
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "auto",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "machine_id.keyword",
+                     "id": "1",
+                     "meta": { },
+                     "settings": { },
+                     "type": "cardinality"
+                  }
+               ],
+               "query": "kubernetes.pod.name:machinegun AND @severity:error AND \"machine failed\" AND machine_ns.keyword:invoice",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": "",
+         "title": "Uniq fails 24h",
+         "transparent": true,
+         "type": "singlestat",
+         "valueFontSize": "80%",
+         "valueMaps": [
+            {
+               "op": "=",
+               "text": "N/A",
+               "value": "null"
+            }
+         ],
+         "valueName": "avg"
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 4,
+            "x": 10,
+            "y": 31
+         },
+         "id": 27,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "MG warning",
+               "color": "#e5ac0e"
+            },
+            {
+               "alias": "MG error",
+               "color": "#bf1b00",
+               "zindex": "-1"
+            }
+         ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": "MG {{term @severity.keyword}}",
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "@severity.keyword",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_term",
+                        "size": "10"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:machinegun AND (@severity:warning OR @severity:error)",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "MG warnings and errors",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "collapse": false,
+         "collapsed": false,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 37
+         },
+         "id": 28,
+         "panels": [ ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "LBS",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 38
+         },
+         "id": 29,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "/alert.+/",
+               "bars": false,
+               "legend": false,
+               "lines": false,
+               "points": false,
+               "stack": false
+            }
+         ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "status",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_term",
+                        "size": "0"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "log.file.path:\"/var/lib/docker/containers/\"",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Completed requests",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 8,
+            "y": 38
+         },
+         "id": 30,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "/alert.+/",
+               "bars": false,
+               "legend": false,
+               "lines": false,
+               "points": false,
+               "stack": false
+            }
+         ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "http_host.keyword",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "asc",
+                        "orderBy": "_count",
+                        "size": "0"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "log.file.path:\"/var/lib/docker/containers/\" AND status:[200 TO 299]",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "2xx by http_host",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 16,
+            "y": 38
+         },
+         "id": 31,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "status",
+                     "id": "4",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_term",
+                        "size": "10"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "fake": true,
+                     "field": "http_host.keyword",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_term",
+                        "size": "0"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "auto",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "log.file.path:\"/var/lib/docker/conteiners/\" AND status:[500 TO 599]",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "5xx by http_host",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 44
+         },
+         "id": 32,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "/alert.+/",
+               "bars": false,
+               "legend": false,
+               "lines": false,
+               "points": false,
+               "stack": false
+            }
+         ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "host.name.keyword",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "asc",
+                        "orderBy": "_count",
+                        "size": "0"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "log.file.path:\"/var/lib/docker/containers/\"",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Requests by balancer",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 8,
+            "y": 44
+         },
+         "id": 33,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "/alert.+/",
+               "bars": false,
+               "legend": false,
+               "lines": false,
+               "points": false,
+               "stack": false
+            }
+         ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "http_host.keyword",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "asc",
+                        "orderBy": "_count",
+                        "size": "0"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "log.file.path:\"/var/lib/docker/containers/\" AND status:429",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "429 by http_host",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 16,
+            "y": 44
+         },
+         "id": 34,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "/alert.+/",
+               "bars": false,
+               "legend": false,
+               "lines": false,
+               "points": false,
+               "stack": false
+            }
+         ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "remote_addr.keyword",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "asc",
+                        "orderBy": "_count",
+                        "size": "0"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "log.file.path:\"/var/lib/docker/containers/\" AND status:429",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "429 by remote_addr",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 50
+         },
+         "id": 35,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": true,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "http_host.keyword",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_term",
+                        "size": "10"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "auto",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "request_time",
+                     "id": "1",
+                     "meta": { },
+                     "settings": {
+                        "percents": [
+                           "75",
+                           "90",
+                           "98"
+                        ]
+                     },
+                     "type": "percentiles"
+                  }
+               ],
+               "query": "log.file.path:\"/var/lib/docker/containers/\" AND (http_host:auth.rbk.money) AND (status:[200 TO 299])",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Auth 2xx request time",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 8,
+            "y": 50
+         },
+         "id": 36,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": true,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "http_host.keyword",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_term",
+                        "size": "10"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "auto",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "request_time",
+                     "id": "1",
+                     "meta": { },
+                     "settings": {
+                        "percents": [
+                           "75",
+                           "90",
+                           "98"
+                        ]
+                     },
+                     "type": "percentiles"
+                  }
+               ],
+               "query": "log.file.path:\"/var/lib/docker/containers/\" AND (http_host:api.rbk.money) AND (status:[200 TO 299])",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "API 2xx request time",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 16,
+            "y": 50
+         },
+         "id": 37,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": true,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "http_host.keyword",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_term",
+                        "size": "10"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "auto",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "request_time",
+                     "id": "1",
+                     "meta": { },
+                     "settings": {
+                        "percents": [
+                           "75",
+                           "90",
+                           "98"
+                        ]
+                     },
+                     "type": "percentiles"
+                  }
+               ],
+               "query": "log.file.path:\"/var/lib/docker/containers/\" AND (http_host:wrapper.rbk.money) AND (status:[200 TO 299])",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "wrapper 2xx request time ",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 56
+         },
+         "id": 38,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": true,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "http_host.keyword",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_term",
+                        "size": "10"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "auto",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "request_time",
+                     "id": "1",
+                     "meta": { },
+                     "settings": {
+                        "percents": [
+                           "75",
+                           "90",
+                           "98"
+                        ]
+                     },
+                     "type": "percentiles"
+                  }
+               ],
+               "query": "log.file.path:\"/var/lib/docker/containers/\" AND (http_host:rbk.mn OR http_host:storage.rbk.money) AND (status:[200 TO 299])",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Other 2xx request time ",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "collapse": false,
+         "collapsed": false,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 62
+         },
+         "id": 39,
+         "panels": [ ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "CAPI",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 63
+         },
+         "id": 40,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "operation_id",
+                     "id": "6",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_count",
+                        "size": "9"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "fake": true,
+                     "field": "service.keyword",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "asc",
+                        "orderBy": "_count",
+                        "size": "0"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:capi AND status:[200 TO 299]",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "2xx on CAPI",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 8,
+            "y": 63
+         },
+         "id": 41,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "status",
+                     "id": "5",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_term",
+                        "size": "0"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:capi AND status:[500 TO 599]",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "5xx on CAPI",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 16,
+            "y": 63
+         },
+         "id": 42,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "operation_id",
+                     "id": "5",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_count",
+                        "size": "9"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "5m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:capi",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "CAPI operation_id top",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "series",
+            "name": null,
+            "show": true,
+            "values": [
+               "total"
+            ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 5,
+            "w": 8,
+            "x": 0,
+            "y": 69
+         },
+         "id": 43,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "host.name.keyword",
+                     "id": "4",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_count",
+                        "size": "0"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "fake": true,
+                     "field": "service.keyword",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_count",
+                        "size": "0"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:capi AND status:[200 TO 299]",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "2xx on CAPI by host",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 5,
+            "w": 8,
+            "x": 8,
+            "y": 69
+         },
+         "id": 44,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": true,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "host.name.keyword",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_term",
+                        "size": "10"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "request_time",
+                     "id": "1",
+                     "meta": { },
+                     "settings": {
+                        "percents": [
+                           "95"
+                        ]
+                     },
+                     "type": "percentiles"
+                  }
+               ],
+               "query": "kubernetes.pod.name:capi AND operation_id:CreateInvoice AND status:[200 TO 299]",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "CreateInvoice timings by host ",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 5,
+            "w": 8,
+            "x": 16,
+            "y": 69
+         },
+         "id": 45,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": true,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "host.name.keyword",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_term",
+                        "size": "10"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "request_time",
+                     "id": "1",
+                     "meta": { },
+                     "settings": {
+                        "percents": [
+                           "95"
+                        ]
+                     },
+                     "type": "percentiles"
+                  }
+               ],
+               "query": "kubernetes.pod.name:capi AND operation_id:CreatePayment AND status:[200 TO 299]",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "CreatePayment timings by host ",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 75
+         },
+         "id": 46,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "host.name.keyword",
+                     "id": "4",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_count",
+                        "size": "0"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "fake": true,
+                     "field": "service.keyword",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_count",
+                        "size": "0"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "select field",
+                     "id": "1",
+                     "type": "count"
+                  }
+               ],
+               "query": "kubernetes.pod.name:capi AND status:[500 TO 599]",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "5xx on CAPI by host",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 8,
+            "y": 75
+         },
+         "id": 47,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "operation_id",
+                     "id": "3",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "1",
+                        "size": "9"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "request_time",
+                     "id": "1",
+                     "meta": { },
+                     "pipelineAgg": "select metric",
+                     "settings": { },
+                     "type": "avg"
+                  }
+               ],
+               "query": "kubernetes.pod.name:capi and status:[200 TO 299]",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "CAPI operation_id request_time top",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "series",
+            "name": null,
+            "show": true,
+            "values": [
+               "total"
+            ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 16,
+            "y": 75
+         },
+         "id": 48,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": true,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "host.name.keyword",
+                     "id": "4",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_count",
+                        "size": "0"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "request_time",
+                     "id": "1",
+                     "meta": { },
+                     "settings": {
+                        "percents": [
+                           "95"
+                        ]
+                     },
+                     "type": "percentiles"
+                  }
+               ],
+               "query": "kubernetes.pod.name:capi AND (operation_id:CreatePaymentResource) AND status:[200 TO 599]",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "CreatePaymentResource time by host",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "collapse": false,
+         "collapsed": false,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 81
+         },
+         "id": 49,
+         "panels": [ ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "Hellgate",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 82
+         },
+         "id": 50,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "rpc.server.function.keyword",
+                     "id": "4",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_count",
+                        "size": "9"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "span_id",
+                     "id": "3",
+                     "meta": { },
+                     "settings": { },
+                     "type": "cardinality"
+                  }
+               ],
+               "query": "kubernetes.pod.name:hellgate",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Hellgate top rpc.server.function",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 8,
+            "y": 82
+         },
+         "id": 51,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "rpc.server.function.keyword",
+                     "id": "4",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_count",
+                        "size": "9"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "span_id",
+                     "id": "3",
+                     "meta": { },
+                     "settings": { },
+                     "type": "cardinality"
+                  }
+               ],
+               "query": "kubernetes.pod.name:hellgate",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Hellgate top rpc.server.function",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "series",
+            "name": null,
+            "show": true,
+            "values": [
+               "total"
+            ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": true,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "rbkm-elasticsearch",
+         "fill": 1,
+         "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 16,
+            "y": 82
+         },
+         "id": 52,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": false,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "alias": null,
+               "bucketAggs": [
+                  {
+                     "fake": true,
+                     "field": "host.name.keyword",
+                     "id": "4",
+                     "settings": {
+                        "min_doc_count": 1,
+                        "order": "desc",
+                        "orderBy": "_count",
+                        "size": "9"
+                     },
+                     "type": "terms"
+                  },
+                  {
+                     "field": "@timestamp",
+                     "id": "2",
+                     "settings": {
+                        "interval": "1m",
+                        "min_doc_count": 0,
+                        "trimEdges": 0
+                     },
+                     "type": "date_histogram"
+                  }
+               ],
+               "id": null,
+               "metrics": [
+                  {
+                     "field": "span_id",
+                     "id": "3",
+                     "meta": { },
+                     "pipelineAgg": "select metric",
+                     "settings": { },
+                     "type": "cardinality"
+                  }
+               ],
+               "query": "rpc.caching_client.service:PartyManagement AND rpc.caching_client.function:Checkout AND rpc.caching_client.event:\"client cache miss\" AND rpc.client.event:\"call service\"",
+               "refId": "A",
+               "timeField": "@timestamp"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "HG cache miss by host",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      }
+   ],
+   "refresh": "",
+   "rows": [ ],
+   "schemaVersion": 14,
+   "style": "dark",
+   "tags": [ ],
+   "templating": {
+      "list": [ ]
+   },
+   "time": {
+      "from": "now-1h",
+      "to": "now"
+   },
+   "timepicker": {
+      "refresh_intervals": [
+         "5s",
+         "10s",
+         "30s",
+         "1m",
+         "5m",
+         "15m",
+         "30m",
+         "1h",
+         "2h",
+         "1d"
+      ],
+      "time_options": [
+         "5m",
+         "15m",
+         "1h",
+         "6h",
+         "12h",
+         "24h",
+         "2d",
+         "7d",
+         "30d"
+      ]
+   },
+   "timezone": "browser",
+   "title": "Common-wall",
+   "version": 0
+}
