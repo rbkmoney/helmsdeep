@@ -69,12 +69,12 @@ metrics:
 
 ciliumPolicies:
   - filters:
-    - port: 80
+    - port: 9000
       type: TCP
-    name: ceph
+    name: minio
     namespace: {{ .Release.Namespace }}
 
 # {{- /*
-#    --storage.accessKey=test \
-#    --storage.secretKey=test \
+#    --storage.accessKey=minioadmin \
+#    --storage.secretKey=minioadmin \
 # */ -}}

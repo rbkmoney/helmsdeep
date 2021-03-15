@@ -197,4 +197,4 @@ releases:
 - name: file-storage
   <<: *generic_stateless
   needs:
-#  - {{ .Namespace | default "default" }}/ceph
+#  - {{ .Namespace | default "default" }}/minio

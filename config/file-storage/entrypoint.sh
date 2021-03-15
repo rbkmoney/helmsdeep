@@ -16,8 +16,8 @@ java \
     --management.endpoints.web.exposure.include=health,info,prometheus \
     --spring.servlet.multipart.max-file-size=10MB \
     --spring.servlet.multipart.max-request-size=10MB \
-    --storage.endpoint=ceph:80 \
-    --storage.bucketName=test \
+    --storage.endpoint=minio:9000 \
+    --storage.bucketName=files \
     --storage.signingRegion=RU \
     --storage.clientProtocol=HTTP \
     --storage.clientMaxErrorRetry=10 \
