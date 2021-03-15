@@ -199,7 +199,7 @@ releases:
   needs:
     - {{ .Namespace | default "default" }}/vault
     - {{ .Namespace | default "default" }}/kafka
-#    - {{ .Namespace | default "default" }}/ceph
+#    - {{ .Namespace | default "default" }}/minino
     - {{ .Namespace | default "default" }}/hellgate
     - {{ .Namespace | default "default" }}/magista
 #    - {{ .Namespace | default "default" }}/payouter

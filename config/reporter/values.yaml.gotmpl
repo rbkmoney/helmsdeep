@@ -99,9 +99,9 @@ ciliumPolicies:
     name: kafka
     namespace: {{ .Release.Namespace }}
   - filters:
-    - port: 80
+    - port: 9000
       type: TCP
-    name: ceph
+    name: minio
     namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8200

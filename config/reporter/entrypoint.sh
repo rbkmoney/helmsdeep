@@ -30,7 +30,7 @@ java \
     --magista.timeout=700000 \
     --domainConfig.url=http://dominant:8022/v1/domain/repository_client \
     --domainConfig.timeout=30000 \
-    --storage.endpoint=ceph:80 \
+    --storage.endpoint=minio:9000 \
     --storage.signingRegion=RU \
     --storage.bucketName=reports \
     --storage.client.protocol=HTTP \
