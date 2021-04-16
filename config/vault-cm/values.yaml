@@ -83,6 +83,22 @@ configMap:
           GRANT ALL ON ALL SEQUENCES IN SCHEMA cm TO \"{{name}}\";" \
           default_ttl="1h" \
           max_ttl="240h"
+      vault write database/config/wallets-hooker \
+          plugin_name=postgresql-database-plugin \
+          allowed_roles="*" \
+          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/wallets-hooker?sslmode=disable" \
+          username="postgres" \
+          password="H@ckM3"
+      vault write database/roles/db-app-wallets-hooker \
+          db_name=wallets-hooker \
+          creation_statements="CREATE SCHEMA IF NOT EXISTS whook;
+          CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
+          GRANT CREATE ON DATABASE wallets-hooker TO \"{{name}}\";
+          GRANT ALL ON SCHEMA whook TO \"{{name}}\";
+          GRANT ALL ON ALL TABLES IN SCHEMA whook TO \"{{name}}\";
+          GRANT ALL ON ALL SEQUENCES IN SCHEMA whook TO \"{{name}}\";" \
+          default_ttl="1h" \
+          max_ttl="240h"
       vault write database/config/reporter \
           plugin_name=postgresql-database-plugin \
           allowed_roles="*" \
@@ -143,6 +159,9 @@ configMap:
         capabilities = ["read"]
       }
       path "database/creds/db-app-claim-management" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-wallets-hooker" {
         capabilities = ["read"]
       }
       path "database/creds/db-app-reporter" {
