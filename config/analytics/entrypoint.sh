@@ -6,6 +6,14 @@ java \
     -jar \
     /opt/analytics/analytics.jar \
     --logging.config=/opt/analytics/logback.xml \
+    --management.security.flag=false \
+    --management.metrics.export.statsd.flavor=etsy \
+    --management.metrics.export.statsd.enabled=true \
+    --management.metrics.export.prometheus.enabled=true \
+    --management.endpoint.health.show-details=always \
+    --management.endpoint.metrics.enabled=true \
+    --management.endpoint.prometheus.enabled=true \
+    --management.endpoints.web.exposure.include=health,info,prometheus \
     --spring.application.name=analytics \
     --kafka.bootstrap.servers=kafka:9092 \
     --kafka.topic.event.sink.initial=mg-events-invoice \

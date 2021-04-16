@@ -208,3 +208,12 @@ releases:
     - {{ .Namespace | default "default" }}/dominant
 #    - {{ .Namespace | default "default" }}/dudoser
     - {{ .Namespace | default "default" }}/keycloak
+- name: magista
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/vault
+    - {{ .Namespace | default "default" }}/kafka
+#    - {{ .Namespace | default "default" }}/columbus
+    - {{ .Namespace | default "default" }}/hellgate
+#    - {{ .Namespace | default "default" }}/payouter
+
