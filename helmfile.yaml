@@ -194,6 +194,20 @@ releases:
 #    - {{ .Namespace | default "default" }}/cashier
 - name: questionary-aggr-proxy
   <<: *generic_stateless
+- name: dark-api
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/magista
+    - {{ .Namespace | default "default" }}/claim-management
+#    - {{ .Namespace | default "default" }}/messages
+    - {{ .Namespace | default "default" }}/questionary-aggr-proxy
+    - {{ .Namespace | default "default" }}/questionary
+#    - {{ .Namespace | default "default" }}/file-storage
+    - {{ .Namespace | default "default" }}/hellgate
+#    - {{ .Namespace | default "default" }}/cabi
+    - {{ .Namespace | default "default" }}/dominant
+#    - {{ .Namespace | default "default" }}/dudoser
+    - {{ .Namespace | default "default" }}/keycloak
 - name: magista
   <<: *generic_stateless
   needs:
@@ -202,3 +216,4 @@ releases:
 #    - {{ .Namespace | default "default" }}/columbus
     - {{ .Namespace | default "default" }}/hellgate
 #    - {{ .Namespace | default "default" }}/payouter
+
