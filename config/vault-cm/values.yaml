@@ -70,14 +70,14 @@ configMap:
       vault write database/config/claim-management \
           plugin_name=postgresql-database-plugin \
           allowed_roles="*" \
-          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/claim-management?sslmode=disable" \
+          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/claimmng?sslmode=disable" \
           username="postgres" \
           password="H@ckM3"
       vault write database/roles/db-app-claim-management \
           db_name=claim-management \
           creation_statements="CREATE SCHEMA IF NOT EXISTS cm;
           CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
-          GRANT CREATE ON DATABASE claim-management TO \"{{name}}\";
+          GRANT CREATE ON DATABASE claimmng TO \"{{name}}\";
           GRANT ALL ON SCHEMA cm TO \"{{name}}\";
           GRANT ALL ON ALL TABLES IN SCHEMA cm TO \"{{name}}\";
           GRANT ALL ON ALL SEQUENCES IN SCHEMA cm TO \"{{name}}\";" \
@@ -97,6 +97,22 @@ configMap:
           GRANT ALL ON SCHEMA rpt TO \"{{name}}\";
           GRANT ALL ON ALL TABLES IN SCHEMA rpt TO \"{{name}}\";
           GRANT ALL ON ALL SEQUENCES IN SCHEMA rpt TO \"{{name}}\";" \
+          default_ttl="1h" \
+          max_ttl="240h"
+      vault write database/config/magista \
+          plugin_name=postgresql-database-plugin \
+          allowed_roles="*" \
+          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/magista?sslmode=disable" \
+          username="postgres" \
+          password="H@ckM3"
+      vault write database/roles/db-app-magista \
+          db_name=magista \
+          creation_statements="CREATE SCHEMA IF NOT EXISTS mst;
+          CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
+          GRANT CREATE ON DATABASE magista TO \"{{name}}\";
+          GRANT ALL ON SCHEMA mst TO \"{{name}}\";
+          GRANT ALL ON ALL TABLES IN SCHEMA mst TO \"{{name}}\";
+          GRANT ALL ON ALL SEQUENCES IN SCHEMA mst TO \"{{name}}\";" \
           default_ttl="1h" \
           max_ttl="240h"
 
@@ -130,5 +146,8 @@ configMap:
         capabilities = ["read"]
       }
       path "database/creds/db-app-reporter" {
+         capabilities = ["read"]
+      }
+      path "database/creds/db-app-magista" {
         capabilities = ["read"]
       }
