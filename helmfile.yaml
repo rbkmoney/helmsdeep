@@ -194,8 +194,40 @@ releases:
 #    - {{ .Namespace | default "default" }}/cashier
 - name: questionary-aggr-proxy
   <<: *generic_stateless
-- name: wallets-hooker
+- name: dark-api
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/magista
+    - {{ .Namespace | default "default" }}/claim-management
+#    - {{ .Namespace | default "default" }}/messages
+    - {{ .Namespace | default "default" }}/questionary-aggr-proxy
+    - {{ .Namespace | default "default" }}/questionary
+#    - {{ .Namespace | default "default" }}/file-storage
+    - {{ .Namespace | default "default" }}/hellgate
+#    - {{ .Namespace | default "default" }}/cabi
+    - {{ .Namespace | default "default" }}/dominant
+#    - {{ .Namespace | default "default" }}/dudoser
+    - {{ .Namespace | default "default" }}/keycloak
+- name: magista
   <<: *generic_stateless
   needs:
     - {{ .Namespace | default "default" }}/vault
     - {{ .Namespace | default "default" }}/kafka
+#    - {{ .Namespace | default "default" }}/columbus
+    - {{ .Namespace | default "default" }}/hellgate
+#    - {{ .Namespace | default "default" }}/payouter
+- name: reporter
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/vault
+    - {{ .Namespace | default "default" }}/kafka
+ #   - {{ .Namespace | default "default" }}/minino
+    - {{ .Namespace | default "default" }}/hellgate
+    - {{ .Namespace | default "default" }}/magista
+ #   - {{ .Namespace | default "default" }}/payouter
+    - {{ .Namespace | default "default" }}/dominant
+ - name: wallets-hooker
+   <<: *generic_stateless
+   needs:
+     - {{ .Namespace | default "default" }}/vault
+     - {{ .Namespace | default "default" }}/kafka

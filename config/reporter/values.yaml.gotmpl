@@ -3,12 +3,12 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/hooker
-  tag: aeffeedb13a8f5125962bfe3e0e734ba4104d876
+  repository: docker.io/rbkmoney/reporter
+  tag: bd02fe73ce7e8ac346492cbd4530d54185b88af1
   pullPolicy: IfNotPresent
 
 runopts:
-  command: ["/opt/hooker/entrypoint.sh"]
+  command: ["/opt/reporter/entrypoint.sh"]
 
 configMap:
   data: 
@@ -27,15 +27,15 @@ volumes:
 
 volumeMounts:
   - name: config-volume
-    mountPath: /opt/hooker/entrypoint.sh
+    mountPath: /opt/reporter/entrypoint.sh
     subPath: entrypoint.sh
     readOnly: true
   - name: config-volume
-    mountPath: /opt/hooker/logback.xml
+    mountPath: /opt/reporter/logback.xml
     subPath: logback.xml
     readOnly: true
   - name: config-volume
-    mountPath: /opt/hooker/loggers.xml
+    mountPath: /opt/reporter/loggers.xml
     subPath: loggers.xml
     readOnly: true
 
@@ -59,15 +59,15 @@ readinessProbe:
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
-  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-hooker"
+  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-reporter"
   vault.hashicorp.com/agent-inject-template-application.properties: |
-    {{`{{- with secret "database/creds/db-app-hooker" -}}
-    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/hooker?sslmode=disable
+    {{`{{- with secret "database/creds/db-app-reporter" -}}
+    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/reporter?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
-    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/hooker?sslmode=disable
-    spring.flyway.user={{ .Data.username }}
-    spring.flyway.password={{ .Data.password }}
+    flyway.url=jdbc:postgresql://postgres-postgresql:5432/reporter?sslmode=disable
+    flyway.user={{ .Data.username }}
+    flyway.password={{ .Data.password }}
     {{- end }}`}}
 
 metrics:
@@ -93,10 +93,15 @@ ciliumPolicies:
         kafka:
         - role: consume
           topics:
-            - mg-events-customer
             - mg-events-invoice
+            - mg-events-party
       type: TCP
     name: kafka
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 9000
+      type: TCP
+    name: minio
     namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8200
@@ -111,8 +116,19 @@ ciliumPolicies:
   - filters:
     - port: 8022
       type: TCP
-    name: fault-detector
+    name: magista
     namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: payouter
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: dominant
+    namespace: {{ .Release.Namespace }}
+
 
 ##In case of kafka mTLS auth move it to vault template
 # {{- /*
@@ -122,4 +138,6 @@ ciliumPolicies:
 #      kafka.ssl.key-password="{{ service.keystore.pass }}"
 #      kafka.ssl.trust-store-location=/opt/{{ service_name }}/kafka-truststore.p12
 #      kafka.ssl.trust-store-password="{{ kafka.truststore.java.pass }}"
+#      storage.accessKey=test \
+#      storage.secretKey=test \
 # */ -}}
