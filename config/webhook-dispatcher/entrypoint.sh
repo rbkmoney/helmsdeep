@@ -4,8 +4,8 @@ set -ue
 java \
     "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
     -jar \
-    /opt/hooker/hooker.jar \
-    --logging.config=/opt/hooker/logback.xml \
+    /opt/webhook-dispatcher/webhook-dispatcher.jar \
+    --logging.config=/opt/webhook-dispatcher/logback.xml \
     --management.security.flag=false \
     --management.metrics.export.statsd.flavor=etsy \
     --management.metrics.export.statsd.enabled=true \
@@ -20,20 +20,22 @@ java \
     --spring.datasource.hikari.idle-timeout=30000 \
     --spring.datasource.hikari.minimum-idle=2 \
     --spring.datasource.hikari.maximum-pool-size=20 \
-    --service.invoicing.url=http://hellgate:8022/v1/processing/invoicing \
-    --service.customer.url=http://hellgate:8022/v1/processing/customer_management \
-    --service.fault-detector.url=http://fault-detector:8022/v1/fault-detector \
-    --kafka.bootstrap-servers=kafka:9092 \
-    --kafka.topics.invoice.id=mg-events-invoice \
-    --kafka.topics.invoice.enabled=true \
-    --kafka.topics.invoice.concurrency=7 \
-    --kafka.topics.customer.id=mg-events-customer \
-    --kafka.topics.customer.enabled=true \
-    --kafka.topics.customer.concurrency=2 \
-    --kafka.client-id=hooker \
-    --kafka.consumer.group-id=Hooker-Invoicing \
-    --kafka.consumer.max-poll-records=500 \
-    --spring.application.name=hooker \
-    --logging.level.com.rbkmoney.hooker.scheduler.MessageScheduler=DEBUG \
+    --spring.flyway.table=flyway_schema_history \
+    --kafka.bootstrap.servers=kafka:9092 \
+    --kafka.topic.webhook.forward=webhooks \
+    --kafka.topic.webhook.first.retry=webhook-first-retry \
+    --kafka.topic.webhook.second.retry=webhook-second-retry \
+    --kafka.topic.webhook.third.retry=webhook-third-retry \
+    --kafka.topic.webhook.last.retry=webhook-last-retry \
+    --kafka.topic.webhook.dead.letter.queue=webhook-dead-letter-queue \
+    --kafka.concurrency.forward=7 \
+    --kafka.concurrency.first.retry=7 \
+    --kafka.concurrency.second.retry=7 \
+    --kafka.concurrency.third.retry=7 \
+    --kafka.concurrency.last.retry=7 \
+    --retry.dead.time.hours=24 \
+    --kafka.concurrency.dead.letter.queue=1 \
+    --spring.flyway.schemas=wb_dispatch \
+    --merchant.timeout=10000 \
     ${@} \
     --spring.config.additional-location=/vault/secrets/application.properties \

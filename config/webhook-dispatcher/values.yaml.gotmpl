@@ -3,15 +3,15 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/hooker
-  tag: aeffeedb13a8f5125962bfe3e0e734ba4104d876
+  repository: docker.io/rbkmoney/webhook-dispatcher
+  tag: 2d816921391da217e8fde45e8492319c4d791383
   pullPolicy: IfNotPresent
 
 runopts:
-  command: ["/opt/hooker/entrypoint.sh"]
+  command: ["/opt/webhook-dispatcher/entrypoint.sh"]
 
 configMap:
-  data: 
+  data:
     entrypoint.sh: |
       {{- readFile "entrypoint.sh" | nindent 6 }}
     loggers.xml: |
@@ -27,15 +27,15 @@ volumes:
 
 volumeMounts:
   - name: config-volume
-    mountPath: /opt/hooker/entrypoint.sh
+    mountPath: /opt/webhook-dispatcher/entrypoint.sh
     subPath: entrypoint.sh
     readOnly: true
   - name: config-volume
-    mountPath: /opt/hooker/logback.xml
+    mountPath: /opt/webhook-dispatcher/logback.xml
     subPath: logback.xml
     readOnly: true
   - name: config-volume
-    mountPath: /opt/hooker/loggers.xml
+    mountPath: /opt/webhook-dispatcher/loggers.xml
     subPath: loggers.xml
     readOnly: true
 
@@ -59,13 +59,13 @@ readinessProbe:
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
-  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-hooker"
+  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-webhook-dispatcher"
   vault.hashicorp.com/agent-inject-template-application.properties: |
-    {{`{{- with secret "database/creds/db-app-hooker" -}}
-    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/hooker?sslmode=disable
+    {{`{{- with secret "database/creds/db-app-webhook-dispatcher" -}}
+    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/webhook-dispatcher?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
-    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/hooker?sslmode=disable
+    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/webhook-dispatcher?sslmode=disable
     spring.flyway.user={{ .Data.username }}
     spring.flyway.password={{ .Data.password }}
     {{- end }}`}}
@@ -93,8 +93,12 @@ ciliumPolicies:
         kafka:
         - role: consume
           topics:
-            - mg-events-customer
-            - mg-events-invoice
+            - webhooks
+            - webhook-first-retry
+            - webhook-second-retry
+            - webhook-third-retry
+            - webhook-last-retry
+            - webhook-dead-letter-queue
       type: TCP
     name: kafka
     namespace: {{ .Release.Namespace }}
@@ -102,16 +106,6 @@ ciliumPolicies:
     - port: 8200
       type: TCP
     name: vault
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
-    name: hellgate
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
-    name: fault-detector
     namespace: {{ .Release.Namespace }}
 
 ##In case of kafka mTLS auth move it to vault template
