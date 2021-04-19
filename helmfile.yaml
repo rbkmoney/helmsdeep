@@ -236,3 +236,10 @@ releases:
   needs:
     - {{ .Namespace | default "default" }}/vault
     - {{ .Namespace | default "default" }}/kafka
+- name: fistful-reporter
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/vault
+    - {{ .Namespace | default "default" }}/kafka
+    - {{ .Namespace | default "default" }}/hellgate
+#    - {{ .Namespace | default "default" }}/file-storage
