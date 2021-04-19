@@ -231,3 +231,8 @@ releases:
    needs:
      - {{ .Namespace | default "default" }}/vault
      - {{ .Namespace | default "default" }}/kafka
+- name: webhook-dispatcher
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/vault
+    - {{ .Namespace | default "default" }}/kafka

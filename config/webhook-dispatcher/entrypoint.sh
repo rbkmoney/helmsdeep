@@ -1,0 +1,41 @@
+#!/bin/sh
+set -ue
+
+java \
+    "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
+    -jar \
+    /opt/webhook-dispatcher/webhook-dispatcher.jar \
+    --logging.config=/opt/webhook-dispatcher/logback.xml \
+    --management.security.flag=false \
+    --management.metrics.export.statsd.flavor=etsy \
+    --management.metrics.export.statsd.enabled=true \
+    --management.metrics.export.prometheus.enabled=true \
+    --management.endpoint.health.show-details=always \
+    --management.endpoint.metrics.enabled=true \
+    --management.endpoint.prometheus.enabled=true \
+    --management.endpoints.web.exposure.include=health,info,prometheus \
+    --spring.datasource.hikari.data-source-properties.prepareThreshold=0 \
+    --spring.datasource.hikari.leak-detection-threshold=5300 \
+    --spring.datasource.hikari.max-lifetime=300000 \
+    --spring.datasource.hikari.idle-timeout=30000 \
+    --spring.datasource.hikari.minimum-idle=2 \
+    --spring.datasource.hikari.maximum-pool-size=20 \
+    --spring.flyway.table=flyway_schema_history \
+    --kafka.bootstrap.servers=kafka:9092 \
+    --kafka.topic.webhook.forward=webhooks \
+    --kafka.topic.webhook.first.retry=webhook-first-retry \
+    --kafka.topic.webhook.second.retry=webhook-second-retry \
+    --kafka.topic.webhook.third.retry=webhook-third-retry \
+    --kafka.topic.webhook.last.retry=webhook-last-retry \
+    --kafka.topic.webhook.dead.letter.queue=webhook-dead-letter-queue \
+    --kafka.concurrency.forward=7 \
+    --kafka.concurrency.first.retry=7 \
+    --kafka.concurrency.second.retry=7 \
+    --kafka.concurrency.third.retry=7 \
+    --kafka.concurrency.last.retry=7 \
+    --retry.dead.time.hours=24 \
+    --kafka.concurrency.dead.letter.queue=1 \
+    --spring.flyway.schemas=wb_dispatch \
+    --merchant.timeout=10000 \
+    ${@} \
+    --spring.config.additional-location=/vault/secrets/application.properties \
