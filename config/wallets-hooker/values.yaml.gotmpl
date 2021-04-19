@@ -3,12 +3,12 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/hooker
-  tag: aeffeedb13a8f5125962bfe3e0e734ba4104d876
+  repository: docker.io/rbkmoney/wallets-hooker
+  tag: 9d0804576ef659a77c333be819083c68a10e63f1
   pullPolicy: IfNotPresent
 
 runopts:
-  command: ["/opt/hooker/entrypoint.sh"]
+  command: ["/opt/wallets-hooker/entrypoint.sh"]
 
 configMap:
   data: 
@@ -27,15 +27,15 @@ volumes:
 
 volumeMounts:
   - name: config-volume
-    mountPath: /opt/hooker/entrypoint.sh
+    mountPath: /opt/wallets-hooker/entrypoint.sh
     subPath: entrypoint.sh
     readOnly: true
   - name: config-volume
-    mountPath: /opt/hooker/logback.xml
+    mountPath: /opt/wallets-hooker/logback.xml
     subPath: logback.xml
     readOnly: true
   - name: config-volume
-    mountPath: /opt/hooker/loggers.xml
+    mountPath: /opt/wallets-hooker/loggers.xml
     subPath: loggers.xml
     readOnly: true
 
@@ -59,13 +59,13 @@ readinessProbe:
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
-  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-hooker"
+  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-wallets-hooker"
   vault.hashicorp.com/agent-inject-template-application.properties: |
-    {{`{{- with secret "database/creds/db-app-hooker" -}}
-    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/hooker?sslmode=disable
+    {{`{{- with secret "database/creds/db-app-wallets-hooker" -}}
+    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/wallets-hooker?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
-    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/hooker?sslmode=disable
+    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/wallets-hooker?sslmode=disable
     spring.flyway.user={{ .Data.username }}
     spring.flyway.password={{ .Data.password }}
     {{- end }}`}}
@@ -93,8 +93,10 @@ ciliumPolicies:
         kafka:
         - role: consume
           topics:
-            - mg-events-customer
-            - mg-events-invoice
+            - webhooks
+            - mg-events-ff-destination
+            - mg-events-ff-wallet
+            - mg-events-ff-withdrawal
       type: TCP
     name: kafka
     namespace: {{ .Release.Namespace }}
@@ -102,16 +104,6 @@ ciliumPolicies:
     - port: 8200
       type: TCP
     name: vault
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
-    name: hellgate
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
-    name: fault-detector
     namespace: {{ .Release.Namespace }}
 
 ##In case of kafka mTLS auth move it to vault template

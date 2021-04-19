@@ -62,10 +62,10 @@ podAnnotations:
   vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-claim-management"
   vault.hashicorp.com/agent-inject-template-application.properties: |
     {{`{{- with secret "database/creds/db-app-claim-management" -}}
-    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/claim-management?sslmode=disable
+    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/claimmng?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
-    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/claim-management?sslmode=disable
+    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/claimmng?sslmode=disable
     spring.flyway.user={{ .Data.username }}
     spring.flyway.password={{ .Data.password }}
     {{- end }}`}}
