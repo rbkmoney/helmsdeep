@@ -24,23 +24,23 @@ secret:
   data:
     token_encryption_key1.jwk: |
       {{- readFile "../api-common/keys/token-encryption-keys/1.jwk" | nindent 6 }}
-    capi.privkey.pem: |
-      {{- readFile "../api-common/keys/capi.privkey.pem" | nindent 6 }}
+    wapi.privkey.pem: |
+      {{- readFile "../api-common/keys/wapi.privkey.pem" | nindent 6 }}
 
 apiInitContainers:
   enabled: true
 
 volumeMounts:
   - name: config-volume
-    mountPath: /opt/wapi/releases/0.1.0/sys.config
+    mountPath: /opt/fistful-server/releases/0.1/sys.config
     subPath: sys.config
     readOnly: true
   - name: config-volume
-    mountPath: /opt/wapi/releases/0.1.0/vm.args
+    mountPath: /opt/fistful-server/releases/0.1/vm.args
     subPath: vm.args
     readOnly: true
   - name: config-volume
-    mountPath: /opt/wapi/erl_inetrc
+    mountPath: /opt/fistful-server/erl_inetrc
     subPath: erl_inetrc
     readOnly: true
   - name: config-volume
