@@ -1,0 +1,50 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+image:
+  repository: docker.io/rbkmoney/bouncer
+  tag: 7ff60dc174d59b17a70f744dc8a99db5229f6493
+  pullPolicy: IfNotPresent
+
+configMap:
+  data:
+    sys.config: |
+      {{- readFile "sys.config" | nindent 6 }}
+    erl_inetrc: |
+      {{- readFile "../vm/erl_inetrc" | nindent 6 }}
+    vm.args: |
+      {{- tpl (readFile "../vm/erl_vm_args.gotmpl") . | nindent 6 }}
+
+metrics:
+  serviceMonitor:
+    enabled: true
+    namespace: {{ .Release.Namespace }}
+    additionalLabels:
+      release: prometheus
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/bouncer/releases/0.1.0/sys.config
+    subPath: sys.config
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/bouncer/releases/0.1.0/vm.args
+    subPath: vm.args
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/bouncer/erl_inetrc
+    subPath: erl_inetrc
+    readOnly: true
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+
+ciliumPolicies:
+  - filters:
+    - port: 8181
+      type: TCP
+    name: bouncer-policies
+    namespace: {{ .Release.Namespace }}
