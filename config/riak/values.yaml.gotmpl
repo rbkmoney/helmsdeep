@@ -9,11 +9,11 @@ image:
 configMap:
   data: 
     user.conf: |
-      {{- readFile "user.yaml" | nindent 6 }}
+      {{- readFile "user.conf" | nindent 6 }}
     riak-cluster.sh: |
-      {{- readFile "cm.yaml" | nindent 6 }}
+      {{- readFile "cm.sh" | nindent 6 }}
     00-update-riak-conf.sh: |
-      {{- readFile "pre.yaml" | nindent 6 }}   
+      {{- readFile "pre.sh" | nindent 6 }}
 
 service:
   type: ClusterIP
