@@ -30,7 +30,7 @@ export CLUSTER_NAME=${CLUSTER_NAME:-riak}
 
 # The COORDINATOR_NODE is the first node in a cluster to which other nodes will eventually join
 export COORDINATOR_NODE=${COORDINATOR_NODE:-$(hostname -s).riak-headless}
-if [[ ! -z "$ipv6" ]]; then
+if [[ "$ipv6" = "true" ]]; then
 export COORDINATOR_NODE_HOST=$(ping -c1 $COORDINATOR_NODE | awk '/^PING/ {print $3}' | sed -r 's/\((.*)\):/\1/g')||'::1'
 else
 export COORDINATOR_NODE_HOST=$(ping -c1 $COORDINATOR_NODE | awk '/^PING/ {print $3}' | sed -r 's/\((.*)\):/\1/g')||'127.0.0.1'

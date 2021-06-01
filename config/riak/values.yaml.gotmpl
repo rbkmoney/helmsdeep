@@ -45,7 +45,7 @@ env:
   - name: COORDINATOR_NODE
     value: {{ .Release.Name }}-0.{{ .Release.Name }}-headless
   - name: ipv6
-    value: yep
+    value: {{ .Values.services.global.ipv6only }}
   - name: WAIT_FOR_ERLANG
     value: 400
       
