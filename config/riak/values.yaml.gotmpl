@@ -44,6 +44,8 @@ env:
     value: "riak"
   - name: COORDINATOR_NODE
     value: {{ .Release.Name }}-0.{{ .Release.Name }}-headless
+  - name: SERVICE_NAME
+    value: {{ .Release.Name }}-headless
   - name: ipv6
     value: {{ .Values.services.global.ipv6only }}
   - name: WAIT_FOR_ERLANG

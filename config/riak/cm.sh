@@ -24,19 +24,20 @@ export SCHEMAS_DIR=/etc/riak/schemas/
 export PB_PORT=${PB_PORT:-8087}
 export HTTP_PORT=${HTTP_PORT:-8098}
 
+SERVICE_NAME=${SERVICE_NAME:-riak-headless}
 
 # CLUSTER_NAME is used to name the nodes and is the value used in the distributed cookie
 export CLUSTER_NAME=${CLUSTER_NAME:-riak}
 
 # The COORDINATOR_NODE is the first node in a cluster to which other nodes will eventually join
-export COORDINATOR_NODE=${COORDINATOR_NODE:-$(hostname -s).riak-headless}
+export COORDINATOR_NODE=${COORDINATOR_NODE:-$(hostname -s).$SERVICE_NAME}
 if [[ "$ipv6" = "true" ]]; then
 export COORDINATOR_NODE_HOST=$(ping -c1 $COORDINATOR_NODE | awk '/^PING/ {print $3}' | sed -r 's/\((.*)\):/\1/g')||'::1'
 else
 export COORDINATOR_NODE_HOST=$(ping -c1 $COORDINATOR_NODE | awk '/^PING/ {print $3}' | sed -r 's/\((.*)\):/\1/g')||'127.0.0.1'
 fi
 # Use ping to discover our HOSTNAME because it's easier and more reliable than other methods
-export HOST=${NODENAME:-$(hostname -s).riak-headless}
+export HOST=${NODENAME:-$(hostname -s).$SERVICE_NAME}
 export HOSTIP=$(ping -c1 $HOST | awk '/^PING/ {print $3}' | sed -r 's/\((.*)\):/\1/g')
 # Run all prestart scripts
 PRESTART=$(find /etc/riak/prestart.d -name *.sh -print | sort)
