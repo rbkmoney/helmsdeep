@@ -1,0 +1,26 @@
+# See https://github.com/apache/kafka/tree/trunk/connect/mirror for details
+
+clusters = primary, secondary
+
+primary.bootstrap.servers = kafka-headless.{{ .Namespace | default "default" }}.svc.cluster.local:9092
+secondary.bootstrap.servers = kafka-headless.replica.svc.cluster.local:9092
+
+primary->secondary.enabled = true
+
+primary->secondary.topics = mg-events-.*
+
+# Internal topics settings
+
+# The replication factor for mm2 internal topics "heartbeats", "primary.checkpoints.internal" and
+# "mm2-offset-syncs.primary.internal"
+# For anything other than development testing, a value greater than 1 is recommended to ensure availability such as 3.
+checkpoints.topic.replication.factor=1
+heartbeats.topic.replication.factor=1
+offset-syncs.topic.replication.factor=1
+
+# The replication factor for connect internal topics "mm2-configs.secondary.internal", "mm2-offsets.secondary.internal" and
+# "mm2-status.secondary.internal"
+# For anything other than development testing, a value greater than 1 is recommended to ensure availability such as 3.
+offset.storage.replication.factor=1
+status.storage.replication.factor=1
+config.storage.replication.factor=1

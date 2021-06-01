@@ -1,0 +1,37 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+image:
+  repository: docker.io/bitnami/kafka
+  tag: 2.8.0
+  pullPolicy: IfNotPresent
+
+runopts:
+  command : ["/opt/bitnami/entrypoint.sh"]
+
+configMap:
+  data:
+    mm2.properties: |
+      {{- tpl (readFile "mm2.properties.gotmpl") . | nindent 6 }}
+    entrypoint.sh: |
+      {{- readFile "entrypoint.sh" | nindent 6 }}
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /var/run/mm2.properties
+    subPath: mm2.properties
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/bitnami/entrypoint.sh
+    subPath: entrypoint.sh
+    readOnly: true
+
+livenessProbe: null
+readinessProbe: null
