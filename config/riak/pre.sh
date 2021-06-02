@@ -10,6 +10,12 @@ mdc.cluster_manager = $HOSTIP:9080
 handoff.ip = $HOSTIP
 END
 
+if [[ "$ipv6" = "true" ]]; then
+  PROTO_DIST="inet6_tcp"
+else
+  PROTO_DIST="inet_tcp"
+fi
+
 rm /etc/riak/advanced.config
 cat<< END > /etc/riak/vm.args
 +scl false
@@ -26,7 +32,7 @@ cat<< END > /etc/riak/vm.args
 +W w
 -smp enable
 +zdbbl 32768
--proto_dist inet6_tcp
+-proto_dist $PROTO_DIST
 END
 
 # Maybe add user config items

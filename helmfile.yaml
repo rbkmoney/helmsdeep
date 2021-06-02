@@ -67,6 +67,8 @@ releases:
   <<: *generic_stateless
 - name: riak
   <<: *generic_statefull_json
+- name: kafka-mirror-maker
+  <<: *generic_stateless
 - name: machinegun
   <<: *generic_stateless_json
   needs:
