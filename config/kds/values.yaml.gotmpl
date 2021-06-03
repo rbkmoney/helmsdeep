@@ -82,7 +82,7 @@ volumes:
 pvc:
   enabled: true
   name: "{{ .Release.Name }}-keyring"
-  storage: 3Mi
+  storage: 10Mi
 
 metrics:
   serviceMonitor:

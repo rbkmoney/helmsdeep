@@ -39,13 +39,14 @@ consuela:
 
 logging:
   out_type: stdout
+  level: info
 
 # Consul client settings.
 # Required when distributed machine registry is enabled.
 consul:
   url: http://consul-server:8500
-  connect_timeout: 200ms
-  recv_timeout: 1s
+  connect_timeout: 500ms
+  recv_timeout: 1400ms
 
 namespaces:
   domain-config:

@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: consul
+  namespace: default
+  labels:
+    app.kubernetes.io/name: consul
+    app.kubernetes.io/instance: consul
+    release: prometheus
+spec:
+  endpoints:
+    - path: /v1/agent/metrics
+      port: "http"
+      scheme: http
+  namespaceSelector:
+    matchNames:
+      - "default"
+  selector:
+    matchLabels:
+      app: "consul"
+      component: "server"

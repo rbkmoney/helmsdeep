@@ -3,7 +3,7 @@ replicaCount: 1
 
 image:
   repository: docker.io/rbkmoney/dashboard
-  tag: ec031a725d886488dcf38c71a8de28af68e2564d
+  tag: 380a2e2464ccec1e624d8972381622fcb3b5789a
   pullPolicy: IfNotPresent
 
 service:
@@ -61,7 +61,7 @@ ingress:
         - /
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
-    - secretName: {{ .Values.services.ingress.tls.secretName }}
+    - secretName: {{ .Release.Name }}-{{ .Values.services.ingress.tls.secretName }}
       hosts:
         - dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
 {{- end }}

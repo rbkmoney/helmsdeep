@@ -65,6 +65,8 @@ releases:
 #Rbkmoney processing releases
 - name: holmes
   <<: *generic_stateless
+- name: tester
+  <<: *generic_stateless
 - name: riak
   <<: *generic_statefull_json
 - name: machinegun

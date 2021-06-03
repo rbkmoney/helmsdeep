@@ -1,0 +1,31 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+image:
+  repository: docker.io/dmitryrbk/test-transaction
+  tag: a2b1602d27b588ddb6fb61181c0921d9b064319f
+  pullPolicy: IfNotPresent
+
+runopts:
+  command : ["/opt/tester/bin/tester,start"]
+
+configMap:
+  data:
+    runtime.exs: |
+      {{- readFile "runtime.exs" | nindent 6 }}
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/tester/releases/0.1.0/runtime.exs
+    subPath: runtime.exs
+    readOnly: true
+
+livenessProbe: null
+readinessProbe: null

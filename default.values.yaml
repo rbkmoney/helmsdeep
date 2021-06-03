@@ -1,13 +1,13 @@
 cilium:
   enabled: false
 elk:
-  enabled: false
+  enabled: true
 prometheus:
   enabled: true
 
 services:
   global:
-    ipv6only: true
+    ipv6only: false
   
   vault:
     dev: true
@@ -16,8 +16,8 @@ services:
     externalUrl: "https://auth.some-site.com"
 
   ingress:
-    rootDomain: some-site.com
+    rootDomain: cluster.yaclo-rbk.site
     tls:
-      enabled: false
-      secretName: some-site-tls-cert
+      enabled: true
+      secretName: yaoblako
 
