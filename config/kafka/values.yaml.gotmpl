@@ -1,7 +1,10 @@
-replicas: 1
+replicaCount: 3
 
 podLabels:
   selector.cilium.rbkmoney/release: {{ .Release.Name }}
+
+numPartitions: 3
+defaultReplicationFactor: 2
 
 zookeeper:
   ## If true, install the Zookeeper chart alongside Kafka
@@ -11,7 +14,7 @@ zookeeper:
   ## If the Zookeeper Chart is disabled a URL and port are required to connect
   # url: "zookeeper"
   # port: 2181
-  replicaCount: 1
+  replicaCount: 3
   persistence:
     enabled: false
 

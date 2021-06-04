@@ -3,6 +3,10 @@
 global:
   name: "consul"
 
+  metrics:
+    enabled: true
+    enableAgentMetrics: true
+
 client:
   enabled: false
 
@@ -13,3 +17,19 @@ server:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: {{ .Release.Name }}
+
+ui:
+  enabled: "true"
+
+  ingress:
+    enabled: true
+
+    hosts:
+      - host: consul.cluster.yaclo-rbk.site
+        paths:
+          - /
+
+    tls:
+      - hosts:
+        - consul.cluster.yaclo-rbk.site
+        secretName: yaoblako

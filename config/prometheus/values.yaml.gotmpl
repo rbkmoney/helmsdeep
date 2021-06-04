@@ -1,32 +1,45 @@
 # Look for reference at https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L2008
-prometheus:
-  additionalServiceMonitors:
-    - name: "rbk-erlang-service"
-      selector:
-        matchLabels:
-          prometheus.metrics.erlang.enabled: "true"
-      namespaceSelector:
-        matchNames:
-          - default
-      endpoints:
-        - port: "api"
-          path: /metrics
-          scheme: http
-    - name: "rbk-java-service"
-      selector:
-        matchLabels:
-          prometheus.metrics.java.enabled: "true"
-      namespaceSelector:
-        matchNames:
-          - default
-      endpoints:
-        - port: "management"
-          path: /actuator/prometheus
-          scheme: http
-
 grafana:
   enabled: true
   replicas: 1
+
+  ingress:
+    enabled: true
+    # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+    # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+    # ingressClassName: nginx
+    # Values can be templated
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    labels: {}
+    path: /
+  
+    # pathType is only for k8s > 1.19
+    pathType: Prefix
+  
+    hosts:
+      - grafana.cluster.yaclo-rbk.site
+    ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
+    extraPaths: []
+    # - path: /*
+    #   backend:
+    #     serviceName: ssl-redirect
+    #     servicePort: use-annotation
+    ## Or for k8s > 1.19
+    # - path: /*
+    #   pathType: Prefix
+    #   backend:
+    #     service:
+    #       name: ssl-redirect
+    #       port:
+    #         name: service
+  
+  
+    tls:
+      - secretName: yaoblako
+        hosts:
+          - grafana.cluster.yaclo-rbk.site
   
   create: true
   ## Use an existing ClusterRole/Role (depending on rbac.namespaced false/true)

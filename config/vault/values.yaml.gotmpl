@@ -34,9 +34,13 @@ server:
       name: vault-init
 
 injector:
-  namespaceSelector:
-    matchLabels:
-      vaultname: {{ .Release.Namespace }}
+  # namespaceSelector:
+  #   matchLabels:
+  #     vaultname: {{ .Release.Namespace }}
+
+  objectSelector:
+     matchLabels:
+       selector.vaultinject.rbkmoney: {{ .Release.Namespace }}
 
 ciliumPolicies:
   - filters:

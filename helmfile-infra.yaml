@@ -13,7 +13,7 @@ releases:
   installed: {{ .Values.elk.enabled }}
   <<: *infra_default
   namespace: monitoring
-  chart: rbkmoney/elk
+  chart: ../charts/charts/elk
 - name: netpolicy
   installed: {{ .Values.cilium.enabled }}
   <<: *infra_default

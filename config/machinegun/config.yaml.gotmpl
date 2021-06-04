@@ -1,4 +1,6 @@
 service_name: machinegun
+dist_node_name:
+  hostpart: ip
 
 erlang:
 {{- if .Values.services.global.ipv6only }}
@@ -20,8 +22,8 @@ storage:
   host: riak
   port: 8087
   pool:
-    size: 10
-    queue_max: 100
+    size: 100
+    queue_max: 500
   batch_concurrency_limit: 10
   connect_timeout: 500ms
   request_timeout: 10s
@@ -39,13 +41,14 @@ consuela:
 
 logging:
   out_type: stdout
+  level: info
 
 # Consul client settings.
 # Required when distributed machine registry is enabled.
 consul:
   url: http://consul-server:8500
-  connect_timeout: 200ms
-  recv_timeout: 1s
+  connect_timeout: 500ms
+  recv_timeout: 1400ms
 
 namespaces:
   domain-config:
@@ -53,12 +56,7 @@ namespaces:
       &default_overseer_config
       scan_interval: 60m
       min_scan_delay: 5s
-    timers:
-      &default_timers_config
-      scan_interval: 60s
-      scan_limit: 5000
-      capacity: 2000
-      min_scan_delay: 5s
+    timers: disabled
     processor:
       url: http://dominant:8022/v1/stateproc
       http_keep_alive_timeout: 3000ms
@@ -77,7 +75,12 @@ namespaces:
       pool_size: 300
       http_keep_alive_timeout: 3000ms
   invoice:
-    timers: *default_timers_config
+    timers:
+      &default_timers_config
+      scan_interval: 60s
+      scan_limit: 5000
+      capacity: 2000
+      min_scan_delay: 5s
     overseer: *default_overseer_config
     event_sinks:
       kafka:
