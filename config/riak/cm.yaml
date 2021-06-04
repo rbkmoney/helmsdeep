@@ -24,6 +24,24 @@ export SCHEMAS_DIR=/etc/riak/schemas/
 export PB_PORT=${PB_PORT:-8087}
 export HTTP_PORT=${HTTP_PORT:-8098}
 
+# Add vm.args
+cat<< END > /etc/riak/vm.args
++sbwt none
++scl false
++sfwi 500
++P 256000
++e 256000
+-env ERL_CRASH_DUMP /var/log/riak/erl_crash.dump
+-env ERL_FULLSWEEP_AFTER 0
++Q 262144
++A 64
+-setcookie riak
+-name $CLUSTER_NAME@$HOST
++K true
++W w
+-smp enable
++zdbbl 32768
+END
 
 # CLUSTER_NAME is used to name the nodes and is the value used in the distributed cookie
 export CLUSTER_NAME=${CLUSTER_NAME:-riak}
