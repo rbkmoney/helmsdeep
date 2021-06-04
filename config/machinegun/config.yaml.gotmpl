@@ -56,12 +56,7 @@ namespaces:
       &default_overseer_config
       scan_interval: 60m
       min_scan_delay: 5s
-    timers:
-      &default_timers_config
-      scan_interval: 60s
-      scan_limit: 5000
-      capacity: 2000
-      min_scan_delay: 5s
+    timers: disabled
     processor:
       url: http://dominant:8022/v1/stateproc
       http_keep_alive_timeout: 3000ms
@@ -80,7 +75,12 @@ namespaces:
       pool_size: 300
       http_keep_alive_timeout: 3000ms
   invoice:
-    timers: *default_timers_config
+    timers:
+      &default_timers_config
+      scan_interval: 60s
+      scan_limit: 5000
+      capacity: 2000
+      min_scan_delay: 5s
     overseer: *default_overseer_config
     event_sinks:
       kafka:
