@@ -12,11 +12,6 @@ configMap:
     blacklist: |
       {{- readFile "blacklisted_keys.yaml" }}
 
-service:
-  type: ClusterIP
-  ports:
-    - name: api
-      port: 8081
 metrics:
   serviceMonitor:
     enabled: true
@@ -34,3 +29,9 @@ volumes:
   - name: config-volume
     configMap:
       name: {{ .Release.Name }}
+
+service:
+  type: ClusterIP
+  ports:
+    - name: api
+      port: 8081
