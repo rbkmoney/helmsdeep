@@ -6,6 +6,7 @@ java \
     -jar \
     /opt/shumway/shumway.jar \
     --logging.config=/opt/shumway/logback.xml \
+    --spring.flyway.table=schema_version \
     --spring.datasource.hikari.data-source-properties.prepareThreshold=0 \
     --spring.datasource.hikari.leak-detection-threshold=5300 \
     --spring.datasource.hikari.max-lifetime=300000 \
