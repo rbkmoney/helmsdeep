@@ -207,3 +207,9 @@ releases:
 #    - {{ .Namespace | default "default" }}/payouter
 - name: payouter
   <<: *generic_stateless_json
+- name: columbus
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/columbus-pg
+- name: columbus-pg
+  <<: *generic_stateless_json
