@@ -7,7 +7,22 @@ initdbScripts:
   rbk-dbs.sql: |
      CREATE DATABASE keycloak;
      CREATE DATABASE shumway;
-     CREATE DATABASE hooker;
+     CREATE DATABASE hook;
+     CREATE DATABASE analytics;
+     CREATE DATABASE questionary;
+     CREATE DATABASE magista;
+     CREATE DATABASE claimmng;
+     CREATE role messages WITH CREATEDB CREATEROLE;
+     CREATE DATABASE messages with owner messages;
+     \connect messages;
+     Create schema if not exists messages.msgs AUTHORIZATION messages;
+     #GRANT CREATE ON DATABASE messages TO "messages";
+     #GRANT ALL ON schema msgs TO "messages";
+     #GRANT ALL ON ALL TABLES IN SCHEMA msgs TO "messages";
+     #GRANT ALL ON ALL SEQUENCES IN SCHEMA msgs TO "messages";
+     CREATE DATABASE payouter;
+     CREATE DATABASE reporter;
+     CREATE DATABASE "fistful-magista";
 
 #TODO: If bump version, change master to primary
 master:
