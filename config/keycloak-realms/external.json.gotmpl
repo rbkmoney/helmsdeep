@@ -606,34 +606,6 @@
   "webAuthnPolicyPasswordlessAcceptableAaguids": [],
   "users": [
     {
-      "id": "ea2ab1c5-5e8d-411d-a013-fdee5122b0eb",
-      "createdTimestamp": 1601602713434,
-      "username": "service-account-realm-management",
-      "enabled": true,
-      "totp": false,
-      "emailVerified": false,
-      "serviceAccountClientId": "realm-management",
-      "disableableCredentialTypes": [],
-      "requiredActions": [],
-      "realmRoles": [
-        "uma_authorization",
-        "offline_access"
-      ],
-      "clientRoles": {
-        "realm-management": [
-          "uma_protection"
-        ],
-        "account": [
-          "manage-account",
-          "view-profile"
-        ]
-      },
-      "notBefore": 0,
-      "groups": [
-        "/merchant"
-      ]
-    },
-    {
       "id": "281220eb-a4ef-4d03-b666-bdec4b26c5f7",
       "createdTimestamp": 1479212158721,
       "username": "demo_merchant",
@@ -649,6 +621,158 @@
           "type": "password",
           "createdDate": 1602080657263,
           "secretData": "{\"value\":\"Pib3j1q5Hk2E0IfQX08TcAcZTXVsLMlE3ZrgFwMpgvTCY1CkiyPb89U+zSzcxFTXwL15zVPQsBU5wbK9s/NSFg==\",\"salt\":\"jQc7ZQwO7g+mXytqhl23lQ==\"}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
+        }
+      ],
+      "disableableCredentialTypes": [
+        "password"
+      ],
+      "requiredActions": [],
+      "realmRoles": [
+        "offline_access",
+        "uma_authorization"
+      ],
+      "clientRoles": {
+        "account": [
+          "manage-account",
+          "view-profile"
+        ]
+      },
+      "notBefore": 0,
+      "groups": [
+        "/merchant"
+      ]
+    },
+    {
+      "id": "281220eb-a4ef-4d03-b666-bdec4b26c5f8",
+      "createdTimestamp": 1479212158721,
+      "username": "demo_merchant_5",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "firstName": "Demo",
+      "lastName": "Merchant 5",
+      "email": "merchant5@its.demo",
+      "credentials": [
+        {
+          "id": "b1c7ced6-ac98-4c1f-aa78-5218530cdb47",
+          "type": "password",
+          "createdDate": 1605469813489,
+          "secretData": "{\"value\":\"GAwHVf+s/kJ36ZjD8XVl3gyZ6oasrqtIOQZKjxv00sLxp9Ax2rNfW34/xEmwvXwFFSa/yzh5fcKPcOuwHVjYHw==\",\"salt\":\"TNVfbXrZkFpmUkxrAwiWTQ==\"}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
+        }
+      ],
+      "disableableCredentialTypes": [
+        "password"
+      ],
+      "requiredActions": [],
+      "realmRoles": [
+        "offline_access",
+        "uma_authorization"
+      ],
+      "clientRoles": {
+        "account": [
+          "manage-account",
+          "view-profile"
+        ]
+      },
+      "notBefore": 0,
+      "groups": [
+        "/merchant"
+      ]
+    },
+    {
+      "id": "281220eb-a4ef-4d03-b666-bdec4b26c5f9",
+      "createdTimestamp": 1479212158721,
+      "username": "demo_merchant_2",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "firstName": "Demo",
+      "lastName": "Merchant 2",
+      "email": "merchant2@its.demo",
+      "credentials": [
+        {
+          "id": "b1c7ced6-ac98-4c1f-aa78-5218530cdb48",
+          "type": "password",
+          "createdDate": 1605469752137,
+          "secretData": "{\"value\":\"agShVC/62Pq9SaiHFN3IuMkADFcgVzebFAJFPaNkkizrTuU+pFNZgUtF0OlSb++lLoxKCQ57tLDpvhfIGnOCIw==\",\"salt\":\"miAt58S692kh8FaX3F64Cw==\"}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
+        }
+      ],
+      "disableableCredentialTypes": [
+        "password"
+      ],
+      "requiredActions": [],
+      "realmRoles": [
+        "offline_access",
+        "uma_authorization"
+      ],
+      "clientRoles": {
+        "account": [
+          "manage-account",
+          "view-profile"
+        ]
+      },
+      "notBefore": 0,
+      "groups": [
+        "/merchant"
+      ]
+    },
+    {
+      "id": "281220eb-a4ef-4d03-b666-bdec4b26c600",
+      "createdTimestamp": 1479212158721,
+      "username": "demo_merchant_3",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "firstName": "Demo",
+      "lastName": "Merchant 3",
+      "email": "merchant3@its.demo",
+      "credentials": [
+        {
+          "id": "b1c7ced6-ac98-4c1f-aa78-5218530cdb49",
+          "type": "password",
+          "createdDate": 1605469768740,
+          "secretData": "{\"value\":\"Eb58qZgj23iUEbx0zELR8HG1+O37rCGzs5cm5XkEQzCl4thma6DNAeA2t4o/A5v4/HIG8z9VPEY8IIEc5gnvtg==\",\"salt\":\"m77+/fB/rTgWRlV0SMznRQ==\"}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
+        }
+      ],
+      "disableableCredentialTypes": [
+        "password"
+      ],
+      "requiredActions": [],
+      "realmRoles": [
+        "offline_access",
+        "uma_authorization"
+      ],
+      "clientRoles": {
+        "account": [
+          "manage-account",
+          "view-profile"
+        ]
+      },
+      "notBefore": 0,
+      "groups": [
+        "/merchant"
+      ]
+    },
+    {
+      "id": "281220eb-a4ef-4d03-b666-bdec4b26c501",
+      "createdTimestamp": 1479212158721,
+      "username": "demo_merchant_4",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "firstName": "Demo",
+      "lastName": "Merchant 4",
+      "email": "merchant4@its.demo",
+      "credentials": [
+        {
+          "id": "b1c7ced6-ac98-4c1f-aa78-5218530cdb50",
+          "type": "password",
+          "createdDate": 1605469792322,
+          "secretData": "{\"value\":\"nWMIRNt/6YmqjiKeNEsQQpkbgxMJydUhOssISxMJoC4iiMrF59GoFZ1VKeIQeo90dUBlhBbS09Se+Gd9udP3iA==\",\"salt\":\"JR/6sMllSPoo2BzCK8mu+A==\"}",
           "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
         }
       ],
@@ -1467,12 +1591,12 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "https://beta.dashboard.rbk.money/*",
-        "https://dashboard.rbk.money/*"
+        "https://beta.dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/*",
+        "https://dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/*"
       ],
       "webOrigins": [
-        "https://beta.dashboard.rbk.money",
-        "https://dashboard.rbk.money"
+        "https://beta.dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}",
+        "https://dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -1529,10 +1653,10 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "{{ .Values.services.keycloak.externalUrl }}/*"
+        "https://dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/*"
       ],
       "webOrigins": [
-        "{{ .Values.services.keycloak.externalUrl }}"
+        "https://dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -2225,10 +2349,10 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "{{ .Values.services.keycloak.externalUrl }}/*"
+        "https://auth.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/*"
       ],
       "webOrigins": [
-        "{{ .Values.services.keycloak.externalUrl }}"
+        "https://auth.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -3117,8 +3241,8 @@
     "contentSecurityPolicyReportOnly": "",
     "xContentTypeOptions": "nosniff",
     "xRobotsTag": "none",
-    "xFrameOptions": "ALLOW-FROM https://dashboard.rbk.money https://beta.dashboard.rbk.money",
-    "contentSecurityPolicy": "child-src 'self', frame-ancestors https://dashboard.rbk.money https://beta.dashboard.rbk.money;",
+    "xFrameOptions": "ALLOW-FROM https://dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}",
+    "contentSecurityPolicy": "child-src 'self', frame-ancestors https://dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }} ;",
     "xXSSProtection": "1; mode=block",
     "strictTransportSecurity": "max-age=31536000; includeSubDomains"
   },
@@ -3133,10 +3257,10 @@
     "ssl": "false",
     "user": "no-reply@rbkmoney.com"
   },
-  "loginTheme": "rbkmoney-hood",
-  "accountTheme": "rbkmoney",
+  "loginTheme": "keycloak",
+  "accountTheme": "keycloak",
   "adminTheme": "keycloak",
-  "emailTheme": "rbkmoney-hood",
+  "emailTheme": "keycloak",
   "eventsEnabled": true,
   "eventsExpiration": 51840000,
   "eventsListeners": [
