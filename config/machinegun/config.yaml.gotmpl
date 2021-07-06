@@ -1,4 +1,6 @@
 service_name: machinegun
+dist_node_name:
+  hostpart: ip
 
 erlang:
 {{- if .Values.services.global.ipv6only }}
@@ -20,8 +22,8 @@ storage:
   host: riak
   port: 8087
   pool:
-    size: 10
-    queue_max: 100
+    size: 100
+    queue_max: 500
   batch_concurrency_limit: 10
   connect_timeout: 500ms
   request_timeout: 10s
@@ -77,7 +79,12 @@ namespaces:
       pool_size: 300
       http_keep_alive_timeout: 3000ms
   invoice:
-    timers: *default_timers_config
+    timers:
+      &default_timers_config
+      scan_interval: 60s
+      scan_limit: 5000
+      capacity: 2000
+      min_scan_delay: 5s
     overseer: *default_overseer_config
     event_sinks:
       kafka:
@@ -141,6 +148,168 @@ namespaces:
     processor:
       url: http://url-shortener:8022/v1/stateproc
       http_keep_alive_timeout: 3000ms
+  ff/identity:
+      timers: *default_timers_config
+      overseer: *default_overseer_config
+      event_sinks:
+          machine:
+              type: machine
+              machine_id: ff/identity
+          kafka:
+              type: kafka
+              topic: mg-events-ff-identity
+              client: default_kafka_client
+      processor:
+          url: http://fistful:8022/v1/stateproc/ff/identity
+          http_keep_alive_timeout: 3000ms
+  ff/wallet_v2:
+      timers: *default_timers_config
+      overseer: *default_overseer_config
+      event_sinks:
+          machine:
+              type: machine
+              machine_id: ff/wallet_v2
+          kafka:
+              type: kafka
+              topic: mg-events-ff-wallet
+              client: default_kafka_client
+      processor:
+          url: http://fistful:8022/v1/stateproc/ff/wallet_v2
+          http_keep_alive_timeout: 3000ms
+  ff/source_v1:
+      timers: *default_timers_config
+      overseer: *default_overseer_config
+      event_sinks:
+          machine:
+              type: machine
+              machine_id: ff/source_v1
+          kafka:
+              type: kafka
+              topic: mg-events-ff-source
+              client: default_kafka_client
+      processor:
+          url: http://fistful:8022/v1/stateproc/ff/source_v1
+          http_keep_alive_timeout: 3000ms
+  ff/destination_v2:
+      timers: *default_timers_config
+      overseer: *default_overseer_config
+      event_sinks:
+          machine:
+              type: machine
+              machine_id: ff/destination_v2
+          kafka:
+              type: kafka
+              topic: mg-events-ff-destination
+              client: default_kafka_client
+      processor:
+          url: http://fistful:8022/v1/stateproc/ff/destination_v2
+          http_keep_alive_timeout: 3000ms
+  ff/deposit_v1:
+      timers: *default_timers_config
+      overseer: *default_overseer_config
+      event_sinks:
+          machine:
+              type: machine
+              machine_id: ff/deposit_v1
+          kafka:
+              type: kafka
+              topic: mg-events-ff-deposit
+              client: default_kafka_client
+      processor:
+          url: http://fistful:8022/v1/stateproc/ff/deposit_v1
+          http_keep_alive_timeout: 3000ms
+  ff/withdrawal_v2:
+      timers: *default_timers_config
+      overseer: *default_overseer_config
+      event_sinks:
+          machine:
+              type: machine
+              machine_id: ff/withdrawal_v2
+          kafka:
+              type: kafka
+              topic: mg-events-ff-withdrawal
+              client: default_kafka_client
+      processor:
+          url: http://fistful:8022/v1/stateproc/ff/withdrawal_v2
+          http_keep_alive_timeout: 3000ms
+  ff/withdrawal/session_v2:
+      timers: *default_timers_config
+      overseer: *default_overseer_config
+      event_sinks:
+          machine:
+              type: machine
+              machine_id: ff/withdrawal/session_v2
+      processor:
+          url: http://fistful:8022/v1/stateproc/ff/withdrawal/session_v2
+          http_keep_alive_timeout: 3000ms
+  ff/sequence:
+      timers: disabled
+      overseer: *default_overseer_config
+      processor:
+          url: http://fistful:8022/v1/stateproc/ff/sequence
+          http_keep_alive_timeout: 3000ms
+  ff/external_id:
+      timers: disabled
+      overseer: *default_overseer_config
+      processor:
+          url: http://fistful:8022/v1/stateproc/ff/external_id
+          http_keep_alive_timeout: 3000ms
+  ff/p2p_transfer_v1:
+      timers: *default_timers_config
+      overseer: *default_overseer_config
+      event_sinks:
+          machine:
+              type: machine
+              machine_id: ff/p2p_transfer_v1
+          kafka:
+              type: kafka
+              topic: mg-events-ff-p2p-transfer
+              client: default_kafka_client
+      processor:
+          url: http://fistful:8022/v1/stateproc/ff/p2p_transfer_v1
+          http_keep_alive_timeout: 3000ms
+  ff/p2p_transfer/session_v1:
+      timers: *default_timers_config
+      overseer: *default_overseer_config
+      event_sinks:
+          machine:
+              type: machine
+              machine_id: ff/p2p_transfer/session_v1
+          kafka:
+              type: kafka
+              topic: mg-events-ff-p2p-transfer-session
+              client: default_kafka_client
+      processor:
+          url: http://fistful:8022/v1/stateproc/ff/p2p_transfer/session_v1
+          http_keep_alive_timeout: 3000ms
+  ff/w2w_transfer_v1:
+      timers: *default_timers_config
+      overseer: *default_overseer_config
+      event_sinks:
+          machine:
+              type: machine
+              machine_id: ff/w2w_transfer_v1
+          kafka:
+              type: kafka
+              topic: mg-events-ff-w2w-transfer
+              client: default_kafka_client
+      processor:
+          url: http://fistful:8022/v1/stateproc/ff/w2w_transfer_v1
+          http_keep_alive_timeout: 3000ms
+  ff/p2p_template_v1:
+      timers: *default_timers_config
+      overseer: *default_overseer_config
+      event_sinks:
+          machine:
+              type: machine
+              machine_id: ff/p2p_template_v1
+          kafka:
+              type: kafka
+              topic: mg-events-ff-p2p-template
+              client: default_kafka_client
+      processor:
+          url: http://fistful:8022/v1/stateproc/ff/p2p_template_v1
+          http_keep_alive_timeout: 3000ms
 
 kafka:
   default_kafka_client:
