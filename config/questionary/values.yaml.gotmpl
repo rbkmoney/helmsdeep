@@ -3,15 +3,15 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/hooker
-  tag: aeffeedb13a8f5125962bfe3e0e734ba4104d876
+  repository: docker.io/rbkmoney/questionary
+  tag: 954dbc039eb011f32d6edf661d874eca9cea9c77
   pullPolicy: IfNotPresent
 
 runopts:
-  command: ["/opt/hooker/entrypoint.sh"]
+  command: ["/opt/questionary/entrypoint.sh"]
 
 configMap:
-  data: 
+  data:
     entrypoint.sh: |
       {{- readFile "entrypoint.sh" | nindent 6 }}
     loggers.xml: |
@@ -27,15 +27,15 @@ volumes:
 
 volumeMounts:
   - name: config-volume
-    mountPath: /opt/hooker/entrypoint.sh
+    mountPath: /opt/questionary/entrypoint.sh
     subPath: entrypoint.sh
     readOnly: true
   - name: config-volume
-    mountPath: /opt/hooker/logback.xml
+    mountPath: /opt/questionary/logback.xml
     subPath: logback.xml
     readOnly: true
   - name: config-volume
-    mountPath: /opt/hooker/loggers.xml
+    mountPath: /opt/questionary/loggers.xml
     subPath: loggers.xml
     readOnly: true
 
@@ -59,20 +59,20 @@ readinessProbe:
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
-  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-hooker"
+  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-questionary"
   vault.hashicorp.com/agent-inject-template-application.properties: |
-    {{`{{- with secret "database/creds/db-app-hooker" -}}
-    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/hooker?sslmode=disable
+    {{`{{- with secret "database/creds/db-app-questionary" -}}
+    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/questionary?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
-    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/hooker?sslmode=disable
+    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/questionary?sslmode=disable
     spring.flyway.user={{ .Data.username }}
     spring.flyway.password={{ .Data.password }}
     {{- end }}`}}
 
 metrics:
   serviceMonitor:
-    enabled: false
+    enabled: true
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus
@@ -88,38 +88,7 @@ ciliumPolicies:
     name: postgres
     namespace: {{ .Release.Namespace }}
   - filters:
-    - port: 9092
-      rules:
-        kafka:
-        - role: consume
-          topics:
-            - mg-events-customer
-            - mg-events-invoice
-      type: TCP
-    name: kafka
-    namespace: {{ .Release.Namespace }}
-  - filters:
     - port: 8200
       type: TCP
     name: vault
     namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
-    name: hellgate
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
-    name: fault-detector
-    namespace: {{ .Release.Namespace }}
-
-##In case of kafka mTLS auth move it to vault template
-# {{- /*
-#      kafka.ssl.enabled={{ kafka.ssl.enable }}
-#      kafka.ssl.key-store-location=/opt/{{ service_name }}/kafka-keystore.p12
-#      kafka.ssl.key-store-password="{{ service.keystore.pass }}"
-#      kafka.ssl.key-password="{{ service.keystore.pass }}"
-#      kafka.ssl.trust-store-location=/opt/{{ service_name }}/kafka-truststore.p12
-#      kafka.ssl.trust-store-password="{{ kafka.truststore.java.pass }}"
-# */ -}}

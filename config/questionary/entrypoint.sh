@@ -4,9 +4,8 @@ set -ue
 java \
     "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
     -jar \
-    /opt/shumway/shumway.jar \
-    --logging.config=/opt/shumway/logback.xml \
-    --spring.flyway.table=schema_version \
+    /opt/questionary/questionary.jar \
+    --logging.config=/opt/questionary/logback.xml \
     --management.security.flag=false \
     --management.metrics.export.statsd.flavor=etsy \
     --management.metrics.export.statsd.enabled=true \
@@ -22,4 +21,5 @@ java \
     --spring.datasource.hikari.minimum-idle=2 \
     --spring.datasource.hikari.maximum-pool-size=20 \
     ${@} \
-    --spring.config.additional-location=/vault/secrets/application.properties
+    --spring.config.additional-location=/vault/secrets/application.properties \
+

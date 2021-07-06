@@ -19,14 +19,15 @@ configMap:
           GRANT ALL ON ALL SEQUENCES IN SCHEMA shm TO \"{{name}}\";" \
           default_ttl="1h" \
           max_ttl="240h"
-      vault write database/config/hook \
+
+      vault write database/config/hooker \
           plugin_name=postgresql-database-plugin \
           allowed_roles="*" \
-          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/hook?sslmode=disable" \
+          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/hooker?sslmode=disable" \
           username="postgres" \
           password="H@ckM3"
       vault write database/roles/db-app-hooker \
-          db_name=hook \
+          db_name=hooker \
           creation_statements="Create schema if not exists hook;
           CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
           GRANT CREATE ON DATABASE hook TO \"{{name}}\";
@@ -81,6 +82,7 @@ configMap:
           GRANT ALL ON ALL SEQUENCES IN SCHEMA mst TO \"{{name}}\";" \
           default_ttl="1h" \
           max_ttl="240h"
+          
       vault write database/config/analytics \
           plugin_name=postgresql-database-plugin \
           allowed_roles="*" \
@@ -97,6 +99,7 @@ configMap:
           GRANT ALL ON ALL SEQUENCES IN SCHEMA analytics TO \"{{name}}\";" \
           default_ttl="1h" \
           max_ttl="240h"
+
       vault write database/config/claim-management \
           plugin_name=postgresql-database-plugin \
           allowed_roles="*" \
@@ -113,6 +116,7 @@ configMap:
           GRANT ALL ON ALL SEQUENCES IN SCHEMA cm TO \"{{name}}\";" \
           default_ttl="1h" \
           max_ttl="240h"
+
       vault write database/config/questionary \
           plugin_name=postgresql-database-plugin \
           allowed_roles="*" \
@@ -129,6 +133,7 @@ configMap:
           GRANT ALL ON ALL SEQUENCES IN SCHEMA qs TO \"{{name}}\";" \
           default_ttl="1h" \
           max_ttl="240h"
+
       vault write database/config/reporter \
           plugin_name=postgresql-database-plugin \
           allowed_roles="*" \
@@ -163,6 +168,7 @@ configMap:
           default_ttl="1h" \
           max_ttl="240h"
   
+
       vault auth enable kubernetes
       vault write auth/kubernetes/config \
              token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
@@ -180,24 +186,21 @@ configMap:
       path "database/creds/db-app-shumway" {
         capabilities = ["read"]
       }
-       path "database/creds/db-app" {
-         capabilities = ["read"]
-       }
-       path "database/creds/db-app-hooker" {
-         capabilities = ["read"]
-       }
-       path "database/creds/db-app-analytics" {
-         capabilities = ["read"]
-       }
-       path "database/creds/db-app-fistful-magista" {
-         capabilities = ["read"]
-       }
-       path "database/creds/db-app-questionary" {
-         capabilities = ["read"]
-       }
-       path "database/creds/db-app-claim-management" {
-         capabilities = ["read"]
-       }
+      path "database/creds/db-app-hooker" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-analytics" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-fistful-magista" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-questionary" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-claim-management" {
+        capabilities = ["read"]
+      }
       path "database/creds/db-app-magista" {
         capabilities = ["read"]
       }

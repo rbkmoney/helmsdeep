@@ -4,8 +4,8 @@ set -ue
 java \
     "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
     -jar \
-    /opt/hooker/hooker.jar \
-    --logging.config=/opt/hooker/logback.xml \
+    /opt/claim-management/claim-management.jar \
+    --logging.config=/opt/claim-management/logback.xml \
     --management.security.flag=false \
     --management.metrics.export.statsd.flavor=etsy \
     --management.metrics.export.statsd.enabled=true \
@@ -20,20 +20,18 @@ java \
     --spring.datasource.hikari.idle-timeout=30000 \
     --spring.datasource.hikari.minimum-idle=2 \
     --spring.datasource.hikari.maximum-pool-size=20 \
-    --service.invoicing.url=http://hellgate:8022/v1/processing/invoicing \
-    --service.customer.url=http://hellgate:8022/v1/processing/customer_management \
-    --service.fault-detector.url=http://fault-detector:8022/v1/fault-detector \
-    --kafka.bootstrap-servers=kafka:9092 \
-    --kafka.topics.invoice.id=mg-events-invoice \
-    --kafka.topics.invoice.enabled=true \
-    --kafka.topics.invoice.concurrency=7 \
-    --kafka.topics.customer.id=mg-events-customer \
-    --kafka.topics.customer.enabled=true \
-    --kafka.topics.customer.concurrency=2 \
-    --kafka.client-id=hooker \
-    --kafka.consumer.group-id=Hooker-Invoicing \
-    --kafka.consumer.max-poll-records=500 \
-    --spring.application.name=hooker \
-    --logging.level.com.rbkmoney.hooker.scheduler.MessageScheduler=DEBUG \
+    --spring.application.name=claim-management \
+    --claim-management.limit=1000 \
+    --kafka.bootstrap.servers=kafka:9092 \
+    --kafka.topics.claim-event-sink.enabled=true \
+    --kafka.topics.claim-event-sink.id=claim-event-sink \
+    --kafka.client-id=claim-management \
+    --kafka.consumer.group-id=claim-management-group-1 \
+    --claim-management.committers[0].id=hellgate \
+    --claim-management.committers[0].uri=http://hellgate:8022/v1/processing/claim_committer \
+    --claim-management.committers[0].timeout=60000 \
+    --claim-management.committers[1].id=cashier \
+    --claim-management.committers[1].uri=http://cashier:8022/claim-committer \
+    --claim-management.committers[1].timeout=10000 \
     ${@} \
     --spring.config.additional-location=/vault/secrets/application.properties \
