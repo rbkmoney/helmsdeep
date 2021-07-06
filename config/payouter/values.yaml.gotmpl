@@ -83,7 +83,7 @@ podAnnotations:
 
 metrics:
   serviceMonitor:
-    enabled: true
+    enabled: false
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus
