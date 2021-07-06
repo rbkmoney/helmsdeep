@@ -1,0 +1,78 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+image:
+  repository: docker.io/rbkmoney/columbus
+  tag: 88be0cbccde15c7d4c88403d495f8d564f826160
+  pullPolicy: IfNotPresent
+
+runopts:
+  command: ["/opt/columbus/entrypoint.sh"]
+
+configMap:
+  data:
+    entrypoint.sh: |
+      {{- readFile "entrypoint.sh" | nindent 6 }}
+    loggers.xml: |
+      {{- readFile "loggers.xml" | nindent 6 }}
+    logback.xml: |
+      {{- readFile "../logs/logback.xml" | nindent 6 }}
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/columbus/entrypoint.sh
+    subPath: entrypoint.sh
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/columbus/logback.xml
+    subPath: logback.xml
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/columbus/loggers.xml
+    subPath: loggers.xml
+    readOnly: true
+
+service:
+  ports:
+    - name: api
+      port: 8022
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: api
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: api
+
+metrics:
+  serviceMonitor:
+    enabled: false
+    namespace: {{ .Release.Namespace }}
+    additionalLabels:
+      release: prometheus
+    endpoints:
+      - port: "management"
+        path: /actuator/prometheus
+        scheme: http
+
+ciliumPolicies:
+  - filters:
+    - port: 5432
+      type: TCP
+    name: columbus-pg
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8200
+      type: TCP
+    name: vault
+    namespace: {{ .Release.Namespace }}
