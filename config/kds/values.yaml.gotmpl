@@ -21,7 +21,7 @@ configMap:
     sys.config: |
       {{- readFile "sys.config" | nindent 6 }}
     erl_inetrc: |
-      {{- readFile "../vm/erl_inetrc" | nindent 6 }}
+      {{- tpl (readFile "../vm/erl_inetrc.gotmpl") . | nindent 6 }}
     vm.args: |
       {{- tpl (readFile "../vm/erl_vm_args.gotmpl") . | nindent 6 }}
 
@@ -82,11 +82,11 @@ volumes:
 pvc:
   enabled: true
   name: "{{ .Release.Name }}-keyring"
-  storage: 3Mi
+  storage: 10Mi
 
 metrics:
   serviceMonitor:
-    enabled: true
+    enabled: false
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus
