@@ -14,7 +14,7 @@
             },
             short_url_template => #{
                 scheme         => https,
-                netloc         => "rbk.mn",
+                netloc         => "shrt.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}",
                 path           => "/"
             },
             source_url_whitelist => [
