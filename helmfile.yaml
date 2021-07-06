@@ -146,7 +146,6 @@ releases:
   needs:
     - {{ .Namespace | default "default" }}/keycloak
 - name: fistful
-  installed: false
   <<: *generic_stateless_json
 - name: payform
   <<: *generic_stateless
