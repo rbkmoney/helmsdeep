@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: docker.io/rbkmoney/machinegun
-  tag: 54eff8de6e39b1102f1eafb44b6a5ce3eab6e9a2
+  tag: b7a4e8e938a9857ed47d43701e7672fc9fefdf00
   pullPolicy: IfNotPresent
 
 configMap:
@@ -36,7 +36,7 @@ volumeMounts:
 
 metrics:
   serviceMonitor:
-    enabled: true
+    enabled: false
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus

@@ -19,6 +19,8 @@ repositories:
   url: https://codecentric.github.io/helm-charts
 - name: rbkmoney
   url: https://rbkmoney.github.io/charts
+- name: es
+  url: https://helm.elastic.co
 
 # Path to the helmfile state file being processed BEFORE releases in this state file
 helmfiles:
@@ -62,6 +64,9 @@ releases:
   - {{ .Namespace | default "default" }}/postgres
   - {{ .Namespace | default "default" }}/keycloak-realms
   wait: true
+- name: deanonimus-es
+  <<: *default
+  chart: es/elasticsearch
 #Rbkmoney processing releases
 - name: holmes
   <<: *generic_stateless
@@ -146,8 +151,11 @@ releases:
   needs:
     - {{ .Namespace | default "default" }}/keycloak
 - name: fistful
-  installed: false
   <<: *generic_stateless_json
+- name: fistful-magista
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/vault
 - name: payform
   <<: *generic_stateless
 - name: test-transaction
@@ -174,3 +182,78 @@ releases:
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/keycloak
+- name: analytics
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/vault
+    - {{ .Namespace | default "default" }}/kafka
+#    - {{ .Namespace | default "default" }}/columbus
+    - {{ .Namespace | default "default" }}/payouter
+- name: questionary
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/vault
+- name: claim-management
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/vault
+    - {{ .Namespace | default "default" }}/kafka
+    - {{ .Namespace | default "default" }}/hellgate
+#    - {{ .Namespace | default "default" }}/cashier
+- name: questionary-aggr-proxy
+  <<: *generic_stateless
+- name: magista
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/vault
+    - {{ .Namespace | default "default" }}/kafka
+#    - {{ .Namespace | default "default" }}/columbus
+    - {{ .Namespace | default "default" }}/hellgate
+#    - {{ .Namespace | default "default" }}/payouter
+- name: payouter
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/vault
+- name: columbus
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/columbus-pg
+- name: columbus-pg
+  <<: *generic_stateless_json
+- name: dark-api
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/magista
+    - {{ .Namespace | default "default" }}/claim-management
+    - {{ .Namespace | default "default" }}/messages
+    - {{ .Namespace | default "default" }}/questionary-aggr-proxy
+    - {{ .Namespace | default "default" }}/questionary
+#    - {{ .Namespace | default "default" }}/file-storage
+    - {{ .Namespace | default "default" }}/hellgate
+    - {{ .Namespace | default "default" }}/dominant
+- name: wb-list-manager
+  installed: false
+  <<: *generic_stateless_json
+- name: fraudbusters-mgmt
+  installed: false
+  <<: *generic_stateless_json
+  needs:
+  - {{ .Namespace | default "default" }}/vault
+  - {{ .Namespace | default "default" }}/fraudbusters
+- name: fraudbusters
+  installed: false  
+  <<: *generic_stateless_json
+  needs:
+  - {{ .Namespace | default "default" }}/wb-list-manager
+  - {{ .Namespace | default "default" }}/columbus
+- name: deanonimus
+  <<: *generic_stateless_json
+  needs:
+  - {{ .Namespace | default "default" }}/deanonimus-es
+- name: messages
+  <<: *generic_stateless_json
+- name: papi
+  <<: *generic_stateless_json
+  - {{ .Namespace | default "default" }}/dominant
+  - {{ .Namespace | default "default" }}/magista
+  - {{ .Namespace | default "default" }}/hellgate

@@ -49,13 +49,27 @@ readinessProbe:
 
 ingress:
   enabled: true
+  annotations:
+{{- if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
+{{- end }}
+    kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+       more_set_headers "Access-Control-Allow-Origin: $http_origin";
   hosts:
     - host: checkout.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
       paths:
         - /
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
+  {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    - secretName: {{ .Release.Name }}-{{ .Values.services.ingress.tls.secretName }}
+  {{- else }}
     - secretName: {{ .Values.services.ingress.tls.secretName }}
+  {{- end }}
       hosts:
         - checkout.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
 {{- end }}

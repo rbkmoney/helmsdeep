@@ -10,11 +10,16 @@ image:
 configMap:
   data:
     sys.config: |
-      {{- readFile "sys.config" | nindent 6 }}
+      {{- tpl (readFile "sys.config.gotmpl") . | nindent 6 }}
     erl_inetrc: |
-      {{- readFile "../vm/erl_inetrc" | nindent 6 }}
+      {{- tpl (readFile "../vm/erl_inetrc.gotmpl") . | nindent 6 }}
     vm.args: |
       {{- tpl (readFile "../vm/erl_vm_args.gotmpl") . | nindent 6 }}
+    fetchKeycloakPubkey: |
+      {{- readFile "../api-common/fetch-keycloak-pubkey.sh" | nindent 6 }}
+
+apiInitContainers:
+  enabled: true
 
 volumeMounts:
   - name: config-volume
@@ -29,18 +34,57 @@ volumeMounts:
     mountPath: /opt/shortener/erl_inetrc
     subPath: erl_inetrc
     readOnly: true
+  - name: keycloak-pubkey
+    mountPath: /var/lib/shortener/keys/keycloak
+    readOnly: true
 
 volumes:
   - name: config-volume
     configMap:
       name: {{ .Release.Name }}
+      defaultMode: 0755
+  - name: keycloak-pubkey
+    emptyDir: {}
 
 metrics:
   serviceMonitor:
-    enabled: true
+    enabled: false
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus
+
+service:
+  type: ClusterIP
+  ports:
+    - name: api
+      port: 8080
+    - name: internal
+      port: 8022
+
+ingress:
+  enabled: true
+  annotations:
+{{- if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
+{{- end }}
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,X-Request-ID"
+    kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
+    nginx.ingress.kubernetes.io/enable-cors: "false"
+  hosts:
+    - host: shrt.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+      paths:
+        - /
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
+  {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    - secretName: {{ .Release.Name }}-{{ .Values.services.ingress.tls.secretName }}
+  {{- else }}
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
+  {{- end }}
+      hosts:
+        - shrt.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+{{- end }}
+  servicePort: 8080
 
 ciliumPolicies:
   - filters:

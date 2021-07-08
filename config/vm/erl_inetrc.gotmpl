@@ -1,4 +1,6 @@
 
+{{- if .Values.services.global.ipv6only }}
 {inet6     , true     }.
 {tcp       , inet6_tcp}.
+{{- end }}
 {cache_size, 0        }.

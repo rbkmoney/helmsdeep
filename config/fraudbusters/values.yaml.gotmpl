@@ -1,0 +1,82 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+image:
+  repository: docker.io/rbkmoney/fraudbusters
+  tag: fbe14fec347e5e6312a5e726e17e8b8c2b749b89
+  pullPolicy: IfNotPresent
+
+runopts:
+  command: ["/opt/fraudbusters/entrypoint.sh"]
+
+env:
+  - name: LOGBACK_SERVICE_NAME
+    value: "fraudbusters"
+
+configMap:
+  data:
+    entrypoint.sh: |
+      {{- readFile "entrypoint.sh" | nindent 6 }}
+    loggers.xml: |
+      {{- readFile "loggers.xml" | nindent 6 }}
+    logback.xml: |
+      {{- readFile "../logs/logback.xml" | nindent 6 }}
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/fraudbusters/entrypoint.sh
+    subPath: entrypoint.sh
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/fraudbusters/logback.xml
+    subPath: logback.xml
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/fraudbusters/loggers.xml
+    subPath: loggers.xml
+    readOnly: true
+
+service:
+  ports:
+    - name: api
+      port: 8022
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: api
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: api
+
+metrics:
+  serviceMonitor:
+    enabled: false
+    namespace: {{ .Release.Namespace }}
+    additionalLabels:
+      release: prometheus
+    endpoints:
+      - port: "api"
+        path: /actuator/prometheus
+        scheme: http
+
+ciliumPolicies:
+  - filters:
+    - port: 5432
+      type: TCP
+    name: postgres
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8200
+      type: TCP
+    name: vault
+    namespace: {{ .Release.Namespace }}

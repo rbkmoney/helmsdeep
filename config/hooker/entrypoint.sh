@@ -6,6 +6,14 @@ java \
     -jar \
     /opt/hooker/hooker.jar \
     --logging.config=/opt/hooker/logback.xml \
+    --management.security.flag=false \
+    --management.metrics.export.statsd.flavor=etsy \
+    --management.metrics.export.statsd.enabled=true \
+    --management.metrics.export.prometheus.enabled=true \
+    --management.endpoint.health.show-details=always \
+    --management.endpoint.metrics.enabled=true \
+    --management.endpoint.prometheus.enabled=true \
+    --management.endpoints.web.exposure.include=health,info,prometheus \
     --spring.datasource.hikari.data-source-properties.prepareThreshold=0 \
     --spring.datasource.hikari.leak-detection-threshold=5300 \
     --spring.datasource.hikari.max-lifetime=300000 \
@@ -25,12 +33,6 @@ java \
     --kafka.client-id=hooker \
     --kafka.consumer.group-id=Hooker-Invoicing \
     --kafka.consumer.max-poll-records=500 \
-    --kafka.ssl.enabled=false \
-    --kafka.ssl.key-store-location=/opt/hooker/kafka-keystore.p12 \
-    --kafka.ssl.key-store-password=test \
-    --kafka.ssl.trust-store-location=/opt/hooker/kafka-truststore.p12 \
-    --kafka.ssl.trust-store-password=test \
-    --kafka.ssl.key-password=test \
     --spring.application.name=hooker \
     --logging.level.com.rbkmoney.hooker.scheduler.MessageScheduler=DEBUG \
     ${@} \

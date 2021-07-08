@@ -1,0 +1,112 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+image:
+  repository: docker.io/rbkmoney/fraudbusters-management
+  tag: 91fe3772f946c7a76a982adfd4d23411607dee5f
+  pullPolicy: IfNotPresent
+
+runopts:
+  command: ["/opt/fraudbusters-management/entrypoint.sh"]
+
+configMap:
+  data: 
+    entrypoint.sh: |
+      {{- readFile "entrypoint.sh" | nindent 6 }}
+    loggers.xml: |
+      {{- readFile "loggers.xml" | nindent 6 }}
+    logback.xml: |
+      {{- readFile "../logs/logback.xml" | nindent 6 }}
+
+env:
+  - name: LOGBACK_SERVICE_NAME
+    value: "fraudbusters-management"
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/fraudbusters-management/entrypoint.sh
+    subPath: entrypoint.sh
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/fraudbusters-management/logback.xml
+    subPath: logback.xml
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/fraudbusters-management/loggers.xml
+    subPath: loggers.xml
+    readOnly: true
+
+service:
+  ports:
+    - name: api
+      port: 8022
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: api
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: api
+
+podAnnotations:
+  vault.hashicorp.com/role: "db-app"
+  vault.hashicorp.com/agent-inject: "true"
+  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-fbmgmt"
+  vault.hashicorp.com/agent-inject-template-application.properties: |
+    {{`{{- with secret "database/creds/db-app-fbmgmt" -}}
+    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/fraudbusters?sslmode=disable
+    spring.datasource.username={{ .Data.username }}
+    spring.datasource.password={{ .Data.password }}
+    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/fraudbusters?sslmode=disable
+    spring.flyway.user={{ .Data.username }}
+    spring.flyway.password={{ .Data.password }}
+    spring.flyway.schemas=af
+    {{- end }}`}}
+
+metrics:
+  serviceMonitor:
+    enabled: false
+    namespace: {{ .Release.Namespace }}
+    additionalLabels:
+      release: prometheus
+    endpoints:
+      - port: "api"
+        path: /actuator/prometheus
+        scheme: http
+
+ciliumPolicies:
+  - filters:
+    - port: 5432
+      type: TCP
+    name: postgres
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 9092
+      type: TCP
+    name: kafka
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8200
+      type: TCP
+    name: vault
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: hellgate
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: fault-detector
+    namespace: {{ .Release.Namespace }}

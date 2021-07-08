@@ -1,0 +1,18 @@
+roles:
+  master: "true"
+  ingest: "true"
+  data: "true"
+  remote_cluster_client: "true"
+  ml: "false"
+
+replicas: 1
+minimumMasterNodes: 1
+
+masterService: deanonimus-es
+# extraEnvs:
+#   - name: discovery.type
+#     value: single-node
+
+image: "docker.elastic.co/elasticsearch/elasticsearch"
+imageTag: "7.10.2"
+imagePullPolicy: "IfNotPresent"

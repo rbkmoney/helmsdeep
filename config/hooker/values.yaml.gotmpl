@@ -61,7 +61,7 @@ podAnnotations:
   vault.hashicorp.com/agent-inject: "true"
   vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-hooker"
   vault.hashicorp.com/agent-inject-template-application.properties: |
-    {{`{{- with secret "database/creds/db-app-hooker" }}
+    {{`{{- with secret "database/creds/db-app-hooker" -}}
     spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/hooker?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
@@ -72,7 +72,7 @@ podAnnotations:
 
 metrics:
   serviceMonitor:
-    enabled: true
+    enabled: false
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus
@@ -108,10 +108,18 @@ ciliumPolicies:
       type: TCP
     name: hellgate
     namespace: {{ .Release.Namespace }}
-{{- /*
   - filters:
     - port: 8022
       type: TCP
     name: fault-detector
     namespace: {{ .Release.Namespace }}
-*/ -}}
+
+##In case of kafka mTLS auth move it to vault template
+# {{- /*
+#      kafka.ssl.enabled={{ kafka.ssl.enable }}
+#      kafka.ssl.key-store-location=/opt/{{ service_name }}/kafka-keystore.p12
+#      kafka.ssl.key-store-password="{{ service.keystore.pass }}"
+#      kafka.ssl.key-password="{{ service.keystore.pass }}"
+#      kafka.ssl.trust-store-location=/opt/{{ service_name }}/kafka-truststore.p12
+#      kafka.ssl.trust-store-password="{{ kafka.truststore.java.pass }}"
+# */ -}}

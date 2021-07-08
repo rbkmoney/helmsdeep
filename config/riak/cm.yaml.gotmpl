@@ -38,6 +38,26 @@ fi
 # Use ping to discover our HOSTNAME because it's easier and more reliable than other methods
 export HOST=${NODENAME:-$(hostname -s).riak-headless}
 export HOSTIP=$(ping -c1 $HOST | awk '/^PING/ {print $3}' | sed -r 's/\((.*)\):/\1/g')
+
+# Add vm.args
+cat<< END > /etc/riak/vm.args
++sbwt none
++scl false
++sfwi 500
++P 256000
++e 256000
+-env ERL_CRASH_DUMP /var/log/riak/erl_crash.dump
+-env ERL_FULLSWEEP_AFTER 0
++Q 262144
++A 64
+-setcookie riak
+-name $CLUSTER_NAME@$HOST
++K true
++W w
+-smp enable
++zdbbl 32768
+END
+
 # Run all prestart scripts
 PRESTART=$(find /etc/riak/prestart.d -name *.sh -print | sort)
 for s in $PRESTART; do
