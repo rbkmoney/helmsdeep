@@ -39,7 +39,7 @@ java \
     --service.invoicing.networkTimeout=60000 \
     --service.payouter.url=http://payouter:8022/payout/management \
     --service.payouter.networkTimeout=60000 \
-    --service.dominant.url=http://dominant:8022/v1/domain/repository_client \
+    --service.dominant.url=http://dominant:8022/v1/domain/repository \
     --service.dominant.networkTimeout=60000 \
     --service.dominant.scheduler.enabled=true \
     --service.dominant.scheduler.pollingDelay=10000 \

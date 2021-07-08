@@ -72,6 +72,9 @@ podAnnotations:
     postgres.db.url=jdbc:postgresql://postgres-postgresql:5432/analytics?sslmode=disable
     postgres.db.user={{ .Data.username }}
     postgres.db.password={{ .Data.password }}
+    clickhouse.db.url=jdbc:clickhouse://chi-demo-cluster-0-0:8123/analytic
+    clickhouse.db.user=analytic
+    clickhouse.db.password=hackme
     {{- end }}`}}
 
 metrics:
@@ -134,15 +137,3 @@ ciliumPolicies:
     name: dominant
     namespace: {{ .Release.Namespace }}
 
-##In case of kafka mTLS auth move it to vault template
-# {{- /*
-#      kafka.ssl.enabled={{ kafka.ssl.enable }}
-#      kafka.ssl.key-store-location=/opt/{{ service_name }}/kafka-keystore.p12
-#      kafka.ssl.key-store-password="{{ service.keystore.pass }}"
-#      kafka.ssl.key-password="{{ service.keystore.pass }}"
-#      kafka.ssl.trust-store-location=/opt/{{ service_name }}/kafka-truststore.p12
-#      kafka.ssl.trust-store-password="{{ kafka.truststore.java.pass }}"
-#      clickhouse.db.url=jdbc:clickhouse://clickhouse:8123/analytic
-#      clickhouse.db.user={{ .Data.clickhouse.username }}
-#      clickhouse.db.password={{ .Data.clickhouse.password }}
-# */ -}}
