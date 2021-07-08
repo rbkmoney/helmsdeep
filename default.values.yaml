@@ -12,9 +12,6 @@ services:
   vault:
     dev: true
 
-  keycloak:
-    externalUrl: "https://auth.some-site.com"
-
   ingress:
     class: "nginx"
     rootDomain: some-site.ru
