@@ -15,6 +15,11 @@ configMap:
       {{- tpl (readFile "../vm/erl_inetrc.gotmpl") . | nindent 6 }}
     vm.args: |
       {{- tpl (readFile "../vm/erl_vm_args.gotmpl") . | nindent 6 }}
+    fetchKeycloakPubkey: |
+      {{- readFile "../api-common/fetch-keycloak-pubkey.sh" | nindent 6 }}
+
+apiInitContainers:
+  enabled: true
 
 volumeMounts:
   - name: config-volume
@@ -29,11 +34,17 @@ volumeMounts:
     mountPath: /opt/shortener/erl_inetrc
     subPath: erl_inetrc
     readOnly: true
+  - name: keycloak-pubkey
+    mountPath: /var/lib/shortener/keys/keycloak
+    readOnly: true
 
 volumes:
   - name: config-volume
     configMap:
       name: {{ .Release.Name }}
+      defaultMode: 0755
+  - name: keycloak-pubkey
+    emptyDir: {}
 
 metrics:
   serviceMonitor:
@@ -63,7 +74,6 @@ ingress:
     - host: shrt.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
       paths:
         - /
-        - /v1/
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
   {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}

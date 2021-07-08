@@ -10,7 +10,9 @@
             ip                 => "::",
             port               => 8080,
             authorizer         => #{
-                keyset         => #{}
+                keyset         => #{
+                    keycloak   => {pem_file, "/var/lib/shortener/keys/keycloak/keycloak.pubkey.pem"}
+                }
             },
             short_url_template => #{
                 scheme         => https,
