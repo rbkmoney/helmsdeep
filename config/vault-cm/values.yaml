@@ -30,7 +30,7 @@ configMap:
           db_name=hooker \
           creation_statements="Create schema if not exists hook;
           CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
-          GRANT CREATE ON DATABASE hook TO \"{{name}}\";
+          GRANT CREATE ON DATABASE hooker TO \"{{name}}\";
           GRANT ALL ON schema hook TO \"{{name}}\";
           GRANT ALL ON ALL TABLES IN SCHEMA hook TO \"{{name}}\";
           GRANT ALL ON ALL SEQUENCES IN SCHEMA hook TO \"{{name}}\";" \
@@ -167,6 +167,23 @@ configMap:
           GRANT ALL ON ALL SEQUENCES IN SCHEMA mst TO \"{{name}}\";" \
           default_ttl="1h" \
           max_ttl="240h"
+
+      vault write database/config/fbmgmt \
+          plugin_name=postgresql-database-plugin \
+          allowed_roles="*" \
+          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/fraudbusters?sslmode=disable" \
+          username="postgres" \
+          password="H@ckM3"
+      vault write database/roles/db-app-fbmgmt \
+          db_name=fbmgmt \
+          creation_statements="CREATE SCHEMA IF NOT EXISTS af;
+          CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
+          GRANT CREATE ON DATABASE fraudbusters TO \"{{name}}\";
+          GRANT ALL ON SCHEMA af TO \"{{name}}\";
+          GRANT ALL ON ALL TABLES IN SCHEMA af TO \"{{name}}\";
+          GRANT ALL ON ALL SEQUENCES IN SCHEMA af TO \"{{name}}\";" \
+          default_ttl="1h" \
+          max_ttl="240h"
   
 
       vault auth enable kubernetes
@@ -187,6 +204,9 @@ configMap:
         capabilities = ["read"]
       }
       path "database/creds/db-app-hooker" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-fbmgmt" {
         capabilities = ["read"]
       }
       path "database/creds/db-app-analytics" {
