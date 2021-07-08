@@ -3,6 +3,9 @@ dependencies:
 - name: consul
   repository: https://helm.releases.hashicorp.com
   version: 0.32.1
+- name: elasticsearch
+  repository: https://helm.elastic.co
+  version: 7.13.2
 - name: kafka
   repository: https://charts.bitnami.com/bitnami
   version: 12.7.3
@@ -12,9 +15,6 @@ dependencies:
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 9.7.2
-- name: raw
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.1
 - name: raw
   repository: https://rbkmoney.github.io/charts
   version: 0.1.1
@@ -30,5 +30,5 @@ dependencies:
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.13.0
-digest: sha256:bbfa7ce7aef2d5ee0d36664332f2e393ba5360b5eeb95c49ad6a2f2b05e45a68
-generated: "2021-07-01T12:27:50.865745+03:00"
+digest: sha256:4a94f6261beb7dd51df14b6208f84bcea2d9d40df73f7627ac21a1cc83daeba8
+generated: "2021-07-08T03:03:07.104688+03:00"
