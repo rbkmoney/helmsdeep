@@ -1,0 +1,141 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+image:
+  repository: docker.io/rbkmoney/messages
+  tag: d85a804962402f64cbdc5cbbae0805af51474243
+  pullPolicy: IfNotPresent
+
+runopts:
+  command: ["/opt/messages/entrypoint.sh"]
+
+configMap:
+  data:
+    entrypoint.sh: |
+      {{- readFile "entrypoint.sh" | nindent 6 }}
+    loggers.xml: |
+      {{- readFile "loggers.xml" | nindent 6 }}
+    logback.xml: |
+      {{- readFile "../logs/logback.xml" | nindent 6 }}
+
+env:
+  - name: LOGBACK_SERVICE_NAME
+    value: "messages"
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/messages/entrypoint.sh
+    subPath: entrypoint.sh
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/messages/logback.xml
+    subPath: logback.xml
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/messages/loggers.xml
+    subPath: loggers.xml
+    readOnly: true
+
+service:
+  ports:
+    - name: api
+      port: 8022
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: api
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: api
+
+# podAnnotations:
+#   vault.hashicorp.com/role: "db-app"
+#   vault.hashicorp.com/agent-inject: "true"
+#   vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-messages"
+#   vault.hashicorp.com/agent-inject-template-application.properties: |
+#     {{`{{- with secret "database/creds/db-app-messages" -}}
+#     spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/messages?sslmode=disable
+#     spring.datasource.username={{ .Data.username }}
+#     spring.datasource.password={{ .Data.password }}
+#     spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/messages?sslmode=disable
+#     spring.flyway.user={{ .Data.username }}
+#     spring.flyway.password={{ .Data.password }}
+#     spring.flyway.schemas=msgs
+#     flyway.schemas=msgs
+#     {{- end }}`}}
+
+ingress:
+  enabled: true
+  annotations:
+{{- if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
+{{- end }}
+    kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
+  hosts:
+    - host: iddqd.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+      paths:
+        - /v1/messages
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
+  {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    - secretName: {{ .Release.Name }}-{{ .Values.services.ingress.tls.secretName }}
+  {{- else }}
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
+  {{- end }}
+      hosts:
+        - iddqd.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+{{- end }}
+  servicePort: 8022
+
+metrics:
+  serviceMonitor:
+    enabled: false
+    namespace: {{ .Release.Namespace }}
+    additionalLabels:
+      release: prometheus
+    endpoints:
+      - port: "management"
+        path: /actuator/prometheus
+        scheme: http
+
+ciliumPolicies:
+  - filters:
+    - port: 5432
+      type: TCP
+    name: postgres
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 9092
+      rules:
+        kafka:
+        - role: consume
+          topics:
+            - claim-event-sink
+      type: TCP
+    name: kafka
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8200
+      type: TCP
+    name: vault
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: hellgate
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: cashier
+    namespace: {{ .Release.Namespace }}

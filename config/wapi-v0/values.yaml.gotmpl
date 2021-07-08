@@ -1,8 +1,8 @@
 # -*- mode: yaml -*-
 
 image:
-  repository: docker.io/rbkmoney/fistful-server
-  tag: 280324f9b10146ab7a641b42ca987e1272db30e2
+  repository: docker.io/rbkmoney/wapi-v0
+  tag: e6206e686b23cef36e98c24aa5d28df8e56017bc
   pullPolicy: IfNotPresent
 
 configMap:
@@ -10,7 +10,7 @@ configMap:
     sys.config: |
       {{- readFile "sys.config" | nindent 6 }}
     erl_inetrc: |
-      {{- readFile "../vm/erl_inetrc" | nindent 6 }}
+      {{- tpl (readFile "../vm/erl_inetrc.gotmpl") . | nindent 6 }}
     fetchKeycloakPubkey: |
       {{- readFile "../api-common/fetch-keycloak-pubkey.sh" | nindent 6 }}
     oopsBody1: |
@@ -24,23 +24,23 @@ secret:
   data:
     token_encryption_key1.jwk: |
       {{- readFile "../api-common/keys/token-encryption-keys/1.jwk" | nindent 6 }}
-    capi.privkey.pem: |
-      {{- readFile "../api-common/keys/capi.privkey.pem" | nindent 6 }}
+    wapi.privkey.pem: |
+      {{- readFile "../api-common/keys/wapi.privkey.pem" | nindent 6 }}
 
 apiInitContainers:
   enabled: true
 
 volumeMounts:
   - name: config-volume
-    mountPath: /opt/wapi/releases/0.1.0/sys.config
+    mountPath: /opt/wapi-v0/releases/0.1.0/sys.config
     subPath: sys.config
     readOnly: true
   - name: config-volume
-    mountPath: /opt/wapi/releases/0.1.0/vm.args
+    mountPath: /opt/wapi-v0/releases/0.1.0/vm.args
     subPath: vm.args
     readOnly: true
   - name: config-volume
-    mountPath: /opt/wapi/erl_inetrc
+    mountPath: /opt/wapi-v0/erl_inetrc
     subPath: erl_inetrc
     readOnly: true
   - name: config-volume
@@ -74,8 +74,6 @@ service:
   ports:
     - name: api
       port: 8080
-    - name: management
-      port: 8022
 
 livenessProbe:
   httpGet:
@@ -88,13 +86,27 @@ readinessProbe:
 
 ingress:
   enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+{{- if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
+{{- end }}
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+       more_set_headers "Access-Control-Allow-Origin: $http_origin";
   hosts:
     - host: api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
       paths:
         - /wapi
 {{- if .Values.services.ingress.tls.enabled }}
-  tls:
+  tls:  
+  {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    - secretName: {{ .Release.Name }}-{{ .Values.services.ingress.tls.secretName }}
+  {{- else }}
     - secretName: {{ .Values.services.ingress.tls.secretName }}
+  {{- end }}
       hosts:
         - api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
 {{- end }}
@@ -110,22 +122,27 @@ ciliumPolicies:
   - filters:
     - port: 8022
       type: TCP
-    name: binbase
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
     name: cds
     namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
-    name: shumway
+    name: fistful_magista
     namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
-    name: machinegun
+    name: fistful_reporter
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: file_storage
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: fistful
     namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
@@ -135,5 +152,5 @@ ciliumPolicies:
   - filters:
     - port: 8022
       type: TCP
-    name: hellgate
+    name: bender
     namespace: {{ .Release.Namespace }}

@@ -10,25 +10,6 @@ mdc.cluster_manager = $HOSTIP:9080
 handoff.ip = $HOSTIP
 END
 
-rm /etc/riak/advanced.config
-cat<< END > /etc/riak/vm.args
-+scl false
-+sfwi 500
-+P 256000
-+e 256000
--env ERL_CRASH_DUMP /var/log/riak/erl_crash.dump
--env ERL_FULLSWEEP_AFTER 0
-+Q 262144
-+A 64
--setcookie riak
--name $CLUSTER_NAME@$HOST
-+K true
-+W w
--smp enable
-+zdbbl 32768
--proto_dist inet6_tcp
-END
-
 # Maybe add user config items
 if [ -s $USER_CONF ]; then
   cat $USER_CONF >>$RIAK_CONF

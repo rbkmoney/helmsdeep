@@ -68,11 +68,13 @@ podAnnotations:
     spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/claimmng?sslmode=disable
     spring.flyway.user={{ .Data.username }}
     spring.flyway.password={{ .Data.password }}
+    spring.flyway.schemas=cm
+    flyway.schemas=cm
     {{- end }}`}}
 
 metrics:
   serviceMonitor:
-    enabled: true
+    enabled: false
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus
@@ -80,6 +82,29 @@ metrics:
       - port: "management"
         path: /actuator/prometheus
         scheme: http
+
+ingress:
+  enabled: true
+  annotations:
+{{- if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
+{{- end }}
+    kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
+  hosts:
+    - host: iddqd.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+      paths:
+        - /v1/cm
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
+  {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    - secretName: {{ .Release.Name }}-{{ .Values.services.ingress.tls.secretName }}
+  {{- else }}
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
+  {{- end }}
+      hosts:
+        - iddqd.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+{{- end }}
+  servicePort: 8022
 
 ciliumPolicies:
   - filters:
@@ -113,12 +138,3 @@ ciliumPolicies:
     name: cashier
     namespace: {{ .Release.Namespace }}
 
-##In case of kafka mTLS auth move it to vault template
-# {{- /*
-#      kafka.ssl.enabled={{ kafka.ssl.enable }}
-#      kafka.ssl.key-store-location=/opt/{{ service_name }}/kafka-keystore.p12
-#      kafka.ssl.key-store-password="{{ service.keystore.pass }}"
-#      kafka.ssl.key-password="{{ service.keystore.pass }}"
-#      kafka.ssl.trust-store-location=/opt/{{ service_name }}/kafka-truststore.p12
-#      kafka.ssl.trust-store-password="{{ kafka.truststore.java.pass }}"
-# */ -}}

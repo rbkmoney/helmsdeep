@@ -10,12 +10,23 @@ initdbScripts:
      CREATE DATABASE hooker;
      CREATE DATABASE analytics;
      CREATE DATABASE questionary;
-     CREATE DATABASE fistful-reporter;
-     CREATE DATABASE webhook-dispatcher;
-     CREATE DATABASE wallets-hooker;
-     CREATE DATABASE reporter;
+     CREATE DATABASE "fistful-reporter";
+     CREATE DATABASE "webhook-dispatcher";
+     CREATE DATABASE "wallets-hooker";
      CREATE DATABASE magista;
      CREATE DATABASE claimmng;
+     CREATE role messages WITH CREATEDB CREATEROLE;
+     CREATE DATABASE messages with owner messages;
+     \connect messages;
+     Create schema if not exists messages.msgs AUTHORIZATION messages;
+     #GRANT CREATE ON DATABASE messages TO "messages";
+     #GRANT ALL ON schema msgs TO "messages";
+     #GRANT ALL ON ALL TABLES IN SCHEMA msgs TO "messages";
+     #GRANT ALL ON ALL SEQUENCES IN SCHEMA msgs TO "messages";
+     CREATE DATABASE payouter;
+     CREATE DATABASE reporter;
+     CREATE DATABASE "fistful-magista";
+     CREATE DATABASE fraudbusters;
 
 #TODO: If bump version, change master to primary
 master:

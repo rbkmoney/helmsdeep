@@ -1,6 +1,7 @@
 # -*- mode: yaml -*-
 configMap:
   data:
-    realms.json: |
-      {{- tpl (readFile "realms.json.gotmpl") . | nindent 6 }}
-
+    external.json: |
+      {{ tpl (readFile "external.json.gotmpl") . | nindent 6 }}
+    internal.json: |
+      {{ tpl (readFile "internal.json.gotmpl") . | nindent 6 }}

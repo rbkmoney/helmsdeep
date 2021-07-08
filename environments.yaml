@@ -1,3 +1,5 @@
+helmDefaults:
+  createNamespace: false
 environments:
   default:
     values:

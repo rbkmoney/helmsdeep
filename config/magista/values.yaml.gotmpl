@@ -72,7 +72,7 @@ podAnnotations:
 
 metrics:
   serviceMonitor:
-    enabled: true
+    enabled: false
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus
@@ -117,13 +117,3 @@ ciliumPolicies:
       type: TCP
     name: payouter
     namespace: {{ .Release.Namespace }}
-
-# add it to vault tamlate if kafka mTLS auth enable 
-#{{- /*
-#     --kafka.ssl.enabled={{ kafka.ssl.enable }}
-#     --kafka.ssl.key-store-location=/opt/{{ service_name }}/kafka-keystore.p12
-#     --kafka.ssl.key-store-password="{{ service.keystore.pass }}"
-#     --kafka.ssl.key-password="{{ service.keystore.pass }}"
-#     --kafka.ssl.trust-store-location=/opt/{{ service_name }}/kafka-truststore.p12
-#     --kafka.ssl.trust-store-password="{{ kafka.truststore.java.pass }}"
-# */ -}}

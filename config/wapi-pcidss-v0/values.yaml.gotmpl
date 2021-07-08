@@ -10,7 +10,7 @@ configMap:
     sys.config: |
       {{- readFile "sys.config" | nindent 6 }}
     erl_inetrc: |
-      {{- readFile "../vm/erl_inetrc" | nindent 6 }}
+      {{- tpl (readFile "../vm/erl_inetrc.gotmpl") . | nindent 6 }}
     fetchKeycloakPubkey: |
       {{- readFile "../api-common/fetch-keycloak-pubkey.sh" | nindent 6 }}
     vm.args: |
@@ -20,19 +20,19 @@ secret:
   data:
     token_encryption_key1.jwk: |
       {{- readFile "../api-common/keys/token-encryption-keys/1.jwk" | nindent 6 }}
-    capi.privkey.pem: |
-      {{- readFile "../api-common/keys/capi.privkey.pem" | nindent 6 }}
+    wapi.privkey.pem: |
+      {{- readFile "../api-common/keys/wapi.privkey.pem" | nindent 6 }}
 
 apiInitContainers:
   enabled: true
 
 volumeMounts:
   - name: config-volume
-    mountPath: /opt/wapi/releases/0.1.0/sys.config
+    mountPath: /opt/wapi/releases/0.0.1/sys.config
     subPath: sys.config
     readOnly: true
   - name: config-volume
-    mountPath: /opt/wapi/releases/0.1.0/vm.args
+    mountPath: /opt/wapi/releases/0.0.1/vm.args
     subPath: vm.args
     readOnly: true
   - name: config-volume
@@ -59,6 +59,16 @@ volumes:
 
 ingress:
   enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+{{- if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
+{{- end }}
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+       more_set_headers "Access-Control-Allow-Origin: $http_origin";
   hosts:
     - host: api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
       paths: 
@@ -66,7 +76,11 @@ ingress:
         - /payres/v0
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
+  {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    - secretName: {{ .Release.Name }}-{{ .Values.services.ingress.tls.secretName }}
+  {{- else }}
     - secretName: {{ .Values.services.ingress.tls.secretName }}
+  {{- end }}
       hosts:
         - api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
 {{- end }}

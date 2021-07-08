@@ -6,6 +6,7 @@ java \
     -jar \
     /opt/shumway/shumway.jar \
     --logging.config=/opt/shumway/logback.xml \
+    --spring.flyway.table=schema_version \
     --management.security.flag=false \
     --management.metrics.export.statsd.flavor=etsy \
     --management.metrics.export.statsd.enabled=true \

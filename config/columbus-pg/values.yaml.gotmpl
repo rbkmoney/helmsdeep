@@ -1,0 +1,27 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+image:
+  repository: docker.io/rbkmoney/postgres-geodata
+  tag: 0eb52256576ec22f89fadc3e7fe505b692e838a3
+  pullPolicy: IfNotPresent
+
+env:
+  - name: POSTGRES_USER
+    value: postgres
+  - name: POSTGRES_PASSWORD
+    value: postgres
+  - name: POSTGRES_DB
+    value: columbus
+
+service:
+  ports:
+    - name: psql
+      port: 5432
+
+livenessProbe: null
+
+readinessProbe: null
+
+

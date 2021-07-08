@@ -13,11 +13,13 @@ runopts:
 configMap:
   data:
     entrypoint.sh: |
-      {{- tpl (readFile "entrypoint.sh.gotmpl") . | nindent 6 }}
+      {{- readFile "entrypoint.sh" | nindent 6 }}
     loggers.xml: |
       {{- readFile "loggers.xml" | nindent 6 }}
     logback.xml: |
       {{- readFile "../logs/logback.xml" | nindent 6 }}
+    fetchKeycloakPubkey: |
+      {{- readFile "../api-common/fetch-keycloak-pubkey.sh" | nindent 6 }}
 
 env:
   - name: LOGBACK_SERVICE_NAME
@@ -28,6 +30,8 @@ volumes:
     configMap:
       name: {{ .Release.Name }}
       defaultMode: 0755
+  - name: keycloak-pubkey
+    emptyDir: {}
 
 volumeMounts:
   - name: config-volume
@@ -42,13 +46,42 @@ volumeMounts:
     mountPath: /opt/dark-api/loggers.xml
     subPath: loggers.xml
     readOnly: true
+  - name: keycloak-pubkey
+    mountPath: /var/lib/dark-api/keys/keycloak
+    readOnly: true
+
+apiInitContainers:
+  enabled: true
 
 service:
   ports:
     - name: api
-      port: 8022
+      port: 8080
     - name: management
       port: 8023
+
+ingress:
+  enabled: true
+  annotations:
+{{- if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
+{{- end }}
+    kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
+  hosts:
+    - host: api.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+      paths:
+        - /dark-api
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
+  {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    - secretName: {{ .Release.Name }}-{{ .Values.services.ingress.tls.secretName }}
+  {{- else }}
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
+  {{- end }}
+      hosts:
+        - api.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+{{- end }}
+  servicePort: 8080
 
 livenessProbe:
   httpGet:
@@ -62,7 +95,7 @@ readinessProbe:
 
 metrics:
   serviceMonitor:
-    enabled: true
+    enabled: false
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus

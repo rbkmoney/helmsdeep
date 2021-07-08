@@ -3,21 +3,22 @@ cilium:
 elk:
   enabled: false
 prometheus:
-  enabled: true
+  enabled: false
 
 services:
   global:
-    ipv6only: true
+    ipv6only: false
   
   vault:
     dev: true
 
-  keycloak:
-    externalUrl: "https://auth.some-site.com"
-
   ingress:
-    rootDomain: some-site.com
+    class: "nginx"
+    rootDomain: some-site.ru
     tls:
-      enabled: false
-      secretName: some-site-tls-cert
+      enabled: true
+      letsEncrypt:
+        enabled: false
+        issuer: ""
+      secretName: someTlsSecret
 

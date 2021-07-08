@@ -34,10 +34,9 @@ server:
       name: vault-init
 
 injector:
-  namespaceSelector:
+  objectSelector:
     matchLabels:
-      vaultname: {{ .Release.Namespace }}
-
+      selector.vaultinject.rbkmoney: {{ .Release.Namespace }}
 ciliumPolicies:
   - filters:
     - port: 5432

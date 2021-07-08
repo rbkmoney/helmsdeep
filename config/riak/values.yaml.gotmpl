@@ -11,7 +11,7 @@ configMap:
     user.conf: |
       {{- readFile "user.yaml" | nindent 6 }}
     riak-cluster.sh: |
-      {{- readFile "cm.yaml" | nindent 6 }}
+      {{- tpl (readFile "cm.yaml.gotmpl") . | nindent 6 }}
     00-update-riak-conf.sh: |
       {{- readFile "pre.yaml" | nindent 6 }}   
 

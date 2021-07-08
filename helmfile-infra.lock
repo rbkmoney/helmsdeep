@@ -1,4 +1,4 @@
-version: v0.137.0
+version: v0.138.7
 dependencies:
 - name: elk
   repository: https://rbkmoney.github.io/charts
@@ -7,4 +7,4 @@ dependencies:
   repository: https://rbkmoney.github.io/charts
   version: 0.1.14
 digest: sha256:0708b0cf24f172ea5be5ae4dc5ea95217f258a440e8e806144683a42ffcd6ab0
-generated: "2021-02-26T00:57:26.519255+03:00"
+generated: "2021-07-08T03:02:47.492243+03:00"

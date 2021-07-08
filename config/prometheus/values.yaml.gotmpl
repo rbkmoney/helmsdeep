@@ -121,6 +121,15 @@ grafana:
       machinegun-namespace:
         json: |
           {{- readFile "dashboards/result/machinegun-namespace.json" | nindent 10 }}
+      tv1:
+        json: |
+          {{- readFile "dashboards/result/tv1.json" | nindent 10 }}
+      tv2:
+        json: |
+          {{- readFile "dashboards/result/tv2.json" | nindent 10 }}
+      common-wall:
+        json: |
+          {{- readFile "dashboards/result/common-wall.json" | nindent 10 }}
 {{- end }}
 
   grafana.ini:
