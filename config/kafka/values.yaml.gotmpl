@@ -1,4 +1,8 @@
-replicas: 1
+replicas: 3
+
+deleteTopicEnable: true
+logRetentionBytes: _-1
+logRetentionHours: -1
 
 podLabels:
   selector.cilium.rbkmoney/release: {{ .Release.Name }}
@@ -11,7 +15,7 @@ zookeeper:
   ## If the Zookeeper Chart is disabled a URL and port are required to connect
   # url: "zookeeper"
   # port: 2181
-  replicaCount: 1
+  replicaCount: 3
   persistence:
     enabled: false
 
