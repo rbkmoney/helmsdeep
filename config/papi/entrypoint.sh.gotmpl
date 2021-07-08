@@ -1,0 +1,35 @@
+#!/bin/sh
+set -ue
+
+mkdir -p /opt/papi/bin/
+cp -pr /var/lib/papi/keys/keycloak/keycloak.pubkey.pem /opt/papi/bin/secret
+java \
+    "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
+    -jar \
+    /opt/papi/papi.jar \
+    --logging.config=/opt/papi/logback.xml \
+    --management.security.flag=false \
+    --management.metrics.export.statsd.flavor=etsy \
+    --management.metrics.export.statsd.enabled=true \
+    --management.metrics.export.prometheus.enabled=true \
+    --management.endpoint.health.show-details=always \
+    --management.endpoint.metrics.enabled=true \
+    --management.endpoint.prometheus.enabled=true \
+    --management.endpoints.web.exposure.include=health,info,prometheus \
+    --magista.client.adapter.url=http://magista:8022/v2/stat \
+    --magista.client.adapter.networkTimeout=90000 \
+    -Dwoody.node_id=papi123 \
+    --dmt.url=http://dominant:8022/v1/domain/repository \
+    --dmt.timeout=300 \
+    --hellgate.timeout=300 \
+    --walker.timeout=300 \
+    --payouter.timeout=300 \
+    --magista.url=http://magista:8022/stat \
+    --shitter.url=http://payouter:8022/payout/management \
+    --walker.url=http://walker:8022/walker \
+    --keycloak.auth-server-url=https://auth.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/auth \
+    --keycloak.realm-public-key.file-path="/opt/papi/bin/secret" \
+    --keycloak.realm=internal \
+    --keycloak.resource=private-api \
+    ${@} \
+    --spring.config.additional-location=/vault/secrets/application.properties \

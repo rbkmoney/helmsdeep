@@ -1,0 +1,146 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+image:
+  repository: docker.io/rbkmoney/papi
+  tag: cce1062e1eabf71810bd585856c37c63cca61df5
+  pullPolicy: IfNotPresent
+
+runopts:
+  command: ["/opt/papi/entrypoint.sh"]
+
+configMap:
+  data:
+    entrypoint.sh: |
+      {{- tpl (readFile "entrypoint.sh.gotmpl") . | nindent 6 }}
+    loggers.xml: |
+      {{- readFile "loggers.xml" | nindent 6 }}
+    logback.xml: |
+      {{- readFile "../logs/logback.xml" | nindent 6 }}
+    fetchKeycloakPubkey: |
+      {{- tpl (readFile "fetch-keycloak-pubkey.sh.gotmpl") . | nindent 6 }}
+
+env:
+  - name: LOGBACK_SERVICE_NAME
+    value: "papi"
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+  - name: keycloak-pubkey
+    emptyDir: {}
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/papi/entrypoint.sh
+    subPath: entrypoint.sh
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/papi/logback.xml
+    subPath: logback.xml
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/papi/loggers.xml
+    subPath: loggers.xml
+    readOnly: true
+  - name: keycloak-pubkey
+    mountPath: /var/lib/papi/keys/keycloak
+    readOnly: true
+
+apiInitContainers:
+  enabled: true
+
+service:
+  ports:
+    - name: api
+      port: 8080
+
+ingress:
+  enabled: true
+  annotations:
+{{- if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
+{{- end }}
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,X-Request-ID"
+    kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
+    nginx.ingress.kubernetes.io/rewrite-target: /api/v1/$1
+    # nginx.ingress.kubernetes.io/app-root: /api/v1
+  hosts:
+    - host: iddqd.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+      paths:
+        - /papi/v1/(.+)
+    - host: idkfa.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+      paths:
+        - /papi/v1
+    - host: dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+      paths:
+        - /papi/v1
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
+  {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    - secretName: {{ .Release.Name }}-{{ .Values.services.ingress.tls.secretName }}
+  {{- else }}
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
+  {{- end }}
+      hosts:
+        - iddqd.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+        - dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+        - iddqd.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+{{- end }}
+  servicePort: 8080
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: "api"
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: "api"
+
+metrics:
+  serviceMonitor:
+    enabled: true
+    namespace: {{ .Release.Namespace }}
+    additionalLabels:
+      release: prometheus
+    endpoints:
+      - port: "api"
+        path: /actuator/prometheus
+        scheme: http
+
+ciliumPolicies:
+  - filters:
+    - port: 8022
+      type: TCP
+    name: magista
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: hellgate
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: dominant
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: cabi
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: dudoser
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8080
+      type: TCP
+    name: keycloak
+    namespace: {{ .Release.Namespace }}
