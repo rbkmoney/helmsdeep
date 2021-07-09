@@ -132,9 +132,4 @@ ciliumPolicies:
       type: TCP
     name: hellgate
     namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
-    name: cashier
-    namespace: {{ .Release.Namespace }}
 
