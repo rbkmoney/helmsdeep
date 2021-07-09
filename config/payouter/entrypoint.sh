@@ -10,7 +10,11 @@ java \
 -Dwoody.node_id=346 \
 --service.dominant.url=http://dominant:8022/v1/domain/repository_client \
 --service.shumway.url=http://shumway:8022/shumpune \
+--service.partyManagement.url=http://hellgate:8022/v1/processing/partymgmt \
+--service.fistful.url=http://fistful:8022/v1/admin \
+--service.fistful.sourceId={{ service['service']['fistful']['sourceId'] }} \
 --kafka.bootstrap-servers=kafka:9092 \
+--kafka.topics.party-management.id=mg-events-party \
 --kafka.topics.invoice.enabled=false \
 --kafka.topics.party-management.enabled=false \
 --kafka.topics.party-management.concurrency=5 \
