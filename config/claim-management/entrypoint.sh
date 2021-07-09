@@ -30,8 +30,5 @@ java \
     --claim-management.committers[0].id=hellgate \
     --claim-management.committers[0].uri=http://hellgate:8022/v1/processing/claim_committer \
     --claim-management.committers[0].timeout=60000 \
-    --claim-management.committers[1].id=cashier \
-    --claim-management.committers[1].uri=http://cashier:8022/claim-committer \
-    --claim-management.committers[1].timeout=10000 \
     ${@} \
     --spring.config.additional-location=/vault/secrets/application.properties \
