@@ -252,8 +252,11 @@ releases:
   - {{ .Namespace | default "default" }}/deanonimus-es
 - name: messages
   <<: *generic_stateless_json
+  needs:
+  - {{ .Namespace | default "default" }}/postgres
 - name: papi
   <<: *generic_stateless_json
+  needs:
   - {{ .Namespace | default "default" }}/dominant
   - {{ .Namespace | default "default" }}/magista
   - {{ .Namespace | default "default" }}/hellgate

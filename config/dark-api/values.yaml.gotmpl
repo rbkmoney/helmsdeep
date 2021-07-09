@@ -68,7 +68,7 @@ ingress:
 {{- end }}
     kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
   hosts:
-    - host: api.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+    - host: api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
       paths:
         - /dark-api
 {{- if .Values.services.ingress.tls.enabled }}
@@ -79,7 +79,7 @@ ingress:
     - secretName: {{ .Values.services.ingress.tls.secretName }}
   {{- end }}
       hosts:
-        - api.{{ .Values.services.ingress.rootdomain | default "rbk.dev" }}
+        - api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080
 
