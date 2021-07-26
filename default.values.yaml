@@ -4,6 +4,9 @@ elk:
   enabled: false
 prometheus:
   enabled: false
+ingress:
+  enabled: true
+  ip: 'someip'
 
 services:
   global:

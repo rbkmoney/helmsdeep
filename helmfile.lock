@@ -1,34 +1,160 @@
-version: v0.138.7
+version: v0.139.9
 dependencies:
 - name: consul
   repository: https://helm.releases.hashicorp.com
   version: 0.32.1
 - name: elasticsearch
   repository: https://helm.elastic.co
-  version: 7.13.2
+  version: 7.13.4
 - name: kafka
   repository: https://charts.bitnami.com/bitnami
   version: 12.7.3
 - name: keycloak
   repository: https://codecentric.github.io/helm-charts
-  version: 11.0.1
+  version: 14.0.1
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 9.7.2
 - name: raw
   repository: https://rbkmoney.github.io/charts
   version: 0.1.1
+- name: raw
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.1
 - name: statefull
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.20
+  version: 0.1.21
+- name: statefull
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.21
 - name: stateless
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.15
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.16
 - name: test-transaction
   repository: https://rbkmoney.github.io/charts
   version: 0.1.5
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.13.0
-digest: sha256:4a94f6261beb7dd51df14b6208f84bcea2d9d40df73f7627ac21a1cc83daeba8
-generated: "2021-07-08T03:03:07.104688+03:00"
+digest: sha256:8932cf09becb9715b335425518ffa506838ff4c121142dc25bfe411786b5e7bf
+generated: "2021-07-26T11:31:15.684152+03:00"
