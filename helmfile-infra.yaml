@@ -7,8 +7,14 @@ bases:
 repositories:
 - name: rbkmoney
   url: https://rbkmoney.github.io/charts
+- name: ingress-nginx
+  url: https://kubernetes.github.io/ingress-nginx
 
 releases:
+- name: ingress
+  installed: {{ .Values.ingress.enabled }}
+  <<: *infra_default
+  chart: ingress-nginx/ingress-nginx  
 - name: logs
   installed: {{ .Values.elk.enabled }}
   <<: *infra_default

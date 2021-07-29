@@ -1,0 +1,16 @@
+controller:
+  replicaCount: 1
+  volumes:
+    - emptyDir:
+        medium: Memory
+        sizeLimit: 512M
+  service:
+    externalIPs:
+      - {{ .Values.ingress.ip }}
+  nodeSelector:
+    ingress: "true"
+  config:
+    worker-processes: 4
+  ingressClassResource:
+    enabled: true
+    default: true
