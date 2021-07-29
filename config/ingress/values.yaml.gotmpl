@@ -9,3 +9,8 @@ controller:
       - {{ .Values.ingress.ip }}
   nodeSelector:
     ingress: "true"
+  config:
+    worker-processes: 4
+  ingressClassResource:
+    enabled: true
+    default: true
