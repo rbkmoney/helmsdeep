@@ -6,4 +6,3 @@ helmfile delete \
 && minikube ssh -- sudo rm -rf /tmp/hostpath-provisioner/default \
 && kubectl delete mutatingwebhookconfigurations,validatingwebhookconfigurations prometheus-prometheus-oper-admission || echo "prometheus webhooks already deleted" \
 && kubectl delete ns monitoring elastic-system || echo "namespaces not found" \
-&& kubectl apply -f config/vault/init-cm.yaml

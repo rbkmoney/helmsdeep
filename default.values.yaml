@@ -5,7 +5,7 @@ elk:
 prometheus:
   enabled: false
 ingress:
-  enabled: true
+  enabled: false
   ip: 'someip'
 
 services:

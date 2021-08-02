@@ -6,4 +6,3 @@ minikube delete &&
 helm repo remove stable incubator bitnami hashicorp codecentric prometheus-community cilium rbkmoney || echo "helm repos already deleted" &&
 minikube start --addons="ingress" --network-plugin="cni" --extra-config="kubelet.network-plugin=cni" &&
 minikube ssh -- sudo mount bpffs -t bpf /sys/fs/bpf &&
-kubectl apply -f config/vault/init-cm.yaml
