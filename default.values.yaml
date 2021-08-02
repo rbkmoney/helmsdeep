@@ -19,9 +19,9 @@ services:
     class: "nginx"
     rootDomain: some-site.ru
     tls:
-      enabled: true
+      enabled: false
       letsEncrypt:
         enabled: false
         issuer: ""
-      secretName: someTlsSecret
+      secretName: your-tlscert-secret-name-or-suffix-for-certmanager-secret
 
