@@ -10,7 +10,7 @@ ingress:
 
 services:
   global:
-    ipv6only: true
+    ipv6only: false
   
   vault:
     dev: true
