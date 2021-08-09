@@ -56,6 +56,9 @@ cat<< END > /etc/riak/vm.args
 +W w
 -smp enable
 +zdbbl 32768
+{{- if .Values.services.global.ipv6only }}
+-proto_dist inet6_tcp
+{{- end }}
 END
 
 # Run all prestart scripts
