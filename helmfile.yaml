@@ -50,6 +50,7 @@ releases:
 - name: vault
   <<: *default
   chart: hashicorp/vault
+  version: 0.11.0
   needs:
   - {{ .Namespace | default "default" }}/postgres
   - {{ .Namespace | default "default" }}/vault-cm
@@ -132,6 +133,8 @@ releases:
     - {{ .Namespace | default "default" }}/keycloak
 - name: url-shortener
   <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/keycloak
 - name: capi-v1
   <<: *generic_stateless_json
   needs:
