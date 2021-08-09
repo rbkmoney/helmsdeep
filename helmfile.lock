@@ -1,17 +1,17 @@
-version: v0.139.9
+version: v0.140.0
 dependencies:
 - name: consul
   repository: https://helm.releases.hashicorp.com
   version: 0.32.1
 - name: elasticsearch
   repository: https://helm.elastic.co
-  version: 7.13.4
+  version: 7.14.0
 - name: kafka
   repository: https://charts.bitnami.com/bitnami
   version: 12.7.3
 - name: keycloak
   repository: https://codecentric.github.io/helm-charts
-  version: 14.0.1
+  version: 11.0.1
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 9.7.2
@@ -155,6 +155,6 @@ dependencies:
   version: 0.1.5
 - name: vault
   repository: https://helm.releases.hashicorp.com
-  version: 0.13.0
-digest: sha256:8932cf09becb9715b335425518ffa506838ff4c121142dc25bfe411786b5e7bf
-generated: "2021-07-26T11:31:15.684152+03:00"
+  version: 0.11.0
+digest: sha256:77fea90f4744aa5b97cec0c649479f71f36b5371995c6ac87181be3b492d1952
+generated: "2021-08-04T12:39:37.35521+03:00"

@@ -1,13 +1,13 @@
-version: v0.139.9
+version: v0.140.0
 dependencies:
 - name: elk
   repository: https://rbkmoney.github.io/charts
   version: 0.1.1
 - name: ingress-nginx
   repository: https://kubernetes.github.io/ingress-nginx
-  version: 3.34.0
+  version: 4.0.0
 - name: netpolicy
   repository: https://rbkmoney.github.io/charts
   version: 0.1.14
-digest: sha256:48efe45754eaeebba1d2c2dc220fa9ba7cbd18e0cbbcceb0fdaa287d4c3ea683
-generated: "2021-07-26T11:30:49.058835+03:00"
+digest: sha256:33ee9bd0e2dac995f94b828971f13aa7b48fb8041a149546f2f1ef7bf3e8df80
+generated: "2021-08-04T12:39:20.103963+03:00"

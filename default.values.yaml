@@ -10,7 +10,7 @@ ingress:
 
 services:
   global:
-    ipv6only: false
+    ipv6only: true
   
   vault:
     dev: true
@@ -19,9 +19,9 @@ services:
     class: "nginx"
     rootDomain: some-site.ru
     tls:
-      enabled: true
+      enabled: false
       letsEncrypt:
         enabled: false
         issuer: ""
-      secretName: someTlsSecret
+      secretName: sometlssecret
 
