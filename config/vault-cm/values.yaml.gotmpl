@@ -1,0 +1,241 @@
+configMap:
+  data:
+    init.vault.sh: |-
+      sleep 5
+
+      vault secrets enable database
+
+      vault write database/config/shumway \
+        plugin_name=postgresql-database-plugin \
+        allowed_roles="*" \
+        connection_url="postgresql://{{`{{username}}`}}:{{`{{password}}`}}@postgres-postgresql:5432/shumway?sslmode=disable" \
+        username="postgres" \
+        password="H@ckM3"
+      vault write database/roles/db-app-shumway \
+        db_name=shumway \
+        creation_statements="Create schema if not exists shm;
+        CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
+        GRANT CREATE ON DATABASE shumway TO \"{{`{{name}}`}}\";
+        GRANT ALL ON schema shm TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL TABLES IN SCHEMA shm TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL SEQUENCES IN SCHEMA shm TO \"{{`{{name}}`}}\";" \
+        default_ttl="1h" \
+        max_ttl="240h"
+
+      vault write database/config/hooker \
+        plugin_name=postgresql-database-plugin \
+        allowed_roles="*" \
+        connection_url="postgresql://{{`{{username}}`}}:{{`{{password}}`}}@postgres-postgresql:5432/hooker?sslmode=disable" \
+        username="postgres" \
+        password="H@ckM3"
+      vault write database/roles/db-app-hooker \
+        db_name=hooker \
+        creation_statements="Create schema if not exists hook;
+        CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
+        GRANT CREATE ON DATABASE hooker TO \"{{`{{name}}`}}\";
+        GRANT ALL ON schema hook TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL TABLES IN SCHEMA hook TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL SEQUENCES IN SCHEMA hook TO \"{{`{{name}}`}}\";" \
+        default_ttl="1h" \
+        max_ttl="240h"
+
+      vault write database/config/messages \
+        plugin_name=postgresql-database-plugin \
+        allowed_roles="*" \
+        connection_url="postgresql://{{`{{username}}`}}:{{`{{password}}`}}@postgres-postgresql:5432/messages?sslmode=disable" \
+        username="postgres" \
+        password="H@ckM3"
+      vault write database/roles/db-app-messages \
+        db_name=messages \
+        creation_statements="CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' IN ROLE messages VALID UNTIL '{{`{{expiration}}`}}';" \
+        default_ttl="1h" \
+        max_ttl="240h"
+
+      vault write database/config/payouter \
+        plugin_name=postgresql-database-plugin \
+        allowed_roles="*" \
+        connection_url="postgresql://{{`{{username}}`}}:{{`{{password}}`}}@postgres-postgresql:5432/payouter?sslmode=disable" \
+        username="postgres" \
+        password="H@ckM3"
+      vault write database/roles/db-app-payouter \
+        db_name=payouter \
+        creation_statements="CREATE SCHEMA IF NOT EXISTS sht;
+        CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
+        GRANT CREATE ON DATABASE payouter TO \"{{`{{name}}`}}\";
+        GRANT ALL ON SCHEMA sht TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL TABLES IN SCHEMA sht TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL SEQUENCES IN SCHEMA sht TO \"{{`{{name}}`}}\";" \
+        default_ttl="1h" \
+        max_ttl="240h"
+
+      vault write database/config/magista \
+        plugin_name=postgresql-database-plugin \
+        allowed_roles="*" \
+        connection_url="postgresql://{{`{{username}}`}}:{{`{{password}}`}}@postgres-postgresql:5432/magista?sslmode=disable" \
+        username="postgres" \
+        password="H@ckM3"
+      vault write database/roles/db-app-magista \
+        db_name=magista \
+        creation_statements="CREATE SCHEMA IF NOT EXISTS mst;
+        CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
+        GRANT CREATE ON DATABASE magista TO \"{{`{{name}}`}}\";
+        GRANT ALL ON SCHEMA mst TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL TABLES IN SCHEMA mst TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL SEQUENCES IN SCHEMA mst TO \"{{`{{name}}`}}\";" \
+        default_ttl="1h" \
+        max_ttl="240h"
+
+      vault write database/config/analytics \
+        plugin_name=postgresql-database-plugin \
+        allowed_roles="*" \
+        connection_url="postgresql://{{`{{username}}`}}:{{`{{password}}`}}@postgres-postgresql:5432/analytics?sslmode=disable" \
+        username="postgres" \
+        password="H@ckM3"
+      vault write database/roles/db-app-analytics \
+        db_name=analytics \
+        creation_statements="CREATE SCHEMA IF NOT EXISTS analytics;
+        CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
+        GRANT CREATE ON DATABASE analytics TO \"{{`{{name}}`}}\";
+        GRANT ALL ON SCHEMA analytics TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL TABLES IN SCHEMA analytics TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL SEQUENCES IN SCHEMA analytics TO \"{{`{{name}}`}}\";" \
+        default_ttl="1h" \
+        max_ttl="240h"
+
+      vault write database/config/claim-management \
+        plugin_name=postgresql-database-plugin \
+        allowed_roles="*" \
+        connection_url="postgresql://{{`{{username}}`}}:{{`{{password}}`}}@postgres-postgresql:5432/claimmng?sslmode=disable" \
+        username="postgres" \
+        password="H@ckM3"
+      vault write database/roles/db-app-claim-management \
+        db_name=claim-management \
+        creation_statements="CREATE SCHEMA IF NOT EXISTS cm;
+        CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
+        GRANT CREATE ON DATABASE claimmng TO \"{{`{{name}}`}}\";
+        GRANT ALL ON SCHEMA cm TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL TABLES IN SCHEMA cm TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL SEQUENCES IN SCHEMA cm TO \"{{`{{name}}`}}\";" \
+        default_ttl="1h" \
+        max_ttl="240h"
+
+      vault write database/config/questionary \
+        plugin_name=postgresql-database-plugin \
+        allowed_roles="*" \
+        connection_url="postgresql://{{`{{username}}`}}:{{`{{password}}`}}@postgres-postgresql:5432/questionary?sslmode=disable" \
+        username="postgres" \
+        password="H@ckM3"
+      vault write database/roles/db-app-questionary \
+        db_name=questionary \
+        creation_statements="CREATE SCHEMA IF NOT EXISTS qs;
+        CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
+        GRANT CREATE ON DATABASE questionary TO \"{{`{{name}}`}}\";
+        GRANT ALL ON SCHEMA qs TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL TABLES IN SCHEMA qs TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL SEQUENCES IN SCHEMA qs TO \"{{`{{name}}`}}\";" \
+        default_ttl="1h" \
+        max_ttl="240h"
+
+      vault write database/config/reporter \
+        plugin_name=postgresql-database-plugin \
+        allowed_roles="*" \
+        connection_url="postgresql://{{`{{username}}`}}:{{`{{password}}`}}@postgres-postgresql:5432/reporter?sslmode=disable" \
+        username="postgres" \
+        password="H@ckM3"
+      vault write database/roles/db-app-reporter \
+        db_name=reporter \
+        creation_statements="CREATE SCHEMA IF NOT EXISTS rpt;
+        CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
+        GRANT CREATE ON DATABASE reporter TO \"{{`{{name}}`}}\";
+        GRANT ALL ON SCHEMA rpt TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL TABLES IN SCHEMA rpt TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL SEQUENCES IN SCHEMA rpt TO \"{{`{{name}}`}}\";" \
+        default_ttl="1h" \
+        max_ttl="240h"
+
+      vault write database/config/fistful-magista \
+        plugin_name=postgresql-database-plugin \
+        allowed_roles="*" \
+        connection_url="postgresql://{{`{{username}}`}}:{{`{{password}}`}}@postgres-postgresql:5432/fistful-magista?sslmode=disable" \
+        username="postgres" \
+        password="H@ckM3"
+      vault write database/roles/db-app-fistful-magista \
+        db_name=fistful-magista \
+        creation_statements="CREATE SCHEMA IF NOT EXISTS mst;
+        CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
+        GRANT CREATE ON DATABASE \"fistful-magista\" TO \"{{`{{name}}`}}\";
+        GRANT ALL ON SCHEMA mst TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL TABLES IN SCHEMA mst TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL SEQUENCES IN SCHEMA mst TO \"{{`{{name}}`}}\";" \
+        default_ttl="1h" \
+        max_ttl="240h"
+
+      vault write database/config/fbmgmt \
+        plugin_name=postgresql-database-plugin \
+        allowed_roles="*" \
+        connection_url="postgresql://{{`{{username}}`}}:{{`{{password}}`}}@postgres-postgresql:5432/fraudbusters?sslmode=disable" \
+        username="postgres" \
+        password="H@ckM3"
+      vault write database/roles/db-app-fbmgmt \
+        db_name=fbmgmt \
+        creation_statements="CREATE SCHEMA IF NOT EXISTS af;
+        CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
+        GRANT CREATE ON DATABASE fraudbusters TO \"{{`{{name}}`}}\";
+        GRANT ALL ON SCHEMA af TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL TABLES IN SCHEMA af TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL SEQUENCES IN SCHEMA af TO \"{{`{{name}}`}}\";" \
+        default_ttl="1h" \
+        max_ttl="240h"
+
+      vault auth enable kubernetes
+
+      vault write auth/kubernetes/config \
+          token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+          {{- if .Values.services.global.ipv6only }}
+          kubernetes_host="https://[${KUBERNETES_PORT_443_TCP_ADDR}]:443" \
+          {{- else }}
+          kubernetes_host="https://${KUBERNETES_PORT_443_TCP_ADDR}:443" \
+          {{- end }}
+          kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+
+      vault write auth/kubernetes/role/db-app \
+          bound_service_account_names="*" \
+          bound_service_account_namespaces="*" \
+          policies=db-app \
+          ttl=1h
+
+      vault policy write db-app /vault-init/db-policy.hcl
+    db-policy.hcl: |-
+      path "database/creds/db-app-shumway" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-hooker" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-fbmgmt" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-analytics" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-fistful-magista" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-questionary" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-claim-management" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-magista" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-payouter" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-messages" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-reporter" {
+        capabilities = ["read"]
+      }
