@@ -61,7 +61,6 @@ releases:
 - name: keycloak
   <<: *default
   chart: codecentric/keycloak
-  version: 11.0.1
   needs:
   - {{ .Namespace | default "default" }}/postgres
   - {{ .Namespace | default "default" }}/keycloak-realms

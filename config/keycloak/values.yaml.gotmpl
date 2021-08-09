@@ -66,7 +66,8 @@ ingress:
   rules:
     - host: 'auth.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}'
       paths:
-        - /
+        - path: /
+          pathType: Prefix
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
     - hosts:
