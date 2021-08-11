@@ -1,0 +1,6 @@
+installCRDs: true
+
+ingressShim:
+  defaultIssuerName: letencrypt-prod
+  defaultIssuerKind: ClusterIssuer
+

@@ -9,6 +9,8 @@ repositories:
   url: https://rbkmoney.github.io/charts
 - name: ingress-nginx
   url: https://kubernetes.github.io/ingress-nginx
+- name: cert-manager
+  url: https://charts.jetstack.io
 
 releases:
 - name: ingress
@@ -24,3 +26,8 @@ releases:
   installed: {{ .Values.cilium.enabled }}
   <<: *infra_default
   chart: rbkmoney/netpolicy
+- name: cert-manager
+  installed: {{ .Values.cert-manager.enabled }}
+  <<: *infra_default
+  namespace: cert-manager
+  chart: cert-manager/cert-manager
