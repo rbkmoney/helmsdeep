@@ -18,7 +18,6 @@ releases:
 - name: logs
   installed: {{ .Values.elk.enabled }}
   <<: *infra_default
-  namespace: monitoring
   chart: rbkmoney/elk
 - name: netpolicy
   installed: {{ .Values.cilium.enabled }}
