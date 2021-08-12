@@ -7,8 +7,8 @@ prometheus:
 ingress:
   enabled: false
   ip: 'someip'
-cert-manager:
-  enabled: false
+certmanager:
+  enabled: true
 
 services:
   global:
