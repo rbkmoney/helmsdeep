@@ -8,7 +8,7 @@ ingress:
   enabled: false
   ip: 'someip'
 certmanager:
-  enabled: true
+  enabled: false
 
 services:
   global:
