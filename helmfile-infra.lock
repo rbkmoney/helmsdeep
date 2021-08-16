@@ -1,4 +1,4 @@
-version: v0.140.0
+version: v0.139.9
 dependencies:
 - name: elk
   repository: https://rbkmoney.github.io/charts
