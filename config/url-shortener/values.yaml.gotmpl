@@ -71,7 +71,7 @@ ingress:
     kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
     nginx.ingress.kubernetes.io/enable-cors: "false"
   hosts:
-    - host: shrt.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+    - host: shrt.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
       paths:
         - /
 {{- if .Values.services.ingress.tls.enabled }}
@@ -82,7 +82,7 @@ ingress:
     - secretName: {{ .Values.services.ingress.tls.secretName }}
   {{- end }}
       hosts:
-        - shrt.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+        - shrt.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080
 

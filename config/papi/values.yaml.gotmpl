@@ -69,13 +69,13 @@ ingress:
     nginx.ingress.kubernetes.io/rewrite-target: /api/v1/$1
     # nginx.ingress.kubernetes.io/app-root: /api/v1
   hosts:
-    - host: iddqd.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+    - host: iddqd.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
       paths:
         - /papi/v1/(.+)
-    - host: idkfa.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+    - host: idkfa.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
       paths:
         - /papi/v1
-    - host: dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+    - host: dashboard.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
       paths:
         - /papi/v1
 {{- if .Values.services.ingress.tls.enabled }}
@@ -86,9 +86,9 @@ ingress:
     - secretName: {{ .Values.services.ingress.tls.secretName }}
   {{- end }}
       hosts:
-        - iddqd.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
-        - dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
-        - iddqd.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+        - iddqd.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+        - dashboard.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+        - iddqd.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080
 
