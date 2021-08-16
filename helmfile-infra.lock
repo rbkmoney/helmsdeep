@@ -1,16 +1,13 @@
 version: v0.140.0
 dependencies:
-- name: cert-manager
-  repository: https://charts.jetstack.io
-  version: v1.5.0
 - name: elk
   repository: https://rbkmoney.github.io/charts
-  version: 0.1.1
+  version: 0.1.5
 - name: ingress-nginx
   repository: https://kubernetes.github.io/ingress-nginx
   version: 3.35.0
 - name: netpolicy
   repository: https://rbkmoney.github.io/charts
   version: 0.1.14
-digest: sha256:664bf95cb978802954cbb1e648533f2dbd7f2c2e8309fe9a9693452a20b72420
-generated: "2021-08-12T11:34:46.641593+03:00"
+digest: sha256:ec0125f5dee172963035525b4fe1f70af94c058cc00a3890efdae3990935c181
+generated: "2021-08-16T16:34:23.566035+03:00"
