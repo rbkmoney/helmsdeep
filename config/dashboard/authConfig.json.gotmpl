@@ -1,6 +1,6 @@
 {
     "realm": "external",
-    "auth-server-url": "https://auth.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/auth/",
+    "auth-server-url": "https://auth{{ if .Values.services.ingress.insertNamespaceBeforeRootDomain }}.{{ .Release.Namespace }}{{ end }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/auth/",
     "ssl-required": "external",
     "resource": "koffing",
     "public-client": true

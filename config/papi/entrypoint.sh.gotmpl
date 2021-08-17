@@ -27,7 +27,7 @@ java \
     --magista.url=http://magista:8022/stat \
     --shitter.url=http://payouter:8022/payout/management \
     --walker.url=http://walker:8022/walker \
-    --keycloak.auth-server-url=https://auth.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/auth \
+    --keycloak.auth-server-url=https://auth{{ if .Values.services.ingress.insertNamespaceBeforeRootDomain }}.{{ .Release.Namespace }}{{ end }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/auth \
     --keycloak.realm-public-key.file-path="/opt/papi/bin/secret" \
     --keycloak.realm=internal \
     --keycloak.resource=private-api \

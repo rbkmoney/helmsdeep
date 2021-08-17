@@ -64,14 +64,14 @@ ingress:
        more_set_headers "Access-Control-Allow-Origin: $http_origin";
   servicePort: http
   rules:
-    - host: 'auth.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}'
+    - host: 'auth{{ if .Values.services.ingress.insertNamespaceBeforeRootDomain }}.{{ .Release.Namespace }}{{ end }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}'
       paths:
         - path: /
           pathType: Prefix
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
     - hosts:
-        - 'auth.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}'
+        - 'auth{{ if .Values.services.ingress.insertNamespaceBeforeRootDomain }}.{{ .Release.Namespace }}{{ end }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}'
   {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
       secretName: {{ .Release.Name }}-{{ .Values.services.ingress.tls.secretName }}
   {{- else }}

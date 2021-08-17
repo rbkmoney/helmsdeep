@@ -20,6 +20,7 @@ services:
   ingress:
     class: "nginx"
     rootDomain: some-site.ru
+    insertNamespaceBeforeRootDomain: true
     tls:
       enabled: false
       letsEncrypt:

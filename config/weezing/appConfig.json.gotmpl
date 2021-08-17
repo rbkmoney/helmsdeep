@@ -1,7 +1,7 @@
 {
 {{- if .Values.services.ingress.tls.enabled }}
-    "papiEndpoint": "https://idkfa.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/papi/v1"
+    "papiEndpoint": "https://idkfa{{ if .Values.services.ingress.insertNamespaceBeforeRootDomain }}.{{ .Release.Namespace }}{{ end }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/papi/v1"
 {{- else }}
-    "papiEndpoint": "http://idkfa.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/papi/v1"
+    "papiEndpoint": "http://idkfa{{ if .Values.services.ingress.insertNamespaceBeforeRootDomain }}.{{ .Release.Namespace }}{{ end }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/papi/v1"
 {{- end }}
 }
