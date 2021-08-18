@@ -60,6 +60,10 @@ service:
     - name: management
       port: 8023
 
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $domainWithoutNamespace := printf "%s" .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.insertNamespaceBeforeRootDomain | ternary $domainWithNamespace $domainWithoutNamespace }}
+
 ingress:
   enabled: true
   annotations:
@@ -73,7 +77,7 @@ ingress:
        more_set_headers "Access-Control-Allow-Origin: $http_origin";
     kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
   hosts:
-    - host: api.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+    - host: api.{{ $ingressDomain | default "rbk.dev" }}
       paths:
         - /dark-api
 {{- if .Values.services.ingress.tls.enabled }}
@@ -84,7 +88,7 @@ ingress:
     - secretName: {{ .Values.services.ingress.tls.secretName }}
   {{- end }}
       hosts:
-        - api.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+        - api.{{ $ingressDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080
 

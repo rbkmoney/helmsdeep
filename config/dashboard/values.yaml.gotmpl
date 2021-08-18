@@ -53,6 +53,10 @@ readinessProbe:
   initialDelaySeconds: 30
   timeoutSeconds: 3
 
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $domainWithoutNamespace := printf "%s" .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.insertNamespaceBeforeRootDomain | ternary $domainWithNamespace $domainWithoutNamespace }}
+
 ingress:
   enabled: true
   annotations:
@@ -66,7 +70,7 @@ ingress:
     nginx.ingress.kubernetes.io/configuration-snippet: |
        more_set_headers "Access-Control-Allow-Origin: $http_origin";
   hosts:
-    - host: dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+    - host: dashboard.{{ $ingressDomain | default "rbk.dev" }}
       paths:
         - /
 {{- if .Values.services.ingress.tls.enabled }}
@@ -77,6 +81,6 @@ ingress:
     - secretName: {{ .Values.services.ingress.tls.secretName }}
   {{- end }}
       hosts:
-        - dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+        - dashboard.{{ $ingressDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080

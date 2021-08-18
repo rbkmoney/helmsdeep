@@ -1,3 +1,6 @@
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $domainWithoutNamespace := printf "%s" .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.insertNamespaceBeforeRootDomain | ternary $domainWithNamespace $domainWithoutNamespace }}
 {
   "id": "external",
   "realm": "external",
@@ -1439,12 +1442,12 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "https://beta.dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/*",
-        "https://dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/*"
+        "https://beta.dashboard.{{ $ingressDomain | default "rbk.dev" }}/*",
+        "https://dashboard.{{ $ingressDomain | default "rbk.dev" }}/*"
       ],
       "webOrigins": [
-        "https://beta.dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}",
-        "https://dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}"
+        "https://beta.dashboard.{{ $ingressDomain | default "rbk.dev" }}",
+        "https://dashboard.{{ $ingressDomain | default "rbk.dev" }}"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -1501,10 +1504,10 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "https://dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/*"
+        "https://dashboard.{{ $ingressDomain | default "rbk.dev" }}/*"
       ],
       "webOrigins": [
-        "https://dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}"
+        "https://dashboard.{{ $ingressDomain | default "rbk.dev" }}"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -2197,10 +2200,10 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "https://auth.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/*"
+        "https://auth.{{ $ingressDomain | default "rbk.dev" }}/*"
       ],
       "webOrigins": [
-        "https://auth.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}"
+        "https://auth.{{ $ingressDomain | default "rbk.dev" }}"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -3089,8 +3092,8 @@
     "contentSecurityPolicyReportOnly": "",
     "xContentTypeOptions": "nosniff",
     "xRobotsTag": "none",
-    "xFrameOptions": "ALLOW-FROM https://dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}",
-    "contentSecurityPolicy": "child-src 'self', frame-ancestors https://dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }} ;",
+    "xFrameOptions": "ALLOW-FROM https://dashboard.{{ $ingressDomain | default "rbk.dev" }}",
+    "contentSecurityPolicy": "child-src 'self', frame-ancestors https://dashboard.{{ $ingressDomain | default "rbk.dev" }} ;",
     "xXSSProtection": "1; mode=block",
     "strictTransportSecurity": "max-age=31536000; includeSubDomains"
   },

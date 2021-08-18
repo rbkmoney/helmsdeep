@@ -1,3 +1,6 @@
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $domainWithoutNamespace := printf "%s" .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.insertNamespaceBeforeRootDomain | ternary $domainWithNamespace $domainWithoutNamespace }}
 [
     {scoper, [
         {storage, scoper_storage_logger}
@@ -16,7 +19,7 @@
             },
             short_url_template => #{
                 scheme         => https,
-                netloc         => "shrt.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}",
+                netloc         => "shrt.{{ $ingressDomain | default "rbk.dev" }}",
                 path           => "/"
             },
             source_url_whitelist => [

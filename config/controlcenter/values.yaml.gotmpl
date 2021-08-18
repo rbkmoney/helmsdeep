@@ -53,6 +53,10 @@ readinessProbe:
   initialDelaySeconds: 30
   timeoutSeconds: 3
 
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $domainWithoutNamespace := printf "%s" .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.insertNamespaceBeforeRootDomain | ternary $domainWithNamespace $domainWithoutNamespace }}
+
 ingress:
   enabled: true
   annotations:
@@ -61,7 +65,7 @@ ingress:
 {{- end }}
     kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
   hosts:
-    - host: iddqd.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+    - host: iddqd.{{ $ingressDomain | default "rbk.dev" }}
       paths:
         - /
 {{- if .Values.services.ingress.tls.enabled }}
@@ -72,6 +76,6 @@ ingress:
     - secretName: {{ .Values.services.ingress.tls.secretName }}
   {{- end }}
       hosts:
-        - iddqd.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+        - iddqd.{{ $ingressDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080

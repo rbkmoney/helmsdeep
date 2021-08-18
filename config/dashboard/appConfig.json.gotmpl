@@ -1,18 +1,16 @@
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $domainWithoutNamespace := printf "%s" .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.insertNamespaceBeforeRootDomain | ternary $domainWithNamespace $domainWithoutNamespace }}
 {
-    "apiEndpoint": "https://api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}",
-    "urlShortenerEndpoint": "https://shrt.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}",
-    "checkoutEndpoint": "https://checkout.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}",
-    "keycloakEndpoint": "https://auth.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}",
-    "docsEndpoints": {
-      "developer": "https://developer.rbk.money",
-      "help": "https://help.rbkmoney.com",
-      "rbk": "https://rbk.money"
-    },
+    "keycloakEndpoint": "https://auth.{{ $ingressDomain | default "rbk.dev" }}",
     "theme": {
       "isMainBackgroundImages": true,
       "logoName": "rbkmoney",
       "name": "main"
     },
+    "apiEndpoint": "https://api.{{ $ingressDomain | default "rbk.dev" }}",
+    "urlShortenerEndpoint": "https://shrt.{{ $ingressDomain | default "rbk.dev" }}",
+    "checkoutEndpoint": "https://checkout.{{ $ingressDomain | default "rbk.dev" }}",
     "yandexMetrika": {
         "id": null,
         "clickmap": true,

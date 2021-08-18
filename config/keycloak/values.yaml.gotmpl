@@ -48,6 +48,10 @@ extraVolumeMounts: |
     mountPath: "/realm/"
     readOnly: true
 
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $domainWithoutNamespace := printf "%s" .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.insertNamespaceBeforeRootDomain | ternary $domainWithNamespace $domainWithoutNamespace }}
+
 ingress:
   enabled: true
   annotations:
@@ -62,14 +66,14 @@ ingress:
        more_set_headers "Access-Control-Allow-Origin: $http_origin";
   servicePort: http
   rules:
-    - host: 'auth.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}'
+    - host: 'auth.{{ $ingressDomain | default "rbk.dev" }}'
       paths:
         - path: /
           pathType: Prefix
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
     - hosts:
-        - 'auth.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}'
+        - 'auth.{{ $ingressDomain | default "rbk.dev" }}'
   {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
       secretName: {{ .Release.Name }}-{{ .Values.services.ingress.tls.secretName }}
   {{- else }}

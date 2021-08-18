@@ -61,6 +61,10 @@ service:
     - name: internal
       port: 8022
 
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $domainWithoutNamespace := printf "%s" .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.insertNamespaceBeforeRootDomain | ternary $domainWithNamespace $domainWithoutNamespace }}
+
 ingress:
   enabled: true
   annotations:
@@ -71,7 +75,7 @@ ingress:
     kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
     nginx.ingress.kubernetes.io/enable-cors: "false"
   hosts:
-    - host: shrt.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+    - host: shrt.{{ $ingressDomain | default "rbk.dev" }}
       paths:
         - /
 {{- if .Values.services.ingress.tls.enabled }}
@@ -82,7 +86,7 @@ ingress:
     - secretName: {{ .Values.services.ingress.tls.secretName }}
   {{- end }}
       hosts:
-        - shrt.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+        - shrt.{{ $ingressDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080
 
