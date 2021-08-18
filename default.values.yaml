@@ -22,9 +22,9 @@ services:
     rootDomain: some-site.ru
     insertNamespaceBeforeRootDomain: true
     tls:
-      enabled: false
+      enabled: true
       letsEncrypt:
-        enabled: false
+        enabled: true
         issuer: ""
       secretName: sometlssecret
 

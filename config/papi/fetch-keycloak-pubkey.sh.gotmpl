@@ -1,3 +1,7 @@
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $domainWithoutNamespace := printf "%s" .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.insertNamespaceBeforeRootDomain | ternary $domainWithNamespace $domainWithoutNamespace }}
+
 #!/bin/sh
 
 set -o pipefail
@@ -26,7 +30,7 @@ while true; do
 
     log INFO "Attempting to fetch Keycloak key..."
 
-    REALM_DATA=$(wget --quiet --timeout=10 "https://auth{{ if .Values.services.ingress.insertNamespaceBeforeRootDomain }}.{{ .Release.Namespace }}{{ end }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/auth/realms/internal" -O -)
+    REALM_DATA=$(wget --quiet --timeout=10 "https://auth.{{ $ingressDomain | default "rbk.dev" }}/auth/realms/internal" -O -)
     EXIT_CODE=$?
     if [ "${EXIT_CODE}" -ne "0" ]; then
         REALM_FAIL=true

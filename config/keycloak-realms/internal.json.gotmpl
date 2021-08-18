@@ -1,3 +1,6 @@
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $domainWithoutNamespace := printf "%s" .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.insertNamespaceBeforeRootDomain | ternary $domainWithNamespace $domainWithoutNamespace }}
 {
   "id": "internal",
   "realm": "internal",
@@ -1473,10 +1476,10 @@
         "clientAuthenticatorType": "client-secret",
         "secret": "**********",
               "redirectUris": [
-          "https://iddqd{{ if .Values.services.ingress.insertNamespaceBeforeRootDomain }}.{{ .Release.Namespace }}{{ end }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/*"
+          "https://iddqd.{{ $ingressDomain | default "rbk.dev" }}/*"
         ],
         "webOrigins": [
-          "https://iddqd{{ if .Values.services.ingress.insertNamespaceBeforeRootDomain }}.{{ .Release.Namespace }}{{ end }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}"
+          "https://iddqd.{{ $ingressDomain | default "rbk.dev" }}"
         ],
         "notBefore": 0,
         "bearerOnly": false,
@@ -1595,8 +1598,8 @@
       "enabled" : true,
       "clientAuthenticatorType" : "client-secret",
       "secret" : "7fed580b-e400-4b61-b031-f524ee69d283",
-      "redirectUris" : [ "https://idkfa{{ if .Values.services.ingress.insertNamespaceBeforeRootDomain }}.{{ .Release.Namespace }}{{ end }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/*" ],
-      "webOrigins" : [ "https://idkfa{{ if .Values.services.ingress.insertNamespaceBeforeRootDomain }}.{{ .Release.Namespace }}{{ end }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}" ],
+      "redirectUris" : [ "https://idkfa.{{ $ingressDomain | default "rbk.dev" }}/*" ],
+      "webOrigins" : [ "https://idkfa.{{ $ingressDomain | default "rbk.dev" }}" ],
       "notBefore" : 0,
       "bearerOnly" : false,
       "consentRequired" : false,

@@ -64,6 +64,10 @@ volumeMounts:
     subPath: erl_inetrc
     readOnly: true
 
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $domainWithoutNamespace := printf "%s" .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.insertNamespaceBeforeRootDomain | ternary $domainWithNamespace $domainWithoutNamespace }}
+
 ingress:
   enabled: true
   annotations:
@@ -72,7 +76,7 @@ ingress:
 {{- end }}
     kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
   hosts:
-    - host: iddqd{{ if .Values.services.ingress.insertNamespaceBeforeRootDomain }}.{{ .Release.Namespace }}{{ end }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+    - host: iddqd.{{ $ingressDomain | default "rbk.dev" }}
       paths:
         - /v1
 {{- if .Values.services.ingress.tls.enabled }}
@@ -83,7 +87,7 @@ ingress:
     - secretName: {{ .Values.services.ingress.tls.secretName }}
   {{- end }}
       hosts:
-        - iddqd{{ if .Values.services.ingress.insertNamespaceBeforeRootDomain }}.{{ .Release.Namespace }}{{ end }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+        - iddqd.{{ $ingressDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8022
 

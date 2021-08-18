@@ -71,6 +71,10 @@ metrics:
     additionalLabels:
       release: prometheus
 
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $domainWithoutNamespace := printf "%s" .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.insertNamespaceBeforeRootDomain | ternary $domainWithNamespace $domainWithoutNamespace }}
+
 ingress:
   enabled: true
   annotations:
@@ -84,7 +88,7 @@ ingress:
     nginx.ingress.kubernetes.io/configuration-snippet: |
        more_set_headers "Access-Control-Allow-Origin: $http_origin";
   hosts:
-    - host: api{{ if .Values.services.ingress.insertNamespaceBeforeRootDomain }}.{{ .Release.Namespace }}{{ end }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+    - host: api.{{ $ingressDomain | default "rbk.dev" }}
       paths: 
         - /binbase/v1
 {{- if .Values.services.ingress.tls.enabled }}
@@ -95,6 +99,6 @@ ingress:
     - secretName: {{ .Values.services.ingress.tls.secretName }}
   {{- end }}
       hosts:
-        - api{{ if .Values.services.ingress.insertNamespaceBeforeRootDomain }}.{{ .Release.Namespace }}{{ end }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+        - api.{{ $ingressDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080

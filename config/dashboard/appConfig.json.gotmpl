@@ -1,7 +1,10 @@
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $domainWithoutNamespace := printf "%s" .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.insertNamespaceBeforeRootDomain | ternary $domainWithNamespace $domainWithoutNamespace }}
 {
-    "apiEndpoint": "https://api{{ if .Values.services.ingress.insertNamespaceBeforeRootDomain }}.{{ .Release.Namespace }}{{ end }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}",
-    "urlShortenerEndpoint": "https://shrt{{ if .Values.services.ingress.insertNamespaceBeforeRootDomain }}.{{ .Release.Namespace }}{{ end }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}",
-    "checkoutEndpoint": "https://checkout{{ if .Values.services.ingress.insertNamespaceBeforeRootDomain }}.{{ .Release.Namespace }}{{ end }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}",
+    "apiEndpoint": "https://api.{{ $ingressDomain | default "rbk.dev" }}",
+    "urlShortenerEndpoint": "https://shrt.{{ $ingressDomain | default "rbk.dev" }}",
+    "checkoutEndpoint": "https://checkout.{{ $ingressDomain | default "rbk.dev" }}",
     "ext": {
         "docsEndpoint": "https://rbkmoney.github.io/docs",
         "supportEmail": "support@rbkmoney.com",
