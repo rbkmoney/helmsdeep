@@ -48,8 +48,7 @@ readinessProbe:
   timeoutSeconds: 3
 
 {{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
-{{ $domainWithoutNamespace := printf "%s" .Values.services.ingress.rootDomain }}
-{{ $ingressDomain := .Values.services.ingress.insertNamespaceBeforeRootDomain | ternary $domainWithNamespace $domainWithoutNamespace }}
+{{ $ingressDomain := .Values.services.ingress.insertNamespaceBeforeRootDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
 
 ingress:
   enabled: true
