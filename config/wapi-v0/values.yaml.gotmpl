@@ -78,11 +78,11 @@ service:
 livenessProbe:
   httpGet:
     path: /health
-    port: management
+    port: api
 readinessProbe:
   httpGet:
     path: /health
-    port: management
+    port: api
 
 ingress:
   enabled: true
@@ -94,12 +94,14 @@ ingress:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
     nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "content-type,content-disposition,authorization,x-request-id"
     nginx.ingress.kubernetes.io/configuration-snippet: |
-       more_set_headers "Access-Control-Allow-Origin: $http_origin";
+       more_set_headers 'Access-Control-Allow-Methods: PUT, GET, POST, OPTIONS' "Access-Control-Allow-Origin: $http_origin";
   hosts:
-    - host: api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+    - host: api.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
       paths:
         - /wapi
+        - /wallet
 {{- if .Values.services.ingress.tls.enabled }}
   tls:  
   {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
@@ -108,7 +110,7 @@ ingress:
     - secretName: {{ .Values.services.ingress.tls.secretName }}
   {{- end }}
       hosts:
-        - api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+        - api.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080
 

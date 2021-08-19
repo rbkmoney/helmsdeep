@@ -50,7 +50,6 @@ releases:
 - name: vault
   <<: *default
   chart: hashicorp/vault
-  version: 0.11.0
   needs:
   - {{ .Namespace | default "default" }}/postgres
   - {{ .Namespace | default "default" }}/vault-cm
@@ -144,12 +143,10 @@ releases:
   needs:
     - {{ .Namespace | default "default" }}/keycloak
 - name: wapi-pcidss-v0
-  installed: false
   <<: *generic_stateless_json
   needs:
    - {{ .Namespace | default "default" }}/keycloak
 - name: wapi-v0
-  installed: false
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/keycloak
@@ -262,3 +259,11 @@ releases:
   - {{ .Namespace | default "default" }}/dominant
   - {{ .Namespace | default "default" }}/magista
   - {{ .Namespace | default "default" }}/hellgate
+- name: reporter
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/vault
+    - {{ .Namespace | default "default" }}/kafka
+    - {{ .Namespace | default "default" }}/hellgate
+    - {{ .Namespace | default "default" }}/magista
+    - {{ .Namespace | default "default" }}/dominant
