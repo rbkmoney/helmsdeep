@@ -13,7 +13,7 @@ runopts:
 configMap:
   data:
     entrypoint.sh: |
-      {{- readFile "entrypoint.sh" | nindent 6 }}
+      {{- tpl  (readFile "entrypoint.sh.gotmpl") . | nindent 6 }}
     loggers.xml: |
       {{- readFile "loggers.xml" | nindent 6 }}
     logback.xml: |
@@ -66,9 +66,14 @@ ingress:
 {{- if .Values.services.ingress.tls.letsEncrypt.enabled }}
     cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
 {{- end }}
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "content-type,content-disposition,authorization,x-request-id"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+       more_set_headers "Access-Control-Allow-Origin: $http_origin";
     kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
   hosts:
-    - host: api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+    - host: api.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
       paths:
         - /dark-api
 {{- if .Values.services.ingress.tls.enabled }}
@@ -79,7 +84,7 @@ ingress:
     - secretName: {{ .Values.services.ingress.tls.secretName }}
   {{- end }}
       hosts:
-        - api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+        - api.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080
 
