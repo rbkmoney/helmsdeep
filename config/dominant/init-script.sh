@@ -24,11 +24,11 @@ FIXTURE=$(cat <<END
             "accounts": [
               {
                 "key": {"symbolic_code": "USD"},
-                "value": {"settlement": 23}
+                "value": {"settlement": $(scripts/dominant/create-account.sh USD)}
               },
               {
                 "key": {"symbolic_code": "RUB"},
-                "value": {"settlement": 1}
+                "value": {"settlement": $(scripts/dominant/create-account.sh RUB)}
               }
             ]
         }
@@ -566,7 +566,7 @@ FIXTURE=$(cat <<END
                   "symbolic_code": "RUB"
                 },
                 "value": {
-                  "settlement": 4
+                  "settlement": $(scripts/dominant/create-account.sh RUB)
                 }
               }
             ],
@@ -979,7 +979,7 @@ FIXTURE=$(cat <<END
                   "symbolic_code": "RUB"
                 },
                 "value": {
-                  "settlement": 11
+                  "settlement": $(scripts/dominant/create-account.sh RUB)
                 }
               }
             ],
