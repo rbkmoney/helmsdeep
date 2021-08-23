@@ -60,7 +60,7 @@ cronjob:
     - "http://keycloak-http"
     - "demo_merchant"
     - "Parolec0"
-    - http://{{ include "test-transaction.fullname" . }}-gateway
+    - http://{{ include "test-transaction.fullname" . }}
     {{- $useIPv4 := true }}
     {{- if and (eq .Values.services.global.ipv6only false) $useIPv4 }}
     - "-4"
@@ -75,4 +75,4 @@ configMap:
     nginx.conf: |
       {{- readFile "nginx.conf" | nindent 6 }}
     virtualhost.conf: |
-      {{- readFile "virtualhost.conf" | nindent 6 }}
+      {{- tpl (readFile "virtualhost.conf") . | nindent 6 }}
