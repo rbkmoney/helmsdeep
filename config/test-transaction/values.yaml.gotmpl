@@ -17,12 +17,14 @@ service:
       protocol: TCP
 
 livenessProbe:
-  tcpSocket:
+  httpGet:
     port: api
+    path: /
 
 readinessProbe:
-  tcpSocket:
+  httpGet:
     port: api
+    path: /
 
 volumeMounts:
   - name: config-volume
