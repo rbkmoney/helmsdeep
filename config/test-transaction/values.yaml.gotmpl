@@ -1,3 +1,102 @@
-{{- if .Values.services.global.ipv6only }}
-useIPv4: false
-{{- end }}
+image:
+  repository: docker.io/nginx/nginx
+  tag: latest
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  ports:
+    - name: api
+      containerPort: 80
+      protocol: TCP
+
+livenessProbe:
+  tcpSocket:
+    port: api
+
+readinessProbe:
+  tcpSocket:
+    port: api
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /etc/nginx/nginx.conf
+    subPath: nginx.conf
+    readOnly: true
+  - name: config-volume
+    mountPath: /etc/nginx/virtualhost/virtualhost.conf
+    subPath: virtualhost.conf
+    readOnly: true
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      items:
+        - key: nginx.conf
+          path: nginx.conf
+        - key: virtualhost.conf
+          path: virtualhost.conf
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+resources: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+gatewayService:
+  type: ClusterIP
+  port: 80
+
+cronjob:
+  enabled: true
+  image:
+    repository: docker.io/rbkmoney/test_transaction_v2
+    tag: d00bb62cb1b685fc5227cdce224174bf21ef333f
+    pullPolicy: IfNotPresent
+  schedule: "*/1 * * * *"
+  args:
+    - "http://keycloak-http"
+    - "demo_merchant"
+    - "Parolec0"
+    - http://{{ include "test-transaction.fullname" . }}-gateway
+    {{- $useIPv4 := true }}
+    {{- if and (eq .Values.services.global.ipv6only false) $useIPv4 }}
+    - "-4"
+    {{- end }}
+    {{- $createTestShop := true }}
+    {{- if $createTestShop }}
+    - --create-test-shop
+    {{- end }}
+
+configMap:
+  data:
+    nginx.conf: |
+      {{- readFile "nginx.conf" | nindent 6 }}
+    virtualhost.conf: |
+      {{- readFile "virtualhost.conf" | nindent 6 }}
