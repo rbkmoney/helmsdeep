@@ -67,10 +67,7 @@ cronjob:
     {{- if and (eq .Values.services.global.ipv6only false) $useIPv4 }}
     - "-4"
     {{- end }}
-    {{- $createTestShop := true }}
-    {{- if $createTestShop }}
     - --create-test-shop
-    {{- end }}
 
 configMap:
   data:
