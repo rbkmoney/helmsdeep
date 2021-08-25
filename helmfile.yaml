@@ -18,7 +18,7 @@ repositories:
 - name: codecentric
   url: https://codecentric.github.io/helm-charts
 - name: rbkmoney
-  url: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
+  url: https://rbkmoney.github.io/charts
 - name: es
   url: https://helm.elastic.co
 
