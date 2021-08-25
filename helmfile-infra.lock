@@ -9,5 +9,5 @@ dependencies:
 - name: netpolicy
   repository: https://rbkmoney.github.io/charts
   version: 0.1.14
-digest: sha256:e2548803992017dd694868336da9a3993b4ae205ac029e041d220df6779ec2ee
-generated: "2021-08-25T10:20:12.173904+03:00"
+digest: sha256:5e36d8a13bdf3ab58c9b64291b28337159eb2c00e5e0c8efc733d4529f189128
+generated: "2021-08-25T15:35:17.120928+03:00"

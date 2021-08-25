@@ -16,145 +16,145 @@ dependencies:
   repository: https://charts.bitnami.com/bitnami
   version: 9.7.2
 - name: raw
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.1
 - name: raw
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.1
 - name: statefull
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.21
 - name: statefull
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.21
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: stateless
-  repository: https://rbkmoney.github.io/charts
+  repository: https://rbkmoney.github.io/charts?ref=fix-cronjob-in-stateless
   version: 0.1.17
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.11.0
-digest: sha256:9f158a0307164e206261a916b4360cedd7b62931232cec7f3ba6263fb82c2752
-generated: "2021-08-25T10:20:27.048843+03:00"
+digest: sha256:2ca98392d0094c2120b53f53663a7cdb6bab1ef621c05588d375ddb55e06090b
+generated: "2021-08-25T15:35:32.211856+03:00"

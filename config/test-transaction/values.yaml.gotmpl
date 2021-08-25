@@ -28,11 +28,7 @@ readinessProbe:
 
 volumeMounts:
   - name: config-volume
-    mountPath: /etc/nginx/nginx.conf
-    subPath: nginx.conf
-    readOnly: true
-  - name: config-volume
-    mountPath: /etc/nginx/virtualhost/virtualhost.conf
+    mountPath: /etc/nginx/conf.d/virtualhost.conf
     subPath: virtualhost.conf
     readOnly: true
 
@@ -41,8 +37,6 @@ volumes:
     configMap:
       name: {{ .Release.Name }}
       items:
-        - key: nginx.conf
-          path: nginx.conf
         - key: virtualhost.conf
           path: virtualhost.conf
 
@@ -62,16 +56,13 @@ cronjob:
     - "http://keycloak-http"
     - "demo_merchant"
     - "Parolec0"
-    - http://{{ include "test-transaction.fullname" . }}
-    {{- $useIPv4 := true }}
-    {{- if and (eq .Values.services.global.ipv6only false) $useIPv4 }}
+    - http://{{ .Release.Name }}
+    {{- if eq .Values.services.global.ipv6only false }}
     - "-4"
     {{- end }}
     - --create-test-shop
 
 configMap:
   data:
-    nginx.conf: |
-      {{- readFile "nginx.conf" | nindent 6 }}
     virtualhost.conf: |
       {{- tpl (readFile "virtualhost.conf") . | nindent 6 }}
