@@ -1417,6 +1417,7 @@ FIXTURE=$(cat <<END
             "name": "Test Payment Institution",
             "system_account_set": {"value": {"id": 1}},
             "default_contract_template": {"value": {"id": 1}},
+            "default_wallet_contract_template": {"value": {"id": 1}},
             "providers": {"value": [{"id": 1}]},
             "withdrawal_providers": {"value": [{"id": 2}]},
             "inspector": {"value": {"id": 1}},
