@@ -162,8 +162,7 @@ releases:
 - name: payform
   <<: *generic_stateless
 - name: test-transaction
-  <<: *default
-  chart: rbkmoney/test-transaction
+  <<: *generic_stateless
   needs:
     - {{ .Namespace | default "default" }}/shumway
     - {{ .Namespace | default "default" }}/dominant
