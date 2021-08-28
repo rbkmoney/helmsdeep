@@ -126,16 +126,8 @@ releases:
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/keycloak
-- name: capi-pcidss-v1
-  <<: *generic_stateless_json
-  needs:
-    - {{ .Namespace | default "default" }}/keycloak
 - name: url-shortener
   <<: *generic_stateless
-  needs:
-    - {{ .Namespace | default "default" }}/keycloak
-- name: capi-v1
-  <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/keycloak
 - name: capi-v2
