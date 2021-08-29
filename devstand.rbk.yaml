@@ -1,0 +1,29 @@
+cilium:
+  enabled: false
+elk:
+  enabled: true
+prometheus:
+  enabled: false
+ingress:
+  enabled: false
+  ip: 'someip'
+certmanager:
+  enabled: false
+
+services:
+  global:
+    ipv6only: true
+  
+  vault:
+    dev: true
+
+  ingress:
+    class: "nginx"
+    rootDomain: dev.rbk.mn
+    tls:
+      enabled: true
+      letsEncrypt:
+        enabled: true
+        issuer: "letsencrypt-prod"
+      secretName: devstand
+
