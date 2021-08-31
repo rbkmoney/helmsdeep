@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: docker.io/rbkmoney/capi-v2
-  tag: 10510c2148fb3aaf1bf8893f8ddd2b4de900e557
+  tag: bc6446611ef7af7c6a60f6de9ca5f4b896d1c004
   pullPolicy: IfNotPresent
 
 configMap:
@@ -133,4 +133,24 @@ ciliumPolicies:
     - port: 8022
       type: TCP
     name: hellgate
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: bouncer
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: party-management
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: hooker
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: hooker
     namespace: {{ .Release.Namespace }}
