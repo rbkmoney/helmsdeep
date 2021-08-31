@@ -1,0 +1,202 @@
+[
+
+    {token_keeper, [
+
+        {ip, "::"},
+        {port, 8022},
+        {services, #{
+            token_keeper => #{
+                path => <<"/v1/token-keeper">>
+            }
+        }},
+        {protocol_opts, #{
+            % How much to wait for another request before closing a keepalive connection? (ms)
+            request_timeout => 3000
+        }},
+        {transport_opts, #{
+            % Maximum number of simultaneous connections. (default = 1024)
+            max_connections => 8000,
+            % Size of the acceptor pool. (default = 10)
+            num_acceptors => 100
+        }},
+        % How much to wait for outstanding requests completion when asked to shut down? (ms)
+        {shutdown_timeout, 1000},
+
+        {audit, #{
+            % Audit logging.
+            log => #{
+                % Audit log level, ideally should be higher that `kernel.level`.
+                level => notice,
+                backend => #{
+                    type => standard_io
+                },
+                formatter => {logger_logstash_formatter, #{
+                    chars_limit => 4096,
+                    depth => unlimited
+                }}
+            }
+        }},
+
+        {woody_event_handlers, [
+            hay_woody_event_handler,
+            {scoper_woody_event_handler, #{
+                event_handler_opts => #{
+                    formatter_opts => #{
+                        max_length => 1000,
+                        max_printable_string_length => 80
+                    }
+                }
+            }}
+        ]},
+
+        {health_check, #{
+            disk    => {erl_health, disk     , ["/", 99]},
+            memory  => {erl_health, cg_memory, [70]},
+            service => {erl_health, service  , [<<"token-keeper">>]}
+        }},
+
+        {jwt, #{
+            keyset => #{
+                keycloak => #{
+                    source => {pem_file, "/var/lib/shortener/keys/keycloak/keycloak.pubkey.pem"},
+                    authority => keycloak
+                },
+                capi => #{
+                    source => {pem_file, "/var/lib/shortener/keys/capi.pubkey.pem"},
+                    authority => capi
+                },
+                wapi => #{
+                    source => {pem_file, "/var/lib/shortener/keys/wapi.pubkey.pem"},
+                    authority => wapi
+                },
+                apikeymgmt => #{
+                    source => {pem_file, "/var/lib/shortener/keys/apikeymgmt.privkey.pem"},
+                    authority => apikeymgmt
+                }
+            }
+        }},
+
+        {blacklist, #{
+            path => "/opt/token-keeper/token-blacklist.yaml"
+        }},
+
+        {issuing, #{
+            authority => apikeymgmt
+        }},
+
+        {authorities, #{
+            keycloak => #{
+                id => <<"com.rbkmoney.keycloak">>,
+                authdata_sources => [
+                    {extract, #{
+                        methods => [
+                            {detect_token, #{
+                                phony_api_key_opts => #{
+                                    metadata_mappings => #{
+                                        party_id => <<"com.rbkmoney.party.id">>
+                                    }
+                                },
+                                user_session_token_opts => #{
+                                    user_realm => <<"external">>,
+                                    metadata_mappings => #{
+                                        user_id => <<"com.rbkmoney.user.id">>,
+                                        user_email => <<"com.rbkmoney.user.email">>,
+                                        user_realm => <<"com.rbkmoney.user.realm">>
+                                    }
+                                },
+                                user_session_token_origins => [
+                                    <<"https://dashboard.rbk.money">>,
+                                    <<"https://beta.dashboard.rbk.money">>,
+                                    <<"https://old.dashboard.rbk.money">>
+                                ]
+                            }}
+                        ]
+                    }}
+                ]
+            },
+            capi => #{
+                id => <<"com.rbkmoney.capi">>,
+                authdata_sources => [
+                    {claim, #{
+                        compatibility => {true, #{
+                            metadata_mappings => #{
+                                party_id => <<"com.rbkmoney.user.party.id">>,
+                                consumer => <<"com.rbkmoney.user.consumer">>
+                            }
+                        }}
+                    }},
+                    {extract, #{
+                        methods => [
+                            {invoice_template_access_token, #{
+                                domain => <<"common-api">>,
+                                metadata_mappings => #{
+                                    party_id => <<"com.rbkmoney.user.party.id">>
+                                }
+                            }}
+                        ]
+                    }}
+                ]
+            },
+            %% CAUTION: For whatever reason, capi keys are getting wapi authority encoded into them
+            wapi => #{
+                id => <<"com.rbkmoney.wapi">>,
+                authdata_sources => [
+                    {claim, #{
+                        compatibility => {true, #{
+                            metadata_mappings => #{
+                                party_id => <<"com.rbkmoney.user.party.id">>,
+                                consumer => <<"com.rbkmoney.user.consumer">>
+                            }
+                        }}
+                    }},
+                    {extract, #{
+                        methods => [
+                            {invoice_template_access_token, #{
+                                domain => <<"common-api">>,
+                                metadata_mappings => #{
+                                    party_id => <<"com.rbkmoney.user.party.id">>
+                                }
+                            }}
+                        ]
+                    }}
+                ]
+            },
+            apikeymgmt => #{
+                id => <<"com.rbkmoney.apikeymgmt">>,
+                signer => apikeymgmt,
+                authdata_sources => [
+                    {storage, {claim, #{}}}
+                ]
+            }
+        }}
+    ]},
+
+    {how_are_you, [
+        {metrics_publishers, []}
+    ]},
+
+    {os_mon, [
+        {disksup_posix_only, true}
+    ]},
+
+    {scoper, [
+        {storage, scoper_storage_logger}
+    ]},
+
+    {kernel, [
+        {logger_level, info},
+        {logger, [
+            {handler, default, logger_std_h, #{
+                level => debug,
+                config => #{
+                    type => standard_io,
+                    sync_mode_qlen => 2000,
+                    drop_mode_qlen => 2000,
+                    flush_qlen => 3000
+                },
+                formatter => {logger_logstash_formatter, #{}}
+            }}
+        ]}
+    ]}
+
+].
