@@ -122,6 +122,8 @@ releases:
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/dominant
+- name: limiter
+  <<: *generic_stateless_json
 - name: party-management
   <<: *generic_stateless_json
   needs:
