@@ -1,0 +1,94 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+image:
+  repository: docker.io/rbkmoney/xrates
+  tag: 242bcbf35a9711fba1503e273ce1c213ec50d167
+  pullPolicy: IfNotPresent
+
+runopts:
+  command: ["/opt/xrates/entrypoint.sh"]
+
+configMap:
+  data:
+    entrypoint.sh: |
+      {{- readFile "entrypoint.sh" | nindent 6 }}
+    loggers.xml: |
+      {{- readFile "loggers.xml" | nindent 6 }}
+    logback.xml: |
+      {{- readFile "../logs/logback.xml" | nindent 6 }}
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/xrates/entrypoint.sh
+    subPath: entrypoint.sh
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/xrates/logback.xml
+    subPath: logback.xml
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/xrates/loggers.xml
+    subPath: loggers.xml
+    readOnly: true
+
+service:
+  ports:
+    - name: api
+      port: 8022
+    - name: management
+      port: 8023
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: management
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: management
+
+podAnnotations:
+  #todo role
+  vault.hashicorp.com/role: "???"
+  #todo file path
+  vault.hashicorp.com/agent-inject-secret-secret.file: "secrets/data/xrates"
+  vault.hashicorp.com/agent-inject-template-secret.file: |
+    {{`{{- with secret "secrets/data/xrates" -}}
+    sources.psb-mastercard.provider.terminalId={{ .DATA.psb-mastercard.ID }}
+    sources.psb-mastercard.provider.secretKey={{ .DATA.psb-mastercard.KEY }}
+    sources.psb-visa.provider.terminalId={{ .DATA.psb-visa.ID }}
+    sources.psb-visa.provider.secretKey={{ .DATA.psb-visa.KEY }}
+    {{- end }}`}}
+
+metrics:
+  serviceMonitor:
+    enabled: false
+    namespace: {{ .Release.Namespace }}
+    additionalLabels:
+      release: prometheus
+    endpoints:
+      - port: "management"
+        path: /actuator/prometheus
+        scheme: http
+
+ciliumPolicies:
+  - filters:
+    - port: 8200
+      type: TCP
+    name: vault
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: machinegun
+    namespace: {{ .Release.Namespace }}
+
