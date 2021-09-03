@@ -1,3 +1,5 @@
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
 [
 
     {token_keeper, [
@@ -105,9 +107,9 @@
                                     }
                                 },
                                 user_session_token_origins => [
-                                    <<"https://dashboard.rbk.money">>,
-                                    <<"https://beta.dashboard.rbk.money">>,
-                                    <<"https://old.dashboard.rbk.money">>
+                                    <<"https://dashboard.{{ $ingressDomain | default "rbk.dev" }}">>,
+                                    <<"https://beta.dashboard.{{ $ingressDomain | default "rbk.dev" }}">>,
+                                    <<"https://old.dashboard.{{ $ingressDomain | default "rbk.dev" }}">>
                                 ]
                             }}
                         ]
