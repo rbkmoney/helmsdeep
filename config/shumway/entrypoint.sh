@@ -23,4 +23,3 @@ java \
     --spring.datasource.hikari.maximum-pool-size=20 \
     ${@} \
     --spring.config.additional-location=/vault/secrets/application.properties \
-    --spring.flyway.schemas=shm
