@@ -664,7 +664,8 @@
       "clientRoles" : {
         "private-api" : [ "adjustment:update", "dmt:pull", "payout:read", "payout:pay", "adjustment:create", "claim:get", "payout:confirm", "dmt:checkout", "claim.comment:get", "party:get", "claim.action:get", "claim:update", "dmt:commit", "claim:accept", "adjustment:get", "merchant:create", "claim.comment:add", "payout:generate", "merchant:update", "accounting_report:get", "internal_report:get", "payout:cancel" ],
         "account" : [ "manage-account", "view-profile" ],
-        "control-center": [ "manage_chargebacks", "search_deposits", "search_ops", "search_invoices", "deposit:write", "search_payments", "view_chargebacks"]
+        "control-center": [ "manage_chargebacks", "search_deposits", "search_ops", "search_invoices", "deposit:write", "search_payments", "view_chargebacks"],
+        "claim-management": [ "get_claims", "request_claim_changes", "add_party_mod", "request_claim_review", "update_claim", "accept_claim", "revoke_claim", "create_claim", "deny_claim", "add_claim_mod"]
       },
       "notBefore" : 0,
       "groups" : [ ]
