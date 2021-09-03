@@ -10,7 +10,7 @@ image:
 configMap:
   data:
     blacklist: |
-      {{- readFile "blacklisted_keys.yaml" }}
+      {{- readFile "blacklisted_keys.yaml" | nindent 6 }}
 
 metrics:
   serviceMonitor:
