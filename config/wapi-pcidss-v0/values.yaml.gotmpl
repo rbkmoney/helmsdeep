@@ -2,7 +2,7 @@
 
 image:
   repository: docker.io/rbkmoney/wapi
-  tag: d115d1933b58fcc2e94c1af7df5a58e1e04dc364
+  tag: 2928b2066ac38d89a67ee437cdfa14fdb3493076
   pullPolicy: IfNotPresent
 
 configMap:
@@ -56,6 +56,12 @@ volumes:
       secretName: {{ .Release.Name }}
   - name: keycloak-pubkey
     emptyDir: {}
+
+service:
+  type: ClusterIP
+  ports:
+    - name: api
+      port: 8080
 
 ingress:
   enabled: true
