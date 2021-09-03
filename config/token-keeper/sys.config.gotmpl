@@ -60,19 +60,19 @@
         {jwt, #{
             keyset => #{
                 keycloak => #{
-                    source => {pem_file, "/var/lib/shortener/keys/keycloak/keycloak.pubkey.pem"},
+                    source => {pem_file, "/var/lib/token-keeper/keys/keycloak/keycloak.pubkey.pem"},
                     authority => keycloak
                 },
                 capi => #{
-                    source => {pem_file, "/var/lib/shortener/keys/capi.pubkey.pem"},
+                    source => {pem_file, "/var/lib/token-keeper/keys/capi.pubkey.pem"},
                     authority => capi
                 },
                 wapi => #{
-                    source => {pem_file, "/var/lib/shortener/keys/wapi.pubkey.pem"},
+                    source => {pem_file, "/var/lib/token-keeper/keys/wapi.pubkey.pem"},
                     authority => wapi
                 },
                 apikeymgmt => #{
-                    source => {pem_file, "/var/lib/shortener/keys/apikeymgmt.privkey.pem"},
+                    source => {pem_file, "/var/lib/token-keeper/keys/apikeymgmt.privkey.pem"},
                     authority => apikeymgmt
                 }
             }
