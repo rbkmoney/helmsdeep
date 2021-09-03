@@ -58,15 +58,16 @@ readinessProbe:
 
 podAnnotations:
   #todo role
-  vault.hashicorp.com/role: "???"
+  vault.hashicorp.com/role: "db-app"
+  vault.hashicorp.com/agent-inject: "true"
   #todo file path
-  vault.hashicorp.com/agent-inject-secret-secret.file: "secrets/data/xrates"
+  vault.hashicorp.com/agent-inject-secret-secret.file: "secret/data/xrates"
   vault.hashicorp.com/agent-inject-template-secret.file: |
-    {{`{{- with secret "secrets/data/xrates" -}}
-    sources.psb-mastercard.provider.terminalId={{ .DATA.psb-mastercard.ID }}
-    sources.psb-mastercard.provider.secretKey={{ .DATA.psb-mastercard.KEY }}
-    sources.psb-visa.provider.terminalId={{ .DATA.psb-visa.ID }}
-    sources.psb-visa.provider.secretKey={{ .DATA.psb-visa.KEY }}
+    {{`{{- with secret "secret/data/xrates" -}}
+    sources.psb-mastercard.provider.terminalId={{ .DATA.data.psb-mastercard-ID }}
+    sources.psb-mastercard.provider.secretKey={{ .DATA.data.psb-mastercard-KEY }}
+    sources.psb-visa.provider.terminalId={{ .DATA.data.psb-visa-ID }}
+    sources.psb-visa.provider.secretKey={{ .DATA.data.psb-visa-KEY }}
     {{- end }}`}}
 
 metrics:

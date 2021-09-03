@@ -23,4 +23,4 @@ java \
     --sources.needInitialize=true \
     ${@} \
     --spring.config.additional-location=/vault/secrets/application.properties \
-    --sources.provider.secrets.file.path=/vault/secrets/xrates/sources.file \
+    --sources.provider.secrets.file.path=/vault/secrets/secret.file \
