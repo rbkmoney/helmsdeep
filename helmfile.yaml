@@ -213,6 +213,7 @@ releases:
 #    - {{ .Namespace | default "default" }}/payouter-
 - name: xrates
   <<: *generic_stateless
+  installed: false
   needs:
     - {{ .Namespace | default "default" }}/vault
     - {{ .Namespace | default "default" }}/machinegun
