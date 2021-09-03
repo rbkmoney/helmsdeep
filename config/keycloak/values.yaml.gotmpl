@@ -4,8 +4,6 @@ postgresql:
 podLabels:
   selector.cilium.rbkmoney/release: {{ .Release.Name }}
 
-image:
-  tag: 12.0.4
 extraEnv: |
   - name: KEYCLOAK_USER
     value: true_admin
