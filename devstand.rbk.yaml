@@ -1,7 +1,7 @@
 cilium:
   enabled: false
 elk:
-  enabled: true
+  enabled: false
 prometheus:
   enabled: false
 ingress:
