@@ -1,7 +1,7 @@
 cilium:
   enabled: false
 elk:
-  enabled: false
+  enabled: true
 prometheus:
   enabled: false
 ingress:
@@ -12,19 +12,18 @@ certmanager:
 
 services:
   global:
-    ipv6only: false
+    ipv6only: true
   
   vault:
     dev: true
 
   ingress:
     class: "nginx"
-    rootDomain: some-site.ru
-    namespacedDomain: false
+    rootDomain: dev.rbk.mn
     tls:
-      enabled: false
+      enabled: true
       letsEncrypt:
-        enabled: false
-        issuer: ""
-      secretName: sometlssecret
+        enabled: true
+        issuer: "letsencrypt-prod"
+      secretName: devstand
 

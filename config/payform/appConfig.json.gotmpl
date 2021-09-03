@@ -1,11 +1,13 @@
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
 {
-    "applePayMerchantID": "merchant.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}",
+    "applePayMerchantID": "merchant.{{ $ingressDomain | default "rbk.dev" }}",
     "brandless": false,
-    "capiEndpoint": "https://api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}",
+    "capiEndpoint": "https://api.{{ $ingressDomain | default "rbk.dev" }}",
     "fixedTheme": "",
     "googlePayGatewayMerchantID": "rbkmoneydevcheckout",
     "googlePayMerchantID": "15442243338125315447",
     "samsungPayMerchantName": "RBK.money",
     "samsungPayServiceID": "c9d337a160e242ba8322aa",
-    "wrapperEndpoint": "https://wrapper.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/"
+    "wrapperEndpoint": "https://wrapper.{{ $ingressDomain | default "rbk.dev" }}/"
 }

@@ -1,6 +1,8 @@
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
 {
     "realm": "internal",
-    "auth-server-url": "https://auth.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/auth/",
+    "auth-server-url": "https://auth.{{ $ingressDomain | default "rbk.dev" }}/auth/",
     "ssl-required": "external",
     "resource": "control-center",
     "public-client": true

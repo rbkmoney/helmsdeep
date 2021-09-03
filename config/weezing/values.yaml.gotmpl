@@ -53,6 +53,9 @@ readinessProbe:
   initialDelaySeconds: 30
   timeoutSeconds: 3
 
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
+
 ingress:
   enabled: true
   annotations:
@@ -67,17 +70,17 @@ ingress:
     nginx.ingress.kubernetes.io/configuration-snippet: |
        more_set_headers "Access-Control-Allow-Origin: $http_origin";
   hosts:
-    - host: idkfa.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+    - host: idkfa.{{ $ingressDomain | default "rbk.dev" }}
       paths:
         - /
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
   {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
-    - secretName: {{ .Release.Name }}-{{ .Values.services.ingress.tls.secretName }}
+    - secretName: idkfa-{{ .Values.services.ingress.tls.secretName }}
   {{- else }}
     - secretName: {{ .Values.services.ingress.tls.secretName }}
   {{- end }}
       hosts:
-        - idkfa.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+        - idkfa.{{ $ingressDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080

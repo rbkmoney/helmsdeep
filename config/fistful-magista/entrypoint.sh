@@ -22,7 +22,7 @@ java \
     --spring.datasource.hikari.maximum-pool-size=20 \
     --spring.application.name=fistful-magista \
     --flyway.schemas=mst \
-    --identity-management.url=http://wapi:8022/v1/identity \
+    --identity-management.url=http://wapi-v0:8080/v1/identity \
     --identity-management.timeout=5000 \
     --kafka.bootstrap-servers=kafka:9092 \
     --kafka.consumer.group-id=fistful-magista \
