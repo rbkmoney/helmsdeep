@@ -16,9 +16,12 @@ configMap:
     vm.args: |
       {{- tpl (readFile "../vm/erl_vm_args.gotmpl") . | nindent 6 }}
     token-blacklist.yaml: |
-      {{- tpl (readFile "token-blacklist.yaml") . | nindent 6 }}
+      {{- readFile "token-blacklist.yaml" | nindent 6 }}
     fetchKeycloakPubkey: |
       {{- readFile "../api-common/fetch-keycloak-pubkey.sh" | nindent 6 }}
+
+secret:
+  data:
     capi.pubkey.pem: |
       {{- readFile "../api-common/keys/capi.pubkey.pem" | nindent 6 }}
     wapi.pubkey.pem: |
@@ -79,6 +82,14 @@ service:
     - name: internal
       port: 8022
 
+livenessProbe:
+  httpGet:
+    port: internal
+
+readinessProbe:
+  httpGet:
+    port: internal
+
 {{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
 {{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
 
@@ -105,7 +116,7 @@ ingress:
       hosts:
         - shrt.{{ $ingressDomain | default "rbk.dev" }}
 {{- end }}
-  servicePort: 8080
+  servicePort: 8022
 
 ciliumPolicies:
   - filters:

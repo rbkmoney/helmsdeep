@@ -20,10 +20,11 @@ services:
   ingress:
     class: "nginx"
     rootDomain: dev.rbk.mn
+    namespacedDomain: true
     tls:
-      enabled: true
+      enabled: false
       letsEncrypt:
-        enabled: true
+        enabled: false
         issuer: "letsencrypt-prod"
       secretName: devstand
 
