@@ -78,6 +78,8 @@ ingress:
   {{- else }}
       secretName: {{ .Values.services.ingress.tls.secretName }}
   {{- end }}
+{{- else }}
+  tls: []
 {{- end }}
 
 ciliumPolicies:
