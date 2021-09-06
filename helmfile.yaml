@@ -138,6 +138,10 @@ releases:
   <<: *generic_stateless
   needs:
     - {{ .Namespace | default "default" }}/keycloak
+- name: capi-v1
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/keycloak
 - name: capi-v2
   <<: *generic_stateless_json
   needs:
@@ -160,7 +164,7 @@ releases:
   <<: *generic_stateless
 - name: test-transaction
   <<: *default
-  chart: rbkmoney/test-transaction
+  chart: ../charts/charts/test-transaction
   needs:
     - {{ .Namespace | default "default" }}/shumway
     - {{ .Namespace | default "default" }}/dominant
