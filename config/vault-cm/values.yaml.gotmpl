@@ -19,7 +19,7 @@ configMap:
         GRANT ALL ON schema shm TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA shm TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA shm TO \"{{`{{name}}`}}\";" \
-        default_ttl="15min" \
+        default_ttl="10h" \
         max_ttl="240h"
 
       vault write database/config/hooker \
@@ -36,7 +36,7 @@ configMap:
         GRANT ALL ON schema hook TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA hook TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA hook TO \"{{`{{name}}`}}\";" \
-        default_ttl="15min" \
+        default_ttl="10h" \
         max_ttl="240h"
 
       vault write database/config/messages \
@@ -48,7 +48,7 @@ configMap:
       vault write database/roles/db-app-messages \
         db_name=messages \
         creation_statements="CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' IN ROLE messages VALID UNTIL '{{`{{expiration}}`}}';" \
-        default_ttl="15min" \
+        default_ttl="10h" \
         max_ttl="240h"
 
       vault write database/config/payouter \
@@ -65,7 +65,7 @@ configMap:
         GRANT ALL ON SCHEMA sht TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA sht TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA sht TO \"{{`{{name}}`}}\";" \
-        default_ttl="15min" \
+        default_ttl="10h" \
         max_ttl="240h"
 
       vault write database/config/magista \
@@ -82,7 +82,7 @@ configMap:
         GRANT ALL ON SCHEMA mst TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA mst TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA mst TO \"{{`{{name}}`}}\";" \
-        default_ttl="15min" \
+        default_ttl="10h" \
         max_ttl="240h"
 
       vault write database/config/analytics \
@@ -99,7 +99,7 @@ configMap:
         GRANT ALL ON SCHEMA analytics TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA analytics TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA analytics TO \"{{`{{name}}`}}\";" \
-        default_ttl="15min" \
+        default_ttl="10h" \
         max_ttl="240h"
 
       vault write database/config/claim-management \
@@ -116,7 +116,7 @@ configMap:
         GRANT ALL ON SCHEMA cm TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA cm TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA cm TO \"{{`{{name}}`}}\";" \
-        default_ttl="15min" \
+        default_ttl="10h" \
         max_ttl="240h"
 
       vault write database/config/questionary \
@@ -133,7 +133,7 @@ configMap:
         GRANT ALL ON SCHEMA qs TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA qs TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA qs TO \"{{`{{name}}`}}\";" \
-        default_ttl="15min" \
+        default_ttl="10h" \
         max_ttl="240h"
 
       vault write database/config/reporter \
@@ -150,7 +150,7 @@ configMap:
         GRANT ALL ON SCHEMA rpt TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA rpt TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA rpt TO \"{{`{{name}}`}}\";" \
-        default_ttl="15min" \
+        default_ttl="10h" \
         max_ttl="240h"
 
       vault write database/config/fistful-magista \
@@ -167,7 +167,7 @@ configMap:
         GRANT ALL ON SCHEMA mst TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA mst TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA mst TO \"{{`{{name}}`}}\";" \
-        default_ttl="15min" \
+        default_ttl="10h" \
         max_ttl="240h"
 
       vault write database/config/fbmgmt \
@@ -184,7 +184,7 @@ configMap:
         GRANT ALL ON SCHEMA af TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA af TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA af TO \"{{`{{name}}`}}\";" \
-        default_ttl="15min" \
+        default_ttl="10h" \
         max_ttl="240h"
 
       vault auth enable kubernetes
