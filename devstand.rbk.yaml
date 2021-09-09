@@ -25,6 +25,6 @@ services:
       enabled: false
       letsEncrypt:
         enabled: false
-        issuer: "letsencrypt-prod"
+        issuer: "letsencrypt-staging"
       secretName: devstand
 
