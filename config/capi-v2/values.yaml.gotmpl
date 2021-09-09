@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: docker.io/rbkmoney/capi-v2
-  tag: 10510c2148fb3aaf1bf8893f8ddd2b4de900e557
+  tag: bc6446611ef7af7c6a60f6de9ca5f4b896d1c004
   pullPolicy: IfNotPresent
 
 configMap:
@@ -84,6 +84,9 @@ metrics:
     additionalLabels:
       release: prometheus
 
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
+
 ingress:
   enabled: true
   annotations:
@@ -93,18 +96,18 @@ ingress:
     nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,X-Request-ID"
     kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
   hosts:
-    - host: api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+    - host: api.{{ $ingressDomain | default "rbk.dev" }}
       paths:
         - /v2
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
   {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
-    - secretName: {{ .Release.Name }}-{{ .Values.services.ingress.tls.secretName }}
+    - secretName: api-{{ .Values.services.ingress.tls.secretName }}
   {{- else }}
     - secretName: {{ .Values.services.ingress.tls.secretName }}
   {{- end }}
       hosts:
-        - api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+        - api.{{ $ingressDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080
 
@@ -133,4 +136,24 @@ ciliumPolicies:
     - port: 8022
       type: TCP
     name: hellgate
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: bouncer
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: party-management
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: hooker
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: hooker
     namespace: {{ .Release.Namespace }}

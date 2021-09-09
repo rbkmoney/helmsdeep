@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: docker.io/rbkmoney/hellgate
-  tag: efe0b67a7a048bfa17cac871ff2e7b797ea13796
+  tag: 9dd99ab584105159efdcc8f0c48ef74a0b918299
   pullPolicy: IfNotPresent
 
 configMap:
@@ -42,6 +42,9 @@ volumes:
     configMap:
       name: {{ .Release.Name }}
 
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
+
 ingress:
   enabled: true
   annotations:
@@ -50,18 +53,18 @@ ingress:
 {{- end }}
     kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
   hosts:
-    - host: iddqd.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+    - host: iddqd.{{ $ingressDomain | default "rbk.dev" }}
       paths:
         - /v1/processing/invoicing
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
   {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
-    - secretName: {{ .Release.Name }}-{{ .Values.services.ingress.tls.secretName }}
+    - secretName: iddqd-{{ .Values.services.ingress.tls.secretName }}
   {{- else }}
     - secretName: {{ .Values.services.ingress.tls.secretName }}
   {{- end }}
       hosts:
-        - iddqd.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+        - iddqd.{{ $ingressDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8022
 

@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: docker.io/rbkmoney/dark-api
-  tag: da3705fde0414af7e9e3eb60ba9b7b4ce88231fc
+  tag: 933d0b9506ba312d69dfd46c5432ced36e3fce64
   pullPolicy: IfNotPresent
 
 runopts:
@@ -13,7 +13,7 @@ runopts:
 configMap:
   data:
     entrypoint.sh: |
-      {{- readFile "entrypoint.sh" | nindent 6 }}
+      {{- tpl  (readFile "entrypoint.sh.gotmpl") . | nindent 6 }}
     loggers.xml: |
       {{- readFile "loggers.xml" | nindent 6 }}
     logback.xml: |
@@ -60,26 +60,34 @@ service:
     - name: management
       port: 8023
 
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
+
 ingress:
   enabled: true
   annotations:
 {{- if .Values.services.ingress.tls.letsEncrypt.enabled }}
     cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
 {{- end }}
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "content-type,content-disposition,authorization,x-request-id"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+       more_set_headers "Access-Control-Allow-Origin: $http_origin";
     kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
   hosts:
-    - host: api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+    - host: api.{{ $ingressDomain | default "rbk.dev" }}
       paths:
         - /dark-api
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
   {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
-    - secretName: {{ .Release.Name }}-{{ .Values.services.ingress.tls.secretName }}
+    - secretName: api-{{ .Values.services.ingress.tls.secretName }}
   {{- else }}
     - secretName: {{ .Values.services.ingress.tls.secretName }}
   {{- end }}
       hosts:
-        - api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+        - api.{{ $ingressDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080
 

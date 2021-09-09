@@ -11,16 +11,26 @@ repositories:
   url: https://kubernetes.github.io/ingress-nginx
 - name: certmanager
   url: https://charts.jetstack.io
+- name: prometheus-community
+  url: https://prometheus-community.github.io/helm-charts
 
 releases:
+{{- if eq .Values.ingress.enabled true }}
 - name: ingress
-  installed: {{ .Values.ingress.enabled }}
   <<: *infra_default
-  chart: ingress-nginx/ingress-nginx  
+  chart: ingress-nginx/ingress-nginx
+{{- end }}
+{{- if eq .Values.prometheus.enabled true }}
+- name: prometheus
+  <<: *infra_default
+  chart: prometheus-community/kube-prometheus-stack
+  namespace: monitoring
+{{- end }}
+{{- if eq .Values.elk.enabled true }}
 - name: logs
-  installed: {{ .Values.elk.enabled }}
   <<: *infra_default
   chart: rbkmoney/elk
+{{- end }}
 - name: netpolicy
   installed: {{ .Values.cilium.enabled }}
   <<: *infra_default

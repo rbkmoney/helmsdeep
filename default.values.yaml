@@ -1,29 +1,50 @@
+# Deploy CiliumNetworkPolicies if you already use cilium as cni
 cilium:
   enabled: false
+# Deploy ECK https://www.elastic.co/guide/en/cloud-on-k8s/current/index.html 
+# include operator,elastic,kibana,filebeats
 elk:
   enabled: false
+# Deploy Prometheus operator in monitoring namespace. 
+# Must have as we use ServiceMonitor by CRD in setup with processing services
 prometheus:
   enabled: false
+# Deploy nginx Ingresscontroller. 
+# We use and recommend https://github.com/kubernetes/ingress-nginx/ coz we have 
+# a lot sublocation on same host on different services
+# and we do not fell in love with minion config by nginx official controller
 ingress:
   enabled: false
+# OUR setup is in baremetal, so there is ip which bind to ingresscontroller
   ip: 'someip'
+# Deploy certmaanger operator. But you still need setup you Issuer or ClusterIssuer for certmanager
 certmanager:
   enabled: false
 
+# Section of common settings for some services
 services:
   global:
+# Set to "true" if your cluster CIDR only ipv6 family
     ipv6only: false
   
   vault:
     dev: true
 
   ingress:
+# Ingressclass if have more than one controller:
     class: "nginx"
+# root domain with will be used for services subdomain:
     rootDomain: some-site.ru
+# If true ingress will be rendered with name of namespace. For example, if deploy
+# in Namespace test api will be available at api.test.some-site.ru
+    namespacedDomain: false
     tls:
       enabled: false
+# Use certmanager annotations for tls certificate
       letsEncrypt:
         enabled: false
         issuer: ""
+# Put here name of secret with wildcard cert for services.ingress.rootDomain if you have one.
+# If use Lets Encrypt for cert this value will be used as suffix for secrets with certs
       secretName: sometlssecret
 

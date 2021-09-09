@@ -34,9 +34,9 @@ java \
     --dominant.networkTimeout=30000 \
     --dudoser.url=http://dudoser:8022/dudos \
     --dudoser.networkTimeout=30000 \
+    --keycloak.auth-server-url=https://auth.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/auth \
     --keycloak.realm-public-key.file-path="/var/lib/dark-api/keys/keycloak/keycloak.pubkey.pem" \
     --keycloak.realm=external \
     --keycloak.resource=common-api \
     --server.servlet.context-path=/dark-api/v1 \
-    ${@} \
-    --spring.config.additional-location=/vault/secrets/application.properties \
+    ${@}

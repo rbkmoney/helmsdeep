@@ -1,8 +1,9 @@
+
 # -*- mode: yaml -*-
 
 image:
   repository: docker.io/rbkmoney/wapi-v0
-  tag: e6206e686b23cef36e98c24aa5d28df8e56017bc
+  tag: fab27c234ed818e594912cbc647dc15fbf55218d
   pullPolicy: IfNotPresent
 
 configMap:
@@ -78,11 +79,14 @@ service:
 livenessProbe:
   httpGet:
     path: /health
-    port: management
+    port: api
 readinessProbe:
   httpGet:
     path: /health
-    port: management
+    port: api
+
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
 
 ingress:
   enabled: true
@@ -94,21 +98,23 @@ ingress:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
     nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "content-type,content-disposition,authorization,x-request-id"
     nginx.ingress.kubernetes.io/configuration-snippet: |
-       more_set_headers "Access-Control-Allow-Origin: $http_origin";
+       more_set_headers 'Access-Control-Allow-Methods: PUT, GET, POST, OPTIONS' "Access-Control-Allow-Origin: $http_origin";
   hosts:
-    - host: api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+    - host: api.{{ $ingressDomain | default "rbk.dev" }}
       paths:
         - /wapi
+        - /wallet
 {{- if .Values.services.ingress.tls.enabled }}
   tls:  
   {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
-    - secretName: {{ .Release.Name }}-{{ .Values.services.ingress.tls.secretName }}
+    - secretName: api-{{ .Values.services.ingress.tls.secretName }}
   {{- else }}
     - secretName: {{ .Values.services.ingress.tls.secretName }}
   {{- end }}
       hosts:
-        - api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+        - api.{{ $ingressDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080
 

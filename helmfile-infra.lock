@@ -1,13 +1,10 @@
 version: v0.140.0
 dependencies:
-- name: elk
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.5
-- name: ingress-nginx
-  repository: https://kubernetes.github.io/ingress-nginx
-  version: 4.0.1
+- name: kube-prometheus-stack
+  repository: https://prometheus-community.github.io/helm-charts
+  version: 18.0.5
 - name: netpolicy
   repository: https://rbkmoney.github.io/charts
   version: 0.1.14
-digest: sha256:e2548803992017dd694868336da9a3993b4ae205ac029e041d220df6779ec2ee
-generated: "2021-08-25T17:06:29.154322+03:00"
+digest: sha256:c9f0356038a75ab2f3d76699408b5db4add8d6f01ca6d9d3fb55cc9e4cb6182f
+generated: "2021-09-09T19:15:03.586698+03:00"

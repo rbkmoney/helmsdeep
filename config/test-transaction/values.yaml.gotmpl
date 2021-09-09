@@ -15,15 +15,15 @@ service:
     - name: api
       port: 80
 
-livenessProbe:
+livenessProbe: 
   httpGet:
     port: api
-    path: /
+    path: /healthz
 
-readinessProbe:
+readinessProbe: 
   httpGet:
     port: api
-    path: /
+    path: /healthz
 
 volumeMounts:
   - name: config-volume

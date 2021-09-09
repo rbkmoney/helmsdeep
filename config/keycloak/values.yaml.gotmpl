@@ -4,8 +4,6 @@ postgresql:
 podLabels:
   selector.cilium.rbkmoney/release: {{ .Release.Name }}
 
-image:
-  tag: 12.0.4
 extraEnv: |
   - name: KEYCLOAK_USER
     value: true_admin
@@ -50,6 +48,9 @@ extraVolumeMounts: |
     mountPath: "/realm/"
     readOnly: true
 
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
+
 ingress:
   enabled: true
   annotations:
@@ -64,19 +65,21 @@ ingress:
        more_set_headers "Access-Control-Allow-Origin: $http_origin";
   servicePort: http
   rules:
-    - host: 'auth.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}'
+    - host: 'auth.{{ $ingressDomain | default "rbk.dev" }}'
       paths:
         - path: /
           pathType: Prefix
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
     - hosts:
-        - 'auth.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}'
+        - 'auth.{{ $ingressDomain | default "rbk.dev" }}'
   {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
       secretName: {{ .Release.Name }}-{{ .Values.services.ingress.tls.secretName }}
   {{- else }}
       secretName: {{ .Values.services.ingress.tls.secretName }}
   {{- end }}
+{{- else }}
+  tls: []
 {{- end }}
 
 ciliumPolicies:

@@ -1,7 +1,9 @@
+{{- $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{- $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
 {
 {{- if .Values.services.ingress.tls.enabled }}
-    "papiEndpoint": "https://idkfa.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/papi/v1"
+    "papiEndpoint": "https://idkfa.{{ $ingressDomain | default "rbk.dev" }}/papi/v1"
 {{- else }}
-    "papiEndpoint": "http://idkfa.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/papi/v1"
+    "papiEndpoint": "http://idkfa.{{ $ingressDomain | default "rbk.dev" }}/papi/v1"
 {{- end }}
 }

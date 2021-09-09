@@ -25,10 +25,6 @@ repositories:
 # Path to the helmfile state file being processed BEFORE releases in this state file
 helmfiles:
   - path: helmfile-infra.yaml
-{{- if and (eq .Values.prometheus.enabled true) ( eq .Namespace "") }}
-  - path: helmfile-prometheus.yaml
-{{- end }}
-
 
 releases:
 #External releases
@@ -50,7 +46,6 @@ releases:
 - name: vault
   <<: *default
   chart: hashicorp/vault
-  version: 0.11.0
   needs:
   - {{ .Namespace | default "default" }}/postgres
   - {{ .Namespace | default "default" }}/vault-cm
@@ -123,11 +118,15 @@ releases:
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/dominant
-- name: capi-pcidss-v2
+- name: limiter
+  <<: *generic_stateless_json
+- name: party-management
+  <<: *generic_stateless_json
+- name: token-keeper
   <<: *generic_stateless_json
   needs:
-    - {{ .Namespace | default "default" }}/keycloak
-- name: capi-pcidss-v1
+    - {{ .Namespace | default "default" }}/dominant
+- name: capi-pcidss-v2
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/keycloak
@@ -144,12 +143,10 @@ releases:
   needs:
     - {{ .Namespace | default "default" }}/keycloak
 - name: wapi-pcidss-v0
-  installed: false
   <<: *generic_stateless_json
   needs:
    - {{ .Namespace | default "default" }}/keycloak
 - name: wapi-v0
-  installed: false
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/keycloak
@@ -177,6 +174,10 @@ releases:
   needs:
     - {{ .Namespace | default "default" }}/keycloak
 - name: controlcenter
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/keycloak
+- name: weezing
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/keycloak
@@ -267,3 +268,15 @@ releases:
   - {{ .Namespace | default "default" }}/dominant
   - {{ .Namespace | default "default" }}/magista
   - {{ .Namespace | default "default" }}/hellgate
+- name: reporter
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/vault
+    - {{ .Namespace | default "default" }}/kafka
+    - {{ .Namespace | default "default" }}/hellgate
+    - {{ .Namespace | default "default" }}/magista
+    - {{ .Namespace | default "default" }}/dominant
+- name: bouncer
+  <<: *generic_stateless_json
+- name: bouncer-policies
+  <<: *generic_stateless_json
