@@ -16,11 +16,12 @@ releases:
 - name: ingress
   installed: {{ .Values.ingress.enabled }}
   <<: *infra_default
-  chart: ingress-nginx/ingress-nginx  
+  chart: ingress-nginx/ingress-nginx
+{{- if eq .Values.elk.enabled true }}
 - name: logs
-  installed: {{ .Values.elk.enabled }}
   <<: *infra_default
   chart: rbkmoney/elk
+{{- end }}
 - name: netpolicy
   installed: {{ .Values.cilium.enabled }}
   <<: *infra_default

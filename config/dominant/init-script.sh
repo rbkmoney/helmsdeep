@@ -1075,6 +1075,9 @@ FIXTURE=$(cat <<END
         "data": {
             "name": "Mocketbank Test Acquiring",
             "description": "Mocketbank Test Acquiring"
+        },
+        "provider_ref": {
+          "id":1
         }
     }}}},
     {"insert": {"object": {"terminal": {
@@ -1423,7 +1426,8 @@ FIXTURE=$(cat <<END
             "inspector": {"value": {"id": 1}},
             "realm": "test",
             "wallet_system_account_set": {"value": {"id": 1}},
-            "residences": ["rus", "aus", "jpn"]
+            "residences": ["rus", "aus", "jpn"],
+            "payment_routing_rules" : {"policies": {"id":1},"prohibitions": {"id":8}}
         }
     }}}}
 ]}

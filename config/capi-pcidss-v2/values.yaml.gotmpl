@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: docker.io/rbkmoney/capi_pcidss-v2
-  tag: 54dde2dd6a7ce75437be334ee3adfcfb9b590d19
+  tag: 2ab58783a40e03c03353a441097f46928d898b09
   pullPolicy: IfNotPresent
 
 configMap:
@@ -135,4 +135,14 @@ ciliumPolicies:
     - port: 8022
       type: TCP
     name: cds
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: bouncer
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: binbase
     namespace: {{ .Release.Namespace }}

@@ -1,0 +1,37 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+image:
+  repository: docker.io/rbkmoney/bouncer-policies
+  tag: 39ca136c5f0e4c89ab4253552759299fdbde360b
+  pullPolicy: IfNotPresent
+
+configMap:
+  data:
+    blacklist: |
+      {{- readFile "blacklisted_keys.yaml" | nindent 6 }}
+
+metrics:
+  serviceMonitor:
+    enabled: true
+    namespace: {{ .Release.Namespace }}
+    additionalLabels:
+      release: prometheus
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /var/opa/roots/service/authz/blacklists/auth_token/data.yaml
+    subPath: blacklist
+    readOnly: true
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+
+service:
+  type: ClusterIP
+  ports:
+    - name: api
+      port: 8181

@@ -3,8 +3,8 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/bender
-  tag: cd0ee8faae41f22a40ea119337be2a842e3e9cd8
+  repository: docker.io/rbkmoney/bouncer
+  tag: 6dbd5079a7a9ac2107d6226f54b910a9d03b68ac
   pullPolicy: IfNotPresent
 
 configMap:
@@ -15,37 +15,36 @@ configMap:
       {{- tpl (readFile "../vm/erl_inetrc.gotmpl") . | nindent 6 }}
     vm.args: |
       {{- tpl (readFile "../vm/erl_vm_args.gotmpl") . | nindent 6 }}
-    
+
 metrics:
   serviceMonitor:
-    enabled: false
+    enabled: true
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/bouncer/releases/0.1.0/sys.config
+    subPath: sys.config
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/bouncer/releases/0.1.0/vm.args
+    subPath: vm.args
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/bouncer/erl_inetrc
+    subPath: erl_inetrc
+    readOnly: true
 
 volumes:
   - name: config-volume
     configMap:
       name: {{ .Release.Name }}
 
-volumeMounts:
-  - name: config-volume
-    mountPath: /opt/bender/releases/1.0.0/sys.config
-    subPath: sys.config
-    readOnly: true
-  - name: config-volume
-    mountPath: /opt/bender/releases/1.0.0/vm.args
-    subPath: vm.args
-    readOnly: true
-  - name: config-volume
-    mountPath: /opt/bender/erl_inetrc
-    subPath: erl_inetrc
-    readOnly: true
-
-
 ciliumPolicies:
   - filters:
-    - port: 8022
+    - port: 8181
       type: TCP
-    name: machinegun
+    name: bouncer-policies
     namespace: {{ .Release.Namespace }}

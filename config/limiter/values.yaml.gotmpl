@@ -3,8 +3,8 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/hellgate
-  tag: 9dd99ab584105159efdcc8f0c48ef74a0b918299
+  repository: docker.io/rbkmoney/limiter
+  tag: c7e96068a56da444e78cc7739a902da8e268dc63
   pullPolicy: IfNotPresent
 
 configMap:
@@ -25,15 +25,15 @@ metrics:
 
 volumeMounts:
   - name: config-volume
-    mountPath: /opt/hellgate/releases/0.1/sys.config
+    mountPath: /opt/limiter/releases/0.1/sys.config
     subPath: sys.config
     readOnly: true
   - name: config-volume
-    mountPath: /opt/hellgate/releases/0.1/vm.args
+    mountPath: /opt/limiter/releases/0.1/vm.args
     subPath: vm.args
     readOnly: true
   - name: config-volume
-    mountPath: /opt/hellgate/erl_inetrc
+    mountPath: /opt/limiter/erl_inetrc
     subPath: erl_inetrc
     readOnly: true
 
@@ -41,6 +41,7 @@ volumes:
   - name: config-volume
     configMap:
       name: {{ .Release.Name }}
+
 
 {{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
 {{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
@@ -55,7 +56,8 @@ ingress:
   hosts:
     - host: iddqd.{{ $ingressDomain | default "rbk.dev" }}
       paths:
-        - /v1/processing/invoicing
+        - /v1/limiter
+        - /v1/configurator
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
   {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
@@ -82,15 +84,5 @@ ciliumPolicies:
   - filters:
     - port: 8022
       type: TCP
-    name: dominant
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
-    name: proxy-mocket-inspector
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
-    name: proxy-mocketbank
+    name: xrates
     namespace: {{ .Release.Namespace }}

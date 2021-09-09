@@ -1,0 +1,17 @@
+title: Auth Token Blacklist
+description: >
+  Used for banning clients carrying specific auth tokens from using any of our
+  public APIs. Entries are separated by their respective authorities. Then, each
+  entry in a list is an _identifier_ of some auth token. Example:
+    entries:
+      keycloak:
+        - "token_a"
+        - "token_b"
+      apikeymgmt:
+        - "token_c"
+  Broadly speaking, what constitutes an _identifier_ depends on which _tokens_
+  are we talking about. Though for the foreseeable future, we consider only
+  JWTs where JWT's identifier is the value of the 'jti' claim.
+entries:
+  keycloak:
+    - "d48e07ec-4899-4338-965b-98752397f2c4"
