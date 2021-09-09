@@ -165,8 +165,17 @@ dependencies:
 - name: stateless
   repository: https://rbkmoney.github.io/charts
   version: 0.1.18
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.18
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.18
+- name: stateless
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.18
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.15.0
-digest: sha256:0dba25a2cfc7d9f87cbb9bf75f5c283faa5e6c6963a106ecf9cdb8e21ed83ac5
-generated: "2021-09-07T11:16:26.582156+03:00"
+digest: sha256:fafb11cc92200741c3e5611cf74243894aa43507f35bb1cceac3d643479102fc
+generated: "2021-09-09T19:15:29.886974+03:00"
