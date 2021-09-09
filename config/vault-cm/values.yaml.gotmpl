@@ -187,6 +187,14 @@ configMap:
         default_ttl="10h" \
         max_ttl="240h"
 
+      vault secrets enable kv
+
+      vault kv put secret/xrates \
+        psb-mastercard-ID=1234 \
+        psb-mastercard-KEY=trururu \
+        psb-visa-ID=4321 \
+        psb-visa-KEY=ururu
+
       vault auth enable kubernetes
 
       vault write auth/kubernetes/config \
@@ -237,5 +245,8 @@ configMap:
         capabilities = ["read"]
       }
       path "database/creds/db-app-reporter" {
+        capabilities = ["read"]
+      }
+      path "secret/data/xrates" {
         capabilities = ["read"]
       }
