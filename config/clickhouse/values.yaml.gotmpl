@@ -1,8 +1,10 @@
 # -*- mode: yaml -*-
 
 clusterName: "rbkmoney"
-shardsCount: 3
-replicasCount: 2
+shardsCount: 1
+replicasCount: 1
+
+replicasUseFQDN: "no"
 
 zookeeper: 
   - host: zookeeper
@@ -12,11 +14,15 @@ users:
   - username: analytic
     password: hackme
     profile: default
+    databases:
+      - analytic
     networks:
       - "::/0"
   - username: fraud
     password: hackme
     profile: default
+    databases:
+      - fraud
     networks:
       - "::/0"   
 
@@ -24,6 +30,7 @@ configMap:
   data:
     01_create_databases.sh: |
       #!/bin/bash
+      sleep 60
       set -e
       clickhouse client -n <<-EOSQL
         CREATE DATABASE IF NOT EXISTS analytic;
