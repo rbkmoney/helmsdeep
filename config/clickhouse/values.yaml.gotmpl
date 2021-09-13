@@ -1,0 +1,576 @@
+# -*- mode: yaml -*-
+
+clusterName: "rbkmoney"
+shardsCount: 3
+replicasCount: 2
+
+zookeeper: 
+  - host: zookeeper
+    port: 2181   
+    
+users:
+  - username: analytic
+    password: hackme
+    profile: default
+    networks:
+      - "::/0"
+  - username: fraud
+    password: hackme
+    profile: default
+    networks:
+      - "::/0"   
+
+configMap:
+  data:
+    01_create_databases.sh: |
+      #!/bin/bash
+      set -e
+      clickhouse client -n <<-EOSQL
+        CREATE DATABASE IF NOT EXISTS analytic;
+        CREATE DATABASE IF NOT EXISTS fraud;
+      EOSQL
+    02_create_tables.sh: |
+      #!/bin/bash
+      set -e
+      clickhouse client -n <<-EOSQL
+        CREATE TABLE IF NOT EXISTS analytic.chargeback_local (
+            timestamp Date,
+            eventTime UInt64,
+            eventTimeHour UInt64,
+            id String,
+            email String,
+            ip String,
+            fingerprint String,
+            bin String,
+            maskedPan String,
+            cardToken String,
+            paymentSystem String,
+            paymentTool String,
+            terminal String,
+            providerId String,
+            bankCountry String,
+            partyId String,
+            shopId String,
+            amount UInt64,
+            currency String,
+            payerType String,
+            tokenProvider String,
+            status Enum8('accepted' = 1, 'rejected' = 2, 'cancelled' = 3),
+            category Enum8('fraud' = 1, 'dispute' = 2, 'authorisation' = 3, 'processing_error' = 4),
+            chargebackCode String,
+            paymentId String
+        ) ENGINE = ReplicatedReplacingMergeTree('/clickhouse/{installation}/{cluster}/tables/{shard}/{database}/{table}', '{replica}')
+        PARTITION BY toYYYYMM(timestamp)
+        ORDER BY (eventTimeHour, partyId, shopId, category, status, currency, providerId, fingerprint, cardToken, id, paymentId);
+
+        CREATE TABLE IF NOT EXISTS analytic.chargeback on cluster '{cluster}' AS analytic.chargeback_local
+        ENGINE = Distributed('{cluster}', analytic, chargeback_local, rand());
+
+        CREATE TABLE IF NOT EXISTS analytic.events_p_to_p_local (
+            timestamp Date,
+            eventTime UInt64,
+            eventTimeHour UInt64,
+            identityId String,
+            transferId String,
+            ip String,
+            email String,
+            bin String,
+            fingerprint String,
+            amount UInt64,
+            currency String,
+            country String,
+            bankCountry String,
+            maskedPan String,
+            bankName String,
+            cardTokenFrom String,
+            cardTokenTo String,
+            resultStatus String,
+            checkedRule String,
+            checkedTemplate String
+        ) ENGINE = ReplicatedMergeTree('/clickhouse/{installation}/{cluster}/tables/{shard}/{database}/{table}', '{replica}')
+        PARTITION BY toYYYYMM(timestamp)
+        ORDER BY (eventTimeHour, identityId, cardTokenFrom, cardTokenTo, bin, fingerprint, currency);
+
+        CREATE TABLE IF NOT EXISTS analytic.events_p_to_p on cluster '{cluster}' AS analytic.events_p_to_p_local
+        ENGINE = Distributed('{cluster}', analytic, events_p_to_p_local, rand());
+
+        CREATE TABLE IF NOT EXISTS analytic.events_sink_local (
+            timestamp Date,
+            eventTime UInt64,
+            eventTimeHour UInt64,
+            partyId String,
+            shopId String,
+            email String,
+            providerName String,
+            amount UInt64,
+            guaranteeDeposit UInt64,
+            systemFee UInt64,
+            providerFee UInt64,
+            externalFee UInt64,
+            currency String,
+            status Enum8('pending' = 1, 'processed' = 2, 'captured' = 3, 'cancelled' = 4, 'failed' = 5),
+            errorReason String,
+            errorCode String,
+            invoiceId String,
+            paymentId String,
+            sequenceId UInt64,
+            ip String,
+            bin String,
+            maskedPan String,
+            paymentTool String,
+            fingerprint String,
+            cardToken String,
+            paymentSystem String,
+            digitalWalletProvider String,
+            digitalWalletToken String,
+            cryptoCurrency String,
+            mobileOperator String,
+            paymentCountry String,
+            bankCountry String,
+            paymentTime UInt64,
+            providerId String,
+            terminal String,
+            cardHolderName String DEFAULT 'UNKNOWN',
+            bankCardTokenProvider String,
+            riskScore String,
+            rrn String,
+            paymentTerminal String
+        ) ENGINE = ReplicatedReplacingMergeTree('/clickhouse/{installation}/{cluster}/tables/{shard}/{database}/{table}', '{replica}')
+        PARTITION BY toYYYYMM(timestamp)
+        ORDER BY (eventTimeHour, partyId, shopId, paymentTool, status, currency, providerName, fingerprint, cardToken, invoiceId, paymentId, sequenceId);
+
+        CREATE TABLE IF NOT EXISTS analytic.events_sink on cluster '{cluster}' AS analytic.events_sink_local
+        ENGINE = Distributed('{cluster}', analytic, events_sink_local, rand());
+
+        CREATE TABLE IF NOT EXISTS analytic.events_sink_payout_local (
+            payoutId String,
+            status Enum8('unpaid' = 1, 'paid' = 2, 'cancelled' = 3, 'confirmed' = 4),
+            payoutType Enum8('bank_account' = 1, 'wallet' = 2),
+            statusCancelledDetails String,
+            isCancelledAfterBeingPaid UInt8,
+            timestamp Date,
+            eventTime UInt64,
+            eventTimeHour UInt64,
+            payoutTime UInt64,
+            shopId String,
+            partyId String,
+            contractId String,
+            amount UInt64,
+            fee UInt64,
+            currency String,
+            walletId String,
+            accountType Enum8('russian_payout_account' = 1, 'international_payout_account' = 2, 'UNKNOWN' = 3),
+            purpose String,
+            legalAgreementSignedAt UInt64,
+            legalAgreementId String,
+            legalAgreementValidUntil UInt64,
+            russianAccount String,
+            russianBankName String,
+            russianBankPostAccount String,
+            russianBankBik String,
+            russianInn String,
+            internationalAccountHolder String,
+            internationalBankName String,
+            internationalBankAddress String,
+            internationalIban String,
+            internationalBic String,
+            internationalLocalBankCode String,
+            internationalLegalEntityLegalName String,
+            internationalLegalEntityTradingName String,
+            internationalLegalEntityRegisteredAddress String,
+            internationalLegalEntityActualAddress String,
+            internationalLegalEntityRegisteredNumber String,
+            internationalBankNumber String,
+            internationalBankAbaRtn String,
+            internationalBankCountryCode String,
+            internationalCorrespondentBankNumber String,
+            internationalCorrespondentBankAccount String,
+            internationalCorrespondentBankName String,
+            internationalCorrespondentBankAddress String,
+            internationalCorrespondentBankBic String,
+            internationalCorrespondentBankIban String,
+            internationalCorrespondentBankAbaRtn String,
+            internationalCorrespondentBankCountryCode String
+        ) ENGINE = ReplicatedReplacingMergeTree('/clickhouse/{installation}/{cluster}/tables/{shard}/{database}/{table}', '{replica}')
+        PARTITION BY toYYYYMM(timestamp)
+        ORDER BY (eventTimeHour, partyId, shopId, status, payoutId, currency, accountType, payoutType, contractId, walletId);
+
+        CREATE TABLE IF NOT EXISTS analytic.events_sink_payout on cluster '{cluster}' AS analytic.events_sink_payout_local
+        ENGINE = Distributed('{cluster}', analytic, events_sink_payout_local, rand());
+
+        CREATE TABLE IF NOT EXISTS analytic.events_sink_refund_local (
+            timestamp Date,
+            eventTime UInt64,
+            eventTimeHour UInt64,
+            partyId String,
+            shopId String,
+            email String,
+            providerName String,
+            amount UInt64,
+            guaranteeDeposit UInt64,
+            systemFee UInt64,
+            providerFee UInt64,
+            externalFee UInt64,
+            currency String,
+            reason String,
+            status Enum8('pending' = 1, 'succeeded' = 2, 'failed' = 3),
+            errorReason String,
+            errorCode String,
+            invoiceId String,
+            refundId String,
+            paymentId String,
+            sequenceId UInt64,
+            ip String,
+            fingerprint String,
+            cardToken String,
+            paymentSystem String,
+            digitalWalletProvider String,
+            digitalWalletToken String,
+            cryptoCurrency String,
+            mobileOperator String,
+            paymentCountry String,
+            bankCountry String,
+            paymentTime UInt64,
+            providerId String,
+            terminal String
+        ) ENGINE = ReplicatedReplacingMergeTree('/clickhouse/{installation}/{cluster}/tables/{shard}/{database}/{table}', '{replica}')
+        PARTITION BY toYYYYMM(timestamp)
+        ORDER BY (eventTimeHour, partyId, shopId, status, currency, providerName, fingerprint, cardToken, invoiceId, paymentId, refundId, sequenceId);
+
+        CREATE TABLE IF NOT EXISTS analytic.events_sink_refund on cluster '{cluster}' AS analytic.events_sink_refund_local
+        ENGINE = Distributed('{cluster}', analytic, events_sink_refund_local, rand());
+
+        CREATE TABLE IF NOT EXISTS analytic.events_unique_local (
+            timestamp Date,
+            eventTimeHour UInt64,
+            eventTime UInt64,
+            payerType String,
+            tokenProvider String,
+            partyId String,
+            shopId String,
+            ip String,
+            email String,
+            bin String,
+            fingerprint String,
+            resultStatus String,
+            amount UInt64,
+            country String,
+            checkedRule String,
+            bankCountry String,
+            currency String,
+            invoiceId String,
+            maskedPan String,
+            bankName String,
+            cardToken String,
+            paymentId String,
+            mobile UInt8,
+            recurrent UInt8,
+            checkedTemplate String
+        ) ENGINE = ReplicatedMergeTree('/clickhouse/{installation}/{cluster}/tables/{shard}/{database}/{table}', '{replica}')
+        PARTITION BY toYYYYMM(timestamp)
+        ORDER BY (eventTimeHour, partyId, shopId, bin, resultStatus, cardToken, email, ip, fingerprint) TTL timestamp + toIntervalMonth(3);
+
+        CREATE TABLE IF NOT EXISTS analytic.events_unique on cluster '{cluster}' AS analytic.events_unique_local
+        ENGINE = Distributed('{cluster}', analytic, events_unique_local, rand());
+
+        CREATE TABLE IF NOT EXISTS analytic.fraud_payment_local (
+            timestamp Date,
+            id String,
+            eventTime String,
+            partyId String,
+            shopId String,
+            amount UInt64,
+            currency String,
+            payerType String,
+            paymentToolType String,
+            cardToken String,
+            paymentSystem String,
+            maskedPan String,
+            issuerCountry String,
+            email String,
+            ip String,
+            fingerprint String,
+            status String,
+            rrn String,
+            providerId UInt32,
+            terminalId UInt32,
+            tempalateId String,
+            description String,
+            fraudType String,
+            comment String
+        ) ENGINE = ReplicatedMergeTree('/clickhouse/{installation}/{cluster}/tables/{shard}/{database}/{table}', '{replica}')
+        PARTITION BY toYYYYMM(timestamp)
+        ORDER BY (partyId, shopId, paymentToolType, status, currency, providerId, fingerprint, cardToken, id);
+
+        CREATE TABLE IF NOT EXISTS analytic.fraud_payment on cluster '{cluster}' AS analytic.fraud_payment_local
+        ENGINE = Distributed('{cluster}', analytic, fraud_payment_local, rand());
+
+        CREATE TABLE IF NOT EXISTS analytic.payment_local (
+            timestamp Date,
+            eventTime UInt64,
+            eventTimeHour UInt64,
+            id String,
+            email String,
+            ip String,
+            fingerprint String,
+            bin String,
+            maskedPan String,
+            cardToken String,
+            paymentSystem String,
+            paymentTool String,
+            terminal String,
+            providerId String,
+            bankCountry String,
+            partyId String,
+            shopId String,
+            payerType String,
+            tokenProvider String,
+            amount UInt64,
+            currency String,
+            checkedTemplate String,
+            checkedRule String,
+            resultStatus String,
+            checkedResultsJson String,
+            mobile UInt8,
+            recurrent UInt8,
+            status Enum8('pending' = 1, 'processed' = 2, 'captured' = 3, 'cancelled' = 4, 'failed' = 5),
+            errorReason String,
+            errorCode String,
+            paymentCountry String
+        ) ENGINE = ReplicatedReplacingMergeTree('/clickhouse/{installation}/{cluster}/tables/{shard}/{database}/{table}', '{replica}')
+        PARTITION BY toYYYYMM(timestamp)
+        ORDER BY (eventTimeHour, partyId, shopId, paymentTool, status, currency, providerId, fingerprint, cardToken, id);
+
+        CREATE TABLE IF NOT EXISTS analytic.payment on cluster '{cluster}' AS analytic.payment_local
+        ENGINE = Distributed('{cluster}', analytic, payment_local, rand());
+
+        CREATE TABLE IF NOT EXISTS analytic.refund_local (
+            timestamp Date,
+            eventTime UInt64,
+            eventTimeHour UInt64,
+            id String,
+            email String,
+            ip String,
+            fingerprint String,
+            bin String,
+            maskedPan String,
+            cardToken String,
+            paymentSystem String,
+            paymentTool String,
+            terminal String,
+            providerId String,
+            bankCountry String,
+            partyId String,
+            shopId String,
+            amount UInt64,
+            currency String,
+            payerType String,
+            tokenProvider String,
+            status Enum8('pending' = 1, 'succeeded' = 2, 'failed' = 3),
+            errorReason String,
+            errorCode String,
+            paymentId String
+        ) ENGINE = ReplicatedReplacingMergeTree('/clickhouse/{installation}/{cluster}/tables/{shard}/{database}/{table}', '{replica}')
+        PARTITION BY toYYYYMM(timestamp)
+        ORDER BY (eventTimeHour, partyId, shopId, status, currency, providerId, fingerprint, cardToken, id, paymentId);
+
+        CREATE TABLE IF NOT EXISTS analytic.refund on cluster '{cluster}' AS analytic.refund_local
+        ENGINE = Distributed('{cluster}', analytic, refund_local, rand());
+
+        CREATE TABLE IF NOT EXISTS fraud.chargeback_local (
+            timestamp Date,
+            eventTime UInt64,
+            eventTimeHour UInt64,
+            id String,
+            email String,
+            ip String,
+            fingerprint String,
+            bin String,
+            maskedPan String,
+            cardToken String,
+            paymentSystem String,
+            paymentTool String,
+            terminal String,
+            providerId String,
+            bankCountry String,
+            partyId String,
+            shopId String,
+            amount UInt64,
+            currency String,
+            payerType String,
+            tokenProvider String,
+            status Enum8('accepted' = 1, 'rejected' = 2, 'cancelled' = 3),
+            category Enum8('fraud' = 1, 'dispute' = 2, 'authorisation' = 3, 'processing_error' = 4),
+            chargebackCode String,
+            paymentId String
+        ) ENGINE = ReplicatedReplacingMergeTree('/clickhouse/{installation}/{cluster}/tables/{shard}/{database}/{table}', '{replica}')
+        PARTITION BY toYYYYMM(timestamp)
+        ORDER BY (eventTimeHour, partyId, shopId, category, status, currency, providerId, fingerprint, cardToken, id, paymentId);
+
+        CREATE TABLE IF NOT EXISTS fraud.chargeback on cluster '{cluster}' AS fraud.chargeback_local
+        ENGINE = Distributed('{cluster}', fraud, chargeback_local, rand());
+
+        CREATE TABLE IF NOT EXISTS fraud.events_p_to_p_local (
+            timestamp Date,
+            eventTime UInt64,
+            eventTimeHour UInt64,
+            identityId String,
+            transferId String,
+            ip String,
+            email String,
+            bin String,
+            fingerprint String,
+            amount UInt64,
+            currency String,
+            country String,
+            bankCountry String,
+            maskedPan String,
+            bankName String,
+            cardTokenFrom String,
+            cardTokenTo String,
+            resultStatus String,
+            checkedRule String,
+            checkedTemplate String
+        ) ENGINE = ReplicatedMergeTree('/clickhouse/{installation}/{cluster}/tables/{shard}/{database}/{table}', '{replica}')
+        PARTITION BY toYYYYMM(timestamp)
+        ORDER BY (eventTimeHour, identityId, cardTokenFrom, cardTokenTo, bin, fingerprint, currency);
+
+        CREATE TABLE IF NOT EXISTS fraud.events_p_to_p on cluster '{cluster}' AS fraud.events_p_to_p_local
+        ENGINE = Distributed('{cluster}', fraud, events_p_to_p_local, rand());
+
+        CREATE TABLE IF NOT EXISTS fraud.events_unique_local (
+            timestamp Date,
+            eventTimeHour UInt64,
+            eventTime UInt64,
+            payerType String,
+            tokenProvider String,
+            partyId String,
+            shopId String,
+            ip String,
+            email String,
+            bin String,
+            fingerprint String,
+            resultStatus String,
+            amount UInt64,
+            country String,
+            checkedRule String,
+            bankCountry String,
+            currency String,
+            invoiceId String,
+            maskedPan String,
+            bankName String,
+            cardToken String,
+            paymentId String,
+            mobile UInt8,
+            recurrent UInt8,
+            checkedTemplate String
+        ) ENGINE = ReplicatedMergeTree('/clickhouse/{installation}/{cluster}/tables/{shard}/{database}/{table}', '{replica}')
+        PARTITION BY toYYYYMM(timestamp)
+        ORDER BY (eventTimeHour, partyId, shopId, bin, resultStatus, cardToken, email, ip, fingerprint) TTL timestamp + toIntervalMonth(3);
+
+        CREATE TABLE IF NOT EXISTS fraud.events_unique on cluster '{cluster}' AS fraud.events_unique_local
+        ENGINE = Distributed('{cluster}', fraud, events_unique_local, rand());
+
+        CREATE TABLE IF NOT EXISTS fraud.fraud_payment_local (
+            timestamp Date,
+            id String,
+            eventTime String,
+            partyId String,
+            shopId String,
+            amount UInt64,
+            currency String,
+            payerType String,
+            paymentToolType String,
+            cardToken String,
+            paymentSystem String,
+            maskedPan String,
+            issuerCountry String,
+            email String,
+            ip String,
+            fingerprint String,
+            status String,
+            rrn String,
+            providerId UInt32,
+            terminalId UInt32,
+            tempalateId String,
+            description String,
+            fraudType String,
+            comment String
+        ) ENGINE = ReplicatedMergeTree('/clickhouse/{installation}/{cluster}/tables/{shard}/{database}/{table}', '{replica}')
+        PARTITION BY toYYYYMM(timestamp)
+        ORDER BY (partyId, shopId, paymentToolType, status, currency, providerId, fingerprint, cardToken, id);
+
+        CREATE TABLE IF NOT EXISTS fraud.fraud_payment on cluster '{cluster}' AS fraud.fraud_payment_local
+        ENGINE = Distributed('{cluster}', fraud, fraud_payment_local, rand());
+
+        CREATE TABLE IF NOT EXISTS fraud.payment_local (
+            timestamp Date,
+            eventTime UInt64,
+            eventTimeHour UInt64,
+            id String,
+            email String,
+            ip String,
+            fingerprint String,
+            bin String,
+            maskedPan String,
+            cardToken String,
+            paymentSystem String,
+            paymentTool String,
+            terminal String,
+            providerId String,
+            bankCountry String,
+            partyId String,
+            shopId String,
+            payerType String,
+            tokenProvider String,
+            amount UInt64,
+            currency String,
+            checkedTemplate String,
+            checkedRule String,
+            resultStatus String,
+            checkedResultsJson String,
+            mobile UInt8,
+            recurrent UInt8,
+            status Enum8('pending' = 1, 'processed' = 2, 'captured' = 3, 'cancelled' = 4, 'failed' = 5),
+            errorReason String,
+            errorCode String,
+            paymentCountry String
+        ) ENGINE = ReplicatedReplacingMergeTree('/clickhouse/{installation}/{cluster}/tables/{shard}/{database}/{table}', '{replica}')
+        PARTITION BY toYYYYMM(timestamp)
+        ORDER BY (eventTimeHour, partyId, shopId, paymentTool, status, currency, providerId, fingerprint, cardToken, id);
+
+        CREATE TABLE IF NOT EXISTS fraud.payment on cluster '{cluster}' AS fraud.payment_local
+        ENGINE = Distributed('{cluster}', fraud, payment_local, rand());
+
+        CREATE TABLE IF NOT EXISTS fraud.refund_local (
+            timestamp Date,
+            eventTime UInt64,
+            eventTimeHour UInt64,
+            id String,
+            email String,
+            ip String,
+            fingerprint String,
+            bin String,
+            maskedPan String,
+            cardToken String,
+            paymentSystem String,
+            paymentTool String,
+            terminal String,
+            providerId String,
+            bankCountry String,
+            partyId String,
+            shopId String,
+            amount UInt64,
+            currency String,
+            payerType String,
+            tokenProvider String,
+            status Enum8('pending' = 1, 'succeeded' = 2, 'failed' = 3),
+            errorReason String,
+            errorCode String,
+            paymentId String
+        ) ENGINE = ReplicatedReplacingMergeTree('/clickhouse/{installation}/{cluster}/tables/{shard}/{database}/{table}', '{replica}')
+        PARTITION BY toYYYYMM(timestamp)
+        ORDER BY (eventTimeHour, partyId, shopId, status, currency, providerId, fingerprint, cardToken, id, paymentId);
+
+        CREATE TABLE IF NOT EXISTS fraud.refund on cluster '{cluster}' AS fraud.refund_local
+        ENGINE = Distributed('{cluster}', fraud, refund_local, rand());

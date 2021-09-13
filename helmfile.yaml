@@ -28,6 +28,9 @@ helmfiles:
 
 releases:
 #External releases
+- name: clickhouse
+  <<: *default
+  chart: ../charts/charts/clickhouse
 - name: kafka
   <<: *default
   chart: bitnami/kafka
