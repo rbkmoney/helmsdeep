@@ -1,0 +1,12 @@
+title: Source IP Range Blacklist
+description: >
+  Used for banning any client reaching from specific source IP range from using
+  any of our public APIs. Each entry is a IPv4/v6 address range in CIDR
+  notation.
+entries:
+#  - "10.0.0.0/8"
+  - "172.16.0.0/12"
+  - "192.168.0.0/16"
+  - "127.0.0.0/24"
+  - "fc00::/7"
+  - "::1/128"
