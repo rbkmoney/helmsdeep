@@ -26,6 +26,9 @@ services:
   global:
 # Set to "true" if your cluster CIDR only ipv6 family
     ipv6only: false
+# Deploy ServiceMonitors with processing services
+    metrics:
+      enabled: true
   
   vault:
     dev: true
