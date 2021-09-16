@@ -1074,10 +1074,10 @@ FIXTURE=$(cat <<END
         "ref": {"id": 1},
         "data": {
             "name": "Mocketbank Test Acquiring",
-            "description": "Mocketbank Test Acquiring"
-        },
-        "provider_ref": {
-          "id":1
+            "description": "Mocketbank Test Acquiring",
+            "provider_ref": {
+              "id": 1
+            }
         }
     }}}},
     {"insert": {"object": {"terminal": {
