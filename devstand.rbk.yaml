@@ -14,6 +14,8 @@ services:
   global:
     ipv6only: true
     registry:
+      repository: docker.io
+      imagePullSecret: {}
   
   vault:
     dev: true
