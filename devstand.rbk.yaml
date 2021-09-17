@@ -13,6 +13,7 @@ certmanager:
 services:
   global:
     ipv6only: true
+    registry:
   
   vault:
     dev: true

@@ -3,9 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/fraudbusters-management
+  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/fraudbusters-management
   tag: 91fe3772f946c7a76a982adfd4d23411607dee5f
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 runopts:
   command: ["/opt/fraudbusters-management/entrypoint.sh"]

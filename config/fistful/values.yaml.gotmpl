@@ -1,9 +1,14 @@
 # -*- mode: yaml -*-
 
 image:
-  repository: docker.io/rbkmoney/fistful-server
+  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/fistful-server
   tag: ef3dc8880c54abdf6da94f3ce64cf613c563c457
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 configMap:
   data:

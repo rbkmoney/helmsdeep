@@ -3,9 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/binbase-test-data
+  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/binbase-test-data
   tag: 53e611d5881405f796f59abef843bcc8178a1343
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 runopts:
   command : ["/opt/binbase/entrypoint.sh"]
