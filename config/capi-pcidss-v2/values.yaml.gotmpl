@@ -3,9 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/capi_pcidss-v2
+  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/capi_pcidss-v2
   tag: 2ab58783a40e03c03353a441097f46928d898b09
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 configMap:
   data:

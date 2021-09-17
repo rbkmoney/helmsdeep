@@ -1,7 +1,12 @@
 image:
-  repository: docker.io/nginx
+  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/nginx
   tag: latest
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 imagePullSecrets: []
 

@@ -3,14 +3,21 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/bouncer-policies
+  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/bouncer-policies
   tag: 39ca136c5f0e4c89ab4253552759299fdbde360b
   pullPolicy: IfNotPresent
 
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
+
 configMap:
   data:
-    blacklist: |
+    blacklisted_keys: |
       {{- readFile "blacklisted_keys.yaml" | nindent 6 }}
+    blacklisted_ips: |
+      {{- readFile "blacklisted_ips.yaml" | nindent 6 }}
 
 metrics:
   serviceMonitor:
@@ -22,7 +29,11 @@ metrics:
 volumeMounts:
   - name: config-volume
     mountPath: /var/opa/roots/service/authz/blacklists/auth_token/data.yaml
-    subPath: blacklist
+    subPath: blacklisted_keys
+    readOnly: true
+  - name: config-volume
+    mountPath: /var/opa/roots/service/authz/blacklists/source_ip_range/data.yaml
+    subPath: blacklisted_ips
     readOnly: true
 
 volumes:

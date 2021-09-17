@@ -2,9 +2,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/weezing
+  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/weezing
   tag: 1423ee2f169b38553ab3f997e1621ef78cbd345d
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 service:
   type: ClusterIP

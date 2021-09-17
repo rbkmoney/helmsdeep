@@ -3,9 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/payouter
+  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/payouter
   tag: a0e37ad47ee5563008d2af47c58a9f117e941db0
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 runopts:
   command: ["/opt/payouter/entrypoint.sh"]

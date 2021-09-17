@@ -3,9 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/kds
+  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/kds
   tag: f8deaa250250fc2cb2f9daba8c762b3ea1895324
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 hook:
   enabled: true

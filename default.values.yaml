@@ -29,7 +29,11 @@ services:
 # Deploy ServiceMonitors with processing services
     metrics:
       enabled: true
-  
+# Set if use your own container registry for processing service's images
+    registry:
+      repository: docker.io
+      imagePullSecret: {}
+
   vault:
     dev: true
 
