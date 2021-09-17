@@ -2,9 +2,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/control-center
+  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/control-center
   tag: 5341664a5d126fca19760cc98bb98f5092209a86
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 service:
   type: ClusterIP

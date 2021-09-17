@@ -2,9 +2,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/dashboard
+  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/dashboard
   tag: 407b46da200b7c3b42f4ba890e018687f69ea45d
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 service:
   type: ClusterIP

@@ -2,9 +2,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/payform
+  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/payform
   tag: 3fe338d414cdfe78f7fc5791076591d0654abd17
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 service:
   type: ClusterIP
