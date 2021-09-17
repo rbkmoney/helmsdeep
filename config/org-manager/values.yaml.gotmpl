@@ -131,7 +131,7 @@ ingress:
       hosts:
         - api.{{ $ingressDomain | default "rbk.dev" }}
 {{- end }}
-  servicePort: 8080
+  servicePort: 8022
 
 ciliumPolicies:
   - filters:
