@@ -3,7 +3,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/payform
-  tag: 5e8f3648568635398ea56075f19180eff28dad19
+  tag: 3fe338d414cdfe78f7fc5791076591d0654abd17
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
