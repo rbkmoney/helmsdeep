@@ -26,7 +26,11 @@ services:
   global:
 # Set to "true" if your cluster CIDR only ipv6 family
     ipv6only: false
-  
+# Set if use your own container registry for processing service's images
+    registry:
+      repository: docker.io
+      imagePullSecret: {}
+
   vault:
     dev: true
 
