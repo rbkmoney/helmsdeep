@@ -13,13 +13,14 @@ configMap:
         password="H@ckM3"
       vault write database/roles/db-app-shumway \
         db_name=shumway \
+        revocation_statements="REASSIGN OWNED BY \"{{`{{name}}`}}\" to postgres; ALTER ROLE \"{{`{{name}}`}}\" NOLOGIN;" \
         creation_statements="Create schema if not exists shm;
         CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
         GRANT CREATE ON DATABASE shumway TO \"{{`{{name}}`}}\";
         GRANT ALL ON schema shm TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA shm TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA shm TO \"{{`{{name}}`}}\";" \
-        default_ttl="10h" \
+        default_ttl="240h" \
         max_ttl="240h"
 
       vault write database/config/hooker \
@@ -30,13 +31,14 @@ configMap:
         password="H@ckM3"
       vault write database/roles/db-app-hooker \
         db_name=hooker \
+        revocation_statements="REASSIGN OWNED BY \"{{`{{name}}`}}\" to postgres; ALTER ROLE \"{{`{{name}}`}}\" NOLOGIN;" \
         creation_statements="Create schema if not exists hook;
         CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
         GRANT CREATE ON DATABASE hooker TO \"{{`{{name}}`}}\";
         GRANT ALL ON schema hook TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA hook TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA hook TO \"{{`{{name}}`}}\";" \
-        default_ttl="10h" \
+        default_ttl="240h" \
         max_ttl="240h"
 
       vault write database/config/messages \
@@ -48,7 +50,7 @@ configMap:
       vault write database/roles/db-app-messages \
         db_name=messages \
         creation_statements="CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' IN ROLE messages VALID UNTIL '{{`{{expiration}}`}}';" \
-        default_ttl="10h" \
+        default_ttl="240h" \
         max_ttl="240h"
 
       vault write database/config/payouter \
@@ -59,13 +61,14 @@ configMap:
         password="H@ckM3"
       vault write database/roles/db-app-payouter \
         db_name=payouter \
-        creation_statements="CREATE SCHEMA IF NOT EXISTS sht;
+        revocation_statements="REASSIGN OWNED BY \"{{`{{name}}`}}\" to postgres; ALTER ROLE \"{{`{{name}}`}}\" NOLOGIN;" \
+        creation_statements="Create schema if not exists sht;
         CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
         GRANT CREATE ON DATABASE payouter TO \"{{`{{name}}`}}\";
         GRANT ALL ON SCHEMA sht TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA sht TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA sht TO \"{{`{{name}}`}}\";" \
-        default_ttl="10h" \
+        default_ttl="240h" \
         max_ttl="240h"
 
       vault write database/config/magista \
@@ -76,13 +79,14 @@ configMap:
         password="H@ckM3"
       vault write database/roles/db-app-magista \
         db_name=magista \
-        creation_statements="CREATE SCHEMA IF NOT EXISTS mst;
+        revocation_statements="REASSIGN OWNED BY \"{{`{{name}}`}}\" to postgres; ALTER ROLE \"{{`{{name}}`}}\" NOLOGIN;" \
+        creation_statements="Create schema if not exists mst;
         CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
         GRANT CREATE ON DATABASE magista TO \"{{`{{name}}`}}\";
         GRANT ALL ON SCHEMA mst TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA mst TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA mst TO \"{{`{{name}}`}}\";" \
-        default_ttl="10h" \
+        default_ttl="240h" \
         max_ttl="240h"
 
       vault write database/config/analytics \
@@ -93,13 +97,14 @@ configMap:
         password="H@ckM3"
       vault write database/roles/db-app-analytics \
         db_name=analytics \
-        creation_statements="CREATE SCHEMA IF NOT EXISTS analytics;
+        revocation_statements="REASSIGN OWNED BY \"{{`{{name}}`}}\" to postgres; ALTER ROLE \"{{`{{name}}`}}\" NOLOGIN;" \
+        creation_statements="Create schema if not exists analytics;
         CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
         GRANT CREATE ON DATABASE analytics TO \"{{`{{name}}`}}\";
         GRANT ALL ON SCHEMA analytics TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA analytics TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA analytics TO \"{{`{{name}}`}}\";" \
-        default_ttl="10h" \
+        default_ttl="240h" \
         max_ttl="240h"
 
       vault write database/config/claim-management \
@@ -110,13 +115,14 @@ configMap:
         password="H@ckM3"
       vault write database/roles/db-app-claim-management \
         db_name=claim-management \
-        creation_statements="CREATE SCHEMA IF NOT EXISTS cm;
+        revocation_statements="REASSIGN OWNED BY \"{{`{{name}}`}}\" to postgres; ALTER ROLE \"{{`{{name}}`}}\" NOLOGIN;" \
+        creation_statements="Create schema if not exists cm;
         CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
         GRANT CREATE ON DATABASE claimmng TO \"{{`{{name}}`}}\";
         GRANT ALL ON SCHEMA cm TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA cm TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA cm TO \"{{`{{name}}`}}\";" \
-        default_ttl="10h" \
+        default_ttl="240h" \
         max_ttl="240h"
 
       vault write database/config/questionary \
@@ -127,13 +133,14 @@ configMap:
         password="H@ckM3"
       vault write database/roles/db-app-questionary \
         db_name=questionary \
-        creation_statements="CREATE SCHEMA IF NOT EXISTS qs;
+        revocation_statements="REASSIGN OWNED BY \"{{`{{name}}`}}\" to postgres; ALTER ROLE \"{{`{{name}}`}}\" NOLOGIN;" \
+        creation_statements="Create schema if not exists qs;
         CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
         GRANT CREATE ON DATABASE questionary TO \"{{`{{name}}`}}\";
         GRANT ALL ON SCHEMA qs TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA qs TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA qs TO \"{{`{{name}}`}}\";" \
-        default_ttl="10h" \
+        default_ttl="240h" \
         max_ttl="240h"
 
       vault write database/config/reporter \
@@ -144,13 +151,14 @@ configMap:
         password="H@ckM3"
       vault write database/roles/db-app-reporter \
         db_name=reporter \
-        creation_statements="CREATE SCHEMA IF NOT EXISTS rpt;
+        revocation_statements="REASSIGN OWNED BY \"{{`{{name}}`}}\" to postgres; ALTER ROLE \"{{`{{name}}`}}\" NOLOGIN;" \
+        creation_statements="Create schema if not exists rpt;
         CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
         GRANT CREATE ON DATABASE reporter TO \"{{`{{name}}`}}\";
         GRANT ALL ON SCHEMA rpt TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA rpt TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA rpt TO \"{{`{{name}}`}}\";" \
-        default_ttl="10h" \
+        default_ttl="240h" \
         max_ttl="240h"
 
       vault write database/config/fistful-magista \
@@ -161,13 +169,14 @@ configMap:
         password="H@ckM3"
       vault write database/roles/db-app-fistful-magista \
         db_name=fistful-magista \
-        creation_statements="CREATE SCHEMA IF NOT EXISTS mst;
+        revocation_statements="REASSIGN OWNED BY \"{{`{{name}}`}}\" to postgres; ALTER ROLE \"{{`{{name}}`}}\" NOLOGIN;" \
+        creation_statements="Create schema if not exists mst;
         CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
         GRANT CREATE ON DATABASE \"fistful-magista\" TO \"{{`{{name}}`}}\";
         GRANT ALL ON SCHEMA mst TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA mst TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA mst TO \"{{`{{name}}`}}\";" \
-        default_ttl="10h" \
+        default_ttl="240h" \
         max_ttl="240h"
 
       vault write database/config/fbmgmt \
@@ -178,13 +187,14 @@ configMap:
         password="H@ckM3"
       vault write database/roles/db-app-fbmgmt \
         db_name=fbmgmt \
-        creation_statements="CREATE SCHEMA IF NOT EXISTS af;
+        revocation_statements="REASSIGN OWNED BY \"{{`{{name}}`}}\" to postgres; ALTER ROLE \"{{`{{name}}`}}\" NOLOGIN;" \
+        creation_statements="Create schema if not exists af;
         CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
         GRANT CREATE ON DATABASE fraudbusters TO \"{{`{{name}}`}}\";
         GRANT ALL ON SCHEMA af TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA af TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA af TO \"{{`{{name}}`}}\";" \
-        default_ttl="10h" \
+        default_ttl="240h" \
         max_ttl="240h"
 
       vault secrets enable kv
