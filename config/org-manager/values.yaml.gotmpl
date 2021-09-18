@@ -15,12 +15,13 @@ imagePullSecrets:
 runopts:
   command: ["/opt/org-manager/entrypoint.sh"]
 
+apiInitContainers:
+  enabled: true
+
 env:
   - name: LOGBACK_SERVICE_NAME
     value: "org-manager"
 
-apiInitContainers:
-  enabled: true
 
 configMap:
   data:
@@ -58,6 +59,7 @@ volumeMounts:
     mountPath: /var/lib/org-manager/keys/keycloak
     readOnly: true
 
+
 service:
   ports:
     - name: api
@@ -67,15 +69,15 @@ service:
     - name: rest
       port: 8080
       
-livenessProbe: null
-  # httpGet:
-  #   path: /actuator/health
-  #   port: management
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: management
 
-readinessProbe: null
-  # httpGet:
-  #   path: /actuator/health
-  #   port: management
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: management
 
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
@@ -140,23 +142,8 @@ ciliumPolicies:
     name: postgres
     namespace: {{ .Release.Namespace }}
   - filters:
-    - port: 9092
-      rules:
-        kafka:
-        - role: consume
-          topics:
-            - claim-event-sink
-      type: TCP
-    name: kafka
-    namespace: {{ .Release.Namespace }}
-  - filters:
     - port: 8200
       type: TCP
     name: vault
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
-    name: hellgate
     namespace: {{ .Release.Namespace }}
 
