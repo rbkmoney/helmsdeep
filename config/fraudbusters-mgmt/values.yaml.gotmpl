@@ -146,4 +146,4 @@ ciliumPolicies:
       - port: 8022
         type: TCP
     name: fraudbusters
-    namespace: { { .Release.Namespace } }
+    namespace: {{ .Release.Namespace }}
