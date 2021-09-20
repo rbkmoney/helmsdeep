@@ -1,11 +1,16 @@
-{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
-{{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
+{{- $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain -}}
+{{- $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain -}}
 {
     "keycloakEndpoint": "https://auth.{{ $ingressDomain | default "rbk.dev" }}",
     "theme": {
       "isMainBackgroundImages": true,
       "logoName": "rbkmoney",
       "name": "main"
+    },
+    "docsEndpoints": {
+        "help": "https://help.rbkmoney.com",
+        "developer": "https://developer.rbk.money",
+        "rbk": "https://rbk.money"
     },
     "apiEndpoint": "https://api.{{ $ingressDomain | default "rbk.dev" }}",
     "urlShortenerEndpoint": "https://shrt.{{ $ingressDomain | default "rbk.dev" }}",
