@@ -197,6 +197,24 @@ configMap:
         default_ttl="240h" \
         max_ttl="240h"
 
+      vault write database/config/org-manager \
+        plugin_name=postgresql-database-plugin \
+        allowed_roles="*" \
+        connection_url="postgresql://{{`{{username}}`}}:{{`{{password}}`}}@postgres-postgresql:5432/org-manager?sslmode=disable" \
+        username="postgres" \
+        password="H@ckM3"
+      vault write database/roles/db-app-org-manager \
+        db_name=org-manager \
+        revocation_statements="REASSIGN OWNED BY \"{{`{{name}}`}}\" to postgres; ALTER ROLE \"{{`{{name}}`}}\" NOLOGIN;" \
+        creation_statements="Create schema if not exists org_manager;
+        CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
+        GRANT CREATE ON DATABASE \"org-manager\" TO \"{{`{{name}}`}}\";
+        GRANT ALL ON SCHEMA org_manager TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL TABLES IN SCHEMA org_manager TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL SEQUENCES IN SCHEMA org_manager TO \"{{`{{name}}`}}\";" \
+        default_ttl="240h" \
+        max_ttl="240h"
+
       vault secrets enable kv
 
       vault kv put secret/xrates \
@@ -258,5 +276,8 @@ configMap:
         capabilities = ["read"]
       }
       path "secret/data/xrates" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-org-manager" {
         capabilities = ["read"]
       }

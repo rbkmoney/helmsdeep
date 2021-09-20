@@ -1,0 +1,149 @@
+# -*- mode: yaml -*-
+
+replicaCount: 1
+
+image:
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/org-manager
+  tag: de838229b670586a511962876cb06cfbb2c93c6f
+  pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
+
+runopts:
+  command: ["/opt/org-manager/entrypoint.sh"]
+
+apiInitContainers:
+  enabled: true
+
+env:
+  - name: LOGBACK_SERVICE_NAME
+    value: "org-manager"
+
+
+configMap:
+  data:
+    entrypoint.sh: |
+      {{- tpl  (readFile "entrypoint.sh.gotmpl") . | nindent 6 }}
+    loggers.xml: |
+      {{- readFile "loggers.xml" | nindent 6 }}
+    logback.xml: |
+      {{- readFile "../logs/logback.xml" | nindent 6 }}
+    fetchKeycloakPubkey: |
+      {{- readFile "../api-common/fetch-keycloak-pubkey.sh" | nindent 6 }}
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+      defaultMode: 0755
+  - name: keycloak-pubkey
+    emptyDir: {}
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/org-manager/entrypoint.sh
+    subPath: entrypoint.sh
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/org-manager/logback.xml
+    subPath: logback.xml
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/org-manager/loggers.xml
+    subPath: loggers.xml
+    readOnly: true
+  - name: keycloak-pubkey
+    mountPath: /var/lib/org-manager/keys/keycloak
+    readOnly: true
+
+
+service:
+  ports:
+    - name: api
+      port: 8022
+    - name: management
+      port: 8023
+    - name: rest
+      port: 8080
+      
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: management
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: management
+
+podAnnotations:
+  vault.hashicorp.com/role: "db-app"
+  vault.hashicorp.com/agent-inject: "true"
+  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-org-manager"
+  vault.hashicorp.com/agent-inject-template-application.properties: |
+    {{`{{- with secret "database/creds/db-app-org-manager" -}}
+    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/org-manager?sslmode=disable
+    spring.datasource.username={{ .Data.username }}
+    spring.datasource.password={{ .Data.password }}
+    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/org-manager?sslmode=disable
+    spring.flyway.user={{ .Data.username }}
+    spring.flyway.password={{ .Data.password }}
+    spring.flyway.schemas=org_manager
+    flyway.schemas=org_manager
+    {{- end }}`}}
+
+metrics:
+  serviceMonitor:
+    enabled: {{ .Values.services.global.metrics.enabled }}
+    namespace: {{ .Release.Namespace }}
+    additionalLabels:
+      release: prometheus
+    endpoints:
+      - port: "management"
+        path: /actuator/prometheus
+        scheme: http
+
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
+
+ingress:
+  enabled: true
+  annotations:
+{{- if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
+{{- end }}
+    kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "content-type,content-disposition,authorization,x-request-id"
+  hosts:
+    - host: api.{{ $ingressDomain | default "rbk.dev" }}
+      paths:
+        - /org
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
+  {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    - secretName: api-{{ .Values.services.ingress.tls.secretName }}
+  {{- else }}
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
+  {{- end }}
+      hosts:
+        - api.{{ $ingressDomain | default "rbk.dev" }}
+{{- end }}
+  servicePort: 8022
+
+ciliumPolicies:
+  - filters:
+    - port: 5432
+      type: TCP
+    name: postgres
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8200
+      type: TCP
+    name: vault
+    namespace: {{ .Release.Namespace }}
+

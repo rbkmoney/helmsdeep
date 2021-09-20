@@ -282,3 +282,7 @@ releases:
   <<: *generic_stateless_json
 - name: bouncer-policies
   <<: *generic_stateless_json
+- name: org-manager
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/keycloak
