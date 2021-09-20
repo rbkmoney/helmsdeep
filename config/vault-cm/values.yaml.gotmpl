@@ -190,7 +190,7 @@ configMap:
         revocation_statements="REASSIGN OWNED BY \"{{`{{name}}`}}\" to postgres; ALTER ROLE \"{{`{{name}}`}}\" NOLOGIN;" \
         creation_statements="Create schema if not exists af;
         CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
-        GRANT CREATE ON DATABASE "fraudbusters-management" TO \"{{`{{name}}`}}\";
+        GRANT CREATE ON DATABASE \"fraudbusters-management\" TO \"{{`{{name}}`}}\";
         GRANT ALL ON SCHEMA af TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL TABLES IN SCHEMA af TO \"{{`{{name}}`}}\";
         GRANT ALL ON ALL SEQUENCES IN SCHEMA af TO \"{{`{{name}}`}}\";" \
