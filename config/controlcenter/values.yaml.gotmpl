@@ -3,7 +3,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/control-center
-  tag: 5341664a5d126fca19760cc98bb98f5092209a86
+  tag: 14fe9434f618508f5389923c5143af221e9af7e0
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
