@@ -37,6 +37,6 @@ java \
     --keycloak.realm=internal \
     --keycloak.ssl-required=none \
     --keycloak.resource=fraudbusters-app \
-    --keycloak.auth-server-url=https://auth.{{ .Release.Namespace }}.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}/auth \
+    --keycloak.auth-server-url=https://auth.{{ $ingressDomain | default "rbk.dev" }}/auth \
     ${@} \
     --spring.config.additional-location=/vault/secrets/application.properties
