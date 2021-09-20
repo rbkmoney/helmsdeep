@@ -1413,6 +1413,66 @@ FIXTURE=$(cat <<END
             }
           }
     }}}},
+		{
+			"insert": {
+				"object": {
+					"payment_system": {
+						"ref": {
+							"id": "MASTERCARD"
+						},
+						"data": {
+							"name": "MASTERCARD",
+							"validation_rules": [
+								{"card_number": {"checksum": {"luhn": {}}}},
+								{"card_number": {"ranges": [{"lower": 16, "upper": 16}]}},
+								{"cvc": {"length": {"lower": 3, "upper": 3}}},
+								{"exp_date": {"exact_exp_date": {}}}
+							]
+						}
+					}
+				}
+			}
+		},
+		{
+			"insert": {
+				"object": {
+					"payment_system": {
+						"ref": {
+							"id": "NSPK MIR"
+						},
+						"data": {
+							"name": "NSPK MIR",
+							"validation_rules": [
+								{"card_number": {"checksum": {"luhn": {}}}},
+								{"card_number": {"ranges": [{"lower": 16, "upper": 16},{"lower": 19, "upper": 20}]}},
+								{"cvc": {"length": {"lower": 3, "upper": 3}}},
+								{"exp_date": {"exact_exp_date": {}}}
+							]
+						}
+					}
+				}
+			}
+		},
+		{
+			"insert": {
+				"object": {
+					"payment_system": {
+						"ref": {
+							"id": "VISA"
+						},
+						"data": {
+							"name": "VISA",
+							"validation_rules": [
+								{"card_number": {"checksum": {"luhn": {}}}},
+								{"card_number": {"ranges": [{"lower": 13, "upper": 13},{"lower": 16, "upper": 16}]}},
+								{"cvc": {"length": {"lower": 3, "upper": 3}}},
+								{"exp_date": {"exact_exp_date": {}}}
+							]
+						}
+					}
+				}
+			}
+		},
 
     {"insert": {"object": {"payment_institution": {
         "ref": {"id": 1},
