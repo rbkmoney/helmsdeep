@@ -6,7 +6,6 @@ java \
     -jar \
     /opt/fraudbusters-management/fraudbusters-management.jar \
     --logging.config=/opt/fraudbusters-management/logback.xml \
-    --logging.file=/var/log/fraudbusters-management/fraudbusters-management.json \
     --kafka.bootstrap.servers=kafka:9092 \
     --kafka.topic.wblist.command=wb-list-command \
     --kafka.topic.wblist.topic.event.sink=wb-list-event-sink \
@@ -19,15 +18,6 @@ java \
     --kafka.topic.fraudbusters.p2p.group.list=fraud-p2p-group-list-command\
     --kafka.topic.fraudbusters.p2p.group.reference=fraud-p2p-group-reference-command\
     --kafka.topic.fraudbusters.unknown-initiating-entity=fraud-unknown-initiating-entity\
-    # TODO: vault?
-#    {% if kafka.ssl.get('enable', False) %}
-#    --kafka.ssl.keystore-location=/opt/fraudbusters-management/kafka-keystore.p12 \
-#    --kafka.ssl.keystore-password="{{ service.keystore.pass }}" \
-#    --kafka.ssl.key-password="{{ service.keystore.pass }}" \
-#    --kafka.ssl.server-keystore-location=/opt/fraudbusters-management/kafka-truststore.p12 \
-#    --kafka.ssl.server-password="{{ kafka.truststore.java.pass }}" \
-#    --kafka.ssl.enable=false \
-#    {% endif %}
     --management.security.enabled=false \
     --management.endpoint.metrics.enabled=true \
     --management.metrics.export.statsd.flavor=etsy \

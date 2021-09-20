@@ -182,7 +182,7 @@ configMap:
       vault write database/config/fbmgmt \
         plugin_name=postgresql-database-plugin \
         allowed_roles="*" \
-        connection_url="postgresql://{{`{{username}}`}}:{{`{{password}}`}}@postgres-postgresql:5432/fraudbusters?sslmode=disable" \
+        connection_url="postgresql://{{`{{username}}`}}:{{`{{password}}`}}@postgres-postgresql:5432/fraudbusters-management?sslmode=disable" \
         username="postgres" \
         password="H@ckM3"
       vault write database/roles/db-app-fbmgmt \
