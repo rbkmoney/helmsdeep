@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/wb-list-manager
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/wb-list-manager
   tag: dc7f451945194441357177fd3153ac82a0333eac
   pullPolicy: IfNotPresent
 

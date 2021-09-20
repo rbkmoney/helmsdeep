@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/fistful-magista
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/fistful-magista
   tag: dd17699f8b18f4ac904b1f0d134b3d192100d03f
   pullPolicy: IfNotPresent
 

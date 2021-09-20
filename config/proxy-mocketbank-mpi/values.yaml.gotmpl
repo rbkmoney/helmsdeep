@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/proxy-mocketbank-mpi
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/proxy-mocketbank-mpi
   tag: e43b6f00eca01eb57a6e917704bff608de57336a
   pullPolicy: IfNotPresent
 

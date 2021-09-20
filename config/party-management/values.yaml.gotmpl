@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/party-management
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/party-management
   tag: 1431cc385e6950a9e28214ec6583eb7d04c5970b
   pullPolicy: IfNotPresent
 

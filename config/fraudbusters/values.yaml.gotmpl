@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/fraudbusters
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/fraudbusters
   tag: fbe14fec347e5e6312a5e726e17e8b8c2b749b89
   pullPolicy: IfNotPresent
 

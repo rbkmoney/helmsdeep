@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/dark-api
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/dark-api
   tag: 933d0b9506ba312d69dfd46c5432ced36e3fce64
   pullPolicy: IfNotPresent
 

@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/questionary-aggr-proxy
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/questionary-aggr-proxy
   tag: 2961b3fa19d3b5e077de847d7e7172fd01a50a17
   pullPolicy: IfNotPresent
 

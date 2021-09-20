@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/columbus
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/columbus
   tag: 88be0cbccde15c7d4c88403d495f8d564f826160
   pullPolicy: IfNotPresent
 

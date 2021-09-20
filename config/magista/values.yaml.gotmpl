@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/magista
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/magista
   tag: 84f2ad8875317497db97ee6902bb624e47906164
   pullPolicy: IfNotPresent
 

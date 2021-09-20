@@ -23,7 +23,7 @@ java \
     --spring.output.ansi.enabled=never \
     --spring.quartz.jdbc.initialize-schema=never \
     --spring.flyway.table=schema_version \
-    --partyManagement.url=http://hellgate:8022/v1/processing/partymgmt \
+    --partyManagement.url=http://party-management:8022/v1/processing/partymgmt \
     --partyManagement.timeout=30000 \
     --magista.url=http://magista:8022/stat \
     --magista.timeout=700000 \

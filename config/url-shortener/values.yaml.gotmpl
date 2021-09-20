@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/url-shortener
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/url-shortener
   tag: bf8673d8ed5629c393ae9c9b7f7f4c54689008bb
   pullPolicy: IfNotPresent
 

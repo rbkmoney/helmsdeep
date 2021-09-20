@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/cds
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/cds
   tag: b1e03ab1669fc73cdade6507e9fe9b46c772cfa3
   pullPolicy: IfNotPresent
 

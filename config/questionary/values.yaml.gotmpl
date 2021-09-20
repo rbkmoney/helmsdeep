@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/questionary
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/questionary
   tag: 954dbc039eb011f32d6edf661d874eca9cea9c77
   pullPolicy: IfNotPresent
 

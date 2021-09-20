@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/deanonimus
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/deanonimus
   tag: 23481a728081af23c47c49d8cc11c2d80b160ec4
   pullPolicy: IfNotPresent
 

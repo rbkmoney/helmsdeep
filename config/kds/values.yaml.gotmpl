@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/kds
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/kds
   tag: f8deaa250250fc2cb2f9daba8c762b3ea1895324
   pullPolicy: IfNotPresent
 

@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/binapi
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/binapi
   tag: c7a2a6ace195094819b57f599f25de724219136e
   pullPolicy: IfNotPresent
 
