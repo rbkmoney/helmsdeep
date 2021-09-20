@@ -1,0 +1,36 @@
+{{- $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain -}}
+{{- $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain -}}
+#!/bin/sh
+set -ue
+
+java \
+    "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
+      -jar /opt/claim-management-api/claim-management-api.jar \
+        --logging.config=/opt/claim-management-api/logback.xml \
+        -Dwoody.node_id=claimapi123 \
+        --server.servlet.context-path=/claim-api/v1 \
+        --claimmanagement.client.adapter.url=http://claim-management:8022/v1/cm \
+        --claimmanagement.client.adapter.networkTimeout=30000 \
+        --partyManagement.url=http://party-management:8022/v1/processing/partymgmt \
+        --partyManagement.networkTimeout=30000 \
+        --spring.output.ansi.enabled=never \
+        --management.endpoint.health.show-details=always \
+        --management.security.flag=false \
+        --keycloak.auth-server-url=https://auth.{{ $ingressDomain | default "rbk.dev" }}/auth \
+        --keycloak.realm-public-key.file-path="/var/lib/claim-management-api/keys/keycloak/keycloak.pubkey.pem" \
+        --keycloak.realm=external \
+        --keycloak.resource=common-api \
+        --orgManagement.url=http://org-manager:8022/org/v1/auth-context \
+        --orgManagement.networkTimeout=10000 \
+        --bouncer.url=http://bouncer:8022/v1/arbiter \
+        --bouncer.networkTimeout=10000 \
+        --bouncer.context-fragment-id=claimmgmt \
+        --bouncer.deployment-id=production \
+        --bouncer.auth-method=SessionToken \
+        --bouncer.realm=external \
+        --bouncer.rule-set-id=service/authz/api \
+        --bouncer.auth.enabled=false \
+    ${@} \
+    --spring.config.additional-location=/vault/secrets/application.properties
+
+
