@@ -13,6 +13,7 @@ certmanager:
 services:
   global:
     ipv6only: true
+      enabled: true
     registry:
       repository: docker.io
       imagePullSecret: {}
