@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/messages
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/messages
   tag: d85a804962402f64cbdc5cbbae0805af51474243
   pullPolicy: IfNotPresent
 

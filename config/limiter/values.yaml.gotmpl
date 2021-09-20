@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/limiter
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/limiter
   tag: c7e96068a56da444e78cc7739a902da8e268dc63
   pullPolicy: IfNotPresent
 

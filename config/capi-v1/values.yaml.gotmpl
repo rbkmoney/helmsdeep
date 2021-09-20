@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/capi-v1
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/capi-v1
   tag: b2b15a5b620cd7061f9e81fa44955e824ffdf806
   pullPolicy: IfNotPresent
 

@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/xrates
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/xrates
   tag: 242bcbf35a9711fba1503e273ce1c213ec50d167
   pullPolicy: IfNotPresent
 

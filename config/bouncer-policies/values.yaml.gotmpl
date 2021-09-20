@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/bouncer-policies
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/bouncer-policies
   tag: 39ca136c5f0e4c89ab4253552759299fdbde360b
   pullPolicy: IfNotPresent
 

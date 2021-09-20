@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/hooker
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/hooker
   tag: aeffeedb13a8f5125962bfe3e0e734ba4104d876
   pullPolicy: IfNotPresent
 

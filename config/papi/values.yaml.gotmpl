@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/papi
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/papi
   tag: cce1062e1eabf71810bd585856c37c63cca61df5
   pullPolicy: IfNotPresent
 

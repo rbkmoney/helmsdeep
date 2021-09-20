@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/analytics
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/analytics
   tag: b9da0376e15b3aabf89141b1343e7c68f3b5af05
   pullPolicy: IfNotPresent
 

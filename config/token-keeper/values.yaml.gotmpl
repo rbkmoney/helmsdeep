@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/rbkmoney/token-keeper
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/token-keeper
   tag: 8dca9ed3c8394566d64bfbb726fe22e8299bccdd
   pullPolicy: IfNotPresent
 
