@@ -91,6 +91,9 @@ metrics:
         path: /actuator/prometheus
         scheme: http
 
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
+
 ingress:
   enabled: true
   annotations:
