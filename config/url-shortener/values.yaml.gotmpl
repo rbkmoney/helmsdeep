@@ -3,9 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/url-shortener
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/url-shortener
   tag: bf8673d8ed5629c393ae9c9b7f7f4c54689008bb
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 configMap:
   data:
@@ -48,7 +53,7 @@ volumes:
 
 metrics:
   serviceMonitor:
-    enabled: false
+    enabled: {{ .Values.services.global.metrics.enabled }}
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus

@@ -3,9 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/papi
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/papi
   tag: cce1062e1eabf71810bd585856c37c63cca61df5
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 runopts:
   command: ["/opt/papi/entrypoint.sh"]
@@ -119,7 +124,7 @@ readinessProbe:
 
 metrics:
   serviceMonitor:
-    enabled: false
+    enabled: {{ .Values.services.global.metrics.enabled }}
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus

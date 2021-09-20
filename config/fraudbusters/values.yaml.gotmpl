@@ -3,9 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/fraudbusters
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/fraudbusters
   tag: fbe14fec347e5e6312a5e726e17e8b8c2b749b89
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 runopts:
   command: ["/opt/fraudbusters/entrypoint.sh"]
@@ -60,7 +65,7 @@ readinessProbe:
 
 metrics:
   serviceMonitor:
-    enabled: false
+    enabled: {{ .Values.services.global.metrics.enabled }}
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus

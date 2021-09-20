@@ -13,6 +13,11 @@ certmanager:
 services:
   global:
     ipv6only: true
+    metrics:
+      enabled: true
+    registry:
+      repository: docker.io/rbkmoney
+      imagePullSecret: {}
   
   vault:
     dev: true
@@ -22,9 +27,9 @@ services:
     rootDomain: dev.rbk.mn
     namespacedDomain: true
     tls:
-      enabled: false
+      enabled: true
       letsEncrypt:
-        enabled: false
-        issuer: "letsencrypt-staging"
+        enabled: true
+        issuer: "letsencrypt-prod"
       secretName: devstand
 

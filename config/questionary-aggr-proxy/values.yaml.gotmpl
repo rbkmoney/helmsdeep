@@ -3,9 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/questionary-aggr-proxy
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/questionary-aggr-proxy
   tag: 2961b3fa19d3b5e077de847d7e7172fd01a50a17
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 runopts:
   command: ["/opt/questionary-aggr-proxy/entrypoint.sh"]
@@ -58,7 +63,7 @@ readinessProbe:
 
 metrics:
   serviceMonitor:
-    enabled: false
+    enabled: {{ .Values.services.global.metrics.enabled }}
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus

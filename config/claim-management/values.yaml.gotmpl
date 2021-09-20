@@ -3,9 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/claim-management
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/claim-management
   tag: 0bce7ae059b37a2c12a6b8b0d2b9ad661da7b88e
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 runopts:
   command: ["/opt/claim-management/entrypoint.sh"]
@@ -74,7 +79,7 @@ podAnnotations:
 
 metrics:
   serviceMonitor:
-    enabled: false
+    enabled: {{ .Values.services.global.metrics.enabled }}
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus

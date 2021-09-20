@@ -3,9 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/postgres-geodata
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/postgres-geodata
   tag: 0eb52256576ec22f89fadc3e7fe505b692e838a3
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 env:
   - name: POSTGRES_USER
