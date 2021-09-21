@@ -19,7 +19,7 @@ woody_server:
 
 storage:
   type: riak
-  host: riak
+  host: {{ .Values.services.riak.riakMgAddress | default "riak" }}
   port: 8087
   pool:
     size: 100
