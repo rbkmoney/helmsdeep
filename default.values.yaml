@@ -55,3 +55,7 @@ services:
 # If use Lets Encrypt for cert this value will be used as suffix for secrets with certs
       secretName: sometlssecret
 
+  riak:
+    splitDss: false
+    riakMgAddress: riak
+    riakCdAddress: riak
