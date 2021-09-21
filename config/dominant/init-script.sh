@@ -4,6 +4,9 @@ set -o errexit
 set -o pipefail
 set -o errtrace
 
+export CHARSET=UTF-8
+export LANG=C.UTF-8
+
 FIXTURE=$(cat <<END
 {"ops": [
 
@@ -110,7 +113,7 @@ FIXTURE=$(cat <<END
                         {
                           "id": {
                             "bank_card": {
-                              "payment_system": "mastercard",
+                              "payment_system": {"id": "mastercard"},
                               "is_cvv_empty": false
                             }
                           }
@@ -118,7 +121,7 @@ FIXTURE=$(cat <<END
                         {
                           "id": {
                             "bank_card": {
-                              "payment_system": "visa",
+                              "payment_system": {"id": "visa"},
                               "is_cvv_empty": false
                             }
                           }
@@ -227,7 +230,7 @@ FIXTURE=$(cat <<END
                           {
                             "id": {
                               "bank_card": {
-                                "payment_system": "mastercard",
+                                "payment_system": {"id": "mastercard"},
                                 "is_cvv_empty": false
                               }
                             }
@@ -235,7 +238,7 @@ FIXTURE=$(cat <<END
                           {
                             "id": {
                               "bank_card": {
-                                "payment_system": "visa",
+                                "payment_system": {"id": "visa"},
                                 "is_cvv_empty": false
                               }
                             }
@@ -254,7 +257,7 @@ FIXTURE=$(cat <<END
                           {
                             "id": {
                               "bank_card": {
-                                "payment_system": "mastercard",
+                                "payment_system": {"id": "mastercard"},
                                 "is_cvv_empty": false
                               }
                             }
@@ -262,7 +265,7 @@ FIXTURE=$(cat <<END
                           {
                             "id": {
                               "bank_card": {
-                                "payment_system": "visa",
+                                "payment_system": {"id": "visa"},
                                 "is_cvv_empty": false
                               }
                             }
@@ -380,7 +383,7 @@ FIXTURE=$(cat <<END
                         {
                           "id": {
                             "bank_card": {
-                              "payment_system": "mastercard",
+                              "payment_system": {"id": "mastercard"},
                               "is_cvv_empty": false
                             }
                           }
@@ -388,7 +391,7 @@ FIXTURE=$(cat <<END
                         {
                           "id": {
                             "bank_card": {
-                              "payment_system": "visa",
+                              "payment_system": {"id": "visa"},
                               "is_cvv_empty": false
                             }
                           }
@@ -396,7 +399,7 @@ FIXTURE=$(cat <<END
                         {
                           "id": {
                             "bank_card": {
-                              "payment_system": "visa",
+                              "payment_system": {"id": "mastercard"},
                               "is_cvv_empty": true
                             }
                           }
@@ -594,7 +597,7 @@ FIXTURE=$(cat <<END
                     {
                       "id": {
                         "bank_card": {
-                          "payment_system": "mastercard",
+                          "payment_system": {"id": "mastercard"},
                           "is_cvv_empty": false
                         }
                       }
@@ -602,7 +605,7 @@ FIXTURE=$(cat <<END
                     {
                       "id": {
                         "bank_card": {
-                          "payment_system": "visa",
+                          "payment_system": {"id": "visa"},
                           "is_cvv_empty": false
                         }
                       }
@@ -923,7 +926,7 @@ FIXTURE=$(cat <<END
                     {
                       "id": {
                         "bank_card": {
-                          "payment_system": "mastercard",
+                          "payment_system": {"id": "mastercard"},
                           "is_cvv_empty": false
                         }
                       }
@@ -931,7 +934,7 @@ FIXTURE=$(cat <<END
                     {
                       "id": {
                         "bank_card": {
-                          "payment_system": "visa",
+                          "payment_system": {"id": "visa"},
                           "is_cvv_empty": false
                         }
                       }
@@ -939,7 +942,7 @@ FIXTURE=$(cat <<END
                     {
                       "id": {
                         "bank_card": {
-                          "payment_system": "visa",
+                          "payment_system": {"id": "visa"},
                           "is_cvv_empty": true
                         }
                       }
