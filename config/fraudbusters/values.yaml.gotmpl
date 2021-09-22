@@ -28,11 +28,21 @@ configMap:
     logback.xml: |
       {{- readFile "../logs/logback.xml" | nindent 6 }}
 
+secret:
+  data:
+    ch-connect: |
+      clickhouse.db.url=jdbc:clickhouse://chi-demo-cluster-0-0:8123/fraud
+      clickhouse.db.user=fraud
+      clickhouse.db.password=hackme
+
 volumes:
   - name: config-volume
     configMap:
       name: {{ .Release.Name }}
       defaultMode: 0755
+  - name: secret
+    secret:
+      secretName: {{ .Release.Name }}
 
 volumeMounts:
   - name: config-volume
@@ -46,6 +56,10 @@ volumeMounts:
   - name: config-volume
     mountPath: /opt/fraudbusters/loggers.xml
     subPath: loggers.xml
+    readOnly: true
+  - name: secret
+    mountPath: /var/lib/fraudbusters/additional.ch.properties
+    subPath: ch-connect
     readOnly: true
 
 service:
@@ -62,16 +76,6 @@ readinessProbe:
   httpGet:
     path: /actuator/health
     port: api
-
-podAnnotations:
-  vault.hashicorp.com/role: "db-app"
-  vault.hashicorp.com/agent-inject: "true"
-  vault.hashicorp.com/agent-inject-template-application.properties: |
-    {{`{{- with secret "database/creds/db-app-fraudbusters" -}}
-    clickhouse.db.url=jdbc:clickhouse://chi-demo-cluster-0-0:8123/fraud
-    clickhouse.db.user=fraud
-    clickhouse.db.password=hackme
-    {{- end }}`}}
 
 metrics:
   serviceMonitor:

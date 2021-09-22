@@ -61,4 +61,5 @@ java \
     --trusted.providers.list=108,114,118,119,121,125,126,128,130,134,135,136,132,137,143,139,144,149 \
     --trusted.providers.interval-time-year=1.5 \
     ${@}
+    --spring.config.additional-location=/var/lib/fraudbusters/additional.ch.properties
 
