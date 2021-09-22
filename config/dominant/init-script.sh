@@ -1041,14 +1041,14 @@ FIXTURE=$(cat <<END
     }}}},
 
     {"insert": {"object": {"payment_method": {
-        "ref": {"id": {"bank_card": {"payment_system": "visa"}}},
+        "ref": {"id": {"bank_card": {"payment_system": {"id": "VISA"}}}},
         "data": {
             "name": "VISA",
             "description": "VISA bank cards"
         }
     }}}},
     {"insert": {"object": {"payment_method": {
-        "ref": {"id": {"bank_card": {"payment_system": "mastercard"}}},
+        "ref": {"id": {"bank_card": {"payment_system": {"id": "MASTERCARD"}}}},
         "data": {
             "name": "Mastercard",
             "description": "Mastercard bank cards"
@@ -1065,7 +1065,7 @@ FIXTURE=$(cat <<END
     }}}},
     {"insert": {"object": {"payment_method": {
         "ref": {
-            "id": {"bank_card": {"payment_system": "visa","is_cvv_empty": true}}
+            "id": {"bank_card": {"payment_system": {"id": "VISA"},"is_cvv_empty": true}}
           },
           "data": {
             "name": "Visa NOCVV",
@@ -1150,7 +1150,7 @@ FIXTURE=$(cat <<END
         }
       }}}},
 
-    {"insert": {"object": {"payment_routing_rules": {
+    {"insert": {"object": {"routing_rules": {
         "ref": {"id": 1},
         "data": {
             "name": "Роутинг по валюте",
@@ -1173,7 +1173,7 @@ FIXTURE=$(cat <<END
             }
           }
     }}}},
-    {"insert": {"object": {"payment_routing_rules": {
+    {"insert": {"object": {"routing_rules": {
         "ref": {"id": 2},
         "data": {
             "name": "Роутинг по банку-эмитенту",
@@ -1202,7 +1202,7 @@ FIXTURE=$(cat <<END
             }
           }
     }}}},
-    {"insert": {"object": {"payment_routing_rules": {
+    {"insert": {"object": {"routing_rules": {
         "ref": {"id": 3},
         "data": {
             "name": "Роутинг по стране, выпустившую карту",
@@ -1229,7 +1229,7 @@ FIXTURE=$(cat <<END
             }
           }
     }}}},
-    {"insert": {"object": {"payment_routing_rules": {
+    {"insert": {"object": {"routing_rules": {
         "ref": {"id": 4},
         "data": {
             "name": "Роутинг по МПС карты",
@@ -1258,7 +1258,7 @@ FIXTURE=$(cat <<END
             }
         }
     }}}},
-    {"insert": {"object": {"payment_routing_rules": {
+    {"insert": {"object": {"routing_rules": {
         "ref": {"id": 5},
         "data": {
             "name": "Роутинг по типу карты",
@@ -1287,7 +1287,7 @@ FIXTURE=$(cat <<END
             }
           }
     }}}},
-    {"insert": {"object": {"payment_routing_rules": {
+    {"insert": {"object": {"routing_rules": {
         "ref": {"id": 6},
         "data": {
             "name": "Роутинг по категории магазина",
@@ -1310,7 +1310,7 @@ FIXTURE=$(cat <<END
             }
           }
     }}}},
-    {"insert": {"object": {"payment_routing_rules": {
+    {"insert": {"object": {"routing_rules": {
         "ref": {"id": 7},
         "data": {
             "name": "Роутинг по URL магазина",
@@ -1333,7 +1333,7 @@ FIXTURE=$(cat <<END
             }
           }
     }}}},
-    {"insert": {"object": {"payment_routing_rules": {
+    {"insert": {"object": {"routing_rules": {
         "ref": {"id": 8},
         "data": {
             "name": "Роутинг по наличию CVV в платеже",
@@ -1360,7 +1360,7 @@ FIXTURE=$(cat <<END
             }
           }
     }}}},
-    {"insert": {"object": {"payment_routing_rules": {
+    {"insert": {"object": {"routing_rules": {
         "ref": {"id": 9},
         "data": {
             "name": "Роутинг по вероятностям",
@@ -1390,7 +1390,7 @@ FIXTURE=$(cat <<END
             }
           }
     }}}},
-    {"insert": {"object": {"payment_routing_rules": {
+    {"insert": {"object": {"routing_rules": {
         "ref": {"id": 10},
         "data": {
             "name": "Роутинг по мерчанту",
