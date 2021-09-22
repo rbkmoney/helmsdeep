@@ -682,7 +682,9 @@ FIXTURE=$(cat <<END
                           "payment_tool": {
                             "bank_card": {
                               "definition": {
-                                "payment_system_is": "visa"
+                                "payment_system": {
+                                  "payment_system_is": {"id": "VISA"}
+                                }
                               }
                             }
                           }
@@ -733,7 +735,9 @@ FIXTURE=$(cat <<END
                           "payment_tool": {
                             "bank_card": {
                               "definition": {
-                                "payment_system_is": "mastercard"
+                                "payment_system": {
+                                  "payment_system_is": {"id": "MASTERCARD"}
+                                }
                               }
                             }
                           }
@@ -1242,7 +1246,7 @@ FIXTURE=$(cat <<END
                         "bank_card": {
                           "definition": {
                             "payment_system": {
-                              "payment_system_is": "mastercard"
+                              "payment_system_is": {"id": "MASTERCARD"}
                             }
                           }
                         }
