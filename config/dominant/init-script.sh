@@ -1038,14 +1038,14 @@ FIXTURE=$(cat <<END
     }}}},
 
     {"insert": {"object": {"payment_method": {
-        "ref": {"id": {"bank_card": {"payment_system": "visa"}}},
+        "ref": {"id": {"bank_card": {"payment_system": {"id": "VISA"}}}},
         "data": {
             "name": "VISA",
             "description": "VISA bank cards"
         }
     }}}},
     {"insert": {"object": {"payment_method": {
-        "ref": {"id": {"bank_card": {"payment_system": "mastercard"}}},
+        "ref": {"id": {"bank_card": {"payment_system": {"id": "MASTERCARD"}}}},
         "data": {
             "name": "Mastercard",
             "description": "Mastercard bank cards"
@@ -1062,7 +1062,7 @@ FIXTURE=$(cat <<END
     }}}},
     {"insert": {"object": {"payment_method": {
         "ref": {
-            "id": {"bank_card": {"payment_system": "visa","is_cvv_empty": true}}
+            "id": {"bank_card": {"payment_system": {"id": "VISA"},"is_cvv_empty": true}}
           },
           "data": {
             "name": "Visa NOCVV",
