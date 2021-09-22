@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/fraudbusters
-  tag: fbe14fec347e5e6312a5e726e17e8b8c2b749b89
+  tag: 5a6874671b4dfe235eba71952c121b1400f3b625
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
@@ -63,6 +63,16 @@ readinessProbe:
     path: /actuator/health
     port: api
 
+podAnnotations:
+  vault.hashicorp.com/role: "db-app"
+  vault.hashicorp.com/agent-inject: "true"
+  vault.hashicorp.com/agent-inject-template-application.properties: |
+    {{`{{- with secret "database/creds/db-app-fraudbusters" -}}
+    clickhouse.db.url=jdbc:clickhouse://chi-demo-cluster-0-0:8123/fraud
+    clickhouse.db.user=fraud
+    clickhouse.db.password=hackme
+    {{- end }}`}}
+
 metrics:
   serviceMonitor:
     enabled: {{ .Values.services.global.metrics.enabled }}
@@ -84,4 +94,19 @@ ciliumPolicies:
     - port: 8200
       type: TCP
     name: vault
+    namespace: {{ .Release.Namespace }}
+  - filters:
+      - port: 8022
+        type: TCP
+    name: columbus
+    namespace: {{ .Release.Namespace }}
+  - filters:
+      - port: 8022
+        type: TCP
+    name: wb-list-manager
+    namespace: {{ .Release.Namespace }}
+  - filters:
+      - port: 8123
+        type: TCP
+    name: clickhouse
     namespace: {{ .Release.Namespace }}
