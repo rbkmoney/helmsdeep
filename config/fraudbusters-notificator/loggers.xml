@@ -1,0 +1,3 @@
+<included>
+    <logger name="com.rbkmoney" level="INFO"/>
+</included>
