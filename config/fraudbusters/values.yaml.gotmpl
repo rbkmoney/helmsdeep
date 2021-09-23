@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/fraudbusters
-  tag: fbe14fec347e5e6312a5e726e17e8b8c2b749b89
+  tag: 5a6874671b4dfe235eba71952c121b1400f3b625
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
@@ -28,11 +28,21 @@ configMap:
     logback.xml: |
       {{- readFile "../logs/logback.xml" | nindent 6 }}
 
+secret:
+  data:
+    ch-connect: |
+      clickhouse.db.url=jdbc:clickhouse://chi-demo-cluster-0-0:8123/fraud
+      clickhouse.db.user=fraud
+      clickhouse.db.password=hackme
+
 volumes:
   - name: config-volume
     configMap:
       name: {{ .Release.Name }}
       defaultMode: 0755
+  - name: secret
+    secret:
+      secretName: {{ .Release.Name }}
 
 volumeMounts:
   - name: config-volume
@@ -46,6 +56,10 @@ volumeMounts:
   - name: config-volume
     mountPath: /opt/fraudbusters/loggers.xml
     subPath: loggers.xml
+    readOnly: true
+  - name: secret
+    mountPath: /var/lib/fraudbusters/additional.ch.properties
+    subPath: ch-connect
     readOnly: true
 
 service:
@@ -84,4 +98,19 @@ ciliumPolicies:
     - port: 8200
       type: TCP
     name: vault
+    namespace: {{ .Release.Namespace }}
+  - filters:
+      - port: 8022
+        type: TCP
+    name: columbus
+    namespace: {{ .Release.Namespace }}
+  - filters:
+      - port: 8022
+        type: TCP
+    name: wb-list-manager
+    namespace: {{ .Release.Namespace }}
+  - filters:
+      - port: 8123
+        type: TCP
+    name: clickhouse
     namespace: {{ .Release.Namespace }}
