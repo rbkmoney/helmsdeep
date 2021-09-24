@@ -256,6 +256,11 @@ releases:
   needs:
   - {{ .Namespace | default "default" }}/wb-list-manager
   - {{ .Namespace | default "default" }}/columbus
+- name: fraudbusters-warehouse
+  installed: false
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/clickhouse
 - name: deanonimus
   <<: *generic_stateless_json
   needs:
