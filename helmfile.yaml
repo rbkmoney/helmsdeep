@@ -249,7 +249,9 @@ releases:
   <<: *generic_stateless_json
   needs:
   - {{ .Namespace | default "default" }}/vault
+  - {{ .Namespace | default "default" }}/kafka
   - {{ .Namespace | default "default" }}/fraudbusters
+  - {{ .Namespace | default "default" }}/fraudbusters-notificator
 - name: fraudbusters
   installed: false  
   <<: *generic_stateless_json
@@ -261,6 +263,12 @@ releases:
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/clickhouse
+- name: fraudbusters-notiificator
+  installed: false
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/vault
+    - {{ .Namespace | default "default" }}/fraudbusters-warehouse
 - name: deanonimus
   <<: *generic_stateless_json
   needs:
