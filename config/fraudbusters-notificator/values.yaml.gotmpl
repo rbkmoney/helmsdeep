@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/fraudbusters-notificator
-  tag: dfcaa2535d97652e9c033b5697a1003bbad7161e
+  tag: 6e828c6de5cc7396f4134d8c9e84b5bfce3b8d5d
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
@@ -68,9 +68,9 @@ readinessProbe:
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
-  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-fbnotif"
+  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-fb-notificator"
   vault.hashicorp.com/agent-inject-template-application.properties: |
-    {{`{{- with secret "database/creds/db-app-fbnotif" -}}
+    {{`{{- with secret "database/creds/db-app-fb-notificator" -}}
     spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/fb_notificator?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}

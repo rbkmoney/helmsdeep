@@ -197,14 +197,14 @@ configMap:
         default_ttl="240h" \
         max_ttl="240h"
 
-      vault write database/config/fbnotif \
+      vault write database/config/fb-notificator \
         plugin_name=postgresql-database-plugin \
         allowed_roles="*" \
         connection_url="postgresql://{{`{{username}}`}}:{{`{{password}}`}}@postgres-postgresql:5432/fb_notificator?sslmode=disable" \
         username="postgres" \
         password="H@ckM3"
-      vault write database/roles/db-app-fbnotif \
-        db_name=fbnotif \
+      vault write database/roles/db-app-fb-notificator \
+        db_name=fb_notificator \
         revocation_statements="REASSIGN OWNED BY \"{{`{{name}}`}}\" to postgres; ALTER ROLE \"{{`{{name}}`}}\" NOLOGIN;" \
         creation_statements="Create schema if not exists fb_notificator;
         CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
