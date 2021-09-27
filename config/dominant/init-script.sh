@@ -121,7 +121,7 @@ FIXTURE=$(cat <<END
                         {
                           "id": {
                             "bank_card": {
-                              "payment_system": {"id": "VISA"},
+                              "payment_system": {"id": "VISA-REF"},
                               "is_cvv_empty": false
                             }
                           }
@@ -238,7 +238,7 @@ FIXTURE=$(cat <<END
                           {
                             "id": {
                               "bank_card": {
-                                "payment_system": {"id": "VISA"},
+                                "payment_system": {"id": "VISA-REF"},
                                 "is_cvv_empty": false
                               }
                             }
@@ -265,7 +265,7 @@ FIXTURE=$(cat <<END
                           {
                             "id": {
                               "bank_card": {
-                                "payment_system": {"id": "VISA"},
+                                "payment_system": {"id": "VISA-REF"},
                                 "is_cvv_empty": false
                               }
                             }
@@ -391,7 +391,7 @@ FIXTURE=$(cat <<END
                         {
                           "id": {
                             "bank_card": {
-                              "payment_system": {"id": "VISA"},
+                              "payment_system": {"id": "VISA-REF"},
                               "is_cvv_empty": false
                             }
                           }
@@ -399,7 +399,7 @@ FIXTURE=$(cat <<END
                         {
                           "id": {
                             "bank_card": {
-                              "payment_system": {"id": "VISA"},
+                              "payment_system": {"id": "VISA-REF"},
                               "is_cvv_empty": true
                             }
                           }
@@ -605,7 +605,7 @@ FIXTURE=$(cat <<END
                     {
                       "id": {
                         "bank_card": {
-                          "payment_system": {"id": "VISA"},
+                          "payment_system": {"id": "VISA-REF"},
                           "is_cvv_empty": false
                         }
                       }
@@ -683,7 +683,7 @@ FIXTURE=$(cat <<END
                             "bank_card": {
                               "definition": {
                                 "payment_system": {
-                                  "payment_system_is": {"id": "VISA"}
+                                  "payment_system_is": {"id": "VISA-REF"}
                                 }
                               }
                             }
@@ -938,7 +938,7 @@ FIXTURE=$(cat <<END
                     {
                       "id": {
                         "bank_card": {
-                          "payment_system": {"id": "VISA"},
+                          "payment_system": {"id": "VISA-REF"},
                           "is_cvv_empty": false
                         }
                       }
@@ -946,7 +946,7 @@ FIXTURE=$(cat <<END
                     {
                       "id": {
                         "bank_card": {
-                          "payment_system": {"id": "VISA"},
+                          "payment_system": {"id": "VISA-REF"},
                           "is_cvv_empty": true
                         }
                       }
@@ -1045,7 +1045,7 @@ FIXTURE=$(cat <<END
     }}}},
 
     {"insert": {"object": {"payment_method": {
-        "ref": {"id": {"bank_card": {"payment_system": {"id": "VISA"}}}},
+        "ref": {"id": {"bank_card": {"payment_system": {"id": "VISA-REF"}}}},
         "data": {
             "name": "VISA",
             "description": "VISA bank cards"
@@ -1069,7 +1069,7 @@ FIXTURE=$(cat <<END
     }}}},
     {"insert": {"object": {"payment_method": {
         "ref": {
-            "id": {"bank_card": {"payment_system": {"id": "VISA"},"is_cvv_empty": true}}
+            "id": {"bank_card": {"payment_system": {"id": "VISA-REF"},"is_cvv_empty": true}}
           },
           "data": {
             "name": "Visa NOCVV",
@@ -1465,10 +1465,10 @@ FIXTURE=$(cat <<END
 				"object": {
 					"payment_system": {
 						"ref": {
-							"id": "VISA"
+							"id": "VISA-REF"
 						},
 						"data": {
-							"name": "VISA",
+							"name": "VISA-REF",
 							"validation_rules": [
 								{"card_number": {"checksum": {"luhn": {}}}},
 								{"card_number": {"ranges": [{"lower": 13, "upper": 13},{"lower": 16, "upper": 16}]}},
