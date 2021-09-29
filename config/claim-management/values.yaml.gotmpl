@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/claim-management
-  tag: 0bce7ae059b37a2c12a6b8b0d2b9ad661da7b88e
+  tag: 657db25265e028fd7f18f3c209bb2bc847abacda
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
