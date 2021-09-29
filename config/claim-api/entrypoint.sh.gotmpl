@@ -16,7 +16,7 @@ java \
         --spring.output.ansi.enabled=never \
         --management.endpoint.health.show-details=always \
         --management.security.flag=false \
-        --keycloak.auth-server-url=https://auth.{{ $ingressDomain | default "rbk.dev" }}/auth \
+        --keycloak.auth-server-url=http://keycloak-headless:8080/auth \
         --keycloak.realm-public-key.file-path="/var/lib/claim-management-api/keys/keycloak/keycloak.pubkey.pem" \
         --keycloak.realm=external \
         --keycloak.resource=common-api \
