@@ -26,7 +26,7 @@ configMap:
 hook:
   enabled: true
   image:
-    repository: docker.io/rbkmoney/holmes
+    repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/holmes
     tag: 99978815b561daaab33e6a35b9e300262186c78e
     pullPolicy: IfNotPresent
   kind: post-install
