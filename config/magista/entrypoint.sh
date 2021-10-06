@@ -23,7 +23,7 @@ java \
     --spring.datasource.hikari.maximum-pool-size=20 \
     --flyway.schemas=mst \
     --payouter.pooling.url=http://payouter:8022/repo \
-    --hellgate.url=http://hellgate:8022/v1/processing/partymgmt \
+    --hellgate.url=http://party-management:8022/v1/processing/partymgmt \
     --hellgate.timeout=30000 \
     --columbus.url=http://columbus:8022/repo \
     --retry-policy.maxAttempts=-1 \

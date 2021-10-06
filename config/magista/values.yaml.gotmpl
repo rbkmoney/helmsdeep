@@ -24,11 +24,48 @@ configMap:
     logback.xml: |
       {{- readFile "../logs/logback.xml" | nindent 6 }}
 
+{{- if or .Values.services.postgres.external .Values.services.kafka.ssl.enabled }}
+secret:
+  data: 
+    db_config: |
+    {{- if .Values.services.postgres.external }}
+      spring.datasource.url=jdbc:postgresql://{{ .Values.services.postgres.endpoint | default "external-postgres" }}:5432/magista?sslmode=disable
+      spring.datasource.username={{ .Values.services.postgres.uniUser }}
+      spring.datasource.password={{ .Values.services.postgres.uniPassword }}
+      flyway.url=jdbc:postgresql://{{ .Values.services.postgres.endpoint | default "external-postgres" }}:5432/magista?sslmode=disable
+      flyway.user={{ .Values.services.postgres.uniUser }}
+      flyway.password={{ .Values.services.postgres.uniPassword }}
+    {{- end }}
+    {{- if .Values.services.kafka.ssl.enabled }}
+      kafka.ssl.enabled=true
+      kafka.ssl.key-store-location=/vault/secrets/kafka-keystore.p12
+      kafka.ssl.key-store-password={{ .Values.services.kafka.ssl.keystorePass }}
+      kafka.ssl.key-store-type=PKCS12
+      kafka.ssl.key-password={{ .Values.services.kafka.ssl.keyPass }}
+      kafka.ssl.trust-store-location=/vault/secrets/kafka-truststore.p12
+      kafka.ssl.trust-store-password={{ .Values.services.kafka.ssl.truststorePass }}
+      kafka.ssl.trust-store-type=PKCS12
+    {{- end }}
+{{- end }}
+
 volumes:
   - name: config-volume
     configMap:
       name: {{ .Release.Name }}
       defaultMode: 0755
+{{- if .Values.services.kafka.ssl.enabled }}
+  - name: kafka-cert
+    secret:
+      secretName: {{ .Release.Name }}-kafka-cert
+  - name: kafka-ca
+    secret:
+      secretName: java-ca-kafka
+{{- end }}
+{{- if or .Values.services.postgres.external .Values.services.kafka.ssl.enabled }}
+  - name: secret
+    secret:
+      secretName: {{ .Release.Name }}
+{{- end }}
 
 volumeMounts:
   - name: config-volume
@@ -43,6 +80,22 @@ volumeMounts:
     mountPath: /opt/magista/loggers.xml
     subPath: loggers.xml
     readOnly: true
+{{- if .Values.services.kafka.ssl.enabled }}
+  - name: kafka-ca
+    subPath: kafka-truststore.p12
+    mountPath: /vault/secrets/kafka-truststore.p12
+    readOnly: true
+  - name: kafka-cert
+    subPath: {{ .Release.Name }}.p12
+    mountPath: /vault/secrets/kafka-keystore.p12
+    readOnly: true
+{{- end }}
+{{- if or .Values.services.postgres.external .Values.services.kafka.ssl.enabled }}
+  - name: secret
+    subPath: db_config
+    mountPath: /vault/secrets/application.properties
+    readOnly: true
+{{- end }}
 
 service:
   ports:
@@ -61,6 +114,7 @@ readinessProbe:
     path: /actuator/health
     port: management
 
+{{- if .Values.services.vault.enabled }}
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
@@ -74,6 +128,7 @@ podAnnotations:
     flyway.user={{ .Data.username }}
     flyway.password={{ .Data.password }}
     {{- end }}`}}
+{{- end }}
 
 metrics:
   serviceMonitor:
@@ -150,13 +205,3 @@ ciliumPolicies:
       type: TCP
     name: payouter
     namespace: {{ .Release.Namespace }}
-
-# add it to vault tamlate if kafka mTLS auth enable 
-#{{- /*
-#     --kafka.ssl.enabled={{ kafka.ssl.enable }}
-#     --kafka.ssl.key-store-location=/opt/{{ service_name }}/kafka-keystore.p12
-#     --kafka.ssl.key-store-password="{{ service.keystore.pass }}"
-#     --kafka.ssl.key-password="{{ service.keystore.pass }}"
-#     --kafka.ssl.trust-store-location=/opt/{{ service_name }}/kafka-truststore.p12
-#     --kafka.ssl.trust-store-password="{{ kafka.truststore.java.pass }}"
-# */ -}}
