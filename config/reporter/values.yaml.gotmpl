@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: rbkmoney/reporter
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/reporter
   tag: 6872c8d1bdce6b4e1d9d5e8eabc462bb2c6daa71
   pullPolicy: IfNotPresent
 
@@ -13,17 +13,55 @@ runopts:
 configMap:
   data: 
     entrypoint.sh: |
-      {{- readFile "entrypoint.sh" | nindent 6 }}
+      {{- tpl (readFile "entrypoint.sh.gotml") . | nindent 6 }}
     loggers.xml: |
       {{- readFile "loggers.xml" | nindent 6 }}
     logback.xml: |
       {{- readFile "../logs/logback.xml" | nindent 6 }}
+
+{{- if or .Values.services.postgres.external .Values.services.kafka.ssl.enabled }}
+secret:
+  data: 
+    db_config: |
+    {{- if .Values.services.postgres.external }}
+      spring.datasource.url=jdbc:postgresql://{{ .Values.services.postgres.endpoint | default "external-postgres" }}:5432/reporter?sslmode=disable
+      spring.datasource.username={{ .Values.services.postgres.uniUser }}
+      spring.datasource.password={{ .Values.services.postgres.uniPassword }}
+      flyway.url=jdbc:postgresql://{{ .Values.services.postgres.endpoint | default "external-postgres" }}:5432/reporter?sslmode=disable
+      flyway.user={{ .Values.services.postgres.uniUser }}
+      flyway.password={{ .Values.services.postgres.uniPassword }}
+      flyway.schemas=rpt
+    {{- end }}
+    {{- if .Values.services.kafka.ssl.enabled }}
+      kafka.ssl.enabled=true
+      kafka.ssl.key-store-location=/vault/secrets/kafka-keystore.p12
+      kafka.ssl.key-store-password={{ .Values.services.kafka.ssl.keystorePass }}
+      kafka.ssl.key-store-type=PKCS12
+      kafka.ssl.key-password={{ .Values.services.kafka.ssl.keyPass }}
+      kafka.ssl.trust-store-location=/vault/secrets/kafka-truststore.p12
+      kafka.ssl.trust-store-password={{ .Values.services.kafka.ssl.truststorePass }}
+      kafka.ssl.trust-store-type=PKCS12
+    {{- end }}
+{{- end }}
 
 volumes:
   - name: config-volume
     configMap:
       name: {{ .Release.Name }}
       defaultMode: 0755
+{{- if .Values.services.kafka.ssl.enabled }}
+  - name: kafka-cert
+    secret:
+      secretName: {{ .Release.Name }}-kafka-cert
+  - name: kafka-ca
+    secret:
+      secretName: java-ca-kafka
+{{- end }}
+{{- if or .Values.services.postgres.external .Values.services.kafka.ssl.enabled }}
+  - name: secret
+    secret:
+      secretName: {{ .Release.Name }}
+{{- end }}
 
 volumeMounts:
   - name: config-volume
@@ -38,6 +76,22 @@ volumeMounts:
     mountPath: /opt/reporter/loggers.xml
     subPath: loggers.xml
     readOnly: true
+{{- if .Values.services.kafka.ssl.enabled }}
+  - name: kafka-ca
+    subPath: kafka-truststore.p12
+    mountPath: /vault/secrets/kafka-truststore.p12
+    readOnly: true
+  - name: kafka-cert
+    subPath: {{ .Release.Name }}.p12
+    mountPath: /vault/secrets/kafka-keystore.p12
+    readOnly: true
+{{- end }}
+{{- if or .Values.services.postgres.external .Values.services.kafka.ssl.enabled }}
+  - name: secret
+    subPath: db_config
+    mountPath: /vault/secrets/application.properties
+    readOnly: true
+{{- end }}
 
 service:
   ports:
@@ -56,6 +110,7 @@ readinessProbe:
     path: /actuator/health
     port: management
 
+{{- if .Values.services.vault.enabled }}
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
@@ -70,6 +125,7 @@ podAnnotations:
     flyway.password={{ .Data.password }}
     flyway.schemas=rpt
     {{- end }}`}}
+{{- end }}
 
 metrics:
   serviceMonitor:
