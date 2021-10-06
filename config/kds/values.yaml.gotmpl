@@ -12,11 +12,19 @@ imagePullSecrets:
   - name: {{ .Values.services.global.registry.imagePullSecret }}
 {{ end }}
 
+{{- if .Values.services.global.pcidss.taints.enabled }}
+tolerations:
+- key: "{{ .Values.services.global.pcidss.taints.key }}"
+  operator: "Equal"
+  value: "{{ .Values.services.global.pcidss.taints.value }}"
+  effect: "NoSchedule"
+{{- end }}
+
 hook:
   enabled: true
   image:
-    repository: docker.io/rbkmoney/holmes
-    tag: 07f58e297c03bcd50dc4695ddbcfa4eb30c9928e
+    repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/holmes
+    tag: 99978815b561daaab33e6a35b9e300262186c78e
     pullPolicy: IfNotPresent
   kind: post-install
   command: "/opt/holmes/scripts/cds/keyring.py -a kds init"
