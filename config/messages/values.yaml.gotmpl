@@ -24,6 +24,22 @@ configMap:
     logback.xml: |
       {{- readFile "../logs/logback.xml" | nindent 6 }}
 
+{{- if .Values.services.postgres.external }}
+secret:
+  data: 
+    db_config: |
+    {{- if .Values.services.postgres.external }}
+      spring.datasource.url=jdbc:postgresql://{{ .Values.services.postgres.endpoint | default "external-postgres" }}:5432/messages?sslmode=disable
+      spring.datasource.username={{ .Values.services.postgres.uniUser }}
+      spring.datasource.password={{ .Values.services.postgres.uniPassword }}
+      spring.flyway.url=jdbc:postgresql://{{ .Values.services.postgres.endpoint | default "external-postgres" }}:5432/messages?sslmode=disable
+      spring.flyway.user={{ .Values.services.postgres.uniUser }}
+      spring.flyway.password={{ .Values.services.postgres.uniPassword }}
+      spring.flyway.schemas=msgs
+      flyway.schemas=msgs
+    {{- end }}
+{{- end }}
+
 env:
   - name: LOGBACK_SERVICE_NAME
     value: "messages"
@@ -33,6 +49,11 @@ volumes:
     configMap:
       name: {{ .Release.Name }}
       defaultMode: 0755
+{{- if .Values.services.postgres.external }}
+  - name: secret
+    secret:
+      secretName: {{ .Release.Name }}
+{{- end }}
 
 volumeMounts:
   - name: config-volume
@@ -47,6 +68,12 @@ volumeMounts:
     mountPath: /opt/messages/loggers.xml
     subPath: loggers.xml
     readOnly: true
+{{- if or .Values.services.postgres.external }}
+  - name: secret
+    subPath: db_config
+    mountPath: /vault/secrets/application.properties
+    readOnly: true
+{{- end }}
 
 service:
   ports:
@@ -63,21 +90,23 @@ readinessProbe:
     path: /actuator/health
     port: api
 
-# podAnnotations:
-#   vault.hashicorp.com/role: "db-app"
-#   vault.hashicorp.com/agent-inject: "true"
-#   vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-messages"
-#   vault.hashicorp.com/agent-inject-template-application.properties: |
-#     {{`{{- with secret "database/creds/db-app-messages" -}}
-#     spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/messages?sslmode=disable
-#     spring.datasource.username={{ .Data.username }}
-#     spring.datasource.password={{ .Data.password }}
-#     spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/messages?sslmode=disable
-#     spring.flyway.user={{ .Data.username }}
-#     spring.flyway.password={{ .Data.password }}
-#     spring.flyway.schemas=msgs
-#     flyway.schemas=msgs
-#     {{- end }}`}}
+{{- if .Values.services.vault.enabled }}
+podAnnotations:
+  vault.hashicorp.com/role: "db-app"
+  vault.hashicorp.com/agent-inject: "true"
+  vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-messages"
+  vault.hashicorp.com/agent-inject-template-application.properties: |
+    {{`{{- with secret "database/creds/db-app-messages" -}}
+    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/messages?sslmode=disable
+    spring.datasource.username={{ .Data.username }}
+    spring.datasource.password={{ .Data.password }}
+    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/messages?sslmode=disable
+    spring.flyway.user={{ .Data.username }}
+    spring.flyway.password={{ .Data.password }}
+    spring.flyway.schemas=msgs
+    flyway.schemas=msgs
+    {{- end }}`}}
+{{- end }}
 
 {{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
 {{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
@@ -123,24 +152,9 @@ ciliumPolicies:
     name: postgres
     namespace: {{ .Release.Namespace }}
   - filters:
-    - port: 9092
-      rules:
-        kafka:
-        - role: consume
-          topics:
-            - claim-event-sink
-      type: TCP
-    name: kafka
-    namespace: {{ .Release.Namespace }}
-  - filters:
     - port: 8200
       type: TCP
     name: vault
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
-    name: hellgate
     namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
