@@ -54,7 +54,11 @@
                     % Which transport to use? (tcp | tls)
                     transport             => tcp,
                     % Which `gen_tcp:connect_option()`s to use? Relevant only for `tcp` transport.
+                    {{- if .Values.services.global.ipv6only -}}
                     tcp_opts              => [inet6],
+                    {{- else -}}
+                    tcp_opts              => [inet],
+                    {{- end }}
                     % Total timeout for estabilishing a connection. (ms)
                     connect_timeout       => 1000
                 }
@@ -79,16 +83,6 @@
             service => {erl_health, service  , [<<"bouncer">>]}
         }}
 
-    ]},
-
-    {how_are_you, [
-        {metrics_publishers, [
-            {hay_statsd_publisher, #{
-                key_prefix => <<"bouncer.">>,
-                host => "localhost",
-                port => 8125
-            }}
-        ]}
     ]},
 
     {os_mon, [

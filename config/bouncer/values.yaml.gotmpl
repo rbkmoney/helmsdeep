@@ -15,7 +15,7 @@ imagePullSecrets:
 configMap:
   data:
     sys.config: |
-      {{- readFile "sys.config" | nindent 6 }}
+      {{- tpl (readFile "sys.config.gotmpl") . | nindent 6 }}
     erl_inetrc: |
       {{- tpl (readFile "../vm/erl_inetrc.gotmpl") . | nindent 6 }}
     vm.args: |
