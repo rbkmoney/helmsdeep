@@ -16,7 +16,6 @@ java \
     --spring.flyway.url=jdbc:postgresql://columbus-pg:5432/columbus?sslmode=disable \
     --spring.flyway.user=postgres \
     --spring.flyway.password=postgres \
-    --geo.db.file.path=classpath:GeoLite2-City.mmdb \
     ${@} \
     --spring.config.additional-location=/vault/secrets/application.properties
 
