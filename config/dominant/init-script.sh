@@ -427,7 +427,7 @@ FIXTURE=$(cat <<END
                         },
                         "lower": {
                           "inclusive": {
-                            "amount": 0,
+                            "amount": -1000000000,
                             "currency": {
                               "symbolic_code": "RUB"
                             }
@@ -467,10 +467,10 @@ FIXTURE=$(cat <<END
                         "value": [
                           {
                             "source": {
-                              "provider": "settlement"
+                              "wallet": 1
                             },
                             "destination": {
-                              "merchant": "settlement"
+                              "wallet": 3
                             },
                             "volume": {
                               "share": {
@@ -478,7 +478,7 @@ FIXTURE=$(cat <<END
                                   "p": 1,
                                   "q": 1
                                 },
-                                "of": "operation_amount"
+                                "of": 1
                               }
                             }
                           }
@@ -1524,6 +1524,7 @@ FIXTURE=$(cat <<END
             "realm": "test",
             "wallet_system_account_set": {"value": {"id": 1}},
             "residences": ["rus", "aus", "jpn"],
+            "identity" : "1",
             "withdrawal_routing_rules" : {"policies": {"id":11},"prohibitions": {"id":8}},
             "payment_routing_rules" : {"policies": {"id":1},"prohibitions": {"id":8}}
         }
