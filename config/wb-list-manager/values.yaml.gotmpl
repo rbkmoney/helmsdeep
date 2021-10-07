@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/wb-list-manager
-  tag: dc7f451945194441357177fd3153ac82a0333eac
+  tag: 7efb78d6fcdcf05e1810bacef45a562a2fa4c550
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
@@ -48,17 +48,19 @@ service:
   ports:
     - name: api
       port: 8022
+    - name: management
+      port: 8023
 
 
 livenessProbe:
   httpGet:
     path: /actuator/health
-    port: api
+    port: management
 
 readinessProbe:
   httpGet:
     path: /actuator/health
-    port: api
+    port: management
 
 metrics:
   serviceMonitor:
@@ -73,9 +75,9 @@ metrics:
 
 ciliumPolicies:
   - filters:
-    - port: 5432
+    - port: 8087
       type: TCP
-    name: postgres
+    name: riak
     namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8200
