@@ -9,8 +9,16 @@ image:
 
 {{ if .Values.services.global.registry.imagePullSecret }}
 imagePullSecrets:
-  - {{ .Values.services.global.registry.imagePullSecret }}
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
 {{ end }}
+
+{{- if .Values.services.global.pcidss.taints.enabled }}
+tolerations:
+- key: "{{ .Values.services.global.pcidss.taints.key }}"
+  operator: "Equal"
+  value: "{{ .Values.services.global.pcidss.taints.value }}"
+  effect: "NoSchedule"
+{{- end }}
 
 runopts:
   command : ["/opt/binbase/entrypoint.sh"]

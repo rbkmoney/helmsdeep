@@ -9,7 +9,7 @@ image:
 
 {{ if .Values.services.global.registry.imagePullSecret }}
 imagePullSecrets:
-  - {{ .Values.services.global.registry.imagePullSecret }}
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
 {{ end }}
 
 runopts:
@@ -34,6 +34,20 @@ configMap:
     fetchKeycloakPubkey: |
       {{- readFile "../api-common/fetch-keycloak-pubkey.sh" | nindent 6 }}
 
+{{- if or .Values.services.postgres.external }}
+secret:
+  data: 
+    db_config: |
+      spring.datasource.url=jdbc:postgresql://{{ .Values.services.postgres.endpoint | default "external-postgres" }}:5432/org-manager?sslmode=disable
+      spring.datasource.username={{ .Values.services.postgres.uniUser }}
+      spring.datasource.password={{ .Values.services.postgres.uniPassword }}
+      spring.flyway.url=jdbc:postgresql://{{ .Values.services.postgres.endpoint | default "external-postgres" }}:5432/org-manager?sslmode=disable
+      spring.flyway.user={{ .Values.services.postgres.uniUser }}
+      spring.flyway.password={{ .Values.services.postgres.uniPassword }}
+      spring.flyway.schemas=org_manager
+      flyway.schemas=org_manager
+{{- end }}
+
 volumes:
   - name: config-volume
     configMap:
@@ -41,6 +55,11 @@ volumes:
       defaultMode: 0755
   - name: keycloak-pubkey
     emptyDir: {}
+{{- if or .Values.services.postgres.external }}
+  - name: secret
+    secret:
+      secretName: {{ .Release.Name }}
+{{- end }}
 
 volumeMounts:
   - name: config-volume
@@ -58,6 +77,12 @@ volumeMounts:
   - name: keycloak-pubkey
     mountPath: /var/lib/org-manager/keys/keycloak
     readOnly: true
+{{- if or .Values.services.postgres.external }}
+  - name: secret
+    subPath: db_config
+    mountPath: /vault/secrets/application.properties
+    readOnly: true
+{{- end }}
 
 
 service:
@@ -79,6 +104,7 @@ readinessProbe:
     path: /actuator/health
     port: management
 
+{{- if .Values.services.vault.enabled }}
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
@@ -94,6 +120,7 @@ podAnnotations:
     spring.flyway.schemas=org_manager
     flyway.schemas=org_manager
     {{- end }}`}}
+{{- end }}
 
 metrics:
   serviceMonitor:

@@ -298,3 +298,5 @@ releases:
     - {{ .Namespace | default "default" }}/party-management
     - {{ .Namespace | default "default" }}/bouncer
     - {{ .Namespace | default "default" }}/claim-management
+- name: file-storage
+   <<: *generic_stateless

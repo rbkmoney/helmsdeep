@@ -16,7 +16,7 @@ java \
     --spring.cache.cache-names=resolveCountry \
     --spring.cache.caffeine.spec=maximumSize=500,expireAfterAccess=100s \
     --kafka.ssl.enable=false \
-    --kafka.bootstrap.servers=kafka:9092 \
+    --kafka.bootstrap.servers={{ .Values.services.kafka.endpoint | default "kafka" }}:{{ .Values.services.kafka.port | default "9092" }} \
     --kafka.aggr.payment.min.bytes=50000 \
     --kafka.consumer.prefix=fraudbusters \
     --kafka.max.retry.attempts=3 \
