@@ -9,7 +9,7 @@ java \
         --logging.config=/opt/deanonimus/logback.xml \
         --spring.elasticsearch.rest.uris="deanonimus-es:9200" \
         --spring.elasticsearch.rest.connection-timeout=5s \
-        --kafka.bootstrap-servers="kafka:9092" \
+        --kafka.bootstrap-servers="{{ .Values.services.kafka.endpoint | default "kafka" }}:{{ .Values.services.kafka.port | default "9092" }}" \
         --kafka.client-id=deanonimus \
         --kafka.topics.party-management.id=mg-events-party \
         --kafka.topics.party-management.enabled=true \

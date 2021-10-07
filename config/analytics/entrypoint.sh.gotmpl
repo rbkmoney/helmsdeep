@@ -15,7 +15,7 @@ java \
     --management.endpoint.prometheus.enabled=true \
     --management.endpoints.web.exposure.include=health,info,prometheus \
     --spring.application.name=analytics \
-    --kafka.bootstrap.servers=kafka:9092 \
+    --kafka.bootstrap.servers={{ .Values.services.kafka.endpoint | default "kafka" }}:{{ .Values.services.kafka.port | default "9092" }} \
     --kafka.topic.event.sink.initial=mg-events-invoice \
     --kafka.topic.payout.initial=payout \
     --kafka.topic.party.initial=mg-events-party \

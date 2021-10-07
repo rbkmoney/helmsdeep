@@ -13,7 +13,7 @@ java \
 --service.partyManagement.url=http://party-management:8022/v1/processing/partymgmt \
 --service.fistful.url=http://fistful:8022/v1/admin \
 --service.fistful.sourceId=3 \
---kafka.bootstrap-servers=kafka:9092 \
+--kafka.bootstrap-servers={{ .Values.services.kafka.endpoint | default "kafka" }}:{{ .Values.services.kafka.port | default "9092" }} \
 --kafka.topics.party-management.id=mg-events-party \
 --kafka.topics.invoice.enabled=false \
 --kafka.topics.party-management.enabled=false \

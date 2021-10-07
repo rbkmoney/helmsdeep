@@ -315,7 +315,7 @@ kafka:
   default_kafka_client:
     endpoints:
     - host: "{{ .Values.services.kafka.endpoint | default "kafka" }}"
-      port: 9092
+      port: {{ .Values.services.kafka.port | default "9092" }}
 {{- if .Values.services.kafka.ssl.enabled }}
     ssl:
       certfile: "/vault/secrets/kafka/tls.crt"

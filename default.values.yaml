@@ -63,7 +63,8 @@ services:
 # Enable external kafka cluster
   kafka:
     external: false
-    endpoint: kafka:9092
+    endpoint: kafka
+    port: 9092
     ssl:
       enabled: false
       keystorePass: 12341234
