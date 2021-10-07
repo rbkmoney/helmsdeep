@@ -1428,6 +1428,29 @@ FIXTURE=$(cat <<END
             }
           }
     }}}},
+    {"insert": {"object": {"routing_rules": {
+        "ref": {"id": 11},
+        "data": {
+            "name": "Роутинг выплат по валюте",
+            "decisions": {
+              "candidates": [
+                {
+                  "allowed": {
+                    "condition": {
+                      "currency_is": {
+                        "symbolic_code": "RUB"
+                      }
+                    }
+                  },
+                  "terminal": {
+                    "id": 3
+                  },
+                  "priority": 1000
+                }
+              ]
+            }
+          }
+    }}}},
 		{
 			"insert": {
 				"object": {
@@ -1497,11 +1520,11 @@ FIXTURE=$(cat <<END
             "default_contract_template": {"value": {"id": 1}},
             "default_wallet_contract_template": {"value": {"id": 1}},
             "providers": {"value": [{"id": 1}]},
-            "withdrawal_providers": {"value": [{"id": 2}]},
             "inspector": {"value": {"id": 1}},
             "realm": "test",
             "wallet_system_account_set": {"value": {"id": 1}},
             "residences": ["rus", "aus", "jpn"],
+            "withdrawal_routing_rules" : {"policies": {"id":11},"prohibitions": {"id":8}},
             "payment_routing_rules" : {"policies": {"id":1},"prohibitions": {"id":8}}
         }
     }}}}
