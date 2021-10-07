@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/fraudbusters-notificator
-  tag: 8ca12230809ddbf2167bc40404264598d56e0ba2
+  tag: 128e65f76b3e48e65e4fb7793c6744bf49308eb8
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
