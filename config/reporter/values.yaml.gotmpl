@@ -13,7 +13,7 @@ runopts:
 configMap:
   data: 
     entrypoint.sh: |
-      {{- tpl (readFile "entrypoint.sh.gotml") . | nindent 6 }}
+      {{- tpl (readFile "entrypoint.sh.gotmpl") . | nindent 6 }}
     loggers.xml: |
       {{- readFile "loggers.xml" | nindent 6 }}
     logback.xml: |
