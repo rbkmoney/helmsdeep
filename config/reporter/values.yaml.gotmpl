@@ -7,6 +7,11 @@ image:
   tag: 6872c8d1bdce6b4e1d9d5e8eabc462bb2c6daa71
   pullPolicy: IfNotPresent
 
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
+
 runopts:
   command: ["/opt/reporter/entrypoint.sh"]
 

@@ -3,8 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/riak-base
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/riak-base
   tag: f5b757c2ec73c7db1460c94a17a20a3b5799fde6
+  pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 configMap:
   data: 
