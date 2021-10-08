@@ -46,10 +46,11 @@ services:
     enabled: true
     dev: true
 
-# Change in case of external splited riak clusters for CDS and Machinegun
+# Change in case of external splited riak clusters for CDS and Machinegun, wb-list-manager
   riak:
     riakMgAddress: riak
     riakCdAddress: riak
+    riakWblAddress: riak
 
 # Enable postgresql external cluster with One user for any services
 # TODO: split users
