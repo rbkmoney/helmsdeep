@@ -7,7 +7,7 @@ java \
     /opt/wb-list-manager/wb-list-manager.jar \
     --logging.config=/opt/wb-list-manager/logback.xml \
     --management.security.enabled=false \
-    --riak.address=riak \
+    --riak.address={{ .Values.services.riak.riakWblAddress | default "riak" }} \
     --riak.port=8087 \
     --riak.bucket=wblist \
     --retry.timeout=2000 \

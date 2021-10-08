@@ -29,6 +29,14 @@ volumes:
     configMap:
       name: {{ .Release.Name }}
       defaultMode: 0755
+{{- if .Values.services.kafka.ssl.enabled }}
+  - name: kafka-cert
+    secret:
+      secretName: {{ .Release.Name }}-kafka-cert
+  - name: kafka-ca
+  secret:
+    secretName: java-ca-kafka
+{{- end }}
 
 volumeMounts:
   - name: config-volume
@@ -43,6 +51,16 @@ volumeMounts:
     mountPath: /opt/wb-list-manager/loggers.xml
     subPath: loggers.xml
     readOnly: true
+{{- if .Values.services.kafka.ssl.enabled }}
+  - name: kafka-ca
+    subPath: kafka-truststore.p12
+    mountPath: /vault/secrets/kafka-truststore.p12
+    readOnly: true
+  - name: kafka-cert
+    subPath: { { .Release.Name } }.p12
+    mountPath: /vault/secrets/kafka-keystore.p12
+    readOnly: true
+{{- end }}
 
 service:
   ports:
