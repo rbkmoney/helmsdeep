@@ -314,8 +314,14 @@ namespaces:
 kafka:
   default_kafka_client:
     endpoints:
-    - host: "kafka-headless"
-      port: 9092
+    - host: "{{ .Values.services.kafka.endpoint | default "kafka" }}"
+      port: {{ .Values.services.kafka.port | default "9092" }}
+{{- if .Values.services.kafka.ssl.enabled }}
+    ssl:
+      certfile: "/vault/secrets/kafka/tls.crt"
+      keyfile: "/vault/secrets/kafka/tls.key"
+      cacertfile: "/vault/secrets/ca.crt"
+{{- end }}
     producer:
       compression: no_compression  # 'gzip' or 'snappy' to enable compression
       # How many message sets (per-partition) can be sent to kafka broker

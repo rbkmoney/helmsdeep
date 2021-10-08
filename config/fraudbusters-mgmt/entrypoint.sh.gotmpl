@@ -8,7 +8,7 @@ java \
     -jar \
     /opt/fraudbusters-management/fraudbusters-management.jar \
     --logging.config=/opt/fraudbusters-management/logback.xml \
-    --kafka.bootstrap.servers=kafka:9092 \
+    --kafka.bootstrap.servers={{ .Values.services.kafka.endpoint | default "kafka" }}:{{ .Values.services.kafka.port | default "9092" }} \
     --kafka.topic.wblist.command=wb-list-command \
     --kafka.topic.wblist.topic.event.sink=wb-list-event-sink \
     --kafka.topic.fraudbusters.payment.template=fraud-template-command\

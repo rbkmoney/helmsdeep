@@ -3,8 +3,8 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/columbus
-  tag: 88be0cbccde15c7d4c88403d495f8d564f826160
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/file-storage
+  tag: d1d6c25f90d571a214eda243559cda5b8b78d9ec
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
@@ -13,12 +13,12 @@ imagePullSecrets:
 {{ end }}
 
 runopts:
-  command: ["/opt/columbus/entrypoint.sh"]
+  command: ["/opt/file-storage/entrypoint.sh"]
 
 configMap:
-  data:
+  data: 
     entrypoint.sh: |
-      {{- readFile "entrypoint.sh" | nindent 6 }}
+      {{- tpl (readFile "entrypoint.sh.gotmpl") . | nindent 6 }}
     loggers.xml: |
       {{- readFile "loggers.xml" | nindent 6 }}
     logback.xml: |
@@ -32,15 +32,15 @@ volumes:
 
 volumeMounts:
   - name: config-volume
-    mountPath: /opt/columbus/entrypoint.sh
+    mountPath: /opt/file-storage/entrypoint.sh
     subPath: entrypoint.sh
     readOnly: true
   - name: config-volume
-    mountPath: /opt/columbus/logback.xml
+    mountPath: /opt/file-storage/logback.xml
     subPath: logback.xml
     readOnly: true
   - name: config-volume
-    mountPath: /opt/columbus/loggers.xml
+    mountPath: /opt/file-storage/loggers.xml
     subPath: loggers.xml
     readOnly: true
 
@@ -48,16 +48,18 @@ service:
   ports:
     - name: api
       port: 8022
+    - name: management
+      port: 8023
 
 livenessProbe:
   httpGet:
     path: /actuator/health
-    port: api
+    port: management
 
 readinessProbe:
   httpGet:
     path: /actuator/health
-    port: api
+    port: management
 
 metrics:
   serviceMonitor:
@@ -71,13 +73,8 @@ metrics:
         scheme: http
 
 ciliumPolicies:
-  - filters:
-    - port: 5432
-      type: TCP
-    name: columbus-pg
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8200
-      type: TCP
-    name: vault
-    namespace: {{ .Release.Namespace }}
+   - filters:
+     - port: 9000
+       type: TCP
+     name: minio
+     namespace: {{ .Release.Namespace }}
