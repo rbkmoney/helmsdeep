@@ -18,5 +18,5 @@ java \
     --postgres.db.user=postgres \
     --postgres.db.password=postgres \
     ${@} \
-    --spring.config.additional-location=/vault/secrets/application.properties
+    --spring.config.additional-location=optional:/vault/secrets/application.properties
 

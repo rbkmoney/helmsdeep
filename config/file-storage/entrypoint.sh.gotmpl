@@ -24,4 +24,4 @@ java \
       --storage.client.protocol=HTTP \
       --storage.clientMaxErrorRetry=5 \
     ${@} \
-    --spring.config.additional-location=/vault/secrets/application.properties \
+    --spring.config.additional-location=optional:/vault/secrets/application.properties

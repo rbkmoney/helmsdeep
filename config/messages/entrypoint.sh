@@ -9,4 +9,4 @@ java \
           --logging.config=/opt/messages/logback.xml \
           -Dwoody.node_id=1 \
     ${@} \
-    --spring.config.additional-location=/vault/secrets/application.properties
+    --spring.config.additional-location=optional:/vault/secrets/application.properties
