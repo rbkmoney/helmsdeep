@@ -6,7 +6,7 @@ java \
     -jar \
     /opt/reporter/reporter.jar \
     --logging.config=/opt/reporter/logback.xml \
-    --management.security.flag=false \
+    --management.security.enabled=false \
     --management.metrics.export.statsd.flavor=etsy \
     --management.metrics.export.statsd.enabled=true \
     --management.metrics.export.prometheus.enabled=true \
@@ -29,17 +29,17 @@ java \
     --magista.timeout=700000 \
     --domainConfig.url=http://dominant:8022/v1/domain/repository \
     --domainConfig.timeout=30000 \
-    --storage.endpoint=eu-central-1.linodeobjects.com \
-    --storage.signingRegion=EU \
-    --storage.bucketName=files \
-    --storage.accessKey=YOUR_S3_ACCESS_KEY \
-    --storage.secretKey=YOUR_S3_SECRET_KEY \
+    --storage.endpoint={{ .Values.services.s3.endpoint }} \
+    --storage.signingRegion={{ .Values.services.s3.region }} \
+    --storage.bucketName={{ .Values.services.s3.bucket }} \
+    --storage.accessKey={{ .Values.services.s3.accessKey }} \
+    --storage.secretKey={{ .Values.services.s3.secretKey }} \
     --storage.client.protocol=HTTP \
     --payouter.polling.enabled=true \
     --payouter.polling.url=http://payouter:8022/repo \
     --hellgate.invoicing.url=http://hellgate:8022/v1/processing/invoicing \
     --hellgate.invoicing.timeout=60000 \
-    --kafka.bootstrap-servers=kafka:9092 \
+    --kafka.bootstrap-servers=kafka-node-0001.dc1.xpay.local:9093 \
     --kafka.topics.invoicing.enabled=true \
     --kafka.topics.invoicing.id=mg-events-invoice \
     --kafka.topics.invoicing.concurrency=10 \
@@ -55,4 +55,4 @@ java \
     --kafka.consumer.session-timeout-ms=300000 \
     --kafka.consumer.auto-offset-reset=earliest \
     ${@} \
-    --spring.config.additional-location=/vault/secrets/application.properties \
+    --spring.config.additional-location=optional:/vault/secrets/application.properties

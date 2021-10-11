@@ -7,7 +7,7 @@ image:
 
 {{ if .Values.services.global.registry.imagePullSecret }}
 imagePullSecrets:
-  - {{ .Values.services.global.registry.imagePullSecret }}
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
 {{ end }}
 
 configMap:
@@ -47,6 +47,34 @@ service:
   ports:
     - name: management
       port: 8022
+
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
+
+ingress:
+  enabled: true
+  annotations:
+{{- if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
+{{- end }}
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,X-Request-ID"
+    kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
+  hosts:
+    - host: iddqd.{{ $ingressDomain | default "rbk.dev" }}
+      paths:
+        - /v1/admin
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
+  {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    - secretName: iddqd-{{ .Values.services.ingress.tls.secretName }}
+  {{- else }}
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
+  {{- end }}
+      hosts:
+        - iddqd.{{ $ingressDomain | default "rbk.dev" }}
+{{- end }}
+  servicePort: 8022
+
 
 livenessProbe:
   httpGet:

@@ -33,9 +33,51 @@ services:
     registry:
       repository: docker.io/rbkmoney
       imagePullSecret: {}
+# Set tolerations for pcidss services. Need manually set taints to pcidss nodes:
+# kubectl taint nodes wrk1-dss wrk2-dss pcidss=true:NoSchedule
+    pcidss:
+      taints:
+        enabled: false
+        key: pcidss
+        value: true
 
   vault:
+# enabled:false switch getting postgres user and password from annotations to secret
+    enabled: true
     dev: true
+
+# Change in case of external splited riak clusters for CDS and Machinegun
+  riak:
+    riakMgAddress: riak
+    riakCdAddress: riak
+
+# Enable postgresql external cluster with One user for any services
+# TODO: split users
+  postgres:
+    external: false
+  # Values below uses only if postgres.external is true
+    endpoint: postgresql-postgres
+    uniUser: postgres
+    uniPassword: H@ckM3
+
+# Enable external kafka cluster
+  kafka:
+    external: false
+    endpoint: kafka
+    port: 9092
+    ssl:
+      enabled: false
+      keystorePass: 12341234
+      # Set if differ from keystore password
+      keyPass: 12341234
+      truststorePass: 43214321
+
+  s3:
+    endpoint: minio:9000
+    region: EU
+    bucket: bucket-files
+    accessKey: user_01
+    secretKey: SomeSecretKeyFromS3AdminConsole
 
   ingress:
 # Ingressclass if have more than one controller:
@@ -55,7 +97,3 @@ services:
 # If use Lets Encrypt for cert this value will be used as suffix for secrets with certs
       secretName: sometlssecret
 
-  riak:
-    splitDss: false
-    riakMgAddress: riak
-    riakCdAddress: riak

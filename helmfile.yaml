@@ -299,3 +299,12 @@ releases:
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/keycloak
+- name: claim-api
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/keycloak
+    - {{ .Namespace | default "default" }}/party-management
+    - {{ .Namespace | default "default" }}/bouncer
+    - {{ .Namespace | default "default" }}/claim-management
+- name: file-storage
+  <<: *generic_stateless

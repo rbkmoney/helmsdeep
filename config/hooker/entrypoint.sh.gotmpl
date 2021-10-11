@@ -23,7 +23,7 @@ java \
     --service.invoicing.url=http://hellgate:8022/v1/processing/invoicing \
     --service.customer.url=http://hellgate:8022/v1/processing/customer_management \
     --service.fault-detector.url=http://fault-detector:8022/v1/fault-detector \
-    --kafka.bootstrap-servers=kafka:9092 \
+    --kafka.bootstrap-servers={{ .Values.services.kafka.endpoint | default "kafka" }}:{{ .Values.services.kafka.port | default "9092" }} \
     --kafka.topics.invoice.id=mg-events-invoice \
     --kafka.topics.invoice.enabled=true \
     --kafka.topics.invoice.concurrency=7 \
@@ -36,4 +36,4 @@ java \
     --spring.application.name=hooker \
     --logging.level.com.rbkmoney.hooker.scheduler.MessageScheduler=DEBUG \
     ${@} \
-    --spring.config.additional-location=/vault/secrets/application.properties \
+    --spring.config.additional-location=optional:/vault/secrets/application.properties

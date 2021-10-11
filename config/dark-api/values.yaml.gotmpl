@@ -4,12 +4,12 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/dark-api
-  tag: 933d0b9506ba312d69dfd46c5432ced36e3fce64
+  tag: 8b686ed44a3a65078aa637c5e1cf1d31265d5dba
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
 imagePullSecrets:
-  - {{ .Values.services.global.registry.imagePullSecret }}
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
 {{ end }}
 
 runopts:

@@ -3,84 +3,79 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/capi-v1
-  tag: b2b15a5b620cd7061f9e81fa44955e824ffdf806
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/claim-management-api
+  tag: 93fe35d83d5bcaf8ab1801684d1bb615d0c18a62
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
 imagePullSecrets:
-  - name: {{ .Values.services.global.registry.imagePullSecret }}
+  - {{ .Values.services.global.registry.imagePullSecret }}
 {{ end }}
 
-configMap:
-  data:
-    sys.config: |
-      {{- readFile "sys.config" | nindent 6 }}
-    erl_inetrc: |
-      {{- tpl (readFile "../vm/erl_inetrc.gotmpl") . | nindent 6 }}
-    fetchKeycloakPubkey: |
-      {{- readFile "../api-common/fetch-keycloak-pubkey.sh" | nindent 6 }}
-    oopsBody1: |
-      {{- readFile "../api-common/oops-bodies/sad-kitty1" | nindent 6 }}
-    oopsBody2: |
-      {{- readFile "../api-common/oops-bodies/sad-kitty2" | nindent 6 }}
-    vm.args: |
-      {{- tpl (readFile "../vm/erl_vm_args.gotmpl") . | nindent 6 }}
-
-secret:
-  data:
-    token_encryption_key1.jwk: |
-      {{- readFile "../api-common/keys/token-encryption-keys/1.jwk" | nindent 6 }}
-    capi.privkey.pem: |
-      {{- readFile "../api-common/keys/capi.privkey.pem" | nindent 6 }}
+runopts:
+  command: ["/opt/claim-management-api/entrypoint.sh"]
 
 apiInitContainers:
   enabled: true
 
-volumeMounts:
-  - name: config-volume
-    mountPath: /opt/capi/releases/0.1.0/sys.config
-    subPath: sys.config
-    readOnly: true
-  - name: config-volume
-    mountPath: /opt/capi/releases/0.1.0/vm.args
-    subPath: vm.args
-    readOnly: true
-  - name: config-volume
-    mountPath: /opt/capi/erl_inetrc
-    subPath: erl_inetrc
-    readOnly: true
-  - name: config-volume
-    mountPath: /var/lib/capi/oops-bodies/oopsBody1
-    subPath: oopsBody1
-    readOnly: true
-  - name: config-volume
-    mountPath: /var/lib/capi/oops-bodies/oopsBody2
-    subPath: oopsBody2
-    readOnly: true
-  - name: secret
-    mountPath: /var/lib/capi/keys
-    readOnly: true
-  - name: keycloak-pubkey
-    mountPath: /var/lib/capi/keys/keycloak
-    readOnly: true
+env:
+  - name: LOGBACK_SERVICE_NAME
+    value: "claim-management-api"
+
+
+configMap:
+  data:
+    entrypoint.sh: |
+      {{- tpl  (readFile "entrypoint.sh.gotmpl") . | nindent 6 }}
+    loggers.xml: |
+      {{- readFile "loggers.xml" | nindent 6 }}
+    logback.xml: |
+      {{- readFile "../logs/logback.xml" | nindent 6 }}
+    fetchKeycloakPubkey: |
+      {{- readFile "../api-common/fetch-keycloak-pubkey.sh" | nindent 6 }}
 
 volumes:
   - name: config-volume
     configMap:
       name: {{ .Release.Name }}
       defaultMode: 0755
-  - name: secret
-    secret:
-      secretName: {{ .Release.Name }}
   - name: keycloak-pubkey
     emptyDir: {}
 
+volumeMounts:
+  - name: config-volume
+    mountPath: /opt/claim-management-api/entrypoint.sh
+    subPath: entrypoint.sh
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/claim-management-api/logback.xml
+    subPath: logback.xml
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/claim-management-api/loggers.xml
+    subPath: loggers.xml
+    readOnly: true
+  - name: keycloak-pubkey
+    mountPath: /var/lib/claim-management-api/keys/keycloak
+    readOnly: true
+
+
 service:
-  type: ClusterIP
   ports:
     - name: api
       port: 8080
+    - name: management
+      port: 8023
+      
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: management
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: management
 
 metrics:
   serviceMonitor:
@@ -88,6 +83,10 @@ metrics:
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus
+    endpoints:
+      - port: "management"
+        path: /actuator/prometheus
+        scheme: http
 
 {{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
 {{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
@@ -95,19 +94,17 @@ metrics:
 ingress:
   enabled: true
   annotations:
-    nginx.ingress.kubernetes.io/enable-cors: "true"
 {{- if .Values.services.ingress.tls.letsEncrypt.enabled }}
     cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
 {{- end }}
     kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
     nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
     nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-       more_set_headers "Access-Control-Allow-Origin: $http_origin";
+    nginx.ingress.kubernetes.io/cors-allow-headers: "content-type,content-disposition,authorization,x-request-id"
   hosts:
     - host: api.{{ $ingressDomain | default "rbk.dev" }}
       paths:
-        - /v1
+        - /claim-api
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
   {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
@@ -122,27 +119,23 @@ ingress:
 
 ciliumPolicies:
   - filters:
-    - port: 8080
+    - port: 8022
       type: TCP
-    name: keycloak
+    name: claim-management
     namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
-    name: bender
+    name: org-manager
     namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
-    name: shumway
+    name: party-management
     namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
-    name: dominant
+    name: bouncer
     namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
-    name: hellgate
-    namespace: {{ .Release.Namespace }}
+
