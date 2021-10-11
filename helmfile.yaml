@@ -299,4 +299,4 @@ releases:
     - {{ .Namespace | default "default" }}/bouncer
     - {{ .Namespace | default "default" }}/claim-management
 - name: file-storage
-   <<: *generic_stateless
+  <<: *generic_stateless
