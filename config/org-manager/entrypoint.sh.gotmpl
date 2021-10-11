@@ -34,4 +34,4 @@ java \
       --bouncer.rule-set-id=service/authz/api \
       --access-check.enabled=true \
     ${@} \
-    --spring.config.additional-location=/vault/secrets/application.properties
+    --spring.config.additional-location=optional:/vault/secrets/application.properties
