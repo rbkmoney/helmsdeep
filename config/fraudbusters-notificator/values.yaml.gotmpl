@@ -35,7 +35,7 @@ secret:
       spring.flyway.user={{ .Values.services.postgres.uniUser }}
       spring.flyway.password={{ .Values.services.postgres.uniPassword }}
       spring.flyway.schemas=fb_notificator
-  {{- end }}
+{{- end }}
 
 env:
   - name: LOGBACK_SERVICE_NAME
