@@ -60,6 +60,10 @@ volumeMounts:
     subPath: {{ .Release.Name }}.p12
     mountPath: /vault/secrets/kafka-keystore.p12
     readOnly: true
+  - name: secret
+    subPath: db_config
+    mountPath: /vault/secrets/application.properties
+    readOnly: true
 {{- end }}
 
 service:
