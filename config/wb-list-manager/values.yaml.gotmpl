@@ -34,8 +34,8 @@ volumes:
     secret:
       secretName: {{ .Release.Name }}-kafka-cert
   - name: kafka-ca
-  secret:
-    secretName: java-ca-kafka
+    secret:
+      secretName: java-ca-kafka
 {{- end }}
 
 volumeMounts:
