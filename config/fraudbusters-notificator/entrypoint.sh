@@ -22,8 +22,6 @@ java \
     --mail.password="" \
     --mail.protocol=smtp \
     --mail.smtp.auth=false \
-    --mail.smtp.auth=false \
-    --mail.smtp.auth=false \
     --mail.smtp.timeout=30000 \
     --mail.smtp.from-address="NotificationService@rbkmoney.com" \
     --mail.smtp.starttls.enable=true \
