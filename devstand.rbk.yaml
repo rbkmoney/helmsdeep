@@ -25,6 +25,8 @@ services:
         value: true
 
   vault:
+# enabled:false switch getting postgres user and password from annotations to secret
+    enabled: false
     dev: true
 
   riak:
@@ -33,17 +35,19 @@ services:
 
 # TODO: split users
   postgres:
-    external: false
-    endpoint: postgresql-postgres
+    external: true
+    endpoint: postgres-postgresql
     uniUser: postgres
     uniPassword: H@ckM3
 
   kafka:
     external: false
-    endpoint: kafka:9092
+    endpoint: kafka
+    port: 9092
     ssl:
       enabled: false
       keystorePass: 12341234
+      # Set if differ from keystore password
       keyPass: 12341234
       truststorePass: 43214321
 
@@ -60,9 +64,9 @@ services:
     rootDomain: dev.rbk.mn
     namespacedDomain: true
     tls:
-      enabled: true
+      enabled: false
       letsEncrypt:
-        enabled: true
+        enabled: false
         issuer: "letsencrypt-prod"
       secretName: devstand
 
