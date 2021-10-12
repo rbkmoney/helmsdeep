@@ -34,7 +34,7 @@ secret:
       kafka.ssl.key-password={{ .Values.services.kafka.ssl.keyPass }}
       kafka.ssl.server-keystore-location=/vault/secrets/kafka-truststore.p12
       kafka.ssl.server-password={{ .Values.services.kafka.ssl.truststorePass }}
-  {{- end }}
+{{- end }}
 
 volumes:
   - name: config-volume
