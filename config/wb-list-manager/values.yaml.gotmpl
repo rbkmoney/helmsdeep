@@ -57,7 +57,7 @@ volumeMounts:
     mountPath: /vault/secrets/kafka-truststore.p12
     readOnly: true
   - name: kafka-cert
-    subPath: { { .Release.Name } }.p12
+    subPath: {{ .Release.Name }}.p12
     mountPath: /vault/secrets/kafka-keystore.p12
     readOnly: true
 {{- end }}
