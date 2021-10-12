@@ -56,6 +56,7 @@ releases:
 - name: keycloak
   <<: *default
   chart: codecentric/keycloak
+  version: 14.0.1
   needs:
   - {{ .Namespace | default "default" }}/postgres
   - {{ .Namespace | default "default" }}/keycloak-realms
@@ -154,6 +155,8 @@ releases:
     - {{ .Namespace | default "default" }}/keycloak
 - name: fistful
   <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/dominant
 - name: fistful-magista
   <<: *generic_stateless
   needs:
