@@ -24,6 +24,18 @@ configMap:
     logback.xml: |
       {{- readFile "../logs/logback.xml" | nindent 6 }}
 
+{{- if .Values.services.kafka.ssl.enabled }}
+secret:
+  data:
+    db_config: |
+      kafka.ssl.enable=true
+      kafka.ssl.keystore-location=/vault/secrets/kafka-keystore.p12
+      kafka.ssl.keystore-password={{ .Values.services.kafka.ssl.keystorePass }}
+      kafka.ssl.key-password={{ .Values.services.kafka.ssl.keyPass }}
+      kafka.ssl.server-keystore-location=/vault/secrets/kafka-truststore.p12
+      kafka.ssl.server-password={{ .Values.services.kafka.ssl.truststorePass }}
+  {{- end }}
+
 volumes:
   - name: config-volume
     configMap:
