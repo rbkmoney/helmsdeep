@@ -34,7 +34,7 @@ releases:
 - name: netpolicy
   installed: {{ .Values.cilium.enabled }}
   <<: *infra_default
-  chart: rbkmoney/netpolicy
+  chart: ../charts/charts/netpolicy
 {{- if eq .Values.certmanager.enabled true }}
 - name: certmanager
   <<: *infra_default
