@@ -1,5 +1,5 @@
 cilium:
-  enabled: true
+  enabled: false
 elk:
   enabled: false
 prometheus:

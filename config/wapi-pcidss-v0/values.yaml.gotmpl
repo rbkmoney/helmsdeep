@@ -126,3 +126,7 @@ ciliumPolicies:
       type: TCP
     name: dominant
     namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8080
+      type: TCP
+    name: keycloak

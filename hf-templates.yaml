@@ -18,11 +18,11 @@ templates:
 
   default_generic: &generic_stateless
     <<: *default
-    chart: ../charts/charts/stateless
+    chart: rbkmoney/stateless
 
   generic_json: &generic_stateless_json
     <<: *default
-    chart: ../charts/charts/stateless
+    chart: rbkmoney/stateless
     values:
       - config/{{ .Release.Name }}/values.yaml.gotmpl
       - logs:
@@ -30,11 +30,11 @@ templates:
 
   generic_statefull: &generic_statefull
     <<: *default
-    chart: ../charts/charts/statefull
+    chart: rbkmoney/statefull
 
   generic_statefull_json: &generic_statefull_json
     <<: *default
-    chart: ../charts/charts/statefull
+    chart: rbkmoney/statefull
     values:
       - config/{{ .Release.Name }}/values.yaml.gotmpl
       - logs:

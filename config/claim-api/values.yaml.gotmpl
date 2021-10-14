@@ -139,7 +139,6 @@ ciliumPolicies:
     name: bouncer
     namespace: {{ .Release.Namespace }}
   - filters:
-    - port: 8022
+    - port: 8080
       type: TCP
-    name: party-management
-    namespace: {{ .Release.Namespace }}
+    name: keycloak

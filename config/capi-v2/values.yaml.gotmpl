@@ -157,8 +157,3 @@ ciliumPolicies:
       type: TCP
     name: hooker
     namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
-    name: party-management
-    namespace: {{ .Release.Namespace }}
