@@ -26,4 +26,4 @@ java \
     --mail.smtp.from-address="NotificationService@rbkmoney.com" \
     --mail.smtp.starttls.enable=true \
     ${@} \
-    --spring.config.additional-location=/vault/secrets/application.properties
+    --spring.config.additional-location=optional:file:/vault/secrets/application.properties

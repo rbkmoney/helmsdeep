@@ -1,5 +1,5 @@
 {{- $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain -}}
-  {{- $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain -}}
+{{- $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain -}}
 # -*- mode: yaml -*-
 
 replicaCount: 1
@@ -26,6 +26,19 @@ configMap:
     logback.xml: |
       {{- readFile "../logs/logback.xml" | nindent 6 }}
 
+{{- if .Values.services.postgres.external }}
+secret:
+  data:
+    db_config: |
+      spring.datasource.url=jdbc:postgresql://{{ .Values.services.postgres.endpoint | default "external-postgres" }}:5432/fraudbusters-management?sslmode=disable
+      spring.datasource.username={{ .Values.services.postgres.uniUser }}
+      spring.datasource.password={{ .Values.services.postgres.uniPassword }}
+      spring.flyway.url=jdbc:postgresql://{{ .Values.services.postgres.endpoint | default "external-postgres" }}:5432/fraudbusters-management?sslmode=disable
+      spring.flyway.user={{ .Values.services.postgres.uniUser }}
+      spring.flyway.password={{ .Values.services.postgres.uniPassword }}
+      spring.flyway.schemas=fraudbusters-management
+{{- end }}
+
 env:
   - name: LOGBACK_SERVICE_NAME
     value: "fraudbusters-management"
@@ -35,6 +48,11 @@ volumes:
     configMap:
       name: {{ .Release.Name }}
       defaultMode: 0755
+{{- if .Values.services.postgres.external }}
+  - name: secret
+    secret:
+      secretName: {{ .Release.Name }}
+{{- end }}
 
 volumeMounts:
   - name: config-volume
@@ -49,11 +67,17 @@ volumeMounts:
     mountPath: /opt/fraudbusters-management/loggers.xml
     subPath: loggers.xml
     readOnly: true
+{{- if .Values.services.postgres.external }}
+  - name: secret
+    subPath: db_config
+    mountPath: /vault/secrets/application.properties
+    readOnly: true
+{{- end }}
 
 service:
   ports:
     - name: api
-      port: 8022
+      port: 8080
 
 livenessProbe:
   httpGet:
@@ -65,6 +89,7 @@ readinessProbe:
     path: /actuator/health
     port: api
 
+{{- if .Values.services.vault.enabled }}
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
@@ -79,6 +104,7 @@ podAnnotations:
     spring.flyway.password={{ .Data.password }}
     spring.flyway.schemas=af
     {{- end }}`}}
+{{- end }}
 
 metrics:
   serviceMonitor:
@@ -104,21 +130,21 @@ ingress:
     nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
     nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
     nginx.ingress.kubernetes.io/cors-allow-headers: "content-type,content-disposition,authorization"
- hosts:
-   - host: api.{{ $ingressDomain | default "rbk.dev" }}
-     paths:
-       - /fb-management
-  {{- if .Values.services.ingress.tls.enabled }}
- tls:
+  hosts:
+    - host: api.{{ $ingressDomain | default "rbk.dev" }}
+      paths:
+        - /fb-management
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
   {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
-   - secretName: api-{{ .Values.services.ingress.tls.secretName }}
+    - secretName: api-{{ .Values.services.ingress.tls.secretName }}
   {{- else }}
-   - secretName: {{ .Values.services.ingress.tls.secretName }}
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
   {{- end }}
-     hosts:
-       - api.{{ $ingressDomain | default "rbk.dev" }}
-  {{- end }}
- servicePort: 8080
+      hosts:
+        - api.{{ $ingressDomain | default "rbk.dev" }}
+{{- end }}
+  servicePort: 8080
 
 
 ciliumPolicies:
