@@ -16,3 +16,6 @@ masterService: deanonimus-es
 image: "docker.elastic.co/elasticsearch/elasticsearch"
 imageTag: "7.10.2"
 imagePullPolicy: "IfNotPresent"
+
+labels:
+  selector.cilium.rbkmoney/release: deanonimus-es
