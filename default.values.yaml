@@ -57,7 +57,7 @@ services:
   postgres:
     external: false
   # Values below uses only if postgres.external is true
-    endpoint: postgresql-postgres
+    endpoint: postgres-postgresql
     uniUser: postgres
     uniPassword: H@ckM3
 
