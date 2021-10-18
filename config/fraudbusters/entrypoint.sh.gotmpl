@@ -12,6 +12,7 @@ java \
     --management.metrics.export.statsd.enabled=true \
     --management.metrics.export.prometheus.enabled=true \
     --management.endpoint.prometheus.enabled=true \
+    --management.endpoints.web.exposure.include=health,info,prometheus \
     --spring.cache.cache-names=resolveCountry \
     --spring.cache.caffeine.spec=maximumSize=500,expireAfterAccess=100s \
     --kafka.ssl.enable=false \
@@ -48,6 +49,8 @@ java \
     --geo.ip.service.url=http://columbus:8022/repo \
     --wb.list.service.url=http://wb-list-manager:8022/v1/wb_list \
     --spring.profiles.active=full-prod \
+    --dgraph.service.enabled=false \
+    --kafka.dgraph.topics.payment.enabled=false \
     --default.template.enable=true \
     --default.template.countToCheckDays=1000 \
     --result.full.check.enabled=true \

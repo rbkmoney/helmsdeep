@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/fraudbusters
-  tag: 5a6874671b4dfe235eba71952c121b1400f3b625
+  tag: 22b2ba994bc59d495f261542c50818419c79794b
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
@@ -66,16 +66,18 @@ service:
   ports:
     - name: api
       port: 8022
+    - name: management
+      port: 8023
 
 livenessProbe:
   httpGet:
     path: /actuator/health
-    port: api
+    port: management
 
 readinessProbe:
   httpGet:
     path: /actuator/health
-    port: api
+    port: management
 
 metrics:
   serviceMonitor:
@@ -84,7 +86,7 @@ metrics:
     additionalLabels:
       release: prometheus
     endpoints:
-      - port: "api"
+      - port: "management"
         path: /actuator/prometheus
         scheme: http
 
