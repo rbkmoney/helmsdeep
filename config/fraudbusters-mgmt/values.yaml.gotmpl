@@ -135,7 +135,7 @@ ingress:
   hosts:
     - host: api.{{ $ingressDomain | default "rbk.dev" }}
       paths:
-        - /fb-management
+        - /fb-management/v1
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
   {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
