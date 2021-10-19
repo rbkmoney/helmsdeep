@@ -3,6 +3,7 @@ server:
 {{- if and .Values.services.global.ipv6only (not .Values.services.vault.dev) }}
   standalone:
     enabled: true
+  {{- if .Values.services.vault.transitUnseal.enabled }}
     config: |
       {
         "listener": {
@@ -14,7 +15,7 @@ server:
         },
         "seal": {
           "transit": {
-            "address": "http://hw-carter.bst3.rbkmoney.net:8200",
+            "address": "{{ .Values.services.vault.transitUnseal.address }}",
             "disable_renewal": "false",
             "key_name": "autounseal",
             "mount_path": "transit/",
@@ -27,6 +28,11 @@ server:
           }
         }
       }
+  extraSecretEnvironmentVars:
+    - envName: VAULT_TOKEN
+      secretName: vault-transit-token
+      secretKey: token
+  {{- end }}
   dataStorage:
     enabled: true
     size: 10Gi
@@ -42,11 +48,6 @@ server:
     - /bin/sh
     - -c
     - /vault-init/init.vault.sh
-{{- else }}
-  extraSecretEnvironmentVars:
-    - envName: VAULT_TOKEN
-      secretName: vault-transit-token
-      secretKey: token
 {{- end }}
   extraLabels: 
     selector.cilium.rbkmoney/release: {{ .Release.Name }}
@@ -62,13 +63,10 @@ server:
     - mountPath: /vault-init
       name: vault-init
 
+{{ if .Values.services.vault.injectorNamespaced }}
 injector:
   objectSelector:
     matchLabels:
       selector.vaultinject.rbkmoney: {{ .Release.Namespace }}
-ciliumPolicies:
-  - filters:
-    - port: 5432
-      type: TCP
-    name: postgres
-    namespace: {{ .Release.Namespace }}
+{{ end }}
+
