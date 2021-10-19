@@ -3,6 +3,30 @@ server:
 {{- if and .Values.services.global.ipv6only (not .Values.services.vault.dev) }}
   standalone:
     enabled: true
+    config: |
+      {
+        "listener": {
+          "tcp": {
+            "address": "[::]:8200",
+            "cluster_address": "[::]:8201",
+            "tls_disable": 1
+          }
+        },
+        "seal": {
+          "transit": {
+            "address": "http://hw-carter.bst3.rbkmoney.net:8200",
+            "disable_renewal": "false",
+            "key_name": "autounseal",
+            "mount_path": "transit/",
+            "tls_skip_verify": "true"
+          }
+        },
+        "storage": {
+          "file": {
+            "path": "/vault/data"
+          }
+        }
+      }
   dataStorage:
     enabled: true
     size: 10Gi
@@ -18,6 +42,11 @@ server:
     - /bin/sh
     - -c
     - /vault-init/init.vault.sh
+{{- else }}
+  extraSecretEnvironmentVars:
+    - envName: VAULT_TOKEN
+      secretName: vault-transit-token
+      secretKey: token
 {{- end }}
   extraLabels: 
     selector.cilium.rbkmoney/release: {{ .Release.Name }}
