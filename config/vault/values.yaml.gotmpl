@@ -3,6 +3,36 @@ server:
 {{- if and .Values.services.global.ipv6only (not .Values.services.vault.dev) }}
   standalone:
     enabled: true
+  {{- if .Values.services.vault.transitUnseal.enabled }}
+    config: |
+      {
+        "listener": {
+          "tcp": {
+            "address": "[::]:8200",
+            "cluster_address": "[::]:8201",
+            "tls_disable": 1
+          }
+        },
+        "seal": {
+          "transit": {
+            "address": "{{ .Values.services.vault.transitUnseal.address }}",
+            "disable_renewal": "false",
+            "key_name": "autounseal",
+            "mount_path": "transit/",
+            "tls_skip_verify": "true"
+          }
+        },
+        "storage": {
+          "file": {
+            "path": "/vault/data"
+          }
+        }
+      }
+  extraSecretEnvironmentVars:
+    - envName: VAULT_TOKEN
+      secretName: vault-transit-token
+      secretKey: token
+  {{- end }}
   dataStorage:
     enabled: true
     size: 10Gi
@@ -33,13 +63,10 @@ server:
     - mountPath: /vault-init
       name: vault-init
 
+{{ if .Values.services.vault.injectorNamespaced }}
 injector:
   objectSelector:
     matchLabels:
       selector.vaultinject.rbkmoney: {{ .Release.Namespace }}
-ciliumPolicies:
-  - filters:
-    - port: 5432
-      type: TCP
-    name: postgres
-    namespace: {{ .Release.Namespace }}
+{{ end }}
+

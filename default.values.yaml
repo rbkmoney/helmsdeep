@@ -44,7 +44,15 @@ services:
   vault:
 # enabled:false switch getting postgres user and password from annotations to secret
     enabled: true
+# Enable autounseal and disable persistance
     dev: true
+    injectorNamespaced: true
+# Set "enabled: true" if use another vault instance for autounseal. 
+# !Needs secret with token named "vault-transit-token" (look at config/vault/values.yaml.gotmpl)
+    transitUnseal:
+      enabled: false
+      address: http://another.vault.local:8200
+
 
 # Change in case of external splited riak clusters for CDS and Machinegun, wb-list-manager
   riak:

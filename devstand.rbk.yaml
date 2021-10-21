@@ -25,7 +25,13 @@ services:
         value: true
 
   vault:
+    enabled: true
     dev: true
+    injectorNamespaced: true
+    transitUnseal:
+      enabled: false
+      address: http://another.vault.local:8200
+
 
   riak:
     riakMgAddress: riak
