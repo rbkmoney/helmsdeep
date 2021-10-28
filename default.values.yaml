@@ -40,6 +40,8 @@ services:
         enabled: false
         key: pcidss
         value: true
+      replicas: 1
+    statelessReplicas: 1
 
 # In case of dev:true and If you use kubernetes >=1.21, or use any cloud provider look at https://www.vaultproject.io/docs/auth/kubernetes#discovering-the-service-account-issuer
 # You need set issuer according to your cluster in config/vault-cm/values.yaml.gotmpl
