@@ -28,6 +28,13 @@ helmfiles:
 
 releases:
 #External releases
+- name: clickhouse-operator
+  <<: *default
+  chart: rbkmoney/clickhouse-operator
+  namespace: clickhouse
+- name: clickhouse
+  <<: *default
+  chart: rbkmoney/clickhouse
 - name: kafka
   <<: *default
   chart: bitnami/kafka
