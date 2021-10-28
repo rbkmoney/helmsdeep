@@ -1,5 +1,11 @@
 version: v0.140.1
 dependencies:
+- name: clickhouse
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.11
+- name: clickhouse-operator
+  repository: https://rbkmoney.github.io/charts
+  version: 0.1.1
 - name: consul
   repository: https://helm.releases.hashicorp.com
   version: 0.35.0
@@ -30,5 +36,5 @@ dependencies:
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.17.1
-digest: sha256:ec410948c529a939d6a90edc4d3b69bb85b464308a4779ab83ff0324fdd818cb
-generated: "2021-10-28T20:01:32.138401+03:00"
+digest: sha256:1956b563561318eb746fd071bca9c82ee151eb7a06b0c6e36a806077582db81e
+generated: "2021-10-28T23:17:07.106247+03:00"
