@@ -24,7 +24,7 @@ configMap:
     logback.xml: |
       {{- readFile "../logs/logback.xml" | nindent 6 }}
     fetchKeycloakPubkey: |
-      {{- tpl (readFile "fetch-keycloak-pubkey.sh.gotmpl") . | nindent 6 }}
+      {{- readFile "../api-common/fetch-keycloak-pubkey.sh" | nindent 6 }}
 
 env:
   - name: LOGBACK_SERVICE_NAME
@@ -161,4 +161,3 @@ ciliumPolicies:
     - port: 8080
       type: TCP
     name: keycloak
-    namespace: {{ .Release.Namespace }}
