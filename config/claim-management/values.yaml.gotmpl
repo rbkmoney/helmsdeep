@@ -119,7 +119,6 @@ ciliumPolicies:
     - port: 5432
       type: TCP
     name: postgres
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 9092
       rules:
@@ -129,15 +128,11 @@ ciliumPolicies:
             - claim-event-sink
       type: TCP
     name: kafka
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8200
       type: TCP
     name: vault
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: hellgate
-    namespace: {{ .Release.Namespace }}
-

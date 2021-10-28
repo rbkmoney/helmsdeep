@@ -75,9 +75,7 @@ ciliumPolicies:
     - port: 5432
       type: TCP
     name: columbus-pg
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8200
       type: TCP
     name: vault
-    namespace: {{ .Release.Namespace }}

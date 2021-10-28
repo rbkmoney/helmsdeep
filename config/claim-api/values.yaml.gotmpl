@@ -122,20 +122,19 @@ ciliumPolicies:
     - port: 8022
       type: TCP
     name: claim-management
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: org-manager
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: party-management
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: bouncer
-    namespace: {{ .Release.Namespace }}
-
+  - filters:
+    - port: 8080
+      type: TCP
+    name: keycloak

@@ -129,37 +129,30 @@ ciliumPolicies:
     - port: 8080
       type: TCP
     name: keycloak
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: cds
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: fistful-magista
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: fistful-reporter
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: file-storage
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: fistful
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: dominant
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP

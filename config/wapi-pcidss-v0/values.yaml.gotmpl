@@ -115,14 +115,15 @@ ciliumPolicies:
     - port: 8022
       type: TCP
     name: bender
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: cds
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8080
       type: TCP
     name: keycloak
-    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: dominant
