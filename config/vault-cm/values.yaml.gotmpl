@@ -243,6 +243,10 @@ configMap:
 
       vault auth enable kubernetes
 
+{{/*
+If you have kubernetes >=1.21, or use any cloud provider look at https://www.vaultproject.io/docs/auth/kubernetes#discovering-the-service-account-issuer
+You need set issuer according your config 
+*/}}
       vault write auth/kubernetes/config \
           token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
           {{- if .Values.services.global.ipv6only }}
@@ -250,7 +254,8 @@ configMap:
           {{- else }}
           kubernetes_host="https://${KUBERNETES_PORT_443_TCP_ADDR}:443" \
           {{- end }}
-          kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
+          issuer="https://kubernetes.default.svc.cluster.local"
 
       vault write auth/kubernetes/role/db-app \
           bound_service_account_names="*" \
