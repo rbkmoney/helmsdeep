@@ -1,7 +1,10 @@
 version: v0.140.1
 dependencies:
+- name: kube-prometheus-stack
+  repository: https://prometheus-community.github.io/helm-charts
+  version: 19.2.2
 - name: netpolicy
   repository: https://rbkmoney.github.io/charts
   version: 0.1.15
-digest: sha256:1a1b1b9dc76c7399837f21c34fbd2c7995dc7d11df3ce19147baafbc5ef41aec
-generated: "2021-10-28T19:58:55.889105+03:00"
+digest: sha256:fa2d030a7343c139a8fffb2bdbed7bf5f8f5a1d673a09992e6f6395c0b0af0ab
+generated: "2021-10-28T23:16:27.523953+03:00"
