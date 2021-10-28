@@ -121,3 +121,8 @@ ciliumPolicies:
       type: TCP
     name: cds
     namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8080
+      type: TCP
+    name: keycloak
+    namespace: {{ .Release.Namespace }}

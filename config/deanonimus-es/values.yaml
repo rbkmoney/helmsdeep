@@ -8,6 +8,8 @@ roles:
 replicas: 1
 minimumMasterNodes: 1
 
+labels: 
+  selector.cilium.rbkmoney/release: deanonimus-es
 masterService: deanonimus-es
 # extraEnvs:
 #   - name: discovery.type

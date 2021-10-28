@@ -172,3 +172,7 @@ ciliumPolicies:
       type: TCP
     name: cashier
     namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 9200
+      type: TCP
+    name: deanonimus-es
