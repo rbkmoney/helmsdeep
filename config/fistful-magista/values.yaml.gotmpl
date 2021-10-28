@@ -3,9 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/fistful-magista
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/fistful-magista
   tag: dd17699f8b18f4ac904b1f0d134b3d192100d03f
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 runopts:
   command: ["/opt/fistful-magista/entrypoint.sh"]
@@ -13,17 +18,56 @@ runopts:
 configMap:
   data:
     entrypoint.sh: |
-      {{- readFile "entrypoint.sh" | nindent 6 }}
+      {{- tpl (readFile "entrypoint.sh.gotmpl") . | nindent 6 }}
     loggers.xml: |
       {{- readFile "loggers.xml" | nindent 6 }}
     logback.xml: |
       {{- readFile "../logs/logback.xml" | nindent 6 }}
+
+{{- if or .Values.services.postgres.external .Values.services.kafka.ssl.enabled }}
+secret:
+  data: 
+    db_config: |
+    {{- if .Values.services.postgres.external }}
+      spring.datasource.url=jdbc:postgresql://{{ .Values.services.postgres.endpoint | default "external-postgres" }}:5432/fistful-magista?sslmode=disable
+      spring.datasource.username={{ .Values.services.postgres.uniUser }}
+      spring.datasource.password={{ .Values.services.postgres.uniPassword }}
+      flyway.url=jdbc:postgresql://{{ .Values.services.postgres.endpoint | default "external-postgres" }}:5432/fistful-magista?sslmode=disable
+      flyway.user={{ .Values.services.postgres.uniUser }}
+      flyway.password={{ .Values.services.postgres.uniPassword }}
+      flyway.schemas=mst
+      spring.flyway.schemas=mst
+    {{- end }}
+    {{- if .Values.services.kafka.ssl.enabled }}
+      kafka.ssl.enabled=true
+      kafka.ssl.key-store-location=/vault/secrets/kafka-keystore.p12
+      kafka.ssl.key-store-password={{ .Values.services.kafka.ssl.keystorePass }}
+      kafka.ssl.key-password={{ .Values.services.kafka.ssl.keyPass }}
+      kafka.ssl.key-store-type=PKCS12
+      kafka.ssl.trust-store-location=/vault/secrets/kafka-truststore.p12
+      kafka.ssl.trust-store-password={{ .Values.services.kafka.ssl.truststorePass }}
+      kafka.ssl.trust-store-type=PKCS12
+    {{- end }}
+{{- end }}
 
 volumes:
   - name: config-volume
     configMap:
       name: {{ .Release.Name }}
       defaultMode: 0755
+{{- if .Values.services.kafka.ssl.enabled }}
+  - name: kafka-cert
+    secret:
+      secretName: {{ .Release.Name }}-kafka-cert
+  - name: kafka-ca
+    secret:
+      secretName: java-ca-kafka
+{{- end }}
+{{- if or .Values.services.postgres.external .Values.services.kafka.ssl.enabled }}
+  - name: secret
+    secret:
+      secretName: {{ .Release.Name }}
+{{- end }}
 
 volumeMounts:
   - name: config-volume
@@ -38,6 +82,22 @@ volumeMounts:
     mountPath: /opt/fistful-magista/loggers.xml
     subPath: loggers.xml
     readOnly: true
+{{- if .Values.services.kafka.ssl.enabled }}
+  - name: kafka-ca
+    subPath: kafka-truststore.p12
+    mountPath: /vault/secrets/kafka-truststore.p12
+    readOnly: true
+  - name: kafka-cert
+    subPath: {{ .Release.Name }}.p12
+    mountPath: /vault/secrets/kafka-keystore.p12
+    readOnly: true
+{{- end }}
+{{- if or .Values.services.postgres.external .Values.services.kafka.ssl.enabled }}
+  - name: secret
+    subPath: db_config
+    mountPath: /vault/secrets/application.properties
+    readOnly: true
+{{- end }}
 
 service:
   ports:
@@ -55,6 +115,7 @@ readinessProbe:
     path: /actuator/health
     port: management
 
+{{- if .Values.services.vault.enabled }}
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
@@ -70,10 +131,38 @@ podAnnotations:
     flyway.schemas=mst
     spring.flyway.schemas=mst
     {{- end }}`}}
+{{- end }}
+
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
+
+ingress:
+  enabled: true
+  annotations:
+{{- if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
+{{- end }}
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,X-Request-ID"
+    kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
+  hosts:
+    - host: iddqd.{{ $ingressDomain | default "rbk.dev" }}
+      paths:
+        - /fistful/stat
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
+  {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    - secretName: iddqd-{{ .Values.services.ingress.tls.secretName }}
+  {{- else }}
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
+  {{- end }}
+      hosts:
+        - iddqd.{{ $ingressDomain | default "rbk.dev" }}
+{{- end }}
+  servicePort: 8022
 
 metrics:
   serviceMonitor:
-    enabled: false
+    enabled: {{ .Values.services.global.metrics.enabled }}
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus
@@ -111,13 +200,3 @@ ciliumPolicies:
       type: TCP
     name: wapi
     namespace: {{ .Release.Namespace }}
-
-##In case of kafka mTLS auth move it to vault template
-# {{- /*
-#      kafka.ssl.enabled={{ kafka.ssl.enable }}
-#      kafka.ssl.key-store-location=/opt/{{ service_name }}/kafka-keystore.p12
-#      kafka.ssl.key-store-password="{{ service.keystore.pass }}"
-#      kafka.ssl.key-password="{{ service.keystore.pass }}"
-#      kafka.ssl.trust-store-location=/opt/{{ service_name }}/kafka-truststore.p12
-#      kafka.ssl.trust-store-password="{{ kafka.truststore.java.pass }}"
-# */ -}}

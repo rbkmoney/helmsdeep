@@ -4,6 +4,9 @@ set -o errexit
 set -o pipefail
 set -o errtrace
 
+export CHARSET=UTF-8
+export LANG=C.UTF-8
+
 FIXTURE=$(cat <<END
 {"ops": [
 
@@ -45,8 +48,8 @@ FIXTURE=$(cat <<END
                   "symbolic_code": "RUB"
                 },
                 "value": {
-                  "income": 2,
-                  "outcome": 3
+                  "income": $(scripts/dominant/create-account.sh RUB),
+                  "outcome": $(scripts/dominant/create-account.sh RUB)
                 }
               }
             ]
@@ -110,7 +113,7 @@ FIXTURE=$(cat <<END
                         {
                           "id": {
                             "bank_card": {
-                              "payment_system": "mastercard",
+                              "payment_system": {"id": "MASTERCARD"},
                               "is_cvv_empty": false
                             }
                           }
@@ -118,7 +121,7 @@ FIXTURE=$(cat <<END
                         {
                           "id": {
                             "bank_card": {
-                              "payment_system": "visa",
+                              "payment_system": {"id": "VISA"},
                               "is_cvv_empty": false
                             }
                           }
@@ -227,7 +230,7 @@ FIXTURE=$(cat <<END
                           {
                             "id": {
                               "bank_card": {
-                                "payment_system": "mastercard",
+                                "payment_system": {"id": "MASTERCARD"},
                                 "is_cvv_empty": false
                               }
                             }
@@ -235,7 +238,7 @@ FIXTURE=$(cat <<END
                           {
                             "id": {
                               "bank_card": {
-                                "payment_system": "visa",
+                                "payment_system": {"id": "VISA"},
                                 "is_cvv_empty": false
                               }
                             }
@@ -254,7 +257,7 @@ FIXTURE=$(cat <<END
                           {
                             "id": {
                               "bank_card": {
-                                "payment_system": "mastercard",
+                                "payment_system": {"id": "MASTERCARD"},
                                 "is_cvv_empty": false
                               }
                             }
@@ -262,7 +265,7 @@ FIXTURE=$(cat <<END
                           {
                             "id": {
                               "bank_card": {
-                                "payment_system": "visa",
+                                "payment_system": {"id": "VISA"},
                                 "is_cvv_empty": false
                               }
                             }
@@ -380,7 +383,7 @@ FIXTURE=$(cat <<END
                         {
                           "id": {
                             "bank_card": {
-                              "payment_system": "mastercard",
+                              "payment_system": {"id": "MASTERCARD"},
                               "is_cvv_empty": false
                             }
                           }
@@ -388,7 +391,7 @@ FIXTURE=$(cat <<END
                         {
                           "id": {
                             "bank_card": {
-                              "payment_system": "visa",
+                              "payment_system": {"id": "VISA"},
                               "is_cvv_empty": false
                             }
                           }
@@ -396,7 +399,7 @@ FIXTURE=$(cat <<END
                         {
                           "id": {
                             "bank_card": {
-                              "payment_system": "visa",
+                              "payment_system": {"id": "VISA"},
                               "is_cvv_empty": true
                             }
                           }
@@ -424,7 +427,7 @@ FIXTURE=$(cat <<END
                         },
                         "lower": {
                           "inclusive": {
-                            "amount": 0,
+                            "amount": -1000000000,
                             "currency": {
                               "symbolic_code": "RUB"
                             }
@@ -464,10 +467,10 @@ FIXTURE=$(cat <<END
                         "value": [
                           {
                             "source": {
-                              "provider": "settlement"
+                              "wallet": 1
                             },
                             "destination": {
-                              "merchant": "settlement"
+                              "wallet": 3
                             },
                             "volume": {
                               "share": {
@@ -475,7 +478,7 @@ FIXTURE=$(cat <<END
                                   "p": 1,
                                   "q": 1
                                 },
-                                "of": "operation_amount"
+                                "of": 1
                               }
                             }
                           }
@@ -568,6 +571,14 @@ FIXTURE=$(cat <<END
                 "value": {
                   "settlement": $(scripts/dominant/create-account.sh RUB)
                 }
+              },
+              {
+                "key": {
+                  "symbolic_code": "USD"
+                },
+                "value": {
+                  "settlement": $(scripts/dominant/create-account.sh USD)
+                }
               }
             ],
             "terms": {
@@ -594,7 +605,7 @@ FIXTURE=$(cat <<END
                     {
                       "id": {
                         "bank_card": {
-                          "payment_system": "mastercard",
+                          "payment_system": {"id": "MASTERCARD"},
                           "is_cvv_empty": false
                         }
                       }
@@ -602,7 +613,7 @@ FIXTURE=$(cat <<END
                     {
                       "id": {
                         "bank_card": {
-                          "payment_system": "visa",
+                          "payment_system": {"id": "VISA"},
                           "is_cvv_empty": false
                         }
                       }
@@ -679,7 +690,9 @@ FIXTURE=$(cat <<END
                           "payment_tool": {
                             "bank_card": {
                               "definition": {
-                                "payment_system_is": "visa"
+                                "payment_system": {
+                                  "payment_system_is": {"id": "VISA"}
+                                }
                               }
                             }
                           }
@@ -730,7 +743,9 @@ FIXTURE=$(cat <<END
                           "payment_tool": {
                             "bank_card": {
                               "definition": {
-                                "payment_system_is": "mastercard"
+                                "payment_system": {
+                                  "payment_system_is": {"id": "MASTERCARD"}
+                                }
                               }
                             }
                           }
@@ -923,7 +938,7 @@ FIXTURE=$(cat <<END
                     {
                       "id": {
                         "bank_card": {
-                          "payment_system": "mastercard",
+                          "payment_system": {"id": "MASTERCARD"},
                           "is_cvv_empty": false
                         }
                       }
@@ -931,7 +946,7 @@ FIXTURE=$(cat <<END
                     {
                       "id": {
                         "bank_card": {
-                          "payment_system": "visa",
+                          "payment_system": {"id": "VISA"},
                           "is_cvv_empty": false
                         }
                       }
@@ -939,7 +954,7 @@ FIXTURE=$(cat <<END
                     {
                       "id": {
                         "bank_card": {
-                          "payment_system": "visa",
+                          "payment_system": {"id": "VISA"},
                           "is_cvv_empty": true
                         }
                       }
@@ -1038,14 +1053,14 @@ FIXTURE=$(cat <<END
     }}}},
 
     {"insert": {"object": {"payment_method": {
-        "ref": {"id": {"bank_card": {"payment_system": "visa"}}},
+        "ref": {"id": {"bank_card": {"payment_system": {"id": "VISA"}}}},
         "data": {
             "name": "VISA",
             "description": "VISA bank cards"
         }
     }}}},
     {"insert": {"object": {"payment_method": {
-        "ref": {"id": {"bank_card": {"payment_system": "mastercard"}}},
+        "ref": {"id": {"bank_card": {"payment_system": {"id": "MASTERCARD"}}}},
         "data": {
             "name": "Mastercard",
             "description": "Mastercard bank cards"
@@ -1062,22 +1077,22 @@ FIXTURE=$(cat <<END
     }}}},
     {"insert": {"object": {"payment_method": {
         "ref": {
-            "id": {"bank_card": {"payment_system": "visa","is_cvv_empty": true}}
+            "id": {"bank_card": {"payment_system": {"id": "VISA"},"is_cvv_empty": true}}
           },
           "data": {
             "name": "Visa NOCVV",
             "description": "No"
           }
     }}}},
-    
+
     {"insert": {"object": {"terminal": {
         "ref": {"id": 1},
         "data": {
             "name": "Mocketbank Test Acquiring",
-            "description": "Mocketbank Test Acquiring"
-        },
-        "provider_ref": {
-          "id":1
+            "description": "Mocketbank Test Acquiring",
+            "provider_ref": {
+              "id": 1
+            }
         }
     }}}},
     {"insert": {"object": {"terminal": {
@@ -1147,7 +1162,7 @@ FIXTURE=$(cat <<END
         }
       }}}},
 
-    {"insert": {"object": {"payment_routing_rules": {
+    {"insert": {"object": {"routing_rules": {
         "ref": {"id": 1},
         "data": {
             "name": "Роутинг по валюте",
@@ -1170,7 +1185,7 @@ FIXTURE=$(cat <<END
             }
           }
     }}}},
-    {"insert": {"object": {"payment_routing_rules": {
+    {"insert": {"object": {"routing_rules": {
         "ref": {"id": 2},
         "data": {
             "name": "Роутинг по банку-эмитенту",
@@ -1199,7 +1214,7 @@ FIXTURE=$(cat <<END
             }
           }
     }}}},
-    {"insert": {"object": {"payment_routing_rules": {
+    {"insert": {"object": {"routing_rules": {
         "ref": {"id": 3},
         "data": {
             "name": "Роутинг по стране, выпустившую карту",
@@ -1226,7 +1241,7 @@ FIXTURE=$(cat <<END
             }
           }
     }}}},
-    {"insert": {"object": {"payment_routing_rules": {
+    {"insert": {"object": {"routing_rules": {
         "ref": {"id": 4},
         "data": {
             "name": "Роутинг по МПС карты",
@@ -1239,7 +1254,7 @@ FIXTURE=$(cat <<END
                         "bank_card": {
                           "definition": {
                             "payment_system": {
-                              "payment_system_is": "mastercard"
+                              "payment_system_is": {"id": "MASTERCARD"}
                             }
                           }
                         }
@@ -1255,7 +1270,7 @@ FIXTURE=$(cat <<END
             }
         }
     }}}},
-    {"insert": {"object": {"payment_routing_rules": {
+    {"insert": {"object": {"routing_rules": {
         "ref": {"id": 5},
         "data": {
             "name": "Роутинг по типу карты",
@@ -1284,7 +1299,7 @@ FIXTURE=$(cat <<END
             }
           }
     }}}},
-    {"insert": {"object": {"payment_routing_rules": {
+    {"insert": {"object": {"routing_rules": {
         "ref": {"id": 6},
         "data": {
             "name": "Роутинг по категории магазина",
@@ -1307,7 +1322,7 @@ FIXTURE=$(cat <<END
             }
           }
     }}}},
-    {"insert": {"object": {"payment_routing_rules": {
+    {"insert": {"object": {"routing_rules": {
         "ref": {"id": 7},
         "data": {
             "name": "Роутинг по URL магазина",
@@ -1330,7 +1345,7 @@ FIXTURE=$(cat <<END
             }
           }
     }}}},
-    {"insert": {"object": {"payment_routing_rules": {
+    {"insert": {"object": {"routing_rules": {
         "ref": {"id": 8},
         "data": {
             "name": "Роутинг по наличию CVV в платеже",
@@ -1357,7 +1372,7 @@ FIXTURE=$(cat <<END
             }
           }
     }}}},
-    {"insert": {"object": {"payment_routing_rules": {
+    {"insert": {"object": {"routing_rules": {
         "ref": {"id": 9},
         "data": {
             "name": "Роутинг по вероятностям",
@@ -1387,7 +1402,7 @@ FIXTURE=$(cat <<END
             }
           }
     }}}},
-    {"insert": {"object": {"payment_routing_rules": {
+    {"insert": {"object": {"routing_rules": {
         "ref": {"id": 10},
         "data": {
             "name": "Роутинг по мерчанту",
@@ -1413,6 +1428,89 @@ FIXTURE=$(cat <<END
             }
           }
     }}}},
+    {"insert": {"object": {"routing_rules": {
+        "ref": {"id": 11},
+        "data": {
+            "name": "Роутинг выплат по валюте",
+            "decisions": {
+              "candidates": [
+                {
+                  "allowed": {
+                    "condition": {
+                      "currency_is": {
+                        "symbolic_code": "RUB"
+                      }
+                    }
+                  },
+                  "terminal": {
+                    "id": 3
+                  },
+                  "priority": 1000
+                }
+              ]
+            }
+          }
+    }}}},
+		{
+			"insert": {
+				"object": {
+					"payment_system": {
+						"ref": {
+							"id": "MASTERCARD"
+						},
+						"data": {
+							"name": "MASTERCARD",
+							"validation_rules": [
+								{"card_number": {"checksum": {"luhn": {}}}},
+								{"card_number": {"ranges": [{"lower": 16, "upper": 16}]}},
+								{"cvc": {"length": {"lower": 3, "upper": 3}}},
+								{"exp_date": {"exact_exp_date": {}}}
+							]
+						}
+					}
+				}
+			}
+		},
+		{
+			"insert": {
+				"object": {
+					"payment_system": {
+						"ref": {
+							"id": "NSPK MIR"
+						},
+						"data": {
+							"name": "NSPK MIR",
+							"validation_rules": [
+								{"card_number": {"checksum": {"luhn": {}}}},
+								{"card_number": {"ranges": [{"lower": 16, "upper": 16},{"lower": 19, "upper": 20}]}},
+								{"cvc": {"length": {"lower": 3, "upper": 3}}},
+								{"exp_date": {"exact_exp_date": {}}}
+							]
+						}
+					}
+				}
+			}
+		},
+		{
+			"insert": {
+				"object": {
+					"payment_system": {
+						"ref": {
+							"id": "VISA"
+						},
+						"data": {
+							"name": "VISA",
+							"validation_rules": [
+								{"card_number": {"checksum": {"luhn": {}}}},
+								{"card_number": {"ranges": [{"lower": 13, "upper": 13},{"lower": 16, "upper": 16}]}},
+								{"cvc": {"length": {"lower": 3, "upper": 3}}},
+								{"exp_date": {"exact_exp_date": {}}}
+							]
+						}
+					}
+				}
+			}
+		},
 
     {"insert": {"object": {"payment_institution": {
         "ref": {"id": 1},
@@ -1422,11 +1520,12 @@ FIXTURE=$(cat <<END
             "default_contract_template": {"value": {"id": 1}},
             "default_wallet_contract_template": {"value": {"id": 1}},
             "providers": {"value": [{"id": 1}]},
-            "withdrawal_providers": {"value": [{"id": 2}]},
             "inspector": {"value": {"id": 1}},
             "realm": "test",
             "wallet_system_account_set": {"value": {"id": 1}},
             "residences": ["rus", "aus", "jpn"],
+            "identity" : "1",
+            "withdrawal_routing_rules" : {"policies": {"id":11},"prohibitions": {"id":8}},
             "payment_routing_rules" : {"policies": {"id":1},"prohibitions": {"id":8}}
         }
     }}}}

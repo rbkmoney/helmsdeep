@@ -3,9 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/dominant
-  tag: c25af1f5a6cc13ac667110534c8d19eb9128a4f3
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/dominant
+  tag: 753f3e0711fc7fff91abcad6e279225a7e5b8b8c
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 configMap:
   data:
@@ -21,8 +26,8 @@ configMap:
 hook:
   enabled: true
   image:
-    repository: docker.io/rbkmoney/holmes
-    tag: 07f58e297c03bcd50dc4695ddbcfa4eb30c9928e
+    repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/holmes
+    tag: 99978815b561daaab33e6a35b9e300262186c78e
     pullPolicy: IfNotPresent
   kind: post-install
   command: "/opt/initdominant/init-script.sh"
@@ -39,7 +44,7 @@ hook:
 
 metrics:
   serviceMonitor:
-    enabled: false
+    enabled: {{ .Values.services.global.metrics.enabled }}
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus

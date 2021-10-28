@@ -1,3 +1,6 @@
+{{- $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain -}}
+{{- $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain -}}
+
 postgresql:
     enabled: false
 
@@ -11,18 +14,20 @@ extraEnv: |
     value: "K46t7q@fHqcHfhys676dkfk"
   - name: PROXY_ADDRESS_FORWARDING
     value: "true"
+  - name: KEYCLOAK_FRONTEND_URL
+    value: https://auth.{{ $ingressDomain | default "rbk.dev" }}/auth
   - name: DB_VENDOR
     value: postgres
-  - name: DB_ADDR
-    value: postgres-postgresql
   - name: DB_PORT
     value: "5432"
   - name: DB_DATABASE
     value: keycloak
+  - name: DB_ADDR
+    value: {{ .Values.services.postgres.endpoint | default "postgres-postgresql" }}
   - name: DB_USER
-    value: postgres
+    value: {{ .Values.services.postgres.uniUser | default "postgres" }}
   - name: DB_PASSWORD
-    value: "H@ckM3"
+    value: {{ .Values.services.postgres.uniPassword | default "H@ckM3" }}
   - name: JAVA_OPTS
     value: >-
       -XX:+UseContainerSupport
@@ -47,9 +52,6 @@ extraVolumeMounts: |
   - name: keycloak-realms-volume
     mountPath: "/realm/"
     readOnly: true
-
-{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
-{{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
 
 ingress:
   enabled: true

@@ -3,9 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/payouter
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/payouter
   tag: a0e37ad47ee5563008d2af47c58a9f117e941db0
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 runopts:
   command: ["/opt/payouter/entrypoint.sh"]
@@ -17,17 +22,61 @@ env:
 configMap:
   data: 
     entrypoint.sh: |
-      {{- readFile "entrypoint.sh" | nindent 6 }}
+      {{- tpl (readFile "entrypoint.sh.gotmpl") . | nindent 6 }}
     loggers.xml: |
       {{- readFile "loggers.xml" | nindent 6 }}
     logback.xml: |
       {{- readFile "../logs/logback.xml" | nindent 6 }}
+
+{{- if or .Values.services.postgres.external .Values.services.kafka.ssl.enabled }}
+secret:
+  data: 
+    db_config: |
+    {{- if .Values.services.postgres.external }}
+      spring.datasource.url=jdbc:postgresql://{{ .Values.services.postgres.endpoint | default "external-postgres" }}:5432/payouter?sslmode=disable
+      spring.datasource.username={{ .Values.services.postgres.uniUser }}
+      spring.datasource.password={{ .Values.services.postgres.uniPassword}}
+      spring.flyway.url=jdbc:postgresql://{{ .Values.services.postgres.endpoint | default "external-postgres" }}:5432/payouter?sslmode=disable
+      spring.flyway.user={{ .Values.services.postgres.uniUser }}
+      spring.flyway.password={{ .Values.services.postgres.uniPassword}}
+      spring.datasource.hikari.data-source-properties.prepareThreshold=0
+      spring.datasource.hikari.leak-detection-threshold=5300
+      flyway.url=jdbc:postgresql://{{ .Values.services.postgres.endpoint | default "external-postgres" }}:5432/payouter?sslmode=disable
+      flyway.user={{ .Values.services.postgres.uniUser }}
+      flyway.password={{ .Values.services.postgres.uniPassword}}
+      flyway.schemas=sht
+      spring.flyway.schemas=sht
+    {{- end }}
+    {{- if .Values.services.kafka.ssl.enabled }}
+      kafka.ssl.enabled=true
+      kafka.ssl.key-store-location=/vault/secrets/kafka-keystore.p12
+      kafka.ssl.key-store-password={{ .Values.services.kafka.ssl.keystorePass }}
+      kafka.ssl.key-store-type=PKCS12
+      kafka.ssl.key-password={{ .Values.services.kafka.ssl.keyPass }}
+      kafka.ssl.trust-store-location=/vault/secrets/kafka-truststore.p12
+      kafka.ssl.trust-store-password={{ .Values.services.kafka.ssl.truststorePass }}
+      kafka.ssl.trust-store-type=PKCS12
+    {{- end }}
+{{- end }}
 
 volumes:
   - name: config-volume
     configMap:
       name: {{ .Release.Name }}
       defaultMode: 0755
+{{- if .Values.services.kafka.ssl.enabled }}
+  - name: kafka-cert
+    secret:
+      secretName: {{ .Release.Name }}-kafka-cert
+  - name: kafka-ca
+    secret:
+      secretName: java-ca-kafka
+{{- end }}
+{{- if or .Values.services.postgres.external .Values.services.kafka.ssl.enabled }}
+  - name: secret
+    secret:
+      secretName: {{ .Release.Name }}
+{{- end }}
 
 volumeMounts:
   - name: config-volume
@@ -42,6 +91,22 @@ volumeMounts:
     mountPath: /opt/payouter/loggers.xml
     subPath: loggers.xml
     readOnly: true
+{{- if .Values.services.kafka.ssl.enabled }}
+  - name: kafka-ca
+    subPath: kafka-truststore.p12
+    mountPath: /vault/secrets/kafka-truststore.p12
+    readOnly: true
+  - name: kafka-cert
+    subPath: {{ .Release.Name }}.p12
+    mountPath: /vault/secrets/kafka-keystore.p12
+    readOnly: true
+{{- end }}
+{{- if or .Values.services.postgres.external .Values.services.kafka.ssl.enabled }}
+  - name: secret
+    subPath: db_config
+    mountPath: /vault/secrets/application.properties
+    readOnly: true
+{{- end }}
 
 service:
   ports:
@@ -60,6 +125,7 @@ readinessProbe: null
   #   path: /actuator/health
   #   port: management
 
+{{- if .Values.services.vault.enabled }}
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
@@ -80,10 +146,11 @@ podAnnotations:
     flyway.schemas=sht
     spring.flyway.schemas=sht
     {{- end }}`}}
+{{- end }}
 
 metrics:
   serviceMonitor:
-    enabled: false
+    enabled: {{ .Values.services.global.metrics.enabled }}
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus

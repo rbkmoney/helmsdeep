@@ -3,9 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/deanonimus
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/deanonimus
   tag: 23481a728081af23c47c49d8cc11c2d80b160ec4
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 runopts:
   command: ["/opt/deanonimus/entrypoint.sh"]
@@ -13,11 +18,25 @@ runopts:
 configMap:
   data:
     entrypoint.sh: |
-      {{- readFile "entrypoint.sh" | nindent 6 }}
+      {{- tpl (readFile "entrypoint.sh.gotmpl") . | nindent 6 }}
     loggers.xml: |
       {{- readFile "loggers.xml" | nindent 6 }}
     logback.xml: |
       {{- readFile "../logs/logback.xml" | nindent 6 }}
+
+{{- if .Values.services.kafka.ssl.enabled }}
+secret:
+  data: 
+    db_config: |
+    {{- if .Values.services.kafka.ssl.enabled }}
+      kafka.ssl.enabled=true
+      kafka.ssl.keystore-location=/vault/secrets/kafka-keystore.p12
+      kafka.ssl.keystore-password={{ .Values.services.kafka.ssl.keystorePass }}
+      kafka.ssl.key-password={{ .Values.services.kafka.ssl.keyPass }}
+      kafka.ssl.truststore-location=/vault/secrets/kafka-truststore.p12
+      kafka.ssl.truststore-password={{ .Values.services.kafka.ssl.truststorePass }}
+    {{- end }}
+{{- end }}
 
 env:
   - name: LOGBACK_SERVICE_NAME
@@ -28,6 +47,17 @@ volumes:
     configMap:
       name: {{ .Release.Name }}
       defaultMode: 0755
+{{- if .Values.services.kafka.ssl.enabled }}
+  - name: kafka-cert
+    secret:
+      secretName: {{ .Release.Name }}-kafka-cert
+  - name: kafka-ca
+    secret:
+      secretName: java-ca-kafka
+  - name: secret
+    secret:
+      secretName: {{ .Release.Name }}
+{{- end }}
 
 volumeMounts:
   - name: config-volume
@@ -42,6 +72,20 @@ volumeMounts:
     mountPath: /opt/deanonimus/loggers.xml
     subPath: loggers.xml
     readOnly: true
+{{- if .Values.services.kafka.ssl.enabled }}
+  - name: kafka-ca
+    subPath: kafka-truststore.p12
+    mountPath: /vault/secrets/kafka-truststore.p12
+    readOnly: true
+  - name: kafka-cert
+    subPath: {{ .Release.Name }}.p12
+    mountPath: /vault/secrets/kafka-keystore.p12
+    readOnly: true
+  - name: secret
+    subPath: db_config
+    mountPath: /vault/secrets/application.properties
+    readOnly: true
+{{- end }}
 
 service:
   ports:
@@ -88,7 +132,7 @@ ingress:
 
 metrics:
   serviceMonitor:
-    enabled: false
+    enabled: {{ .Values.services.global.metrics.enabled }}
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus

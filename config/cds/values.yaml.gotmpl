@@ -3,14 +3,27 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/cds
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/cds
   tag: b1e03ab1669fc73cdade6507e9fe9b46c772cfa3
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
+
+{{- if .Values.services.global.pcidss.taints.enabled }}
+tolerations:
+- key: "{{ .Values.services.global.pcidss.taints.key }}"
+  operator: "Equal"
+  value: "{{ .Values.services.global.pcidss.taints.value }}"
+  effect: "NoSchedule"
+{{- end }}
 
 configMap:
   data:
     sys.config: |
-      {{- readFile "sys.config" | nindent 6 }}
+      {{- tpl (readFile "sys.config.gotmpl") . | nindent 6 }}
     erl_inetrc: |
       {{- tpl (readFile "../vm/erl_inetrc.gotmpl") . | nindent 6 }}
     vm.args: |
@@ -50,7 +63,7 @@ volumes:
 
 metrics:
   serviceMonitor:
-    enabled: false
+    enabled: {{ .Values.services.global.metrics.enabled }}
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus

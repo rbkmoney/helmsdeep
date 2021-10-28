@@ -125,6 +125,8 @@ releases:
   <<: *generic_stateless_json
 - name: party-management
   <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/dominant
 - name: token-keeper
   <<: *generic_stateless_json
   needs:
@@ -250,13 +252,26 @@ releases:
   <<: *generic_stateless_json
   needs:
   - {{ .Namespace | default "default" }}/vault
+  - {{ .Namespace | default "default" }}/kafka
   - {{ .Namespace | default "default" }}/fraudbusters
+  - {{ .Namespace | default "default" }}/fraudbusters-notificator
 - name: fraudbusters
   installed: false  
   <<: *generic_stateless_json
   needs:
   - {{ .Namespace | default "default" }}/wb-list-manager
   - {{ .Namespace | default "default" }}/columbus
+- name: fraudbusters-warehouse
+  installed: false
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/clickhouse
+- name: fraudbusters-notificator
+  installed: false
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/vault
+    - {{ .Namespace | default "default" }}/fraudbusters-warehouse
 - name: deanonimus
   <<: *generic_stateless_json
   needs:
@@ -283,3 +298,16 @@ releases:
   <<: *generic_stateless_json
 - name: bouncer-policies
   <<: *generic_stateless_json
+- name: org-manager
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/keycloak
+- name: claim-api
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/keycloak
+    - {{ .Namespace | default "default" }}/party-management
+    - {{ .Namespace | default "default" }}/bouncer
+    - {{ .Namespace | default "default" }}/claim-management
+- name: file-storage
+  <<: *generic_stateless

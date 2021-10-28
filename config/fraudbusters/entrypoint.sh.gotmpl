@@ -1,0 +1,64 @@
+#!/bin/sh
+set -ue
+
+java \
+    "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
+    -jar \
+    /opt/fraudbusters/fraudbusters.jar \
+    --logging.config=/opt/fraudbusters/logback.xml \
+    --management.security.enabled=false \
+    --management.endpoint.metrics.enabled=true \
+    --management.metrics.export.statsd.flavor=etsy \
+    --management.metrics.export.statsd.enabled=true \
+    --management.metrics.export.prometheus.enabled=true \
+    --management.endpoint.prometheus.enabled=true \
+    --spring.cache.cache-names=resolveCountry \
+    --spring.cache.caffeine.spec=maximumSize=500,expireAfterAccess=100s \
+    --kafka.ssl.enable=false \
+    --kafka.bootstrap.servers={{ .Values.services.kafka.endpoint | default "kafka" }}:{{ .Values.services.kafka.port | default "9092" }} \
+    --kafka.aggr.payment.min.bytes=50000 \
+    --kafka.consumer.prefix=fraudbusters \
+    --kafka.max.retry.attempts=3 \
+    --kafka.max.poll.records=100 \
+    --kafka.backoff.interval=1000 \
+    --kafka.historical.listener.enable=false \
+    --kafka.listen.result.concurrency=21 \
+    --kafka.topic.result=result \
+    --kafka.topic.template=template \
+    --kafka.topic.reference=template_reference \
+    --kafka.topic.group-list=group_list \
+    --kafka.topic.group-reference=group_reference \
+    --kafka.topic.full-template=full_template \
+    --kafka.topic.full-reference=full_template_reference \
+    --kafka.topic.full-group-list=full_group_list \
+    --kafka.topic.full-group-reference=full_group_reference \
+    --kafka.topic.p2p-result=p2p_result \
+    --kafka.topic.p2p-template=template_p2p \
+    --kafka.topic.p2p-reference=template_p2p_reference \
+    --kafka.topic.p2p-group-list=group_p2p_list \
+    --kafka.topic.p2p-group-reference=group_p2p_reference \
+    --kafka.topic.unknown-initiating-entity=unknown_initiating_entity \
+    --kafka.topic.event.sink.payment=payment_event \
+    --kafka.topic.event.sink.refund=refund_event \
+    --kafka.topic.event.sink.chargeback=chargeback_event \
+    --kafka.topic.event.sink.initial=event_sink \
+    --kafka.topic.event.sink.aggregated=aggregated_event_sink \
+    --kafka.topic.event.sink.withdrawal=withdrawal \
+    --kafka.topic.fraud.payment=fraud_payment \
+    --geo.ip.service.url=http://columbus:8022/repo \
+    --wb.list.service.url=http://wb-list-manager:8022/v1/wb_list \
+    --spring.profiles.active=full-prod \
+    --default.template.enable=true \
+    --default.template.countToCheckDays=1000 \
+    --result.full.check.enabled=true \
+    --time.pool.cleanup.gap=60 \
+    --card-token-pool.maxAttempts=5 \
+    --card-token-pool.retryDelayMs=500 \
+    --card-token-pool.filePath=tokens \
+    --card-token-pool.scheduleRateMs=600000 \
+    --load.isTrusted.enabled=false \
+    --trusted.providers.list=108,114,118,119,121,125,126,128,130,134,135,136,132,137,143,139,144,149 \
+    --trusted.providers.interval-time-year=1.5 \
+    ${@} \
+    --spring.config.additional-location=/var/lib/fraudbusters/additional.ch.properties
+

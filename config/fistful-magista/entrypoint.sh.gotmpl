@@ -24,7 +24,7 @@ java \
     --flyway.schemas=mst \
     --identity-management.url=http://wapi-v0:8080/v1/identity \
     --identity-management.timeout=5000 \
-    --kafka.bootstrap-servers=kafka:9092 \
+    --kafka.bootstrap-servers={{ .Values.services.kafka.endpoint | default "kafka" }}:{{ .Values.services.kafka.port | default "9092" }} \
     --kafka.consumer.group-id=fistful-magista \
     --kafka.consumer.concurrency=7 \
     --kafka.max-poll-records=1 \
@@ -39,4 +39,4 @@ java \
     --kafka.topic.withdrawal.name=mg-events-ff-withdrawal \
     --kafka.topic.withdrawal.listener.enabled=true \
     ${@} \
-    --spring.config.additional-location=/vault/secrets/application.properties \
+    --spring.config.additional-location=optional:/vault/secrets/application.properties

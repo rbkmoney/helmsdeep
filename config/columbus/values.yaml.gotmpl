@@ -3,9 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/columbus
-  tag: 88be0cbccde15c7d4c88403d495f8d564f826160
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/columbus
+  tag: 4ecdd2f5490d99a9a278d584239e82cddf266438
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 runopts:
   command: ["/opt/columbus/entrypoint.sh"]
@@ -56,12 +61,12 @@ readinessProbe:
 
 metrics:
   serviceMonitor:
-    enabled: false
+    enabled: {{ .Values.services.global.metrics.enabled }}
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus
     endpoints:
-      - port: "management"
+      - port: "api"
         path: /actuator/prometheus
         scheme: http
 

@@ -2,9 +2,14 @@
 # -*- mode: yaml -*-
 
 image:
-  repository: docker.io/rbkmoney/wapi-v0
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/wapi-v0
   tag: fab27c234ed818e594912cbc647dc15fbf55218d
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 configMap:
   data:

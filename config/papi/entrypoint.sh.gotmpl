@@ -34,4 +34,4 @@ java \
     --keycloak.realm=internal \
     --keycloak.resource=private-api \
     ${@} \
-    --spring.config.additional-location=/vault/secrets/application.properties \
+    --spring.config.additional-location=optional:/vault/secrets/application.properties

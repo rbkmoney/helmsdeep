@@ -3,9 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/xrates
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/xrates
   tag: 242bcbf35a9711fba1503e273ce1c213ec50d167
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 runopts:
   command: ["/opt/xrates/entrypoint.sh"]
@@ -72,7 +77,7 @@ podAnnotations:
 
 metrics:
   serviceMonitor:
-    enabled: false
+    enabled: {{ .Values.services.global.metrics.enabled }}
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus

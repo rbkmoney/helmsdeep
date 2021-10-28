@@ -23,14 +23,14 @@ java \
     --spring.datasource.hikari.maximum-pool-size=20 \
     --flyway.schemas=mst \
     --payouter.pooling.url=http://payouter:8022/repo \
-    --hellgate.url=http://hellgate:8022/v1/processing/partymgmt \
+    --hellgate.url=http://party-management:8022/v1/processing/partymgmt \
     --hellgate.timeout=30000 \
     --columbus.url=http://columbus:8022/repo \
     --retry-policy.maxAttempts=-1 \
-    --kafka.bootstrap-servers=kafka:9092 \
+    --kafka.bootstrap-servers={{ .Values.services.kafka.endpoint | default "kafka" }}:{{ .Values.services.kafka.port | default "9092" }} \
     --kafka.topics.invoicing=mg-events-invoice \
     --kafka.client-id=magista \
     --kafka.consumer.group-id=magista-invoicing-1 \
     --kafka.consumer.concurrency=7 \
     ${@} \
-    --spring.config.additional-location=/vault/secrets/application.properties \
+    --spring.config.additional-location=optional:/vault/secrets/application.properties

@@ -7,6 +7,7 @@ logRetentionHours: -1
 podLabels:
   selector.cilium.rbkmoney/release: {{ .Release.Name }}
 
+clusterDomain: cluster.local
 zookeeper:
   ## If true, install the Zookeeper chart alongside Kafka
   ## ref: https://github.com/kubernetes/charts/tree/master/incubator/zookeeper
@@ -15,9 +16,10 @@ zookeeper:
   ## If the Zookeeper Chart is disabled a URL and port are required to connect
   # url: "zookeeper"
   # port: 2181
-  replicaCount: 3
+  replicaCount: 1
   persistence:
-    enabled: false
+    enabled: true
+  clusterDomain: cluster.local
 
 ciliumPolicies:
   - filters:

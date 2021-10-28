@@ -1,11 +1,18 @@
+{{- $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain -}}
+{{- $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain -}}
 # -*- mode: yaml -*-
 
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/fraudbusters-management
-  tag: 91fe3772f946c7a76a982adfd4d23411607dee5f
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/fraudbusters-management
+  tag: 31cc976274067b476771749ef229460f75a857ac
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 runopts:
   command: ["/opt/fraudbusters-management/entrypoint.sh"]
@@ -13,11 +20,24 @@ runopts:
 configMap:
   data: 
     entrypoint.sh: |
-      {{- readFile "entrypoint.sh" | nindent 6 }}
+      {{- tpl (readFile "entrypoint.sh.gotmpl") . | nindent 6 }}
     loggers.xml: |
       {{- readFile "loggers.xml" | nindent 6 }}
     logback.xml: |
       {{- readFile "../logs/logback.xml" | nindent 6 }}
+
+{{- if .Values.services.postgres.external }}
+secret:
+  data:
+    db_config: |
+      spring.datasource.url=jdbc:postgresql://{{ .Values.services.postgres.endpoint | default "external-postgres" }}:5432/fraudbusters-management?sslmode=disable
+      spring.datasource.username={{ .Values.services.postgres.uniUser }}
+      spring.datasource.password={{ .Values.services.postgres.uniPassword }}
+      spring.flyway.url=jdbc:postgresql://{{ .Values.services.postgres.endpoint | default "external-postgres" }}:5432/fraudbusters-management?sslmode=disable
+      spring.flyway.user={{ .Values.services.postgres.uniUser }}
+      spring.flyway.password={{ .Values.services.postgres.uniPassword }}
+      spring.flyway.schemas=fraudbusters-management
+{{- end }}
 
 env:
   - name: LOGBACK_SERVICE_NAME
@@ -28,6 +48,11 @@ volumes:
     configMap:
       name: {{ .Release.Name }}
       defaultMode: 0755
+{{- if .Values.services.postgres.external }}
+  - name: secret
+    secret:
+      secretName: {{ .Release.Name }}
+{{- end }}
 
 volumeMounts:
   - name: config-volume
@@ -42,11 +67,17 @@ volumeMounts:
     mountPath: /opt/fraudbusters-management/loggers.xml
     subPath: loggers.xml
     readOnly: true
+{{- if .Values.services.postgres.external }}
+  - name: secret
+    subPath: db_config
+    mountPath: /vault/secrets/application.properties
+    readOnly: true
+{{- end }}
 
 service:
   ports:
     - name: api
-      port: 8022
+      port: 8080
 
 livenessProbe:
   httpGet:
@@ -58,24 +89,26 @@ readinessProbe:
     path: /actuator/health
     port: api
 
+{{- if .Values.services.vault.enabled }}
 podAnnotations:
   vault.hashicorp.com/role: "db-app"
   vault.hashicorp.com/agent-inject: "true"
   vault.hashicorp.com/agent-inject-secret-application.properties: "database/creds/db-app-fbmgmt"
   vault.hashicorp.com/agent-inject-template-application.properties: |
     {{`{{- with secret "database/creds/db-app-fbmgmt" -}}
-    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/fraudbusters?sslmode=disable
+    spring.datasource.url=jdbc:postgresql://postgres-postgresql:5432/fraudbusters-management?sslmode=disable
     spring.datasource.username={{ .Data.username }}
     spring.datasource.password={{ .Data.password }}
-    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/fraudbusters?sslmode=disable
+    spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/fraudbusters-management?sslmode=disable
     spring.flyway.user={{ .Data.username }}
     spring.flyway.password={{ .Data.password }}
     spring.flyway.schemas=af
     {{- end }}`}}
+{{- end }}
 
 metrics:
   serviceMonitor:
-    enabled: false
+    enabled: {{ .Values.services.global.metrics.enabled }}
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus
@@ -83,6 +116,36 @@ metrics:
       - port: "api"
         path: /actuator/prometheus
         scheme: http
+
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
+
+ingress:
+  enabled: true
+  annotations:
+  {{- if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
+    {{- end }}
+    kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "content-type,content-disposition,authorization"
+  hosts:
+    - host: api.{{ $ingressDomain | default "rbk.dev" }}
+      paths:
+        - /fb-management
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
+  {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    - secretName: api-{{ .Values.services.ingress.tls.secretName }}
+  {{- else }}
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
+  {{- end }}
+      hosts:
+        - api.{{ $ingressDomain | default "rbk.dev" }}
+{{- end }}
+  servicePort: 8080
+
 
 ciliumPolicies:
   - filters:
@@ -103,10 +166,10 @@ ciliumPolicies:
   - filters:
     - port: 8022
       type: TCP
-    name: hellgate
+    name: fraudbusters-notificator
     namespace: {{ .Release.Namespace }}
   - filters:
-    - port: 8022
-      type: TCP
-    name: fault-detector
+      - port: 8022
+        type: TCP
+    name: fraudbusters
     namespace: {{ .Release.Namespace }}

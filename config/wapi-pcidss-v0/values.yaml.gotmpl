@@ -1,9 +1,22 @@
 # -*- mode: yaml -*-
 
 image:
-  repository: docker.io/rbkmoney/wapi
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/wapi
   tag: 5909eba3e4ee8f0c27db5fa02e91f49f6a7dd74b
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
+
+{{- if .Values.services.global.pcidss.taints.enabled }}
+tolerations:
+- key: "{{ .Values.services.global.pcidss.taints.key }}"
+  operator: "Equal"
+  value: "{{ .Values.services.global.pcidss.taints.value }}"
+  effect: "NoSchedule"
+{{- end }}
 
 configMap:
   data:

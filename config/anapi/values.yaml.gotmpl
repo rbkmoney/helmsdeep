@@ -3,9 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/anapi
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/anapi
   tag: 86990bcc3ee81b909240b64d03f2575d5677c6ae
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 configMap:
   data:
@@ -66,7 +71,7 @@ service:
 
 metrics:
   serviceMonitor:
-    enabled: false
+    enabled: {{ .Values.services.global.metrics.enabled }}
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus
@@ -81,9 +86,9 @@ ingress:
     cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
 {{- end }}
     kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
-    nginx.ingress.kubernetes.io/enable-cors: "false"
     nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
     nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "content-type,content-disposition,authorization,x-request-id"
     nginx.ingress.kubernetes.io/configuration-snippet: |
        more_set_headers "Access-Control-Allow-Origin: $http_origin";
   hosts:

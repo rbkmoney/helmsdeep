@@ -13,18 +13,62 @@ certmanager:
 services:
   global:
     ipv6only: true
-  
+    metrics:
+      enabled: true
+    registry:
+      repository: docker.io/rbkmoney
+      imagePullSecret: {}
+    pcidss:
+      taints:
+        enabled: false
+        key: pcidss
+        value: true
+
   vault:
+    enabled: true
     dev: true
+    injectorNamespaced: true
+    transitUnseal:
+      enabled: false
+      address: http://another.vault.local:8200
+
+
+  riak:
+    riakMgAddress: riak
+    riakCdAddress: riak
+
+# TODO: split users
+  postgres:
+    external: false
+    endpoint: postgresql-postgres
+    uniUser: postgres
+    uniPassword: H@ckM3
+
+  kafka:
+    external: false
+    endpoint: kafka:9092
+    ssl:
+      enabled: false
+      keystorePass: 12341234
+      keyPass: 12341234
+      truststorePass: 43214321
+
+  s3:
+    endpoint: minio:9000
+    region: EU
+    bucket: bucket-files
+    accessKey: user_01
+    secretKey: SomeSecretKeyFromS3AdminConsole
+  
 
   ingress:
     class: "nginx"
     rootDomain: dev.rbk.mn
     namespacedDomain: true
     tls:
-      enabled: false
+      enabled: true
       letsEncrypt:
-        enabled: false
-        issuer: "letsencrypt-staging"
+        enabled: true
+        issuer: "letsencrypt-prod"
       secretName: devstand
 

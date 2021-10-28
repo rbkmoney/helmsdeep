@@ -3,9 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/machinegun
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/machinegun
   tag: 9c3248a68fe530d23a8266057a40a1a339a161b8
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 configMap:
   data:
@@ -23,6 +28,14 @@ volumes:
   - name: cookie-secret
     secret:
       secretName: {{ .Release.Name }}
+{{- if .Values.services.kafka.ssl.enabled }}
+  - name: kafka-cert
+    secret:
+      secretName: {{ .Release.Name }}-kafka-cert
+  - name: kafka-ca
+    secret:
+      secretName: erl-kafka-ca
+{{- end }}
 
 volumeMounts:
   - name: config-volume
@@ -33,10 +46,19 @@ volumeMounts:
     mountPath: /opt/machinegun/etc/cookie
     subPath: cookie
     readOnly: true
+{{- if .Values.services.kafka.ssl.enabled }}
+  - name: kafka-ca
+    subPath: ca.crt
+    mountPath: /vault/secrets/ca.crt
+    readOnly: true
+  - name: kafka-cert
+    mountPath: /vault/secrets/kafka/
+    readOnly: true
+{{- end }}
 
 metrics:
   serviceMonitor:
-    enabled: false
+    enabled: {{ .Values.services.global.metrics.enabled }}
     namespace: {{ .Release.Namespace }}
     additionalLabels:
       release: prometheus

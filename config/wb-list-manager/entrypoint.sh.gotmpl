@@ -1,0 +1,22 @@
+#!/bin/sh
+set -ue
+
+java \
+    "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
+    -jar \
+    /opt/wb-list-manager/wb-list-manager.jar \
+    --logging.config=/opt/wb-list-manager/logback.xml \
+    --management.security.enabled=false \
+    --riak.address={{ .Values.services.riak.riakWblAddress | default "riak" }} \
+    --riak.port=8087 \
+    --riak.bucket=wblist \
+    --retry.timeout=2000 \
+    --retry.max.attempts=3 \
+    --kafka.wblist.topic.command=wb-list-command \
+    --kafka.wblist.topic.event.sink=wb-list-event-sink \
+    --kafka.ssl.enable=false \
+    --kafka.bootstrap-servers={{ .Values.services.kafka.endpoint | default "kafka" }}:{{ .Values.services.kafka.port | default "9092" }} \
+    --management.metrics.export.statsd.enabled=false \
+    ${@} \
+    --spring.config.additional-location=optional:file:/vault/secrets/application.properties
+

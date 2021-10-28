@@ -1,0 +1,37 @@
+{{- $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain -}}
+{{- $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain -}}
+#!/bin/sh
+set -ue
+
+java \
+    "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
+    -jar \
+      /opt/org-manager/org-manager.jar \
+      --server.servlet.context-path=/org/v1 \
+      --spring.flyway.schemas=org_manager \
+      --logging.file=/var/log/org-manager/org-manager.json \
+      --logging.config=/opt/org-manager/logback.xml \
+      --management.security.enabled=false \
+      --spring.datasource.hikari.data-source-properties.prepareThreshold=0 \
+      --spring.datasource.hikari.leak-detection-threshold=5300 \
+      --spring.datasource.hikari.max-lifetime=300000 \
+      --spring.datasource.hikari.idle-timeout=30000 \
+      --spring.datasource.hikari.minimum-idle=2 \
+      --spring.datasource.hikari.maximum-pool-size=20 \
+      -Dwoody.node_id=org-manager123 \
+      --keycloak.auth-server-url=http://keycloak-headless:8080/auth \
+      --keycloak.realm-public-key-file-path="/var/lib/org-manager/keys/keycloak/keycloak.pubkey.pem" \
+      --keycloak.realm=external \
+      --keycloak.resource=common-api \
+      --dudoser.url=http://dudoser:8022/dudos \
+      --bouncer.url=http://bouncer:8022/v1/arbiter \
+      --dashboard.url=https://dashboard.{{ $ingressDomain | default "rbk.dev" }}/organization-section/accept-invitation/ \
+      --bouncer.networkTimeout=10000 \
+      --bouncer.context-fragment-id=orgmgmt \
+      --bouncer.deployment-id=production \
+      --bouncer.auth-method=SessionToken \
+      --bouncer.realm=external \
+      --bouncer.rule-set-id=service/authz/api \
+      --access-check.enabled=true \
+    ${@} \
+    --spring.config.additional-location=optional:/vault/secrets/application.properties

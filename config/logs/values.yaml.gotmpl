@@ -1,3 +1,10 @@
+operator:
+{{- if .Values.services.global.ipv6only }}
+  ipFamily: "IPv6"
+{{- else -}}
+  ipFamily: "IPv4"
+{{- end }}
+
 elastic:
   master:
     replicas: 1
@@ -66,3 +73,29 @@ elastic:
  
 filebeat:
     enabled: true
+
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
+
+ingress:
+  enabled: true
+  annotations:
+{{- if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
+{{- end }}
+    kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
+  hosts:
+    - host: kibana.{{ $ingressDomain | default "rbk.dev" }}
+      paths:
+        - /
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
+  {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    - secretName: kibana-{{ .Values.services.ingress.tls.secretName }}
+  {{- else }}
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
+  {{- end }}
+      hosts:
+        - kibana.{{ $ingressDomain | default "rbk.dev" }}
+{{- end }}
+  servicePort: 5601

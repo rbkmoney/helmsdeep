@@ -26,9 +26,67 @@ services:
   global:
 # Set to "true" if your cluster CIDR only ipv6 family
     ipv6only: false
-  
+# Deploy ServiceMonitors with processing services
+    metrics:
+      enabled: true
+# Set if use your own container registry for processing service's images
+    registry:
+      repository: docker.io/rbkmoney
+      imagePullSecret: {}
+# Set tolerations for pcidss services. Need manually set taints to pcidss nodes:
+# kubectl taint nodes wrk1-dss wrk2-dss pcidss=true:NoSchedule
+    pcidss:
+      taints:
+        enabled: false
+        key: pcidss
+        value: true
+
   vault:
+# enabled:false switch getting postgres user and password from annotations to secret
+    enabled: true
+# Enable autounseal and disable persistance
     dev: true
+    injectorNamespaced: true
+# Set "enabled: true" if use another vault instance for autounseal. 
+# !Needs secret with token named "vault-transit-token" (look at config/vault/values.yaml.gotmpl)
+    transitUnseal:
+      enabled: false
+      address: http://another.vault.local:8200
+
+
+# Change in case of external splited riak clusters for CDS and Machinegun, wb-list-manager
+  riak:
+    riakMgAddress: riak
+    riakCdAddress: riak
+    riakWblAddress: riak
+
+# Enable postgresql external cluster with One user for any services
+# TODO: split users
+  postgres:
+    external: false
+  # Values below uses only if postgres.external is true
+    endpoint: postgres-postgresql
+    uniUser: postgres
+    uniPassword: H@ckM3
+
+# Enable external kafka cluster
+  kafka:
+    external: false
+    endpoint: kafka
+    port: 9092
+    ssl:
+      enabled: false
+      keystorePass: 12341234
+      # Set if differ from keystore password
+      keyPass: 12341234
+      truststorePass: 43214321
+
+  s3:
+    endpoint: minio:9000
+    region: EU
+    bucket: bucket-files
+    accessKey: user_01
+    secretKey: SomeSecretKeyFromS3AdminConsole
 
   ingress:
 # Ingressclass if have more than one controller:

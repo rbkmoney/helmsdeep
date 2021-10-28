@@ -3,9 +3,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/proxy-mocket-inspector
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/proxy-mocket-inspector
   tag: 0ea276f2bb2ff2d25ba69c3c729552b81a75ece2
   pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
 
 configMap:
   data:
