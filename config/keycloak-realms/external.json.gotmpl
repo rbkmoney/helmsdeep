@@ -3916,7 +3916,9 @@
   "resetCredentialsFlow": "reset credentials",
   "clientAuthenticationFlow": "clients",
   "dockerAuthenticationFlow": "docker auth",
-  "attributes": {},
+  "attributes": {
+    "frontendUrl": "https://auth.{{ $ingressDomain | default "rbk.dev" }}/auth"
+  },
   "keycloakVersion": "11.0.0",
   "userManagedAccessAllowed": false
 }

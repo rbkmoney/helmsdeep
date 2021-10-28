@@ -2220,7 +2220,8 @@
       "maxFailureWaitSeconds" : "900",
       "_browser_header.contentSecurityPolicy" : "frame-src 'self'",
       "minimumQuickLoginWaitSeconds" : "60",
-      "waitIncrementSeconds" : "60"
+      "waitIncrementSeconds" : "60",
+      "frontendUrl": "https://auth.{{ $ingressDomain | default "rbk.dev" }}/auth"
     },
     "keycloakVersion" : "3.4.0.Final"
 }
