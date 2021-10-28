@@ -70,3 +70,25 @@ configMap:
   data:
     virtualhost.conf: |
       {{- tpl (readFile "virtualhost.conf") . | nindent 6 }}
+
+ciliumPolicies:
+  - filters:
+    - port: 8080
+      type: TCP
+    name: keycloak
+  - filters:
+    - port: 8080
+      type: TCP
+    name: capi-v1
+  - filters:
+    - port: 8080
+      type: TCP
+    name: capi-v2
+  - filters:
+    - port: 8080
+      type: TCP
+    name: capi-pcidss-v2
+  - filters:
+    - port: 80
+      type: TCP
+    name: test-transaction
