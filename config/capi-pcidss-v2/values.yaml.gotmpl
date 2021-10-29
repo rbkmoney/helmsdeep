@@ -137,10 +137,6 @@ ciliumPolicies:
   - filters:
     - port: 8022
       type: TCP
-    name: binbase
-  - filters:
-    - port: 8022
-      type: TCP
     name: bender
   - filters:
     - port: 8022
@@ -158,3 +154,7 @@ ciliumPolicies:
     - port: 8022
       type: TCP
     name: dominant
+  - filters:
+    - port: 8022
+      type: TCP
+    name: token-keeper

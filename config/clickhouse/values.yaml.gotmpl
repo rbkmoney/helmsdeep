@@ -7,7 +7,7 @@ replicasCount: 1
 replicasUseFQDN: "no"
 
 zookeeper: 
-  - host: zookeeper
+  - host: kafka-zookeeper
     port: 2181   
     
 users:
@@ -581,3 +581,9 @@ configMap:
 
         CREATE TABLE IF NOT EXISTS fraud.refund on cluster '{cluster}' AS fraud.refund_local
         ENGINE = Distributed('{cluster}', fraud, refund_local, rand());
+
+ciliumPolicies:
+  - filters:
+    - port: 2181
+      type: TCP
+    name: kafka-zookeeper
