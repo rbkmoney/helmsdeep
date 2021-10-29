@@ -121,11 +121,6 @@ ciliumPolicies:
     name: postgres
   - filters:
     - port: 9092
-      rules:
-        kafka:
-        - role: consume
-          topics:
-            - claim-event-sink
       type: TCP
     name: kafka
   - filters:
@@ -136,3 +131,11 @@ ciliumPolicies:
     - port: 8022
       type: TCP
     name: hellgate
+
+{{/*
+      rules:
+        kafka:
+        - role: consume
+          topics:
+            - claim-event-sink
+*/}}

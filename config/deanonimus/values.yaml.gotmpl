@@ -148,11 +148,6 @@ ciliumPolicies:
     name: postgres
   - filters:
     - port: 9092
-      rules:
-        kafka:
-        - role: consume
-          topics:
-            - claim-event-sink
       type: TCP
     name: kafka
   - filters:
@@ -171,3 +166,11 @@ ciliumPolicies:
     - port: 9200
       type: TCP
     name: deanonimus-es
+
+{{/*
+      rules:
+        kafka:
+        - role: consume
+          topics:
+            - claim-event-sink
+*/}}
