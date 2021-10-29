@@ -20,6 +20,8 @@ zookeeper:
   persistence:
     enabled: true
   clusterDomain: cluster.local
+  podLabels: 
+    selector.cilium.rbkmoney/release: kafka-zookeeper
 
 ciliumPolicies:
   - filters:
