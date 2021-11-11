@@ -88,6 +88,16 @@ services:
     accessKey: user_01
     secretKey: SomeSecretKeyFromS3AdminConsole
 
+  mail:
+    smtp:
+      host: mail
+      port: 25
+      from: no-reply@test.ru
+    auth:
+      enabled: false
+      username: user
+      password: password
+
   ingress:
 # Ingressclass if have more than one controller:
     class: "nginx"
