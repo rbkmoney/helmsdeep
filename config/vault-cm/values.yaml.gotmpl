@@ -233,6 +233,24 @@ configMap:
         default_ttl="240h" \
         max_ttl="240h"
 
+      vault write database/config/dudoser \
+        plugin_name=postgresql-database-plugin \
+        allowed_roles="*" \
+        connection_url="postgresql://{{`{{username}}`}}:{{`{{password}}`}}@postgres-postgresql:5432/dudoser?sslmode=disable" \
+        username="postgres" \
+        password="H@ckM3"
+      vault write database/roles/db-app-dudoser \
+        db_name=dudoser \
+        revocation_statements="REASSIGN OWNED BY \"{{`{{name}}`}}\" to postgres; ALTER ROLE \"{{`{{name}}`}}\" NOLOGIN;" \
+        creation_statements="Create schema if not exists dudos;
+        CREATE ROLE \"{{`{{name}}`}}\" WITH LOGIN PASSWORD '{{`{{password}}`}}' VALID UNTIL '{{`{{expiration}}`}}';
+        GRANT CREATE ON DATABASE dudoser TO \"{{`{{name}}`}}\";
+        GRANT ALL ON SCHEMA dudos TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL TABLES IN SCHEMA dudos TO \"{{`{{name}}`}}\";
+        GRANT ALL ON ALL SEQUENCES IN SCHEMA dudos TO \"{{`{{name}}`}}\";" \
+        default_ttl="240h" \
+        max_ttl="240h"
+
       vault secrets enable kv
 
       vault kv put secret/xrates \
@@ -300,5 +318,8 @@ configMap:
         capabilities = ["read"]
       }
       path "database/creds/db-app-fb-notificator" {
+          capabilities = ["read"]
+      }
+      path "database/creds/db-app-dudoser" {
           capabilities = ["read"]
       }
