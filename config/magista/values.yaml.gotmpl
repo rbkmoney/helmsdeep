@@ -177,11 +177,6 @@ ciliumPolicies:
     namespace: {{ .Release.Namespace }}
   - filters:
     - port: 9092
-      rules:
-        kafka:
-        - role: consume
-          topics:
-            - mg-events-invoice
       type: TCP
     name: kafka
     namespace: {{ .Release.Namespace }}
@@ -204,4 +199,11 @@ ciliumPolicies:
     - port: 8022
       type: TCP
     name: payouter
-    namespace: {{ .Release.Namespace }}
+
+{{/*
+      rules:
+        kafka:
+        - role: consume
+          topics:
+            - mg-events-invoice
+*/}}

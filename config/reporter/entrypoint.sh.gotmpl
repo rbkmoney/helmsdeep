@@ -55,4 +55,4 @@ java \
     --kafka.consumer.session-timeout-ms=300000 \
     --kafka.consumer.auto-offset-reset=earliest \
     ${@} \
-    --spring.config.additional-location=optional:/vault/secrets/application.properties
+    --spring.config.additional-location=/vault/secrets/application.properties

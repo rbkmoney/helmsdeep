@@ -7,4 +7,6 @@ environments:
   devstand:
     values:
       - devstand.rbk.yaml
-  production:
+  prod:
+    values:
+      - prod.values.yaml

@@ -17,5 +17,5 @@ java \
     --spring.flyway.user=postgres \
     --spring.flyway.password=postgres \
     ${@} \
-    --spring.config.additional-location=optional:/vault/secrets/application.properties
+    --spring.config.additional-location=/vault/secrets/application.properties
 

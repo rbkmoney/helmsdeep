@@ -87,7 +87,7 @@ ingress:
 {{- if .Values.services.ingress.tls.letsEncrypt.enabled }}
     cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
 {{- end }}
-    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
     nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
     nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
     nginx.ingress.kubernetes.io/configuration-snippet: |
@@ -115,9 +115,15 @@ ciliumPolicies:
     - port: 8022
       type: TCP
     name: bender
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: cds
-    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8080
+      type: TCP
+    name: keycloak
+  - filters:
+    - port: 8022
+      type: TCP
+    name: dominant

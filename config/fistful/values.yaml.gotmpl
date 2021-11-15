@@ -19,9 +19,6 @@ configMap:
     vm.args: |
       {{- tpl (readFile "../vm/erl_vm_args.gotmpl") . | nindent 6 }}
 
-apiInitContainers:
-  enabled: false
-
 volumeMounts:
   - name: config-volume
     mountPath: /opt/fistful-server/releases/0.1/sys.config
@@ -90,29 +87,23 @@ ciliumPolicies:
     - port: 8022
       type: TCP
     name: binbase
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: cds
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: shumway
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: machinegun
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: dominant
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: hellgate
-    namespace: {{ .Release.Namespace }}

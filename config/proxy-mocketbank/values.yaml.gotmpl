@@ -72,3 +72,17 @@ readinessProbe:
     port: api
   initialDelaySeconds: 30
   timeoutSeconds: 3
+
+ciliumPolicies:
+  - filters:
+    - port: 8080
+      type: TCP
+    name: proxy-mocketbank-mpi
+  - filters:
+    - port: 8022
+      type: TCP
+    name: cds
+  - filters:
+    - port: 8022
+      type: TCP
+    name: hellgate

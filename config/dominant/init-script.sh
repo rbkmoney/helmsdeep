@@ -467,10 +467,10 @@ FIXTURE=$(cat <<END
                         "value": [
                           {
                             "source": {
-                              "wallet": 1
+                              "provider": "settlement"
                             },
                             "destination": {
-                              "wallet": 3
+                              "merchant": "settlement"
                             },
                             "volume": {
                               "share": {
@@ -478,7 +478,7 @@ FIXTURE=$(cat <<END
                                   "p": 1,
                                   "q": 1
                                 },
-                                "of": 1
+                                "of": "operation_amount"
                               }
                             }
                           }

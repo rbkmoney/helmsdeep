@@ -4,7 +4,6 @@
 set -ue
 
 mkdir -p /opt/papi/bin/
-cp -pr /var/lib/papi/keys/keycloak/keycloak.pubkey.pem /opt/papi/bin/secret
 java \
     "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
     -jar \
@@ -29,9 +28,9 @@ java \
     --magista.url=http://magista:8022/stat \
     --shitter.url=http://payouter:8022/payout/management \
     --walker.url=http://walker:8022/walker \
-    --keycloak.auth-server-url=https://auth.{{ $ingressDomain | default "rbk.dev" }}/auth \
-    --keycloak.realm-public-key.file-path="/opt/papi/bin/secret" \
+    --keycloak.auth-server-url=http://keycloak-headless:8080/auth \
+    --keycloak.realm-public-key.file-path="/var/lib/papi/keys/keycloak/keycloak.pubkey.pem" \
     --keycloak.realm=internal \
     --keycloak.resource=private-api \
     ${@} \
-    --spring.config.additional-location=optional:/vault/secrets/application.properties
+    --spring.config.additional-location=/vault/secrets/application.properties

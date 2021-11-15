@@ -1,6 +1,6 @@
 # -*- mode: yaml -*-
 
-replicaCount: 1
+replicaCount: {{ .Values.services.global.statelessReplicas }}
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/hooker
@@ -146,30 +146,29 @@ ciliumPolicies:
     - port: 5432
       type: TCP
     name: postgres
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 9092
+      type: TCP
+    name: kafka
+  - filters:
+    - port: 8200
+      type: TCP
+    name: vault
+  - filters:
+    - port: 8022
+      type: TCP
+    name: hellgate
+  - filters:
+    - port: 8022
+      type: TCP
+    name: fault-detector
+    namespace: {{ .Release.Namespace }}
+
+{{/*
       rules:
         kafka:
         - role: consume
           topics:
             - mg-events-customer
             - mg-events-invoice
-      type: TCP
-    name: kafka
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8200
-      type: TCP
-    name: vault
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
-    name: hellgate
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
-    name: fault-detector
-    namespace: {{ .Release.Namespace }}
+*/}}

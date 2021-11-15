@@ -39,7 +39,7 @@ secret:
       postgres.db.url=jdbc:postgresql://{{ .Values.services.postgres.endpoint | default "external-postgres" }}:5432/analytics?sslmode=disable
       postgres.db.user={{ .Values.services.postgres.uniUser }}
       postgres.db.password={{ .Values.services.postgres.uniPassword }}
-      clickhouse.db.url=jdbc:clickhouse://chi-demo-cluster-0-0:8123/analytic
+      clickhouse.db.url=jdbc:clickhouse://clickhouse:8123/analytic
       clickhouse.db.user=analytic
       clickhouse.db.password=hackme
     {{- end }}
@@ -136,7 +136,7 @@ podAnnotations:
     postgres.db.url=jdbc:postgresql://postgres-postgresql:5432/analytics?sslmode=disable
     postgres.db.user={{ .Data.username }}
     postgres.db.password={{ .Data.password }}
-    clickhouse.db.url=jdbc:clickhouse://chi-demo-cluster-0-0:8123/analytic
+    clickhouse.db.url=jdbc:clickhouse://clickhouse:8123/analytic
     clickhouse.db.user=analytic
     clickhouse.db.password=hackme
     {{- end }}`}}
@@ -158,9 +158,37 @@ ciliumPolicies:
     - port: 5432
       type: TCP
     name: postgres
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 9092
+      type: TCP
+    name: kafka
+  - filters:
+    - port: 8123
+      type: TCP
+    name: clickhouse
+  - filters:
+    - port: 8200
+      type: TCP
+    name: vault
+  - filters:
+    - port: 8022
+      type: TCP
+    name: columbus
+  - filters:
+    - port: 8022
+      type: TCP
+    name: hellgate
+  - filters:
+    - port: 8022
+      type: TCP
+    name: payouter
+  - filters:
+    - port: 8022
+      type: TCP
+    name: dominant
+    namespace: {{ .Release.Namespace }}
+
+{{/*
       rules:
         kafka:
         - role: consume
@@ -168,36 +196,4 @@ ciliumPolicies:
             - mg-events-invoice
             - payout
             - mg-events-party
-      type: TCP
-    name: kafka
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8123
-      type: TCP
-    name: clickhouse
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8200
-      type: TCP
-    name: vault
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
-    name: columbus
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
-    name: hellgate
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
-    name: payouter
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
-    name: dominant
-    namespace: {{ .Release.Namespace }}
+*/}}

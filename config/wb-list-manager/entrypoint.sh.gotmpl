@@ -18,5 +18,5 @@ java \
     --kafka.bootstrap-servers={{ .Values.services.kafka.endpoint | default "kafka" }}:{{ .Values.services.kafka.port | default "9092" }} \
     --management.metrics.export.statsd.enabled=false \
     ${@} \
-    --spring.config.additional-location=optional:file:/vault/secrets/application.properties
+    --spring.config.additional-location=/vault/secrets/application.properties
 

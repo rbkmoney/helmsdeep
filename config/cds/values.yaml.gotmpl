@@ -1,6 +1,6 @@
 # -*- mode: yaml -*-
 
-replicaCount: 1
+replicaCount: {{ .Values.services.global.pcidss.replicas }}
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/cds
@@ -73,11 +73,9 @@ ciliumPolicies:
     - port: 8087
       type: TCP
     name: riak
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     - port: 8023
       type: TCP
     name: kds
-    namespace: {{ .Release.Namespace }}

@@ -1,6 +1,6 @@
 # -*- mode: yaml -*-
 
-replicaCount: 1
+replicaCount: {{ .Values.services.global.statelessReplicas }}
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/dominant
@@ -83,6 +83,9 @@ ingress:
     - host: iddqd.{{ $ingressDomain | default "rbk.dev" }}
       paths:
         - /v1
+    - host: idkfa.{{ $ingressDomain | default "rbk.dev" }}
+      paths:
+        - /v1
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
   {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
@@ -92,6 +95,13 @@ ingress:
   {{- end }}
       hosts:
         - iddqd.{{ $ingressDomain | default "rbk.dev" }}
+  {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    - secretName: idkfa-{{ .Values.services.ingress.tls.secretName }}
+  {{- else }}
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
+  {{- end }}
+      hosts:
+        - idkfa.{{ $ingressDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8022
 
@@ -100,24 +110,19 @@ ciliumPolicies:
     - port: 8022
       type: TCP
     name: shumway
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: machinegun
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: dominant
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: proxy-mocket-inspector
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: proxy-mocketbank
-    namespace: {{ .Release.Namespace }}

@@ -609,7 +609,7 @@
   "users": [
     {
       "id": "281220eb-a4ef-4d03-b666-bdec4b26c5f7",
-      "createdTimestamp": 1479212158721,
+      "createdTimestamp": 1623413226000,
       "username": "demo_merchant",
       "enabled": true,
       "totp": false,
@@ -621,7 +621,7 @@
         {
           "id": "b1c7ced6-ac98-4c1f-aa78-5218530cdb46",
           "type": "password",
-          "createdDate": 1602080657263,
+          "createdDate": 1623413226000,
           "secretData": "{\"value\":\"Pib3j1q5Hk2E0IfQX08TcAcZTXVsLMlE3ZrgFwMpgvTCY1CkiyPb89U+zSzcxFTXwL15zVPQsBU5wbK9s/NSFg==\",\"salt\":\"jQc7ZQwO7g+mXytqhl23lQ==\"}",
           "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
         }
@@ -3916,7 +3916,9 @@
   "resetCredentialsFlow": "reset credentials",
   "clientAuthenticationFlow": "clients",
   "dockerAuthenticationFlow": "docker auth",
-  "attributes": {},
+  "attributes": {
+    "frontendUrl": "https://auth.{{ $ingressDomain | default "rbk.dev" }}/auth"
+  },
   "keycloakVersion": "11.0.0",
   "userManagedAccessAllowed": false
 }

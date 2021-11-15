@@ -93,24 +93,19 @@ ciliumPolicies:
     - port: 5432
       type: TCP
     name: postgres
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8200
       type: TCP
     name: vault
-    namespace: {{ .Release.Namespace }}
   - filters:
       - port: 8022
         type: TCP
     name: columbus
-    namespace: {{ .Release.Namespace }}
   - filters:
       - port: 8022
         type: TCP
     name: wb-list-manager
-    namespace: {{ .Release.Namespace }}
   - filters:
       - port: 8123
         type: TCP
     name: clickhouse
-    namespace: {{ .Release.Namespace }}

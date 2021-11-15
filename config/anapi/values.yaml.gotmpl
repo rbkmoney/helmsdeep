@@ -106,3 +106,17 @@ ingress:
         - api.{{ $ingressDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080
+
+ciliumPolicies:
+  - filters:
+    - port: 8080
+      type: TCP
+    name: keycloak
+  - filters:
+    - port: 8022
+      type: TCP
+    name: analytics
+  - filters:
+    - port: 8022
+      type: TCP
+    name: magista

@@ -151,12 +151,6 @@ ciliumPolicies:
     namespace: {{ .Release.Namespace }}
   - filters:
     - port: 9092
-      rules:
-        kafka:
-        - role: consume
-          topics:
-            - mg-events-invoice
-            - mg-events-party
       type: TCP
     name: kafka
     namespace: {{ .Release.Namespace }}
@@ -190,3 +184,12 @@ ciliumPolicies:
       type: TCP
     name: dominant
     namespace: {{ .Release.Namespace }}
+
+{{/*
+      rules:
+        kafka:
+        - role: consume
+          topics:
+            - mg-events-invoice
+            - mg-events-party
+*/}}

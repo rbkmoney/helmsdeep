@@ -1,6 +1,6 @@
 # -*- mode: yaml -*-
 
-replicaCount: 1
+replicaCount: {{ .Values.services.global.statelessReplicas }}
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/bouncer
@@ -52,4 +52,3 @@ ciliumPolicies:
     - port: 8181
       type: TCP
     name: bouncer-policies
-    namespace: {{ .Release.Namespace }}

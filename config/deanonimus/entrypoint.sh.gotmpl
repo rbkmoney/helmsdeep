@@ -19,4 +19,4 @@ java \
         --kafka.error-handler.sleep-time-seconds=5 \
         --kafka.error-handler.maxAttempts=-1 \
     ${@} \
-    --spring.config.additional-location=optional:/vault/secrets/application.properties
+    --spring.config.additional-location=/vault/secrets/application.properties
