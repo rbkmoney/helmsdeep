@@ -6,4 +6,5 @@
 {{- else }}
     "papiEndpoint": "http://iddqd.{{ $ingressDomain | default "rbk.dev" }}/papi/v1"
 {{- end }}
+    "fileStorageEndpoint": "{{ .Values.services.s3.endpoint }}"
 }

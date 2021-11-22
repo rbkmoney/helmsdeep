@@ -15,6 +15,7 @@
     "apiEndpoint": "https://api.{{ $ingressDomain | default "rbk.dev" }}",
     "urlShortenerEndpoint": "https://shrt.{{ $ingressDomain | default "rbk.dev" }}",
     "checkoutEndpoint": "https://checkout.{{ $ingressDomain | default "rbk.dev" }}",
+    "fileStorageEndpoint": "{{ .Values.services.s3.endpoint }}",
     "yandexMetrika": {
         "id": null,
         "clickmap": true,
