@@ -1,0 +1,90 @@
+# -*- mode: yaml -*-
+replicaCount: 1
+
+image:
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/fraudbusters-ui
+  tag: f0d4b45c0726f6b45f8ad42b77fb7f7750bd86b1
+  pullPolicy: IfNotPresent
+
+{{ if .Values.services.global.registry.imagePullSecret }}
+imagePullSecrets:
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
+{{ end }}
+
+service:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+
+configMap:
+  data:
+    appConfig.json: |
+      {{- tpl (readFile "appConfig.json.gotmpl") . | nindent 6 }}
+    authConfig.json: |
+      {{- tpl (readFile "authConfig.json.gotmpl") . | nindent 6 }}
+    fraudbusters-ui.conf: |
+      {{- readFile "vhost.conf" | nindent 6 }}
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /usr/share/nginx/html/appConfig.json
+    subPath: appConfig.json
+    readOnly: true
+  - name: config-volume
+    mountPath: /usr/share/nginx/html/authConfig.json
+    subPath: authConfig.json
+    readOnly: true
+  - name: config-volume
+    mountPath: /etc/nginx/vhosts.d/fraudbusters-ui.conf
+    subPath: fraudbusters-ui.conf
+    readOnly: true
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+
+livenessProbe:
+  httpGet:
+    path: /appConfig.json
+    port: http
+  initialDelaySeconds: 30
+  timeoutSeconds: 3
+readinessProbe:
+  httpGet:
+    path: /appConfig.json
+    port: http
+  initialDelaySeconds: 30
+  timeoutSeconds: 3
+
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
+
+ingress:
+  enabled: true
+  annotations:
+{{- if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
+{{- end }}
+    kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
+    nginx.ingress.kubernetes.io/enable-cors: "true" 
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+       more_set_headers "Access-Control-Allow-Origin: $http_origin";
+  hosts:
+    - host: fraudbusters-ui.{{ $ingressDomain | default "rbk.dev" }}
+      paths:
+        - /
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
+  {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    - secretName: fraudbusters-ui-{{ .Values.services.ingress.tls.secretName }}
+  {{- else }}
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
+  {{- end }}
+      hosts:
+        - fraudbusters-ui.{{ $ingressDomain | default "rbk.dev" }}
+{{- end }}
+  servicePort: 8080
