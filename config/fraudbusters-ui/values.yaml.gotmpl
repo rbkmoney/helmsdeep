@@ -88,3 +88,13 @@ ingress:
         - fraudbusters-ui.{{ $ingressDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080
+
+ciliumPolicies:
+  - filters:
+    - port: 8080
+      type: TCP
+    name: fraudbusters-mgmt
+  - filters:
+    - port: 8080
+      type: TCP
+    name: keycloak
