@@ -1,0 +1,6 @@
+{{- $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain -}}
+{{- $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain -}}
+{
+    "fbManagementEndpoint": "https://api.{{ $ingressDomain | default "rbk.dev" }}",
+    "pageSize": 10
+}
