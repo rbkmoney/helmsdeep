@@ -101,6 +101,32 @@ ciliumPolicies:
       type: TCP
     name: party-management
 
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
+
+ingress:
+  enabled: true
+  annotations:
+{{- if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
+{{- end }}
+    kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
+  hosts:
+    - host: iddqd.{{ $ingressDomain | default "rbk.dev" }}
+      paths:
+        - /v1/automaton
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
+  {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
+    - secretName: iddqd-{{ .Values.services.ingress.tls.secretName }}
+  {{- else }}
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
+  {{- end }}
+      hosts:
+        - iddqd.{{ $ingressDomain | default "rbk.dev" }}
+{{- end }}
+  servicePort: 8022
+
 {{/*
       rules:
         kafka:
