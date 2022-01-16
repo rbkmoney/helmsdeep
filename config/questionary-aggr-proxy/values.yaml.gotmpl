@@ -15,6 +15,10 @@ imagePullSecrets:
 runopts:
   command: ["/opt/questionary-aggr-proxy/entrypoint.sh"]
 
+env:
+  - name: LOGBACK_SERVICE_NAME
+    value: "questionary-aggregate-proxy"
+
 configMap:
   data:
     entrypoint.sh: |

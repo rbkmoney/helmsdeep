@@ -15,6 +15,10 @@ imagePullSecrets:
 runopts:
   command: ["/opt/xrates/entrypoint.sh"]
 
+env:
+  - name: LOGBACK_SERVICE_NAME
+    value: "xrates"
+
 configMap:
   data:
     entrypoint.sh: |

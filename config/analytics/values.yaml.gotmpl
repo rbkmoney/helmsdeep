@@ -53,6 +53,10 @@ secret:
     {{- end }}
 {{- end }}
 
+env:
+  - name: LOGBACK_SERVICE_NAME
+    value: "analytics"
+
 volumes:
   - name: config-volume
     configMap:

@@ -15,6 +15,10 @@ imagePullSecrets:
 runopts:
   command: ["/opt/wb-list-manager/entrypoint.sh"]
 
+env:
+  - name: LOGBACK_SERVICE_NAME
+    value: "wb-list-manager"
+
 configMap:
   data:
     entrypoint.sh: |
