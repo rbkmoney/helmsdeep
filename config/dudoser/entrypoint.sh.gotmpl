@@ -1,0 +1,33 @@
+#!/bin/sh
+set -ue
+
+java \
+    "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
+    -jar \
+        /opt/dudoser/dudoser.jar \
+        --logging.config=/opt/dudoser/logback.xml \
+        -Dwoody.node_id=dudos1 \
+        --server.port=8022 \
+        --spring.flyway.schemas=dudos \
+        --hellgate.url=http://party-management:8022/v1/processing/partymgmt \
+        --hellgate.networkTimeout=300 \
+        --invoicing-service.url=http://hellgate:8022/v1/processing/invoicing \
+        --invoicing-service.networkTimeout=300 \
+        --kafka.bootstrap-servers="{{ .Values.services.kafka.endpoint | default "kafka" }}:{{ .Values.services.kafka.port | default "9092" }}" \
+        --kafka.topics.invoice.id=mg-events-invoice \
+        --kafka.topics.invoice.enabled=true \
+        --kafka.client-id=dudoser \
+        --kafka.consumer.group-id=Dudoser-Invoicing \
+        --kafka.consumer.concurrency=7 \
+        --mail.host={{ .Values.services.mail.smtp.host }} \
+        --mail.port={{ .Values.services.mail.smtp.port | default "25" }} \
+        --mail.smtp.auth={{ .Values.services.mail.auth.enabled }} \
+        --mail.username={{ .Values.services.mail.auth.username }} \
+        --mail.password={{ .Values.services.mail.auth.password }} \
+        --mail.from={{ .Values.services.mail.smtp.from }} \
+        --notification.payment.paid.from={{ .Values.services.mail.smtp.from }} \
+        --notification.create.invoice.from={{ .Values.services.mail.smtp.from }} \
+        --subject.timezone.refund=Europe/Moscow \
+        --subject.timezone.payment=Europe/Moscow \
+    ${@} \
+    --spring.config.additional-location=optional:/vault/secrets/application.properties

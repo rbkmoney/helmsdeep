@@ -78,24 +78,23 @@ ciliumPolicies:
     - port: 8022
       type: TCP
     name: shumway
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: machinegun
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: dominant
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: proxy-mocket-inspector
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: proxy-mocketbank
-    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: party-management

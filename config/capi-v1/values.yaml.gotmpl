@@ -1,6 +1,6 @@
 # -*- mode: yaml -*-
 
-replicaCount: 1
+replicaCount: {{ .Values.services.global.statelessReplicas }}
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/capi-v1
@@ -125,24 +125,19 @@ ciliumPolicies:
     - port: 8080
       type: TCP
     name: keycloak
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: bender
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: shumway
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: dominant
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: hellgate
-    namespace: {{ .Release.Namespace }}

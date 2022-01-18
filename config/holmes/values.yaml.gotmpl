@@ -14,3 +14,10 @@ imagePullSecrets:
 
 livenessProbe: null
 readinessProbe: null
+
+ciliumPolicies:
+  - filters:
+    - port: 8200
+      type: TCP
+    name: vault
+    namespace: {{ .Release.Namespace }}

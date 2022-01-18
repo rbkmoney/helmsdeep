@@ -176,9 +176,20 @@ ciliumPolicies:
     - port: 5432
       type: TCP
     name: postgres
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 9092
+      type: TCP
+    name: kafka
+  - filters:
+    - port: 8200
+      type: TCP
+    name: vault
+  - filters:
+    - port: 8022
+      type: TCP
+    name: wapi
+
+{{/*
       rules:
         kafka:
         - role: consume
@@ -187,16 +198,4 @@ ciliumPolicies:
             - mg-events-ff-identity
             - mg-events-ff-wallet
             - mg-events-ff-withdrawal
-      type: TCP
-    name: kafka
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8200
-      type: TCP
-    name: vault
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
-    name: wapi
-    namespace: {{ .Release.Namespace }}
+*/}}

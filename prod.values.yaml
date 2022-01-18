@@ -1,0 +1,76 @@
+cilium:
+  enabled: true
+elk:
+  enabled: false
+prometheus:
+  enabled: false
+ingress:
+  enabled: false
+  ip: 'someip'
+certmanager:
+  enabled: false
+services:
+  global:
+    ipv6only: true
+    metrics:
+      enabled: true
+    registry:
+      repository: docker.io/rbkmoney
+      imagePullSecret: {}
+    pcidss:
+      taints:
+        enabled: false
+        key: pcidss
+        value: true
+      replicas: 1
+    statelessReplicas: 1
+
+  vault:
+    enabled: true
+    dev: true
+    injectorNamespaced: true
+    transitUnseal:
+      enabled: false
+      address: http://another.vault.local:8200
+
+  riak:
+    riakMgAddress: riak
+    riakCdAddress: riak
+    riakWblAddress: riak
+
+  postgres:
+    external: false
+  # Values below uses only if postgres.external is true
+    endpoint: postgres-postgresql
+    uniUser: postgres
+    uniPassword: H@ckM3
+
+  kafka:
+    external: false
+    endpoint: kafka
+    port: 9092
+    ssl:
+      enabled: false
+      keystorePass: 12341234
+      # Set if differ from keystore password
+      keyPass: 12341234
+      truststorePass: 43214321
+
+  s3:
+    endpoint: minio:9000
+    region: EU
+    bucket: bucket-files
+    accessKey: user_01
+    secretKey: SomeSecretKeyFromS3AdminConsole
+
+  ingress:
+    class: "nginx-external"
+    rootDomain: prod.rbk.mn
+    namespacedDomain: false
+    tls:
+      enabled: true
+      letsEncrypt:
+        enabled: true
+        issuer: "letsencrypt-staging"
+      secretName: prodtls
+

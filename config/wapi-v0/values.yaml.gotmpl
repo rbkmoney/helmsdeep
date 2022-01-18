@@ -100,7 +100,7 @@ ingress:
 {{- if .Values.services.ingress.tls.letsEncrypt.enabled }}
     cert-manager.io/cluster-issuer: {{ .Values.services.ingress.tls.letsEncrypt.issuer }}
 {{- end }}
-    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/ingress.class: {{ .Values.services.ingress.class | quote }}
     nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
     nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
     nginx.ingress.kubernetes.io/cors-allow-headers: "content-type,content-disposition,authorization,x-request-id"
@@ -129,37 +129,30 @@ ciliumPolicies:
     - port: 8080
       type: TCP
     name: keycloak
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: cds
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
-    name: fistful_magista
-    namespace: {{ .Release.Namespace }}
+    name: fistful-magista
   - filters:
     - port: 8022
       type: TCP
-    name: fistful_reporter
-    namespace: {{ .Release.Namespace }}
+    name: fistful-reporter
   - filters:
     - port: 8022
       type: TCP
-    name: file_storage
-    namespace: {{ .Release.Namespace }}
+    name: file-storage
   - filters:
     - port: 8022
       type: TCP
     name: fistful
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: dominant
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP

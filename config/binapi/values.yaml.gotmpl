@@ -1,6 +1,6 @@
 # -*- mode: yaml -*-
 
-replicaCount: 1
+replicaCount: {{ .Values.services.global.pcidss.replicas }}
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/binapi
@@ -114,3 +114,9 @@ ingress:
         - api.{{ $ingressDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080
+
+ciliumPolicies:
+  - filters:
+    - port: 8080
+      type: TCP
+    name: keycloak

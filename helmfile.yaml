@@ -28,6 +28,15 @@ helmfiles:
 
 releases:
 #External releases
+- name: clickhouse-operator
+  <<: *default
+  chart: rbkmoney/clickhouse-operator
+- name: clickhouse
+  <<: *default
+  chart: rbkmoney/clickhouse
+  needs:
+  - {{ .Namespace | default "default" }}/clickhouse-operator
+  - {{ .Namespace | default "default" }}/kafka
 - name: kafka
   <<: *default
   chart: bitnami/kafka
@@ -192,8 +201,8 @@ releases:
   needs:
     - {{ .Namespace | default "default" }}/vault
     - {{ .Namespace | default "default" }}/kafka
-#    - {{ .Namespace | default "default" }}/columbus
-    - {{ .Namespace | default "default" }}/payouter
+    - {{ .Namespace | default "default" }}/clickhouse
+    - {{ .Namespace | default "default" }}/columbus
 - name: questionary
   <<: *generic_stateless
   needs:
@@ -249,7 +258,9 @@ releases:
   <<: *generic_stateless_json
   needs:
   - {{ .Namespace | default "default" }}/vault
+  - {{ .Namespace | default "default" }}/kafka
   - {{ .Namespace | default "default" }}/fraudbusters
+  - {{ .Namespace | default "default" }}/fraudbusters-notificator
 - name: fraudbusters
   installed: false  
   <<: *generic_stateless_json
@@ -261,6 +272,12 @@ releases:
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/clickhouse
+- name: fraudbusters-notificator
+  installed: false
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/vault
+    - {{ .Namespace | default "default" }}/fraudbusters-warehouse
 - name: deanonimus
   <<: *generic_stateless_json
   needs:
@@ -269,6 +286,7 @@ releases:
   <<: *generic_stateless_json
   needs:
   - {{ .Namespace | default "default" }}/postgres
+  - {{ .Namespace | default "default" }}/vault
 - name: papi
   <<: *generic_stateless_json
   needs:
@@ -299,4 +317,13 @@ releases:
     - {{ .Namespace | default "default" }}/bouncer
     - {{ .Namespace | default "default" }}/claim-management
 - name: file-storage
-   <<: *generic_stateless
+  <<: *generic_stateless
+- name: dudoser
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/hellgate
+    - {{ .Namespace | default "default" }}/kafka
+- name: fraudbusters-ui
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/keycloak

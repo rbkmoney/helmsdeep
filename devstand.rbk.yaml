@@ -25,7 +25,13 @@ services:
         value: true
 
   vault:
+    enabled: true
     dev: true
+    injectorNamespaced: true
+    transitUnseal:
+      enabled: false
+      address: http://another.vault.local:8200
+
 
   riak:
     riakMgAddress: riak
@@ -34,13 +40,14 @@ services:
 # TODO: split users
   postgres:
     external: false
-    endpoint: postgresql-postgres
+    endpoint: postgres-postgresql
     uniUser: postgres
     uniPassword: H@ckM3
 
   kafka:
     external: false
-    endpoint: kafka:9092
+    endpoint: kafka
+    port: 9092
     ssl:
       enabled: false
       keystorePass: 12341234

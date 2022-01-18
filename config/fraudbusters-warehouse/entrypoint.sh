@@ -14,6 +14,6 @@ java \
     --management.endpoint.prometheus.enabled=true \
     --management.endpoint.health.show-details=always \
     --management.endpoints.web.exposure.include=health,info,prometheus \
-    ${@}
+    ${@} \
     --spring.config.additional-location=/var/lib/fraudbusters-warehouse/additional.ch.properties
 

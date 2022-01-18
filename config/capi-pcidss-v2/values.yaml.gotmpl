@@ -1,6 +1,6 @@
 # -*- mode: yaml -*-
 
-replicaCount: 1
+replicaCount: {{ .Values.services.global.pcidss.replicas }}
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/capi_pcidss-v2
@@ -137,25 +137,24 @@ ciliumPolicies:
   - filters:
     - port: 8022
       type: TCP
-    name: binbase
-    namespace: {{ .Release.Namespace }}
-  - filters:
-    - port: 8022
-      type: TCP
     name: bender
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: cds
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: bouncer
-    namespace: {{ .Release.Namespace }}
   - filters:
     - port: 8022
       type: TCP
     name: binbase
-    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: dominant
+  - filters:
+    - port: 8022
+      type: TCP
+    name: token-keeper

@@ -25,6 +25,8 @@ releases:
   <<: *infra_default
   chart: prometheus-community/kube-prometheus-stack
   namespace: monitoring
+  values:
+    - namespaceOverride: "monitoring"
 {{- end }}
 {{- if eq .Values.elk.enabled true }}
 - name: logs
