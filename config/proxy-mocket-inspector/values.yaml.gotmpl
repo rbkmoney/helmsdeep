@@ -12,6 +12,10 @@ imagePullSecrets:
   - name: {{ .Values.services.global.registry.imagePullSecret }}
 {{ end }}
 
+env:
+  - name: LOGBACK_SERVICE_NAME
+    value: "proxy-mocket-inspectoer
+
 configMap:
   data:
     entrypoint.sh: |

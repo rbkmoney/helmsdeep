@@ -15,6 +15,10 @@ imagePullSecrets:
 runopts:
   command: ["/opt/claim-management/entrypoint.sh"]
 
+env:
+  - name: LOGBACK_SERVICE_NAME
+    value: "claim-management"
+
 configMap:
   data:
     entrypoint.sh: |

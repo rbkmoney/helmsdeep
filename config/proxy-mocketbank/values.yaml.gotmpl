@@ -20,6 +20,10 @@ tolerations:
   effect: "NoSchedule"
 {{- end }}
 
+env:
+  - name: LOGBACK_SERVICE_NAME
+    value: "proxy-mocketbank"
+
 configMap:
   data:
     entrypoint.sh: |

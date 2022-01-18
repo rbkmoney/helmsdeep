@@ -15,6 +15,10 @@ imagePullSecrets:
 runopts:
   command : ["/opt/shumway/entrypoint.sh"]
 
+env:
+  - name: LOGBACK_SERVICE_NAME
+    value: "shumway"
+
 configMap:
   data:
     entrypoint.sh: |

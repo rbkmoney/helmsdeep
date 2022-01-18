@@ -23,6 +23,10 @@ tolerations:
 runopts:
   command : ["/opt/binbase/entrypoint.sh"]
 
+env:
+  - name: LOGBACK_SERVICE_NAME
+    value: "binbase"
+
 configMap:
  data:
    entrypoint.sh: |

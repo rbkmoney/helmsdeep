@@ -15,6 +15,10 @@ imagePullSecrets:
 runopts:
   command: ["/opt/reporter/entrypoint.sh"]
 
+env:
+  - name: LOGBACK_SERVICE_NAME
+    value: "reporter"
+
 configMap:
   data: 
     entrypoint.sh: |

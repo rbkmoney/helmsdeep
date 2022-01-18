@@ -15,6 +15,10 @@ imagePullSecrets:
 runopts:
   command: ["/opt/file-storage/entrypoint.sh"]
 
+env:
+  - name: LOGBACK_SERVICE_NAME
+    value: "file-storage"
+
 configMap:
   data: 
     entrypoint.sh: |
