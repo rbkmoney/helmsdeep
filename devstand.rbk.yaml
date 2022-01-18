@@ -23,6 +23,8 @@ services:
         enabled: false
         key: pcidss
         value: true
+      replicas: 1
+    statelessReplicas: 1
 
   vault:
     enabled: true
@@ -36,6 +38,7 @@ services:
   riak:
     riakMgAddress: riak
     riakCdAddress: riak
+    riakWblAddress: riak
 
 # TODO: split users
   postgres:
@@ -61,7 +64,6 @@ services:
     accessKey: user_01
     secretKey: SomeSecretKeyFromS3AdminConsole
   
-
   ingress:
     class: "nginx"
     rootDomain: dev.rbk.mn
