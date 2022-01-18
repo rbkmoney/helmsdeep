@@ -13,22 +13,17 @@ FIXTURE=$(cat <<END
     {"insert": {"object": {"globals": {
         "ref": {},
         "data": {
-            "system_account_set": {"value": {"id": 1}},
             "external_account_set": {"value": {"id": 1}},
-            "inspector": {"value": {"id": 1}}
+            "payment_institutions": [{"id": 1}]
         }
     }}}},
 
     {"insert": {"object": {"system_account_set": {
         "ref": {"id": 1},
         "data": {
-            "name": "Primary",
-            "description": "Primary",
+            "name": "Test System Account",
+            "description": "System Account for testing purposes",
             "accounts": [
-              {
-                "key": {"symbolic_code": "USD"},
-                "value": {"settlement": $(scripts/dominant/create-account.sh USD)}
-              },
               {
                 "key": {"symbolic_code": "RUB"},
                 "value": {"settlement": $(scripts/dominant/create-account.sh RUB)}
@@ -40,8 +35,8 @@ FIXTURE=$(cat <<END
     {"insert": {"object": {"external_account_set": {
         "ref": {"id": 1},
         "data": {
-            "name": "Primary",
-            "description": "Primary",
+            "name": "Test External Account",
+            "description": "External Account for testing purposes",
             "accounts": [
               {
                 "key": {
@@ -56,35 +51,20 @@ FIXTURE=$(cat <<END
           }
     }}}},
 
-    {"insert": {"object": {"inspector": {
-        "ref": {"id": 1},
-        "data": {
-            "name": "Kovalsky",
-            "description": "World famous inspector Kovalsky at your service!",
-            "proxy": {
-                "ref": {"id": 100},
-                "additional": {
-                    "risk_score": "high"
-                }
-            }
-        }
-    }}}},
-    {"insert": {"object": {"inspector": {
-        "ref": {
-          "id": 5
-        },
-        "data": {
-          "name": "Fraudbusters",
-          "description": "Fraudbusters!",
-          "proxy": {
+    {
+      "insert": {
+        "object": {
+          "country": {
             "ref": {
-              "id": 5
+              "id": "rus"
             },
-            "additional": []
-          },
-          "fallback_risk_score": "high"
+            "data": {
+              "name": "Russian Federation"
+            }
+          }
         }
-      }}}},
+      }
+    },
 
     {"insert": {"object": {"term_set_hierarchy": {
         "ref": {"id": 1},
@@ -142,38 +122,9 @@ FIXTURE=$(cat <<END
                             "value": {
                               "upper": {
                                 "exclusive": {
-                                  "amount": 4200000,
-                                  "currency": {
-                                    "symbolic_code": "RUB"
-                                  }
-                                }
-                              },
-                              "lower": {
-                                "inclusive": {
-                                  "amount": 1000,
-                                  "currency": {
-                                    "symbolic_code": "RUB"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        },
-                        {
-                          "if_": {
-                            "condition": {
-                              "currency_is": {
-                                "symbolic_code": "USD"
-                              }
-                            }
-                          },
-                          "then_": {
-                            "value": {
-                              "upper": {
-                                "inclusive": {
                                   "amount": 100000000,
                                   "currency": {
-                                    "symbolic_code": "USD"
+                                    "symbolic_code": "RUB"
                                   }
                                 }
                               },
@@ -181,7 +132,7 @@ FIXTURE=$(cat <<END
                                 "inclusive": {
                                   "amount": 100,
                                   "currency": {
-                                    "symbolic_code": "USD"
+                                    "symbolic_code": "RUB"
                                   }
                                 }
                               }
@@ -303,38 +254,9 @@ FIXTURE=$(cat <<END
                                   },
                                   "lower": {
                                     "inclusive": {
-                                      "amount": 1000,
-                                      "currency": {
-                                        "symbolic_code": "RUB"
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            },
-                            {
-                              "if_": {
-                                "condition": {
-                                  "currency_is": {
-                                    "symbolic_code": "USD"
-                                  }
-                                }
-                              },
-                              "then_": {
-                                "value": {
-                                  "upper": {
-                                    "inclusive": {
-                                      "amount": 100000000,
-                                      "currency": {
-                                        "symbolic_code": "USD"
-                                      }
-                                    }
-                                  },
-                                  "lower": {
-                                    "inclusive": {
                                       "amount": 100,
                                       "currency": {
-                                        "symbolic_code": "USD"
+                                        "symbolic_code": "RUB"
                                       }
                                     }
                                   }
@@ -395,25 +317,13 @@ FIXTURE=$(cat <<END
                               "is_cvv_empty": false
                             }
                           }
-                        },
-                        {
-                          "id": {
-                            "bank_card": {
-                              "payment_system": {"id": "VISA"},
-                              "is_cvv_empty": true
-                            }
-                          }
                         }
                       ]
                     }
                   },
                   "wallets": {
                     "currencies": {
-                      "value": [
-                        {
-                          "symbolic_code": "RUB"
-                        }
-                      ]
+                      "value": [{"symbolic_code": "RUB"}]
                     },
                     "wallet_limit": {
                       "value": {
@@ -437,11 +347,7 @@ FIXTURE=$(cat <<END
                     },
                     "withdrawals": {
                       "currencies": {
-                        "value": [
-                          {
-                            "symbolic_code": "RUB"
-                          }
-                        ]
+                        "value": [{"symbolic_code": "RUB"}]
                       },
                       "cash_limit": {
                         "value": {
@@ -502,18 +408,9 @@ FIXTURE=$(cat <<END
     {"insert": {"object": {"currency": {
         "ref": {"symbolic_code": "RUB"},
         "data": {
-            "name": "Russian rubles",
+            "name": "Russian ruble",
             "numeric_code": 643,
             "symbolic_code": "RUB",
-            "exponent": 2
-        }
-    }}}},
-    {"insert": {"object": {"currency": {
-        "ref": {"symbolic_code": "USD"},
-          "data": {
-            "name": "USA Dollars",
-            "symbolic_code": "USD",
-            "numeric_code": 840,
             "exponent": 2
         }
     }}}},
@@ -527,78 +424,30 @@ FIXTURE=$(cat <<END
         }
     }}}},
 
-    {"insert": {"object": {"bank_card_category": {
-        "ref": {"id": 1},
-        "data": {
-            "name": "CATEGORY1",
-            "description": "ok",
-            "category_patterns": [
-              "*SOMECATEGORY*"
-            ]
-          }
-    }}}},
-
-    {"insert": {"object": {"bank": {
-        "ref": {"id": 1},
-        "data": {
-            "name": "Bank 1",
-            "description": "Bank 1",
-            "binbase_id_patterns": [
-              "*SOMEBANK*"
-            ],
-            "bins": [
-              "123456"
-            ]
-          }
-    }}}},
-
     {"insert": {"object": {"provider": {
         "ref": {"id": 1},
         "data": {
-            "name": "Mocketbank",
-            "description": "Mocketbank",
+            "name": "Mocketbank Provider",
+            "description": "Mocketbank Provider",
             "proxy": {
-              "ref": {
-                "id": 1
-              },
+              "ref": {"id": 1},
               "additional": []
             },
             "accounts": [
               {
-                "key": {
-                  "symbolic_code": "RUB"
-                },
+                "key": {"symbolic_code": "RUB"},
                 "value": {
                   "settlement": $(scripts/dominant/create-account.sh RUB)
-                }
-              },
-              {
-                "key": {
-                  "symbolic_code": "USD"
-                },
-                "value": {
-                  "settlement": $(scripts/dominant/create-account.sh USD)
                 }
               }
             ],
             "terms": {
               "payments": {
                 "currencies": {
-                  "value": [
-                    {
-                      "symbolic_code": "RUB"
-                    },
-                    {
-                      "symbolic_code": "USD"
-                    }
-                  ]
+                  "value": [{ "symbolic_code": "RUB"}]
                 },
                 "categories": {
-                  "value": [
-                    {
-                      "id": 1
-                    }
-                  ]
+                  "value": [{"id": 1}]
                 },
                 "payment_methods": {
                   "value": [
@@ -642,38 +491,9 @@ FIXTURE=$(cat <<END
                           },
                           "lower": {
                             "inclusive": {
-                              "amount": 1000,
+                              "amount": -1000000000,
                               "currency": {
                                 "symbolic_code": "RUB"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    {
-                      "if_": {
-                        "condition": {
-                          "currency_is": {
-                            "symbolic_code": "USD"
-                          }
-                        }
-                      },
-                      "then_": {
-                        "value": {
-                          "upper": {
-                            "inclusive": {
-                              "amount": 100000000,
-                              "currency": {
-                                "symbolic_code": "USD"
-                              }
-                            }
-                          },
-                          "lower": {
-                            "inclusive": {
-                              "amount": 100,
-                              "currency": {
-                                "symbolic_code": "USD"
                               }
                             }
                           }
@@ -852,35 +672,6 @@ FIXTURE=$(cat <<END
                               }
                             }
                           }
-                        },
-                        {
-                          "if_": {
-                            "condition": {
-                              "currency_is": {
-                                "symbolic_code": "USD"
-                              }
-                            }
-                          },
-                          "then_": {
-                            "value": {
-                              "upper": {
-                                "inclusive": {
-                                  "amount": 100000000,
-                                  "currency": {
-                                    "symbolic_code": "USD"
-                                  }
-                                }
-                              },
-                              "lower": {
-                                "inclusive": {
-                                  "amount": 100,
-                                  "currency": {
-                                    "symbolic_code": "USD"
-                                  }
-                                }
-                              }
-                            }
-                          }
                         }
                       ]
                     }
@@ -900,26 +691,9 @@ FIXTURE=$(cat <<END
                       },
                       "then_": {
                         "value": {
-                          "amount": 199,
-                          "currency": {
-                            "symbolic_code": "RUB"
-                          }
-                        }
-                      }
-                    },
-                    {
-                      "if_": {
-                        "condition": {
-                          "currency_is": {
-                            "symbolic_code": "USD"
-                          }
-                        }
-                      },
-                      "then_": {
-                        "value": {
                           "amount": 100,
                           "currency": {
-                            "symbolic_code": "USD"
+                            "symbolic_code": "RUB"
                           }
                         }
                       }
@@ -927,11 +701,7 @@ FIXTURE=$(cat <<END
                   ]
                 },
                 "categories": {
-                  "value": [
-                    {
-                      "id": 1
-                    }
-                  ]
+                  "value": [{"id": 1}]
                 },
                 "payment_methods": {
                   "value": [
@@ -950,14 +720,6 @@ FIXTURE=$(cat <<END
                           "is_cvv_empty": false
                         }
                       }
-                    },
-                    {
-                      "id": {
-                        "bank_card": {
-                          "payment_system": {"id": "VISA"},
-                          "is_cvv_empty": true
-                        }
-                      }
                     }
                   ]
                 }
@@ -965,34 +727,25 @@ FIXTURE=$(cat <<END
             },
             "abs_account": "0000000001",
             "terminal": {
-              "value": [
-                {
-                  "id": 1,
-                  "priority": 1000
-                }
-              ]
+              "value": [{"id": 1, "priority": 1000}]
             }
           }
     }}}},
     {"insert": {"object": {"provider": {
         "ref": {"id": 2},
         "data": {
-            "name": "Mocketbank payouts",
-            "description": "No",
+            "name": "Payout provider",
+            "description": "Mocketbank provider for payouts",
+            "identity": "1",
             "proxy": {
-              "ref": {
-                "id": 3
-              },
+              "ref": {"id": 2},
               "additional": {
                 "k": "v"
               }
             },
-            "identity": "1",
             "accounts": [
               {
-                "key": {
-                  "symbolic_code": "RUB"
-                },
+                "key": {"symbolic_code": "RUB"},
                 "value": {
                   "settlement": $(scripts/dominant/create-account.sh RUB)
                 }
@@ -1002,18 +755,10 @@ FIXTURE=$(cat <<END
               "wallet": {
                 "withdrawals": {
                   "currencies": {
-                    "value": [
-                      {
-                        "symbolic_code": "RUB"
-                      }
-                    ]
+                    "value": [{"symbolic_code": "RUB"}]
                   },
                   "payout_methods": {
-                    "value": [
-                      {
-                        "id": "wallet_info"
-                      }
-                    ]
+                    "value": [{ "id": "wallet_info" }]
                   },
                   "cash_limit": {
                     "value": {
@@ -1042,12 +787,7 @@ FIXTURE=$(cat <<END
               }
             },
             "terminal": {
-              "value": [
-                {
-                  "id": 3,
-                  "priority": 1000
-                }
-              ]
+              "value": [{"id": 2, "priority": 1000}]
             }
         }
     }}}},
@@ -1067,29 +807,18 @@ FIXTURE=$(cat <<END
         }
     }}}},
     {"insert": {"object": {"payout_method": {
-        "ref": {
-            "id": "wallet_info"
-          },
-          "data": {
-            "name": "Wallet info",
-            "description": "Выводы на кошельки мерчантов"
-          }
-    }}}},
-    {"insert": {"object": {"payment_method": {
-        "ref": {
-            "id": {"bank_card": {"payment_system": {"id": "VISA"},"is_cvv_empty": true}}
-          },
-          "data": {
-            "name": "Visa NOCVV",
-            "description": "No"
-          }
+        "ref": {"id": "wallet_info"},
+        "data": {
+          "name": "Wallet payout",
+          "description": "Payout to merchant's wallets"
+        }
     }}}},
 
     {"insert": {"object": {"terminal": {
         "ref": {"id": 1},
         "data": {
-            "name": "Mocketbank Test Acquiring",
-            "description": "Mocketbank Test Acquiring",
+            "name": "Mocketbank Acquiring Terminal",
+            "description": "Mocketbank Acquiring Terminal",
             "provider_ref": {
               "id": 1
             }
@@ -1098,15 +827,6 @@ FIXTURE=$(cat <<END
     {"insert": {"object": {"terminal": {
         "ref": {
           "id": 2
-        },
-        "data": {
-          "name": "Mocketbank Test2 Terminal",
-          "description": "Mocketbank Test2 Terminal"
-        }
-      }}}},
-    {"insert": {"object": {"terminal": {
-        "ref": {
-          "id": 3
         },
         "data": {
           "name": "Mocketbank Payout terminal",
@@ -1131,7 +851,7 @@ FIXTURE=$(cat <<END
         }
     }}}},
     {"insert": {"object": {"proxy": {
-        "ref": {"id": 3},
+        "ref": {"id": 2},
         "data": {
             "name": "Mocketbank Proxy Payouts",
             "description": "Proxy test Payouts",
@@ -1142,30 +862,19 @@ FIXTURE=$(cat <<END
         }
     }}}},
     {"insert": {"object": {"proxy": {
-        "ref": {"id": 100},
+        "ref": {"id": 3},
         "data": {
             "name": "Mocket Inspector Proxy",
-            "description": "Mocked inspector proxy for integration test purposes",
+            "description": "Mocked inspector proxy for test purposes",
             "url": "http://proxy-mocket-inspector:8022/proxy/mocket/inspector",
             "options": {"risk_score": "high"}
         }
     }}}},
-    {"insert": {"object": {"proxy": {
-        "ref": {
-          "id": 5
-        },
-        "data": {
-          "name": "Fraudbusters",
-          "description": "Fraudbusters",
-          "url": "http://fraudbusters:8022/fraud_inspector/v1",
-          "options": []
-        }
-      }}}},
 
     {"insert": {"object": {"routing_rules": {
         "ref": {"id": 1},
         "data": {
-            "name": "Роутинг по валюте",
+            "name": "Payment ruleset",
             "decisions": {
               "candidates": [
                 {
@@ -1188,20 +897,14 @@ FIXTURE=$(cat <<END
     {"insert": {"object": {"routing_rules": {
         "ref": {"id": 2},
         "data": {
-            "name": "Роутинг по банку-эмитенту",
+            "name": "Payout ruleset",
             "decisions": {
               "candidates": [
                 {
                   "allowed": {
                     "condition": {
-                      "payment_tool": {
-                        "bank_card": {
-                          "definition": {
-                            "issuer_bank_is": {
-                              "id": 1
-                            }
-                          }
-                        }
+                      "currency_is": {
+                        "symbolic_code": "RUB"
                       }
                     }
                   },
@@ -1217,240 +920,13 @@ FIXTURE=$(cat <<END
     {"insert": {"object": {"routing_rules": {
         "ref": {"id": 3},
         "data": {
-            "name": "Роутинг по стране, выпустившую карту",
+            "name": "Prohibitions",
             "decisions": {
-              "candidates": [
-                {
-                  "allowed": {
-                    "condition": {
-                      "payment_tool": {
-                        "bank_card": {
-                          "definition": {
-                            "issuer_country_is": "mlt"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "terminal": {
-                    "id": 1
-                  },
-                  "priority": 1000
-                }
-              ]
+              "candidates": []
             }
           }
     }}}},
-    {"insert": {"object": {"routing_rules": {
-        "ref": {"id": 4},
-        "data": {
-            "name": "Роутинг по МПС карты",
-            "decisions": {
-              "candidates": [
-                {
-                  "allowed": {
-                    "condition": {
-                      "payment_tool": {
-                        "bank_card": {
-                          "definition": {
-                            "payment_system": {
-                              "payment_system_is": {"id": "MASTERCARD"}
-                            }
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "terminal": {
-                    "id": 2
-                  },
-                  "priority": 1000
-                }
-              ]
-            }
-        }
-    }}}},
-    {"insert": {"object": {"routing_rules": {
-        "ref": {"id": 5},
-        "data": {
-            "name": "Роутинг по типу карты",
-            "decisions": {
-              "candidates": [
-                {
-                  "allowed": {
-                    "condition": {
-                      "payment_tool": {
-                        "bank_card": {
-                          "definition": {
-                            "category_is": {
-                              "id": 1
-                            }
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "terminal": {
-                    "id": 1
-                  },
-                  "priority": 1000
-                }
-              ]
-            }
-          }
-    }}}},
-    {"insert": {"object": {"routing_rules": {
-        "ref": {"id": 6},
-        "data": {
-            "name": "Роутинг по категории магазина",
-            "decisions": {
-              "candidates": [
-                {
-                  "allowed": {
-                    "condition": {
-                      "category_is": {
-                        "id": 1
-                      }
-                    }
-                  },
-                  "terminal": {
-                    "id": 2
-                  },
-                  "priority": 1000
-                }
-              ]
-            }
-          }
-    }}}},
-    {"insert": {"object": {"routing_rules": {
-        "ref": {"id": 7},
-        "data": {
-            "name": "Роутинг по URL магазина",
-            "decisions": {
-              "candidates": [
-                {
-                  "allowed": {
-                    "condition": {
-                      "shop_location_is": {
-                        "url": "someurl"
-                      }
-                    }
-                  },
-                  "terminal": {
-                    "id": 1
-                  },
-                  "priority": 1000
-                }
-              ]
-            }
-          }
-    }}}},
-    {"insert": {"object": {"routing_rules": {
-        "ref": {"id": 8},
-        "data": {
-            "name": "Роутинг по наличию CVV в платеже",
-            "decisions": {
-              "candidates": [
-                {
-                  "allowed": {
-                    "condition": {
-                      "payment_tool": {
-                        "bank_card": {
-                          "definition": {
-                            "empty_cvv_is": true
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "terminal": {
-                    "id": 2
-                  },
-                  "priority": 1000
-                }
-              ]
-            }
-          }
-    }}}},
-    {"insert": {"object": {"routing_rules": {
-        "ref": {"id": 9},
-        "data": {
-            "name": "Роутинг по вероятностям",
-            "decisions": {
-              "candidates": [
-                {
-                  "allowed": {
-                    "constant": true
-                  },
-                  "terminal": {
-                    "id": 1
-                  },
-                  "weight": 1,
-                  "priority": 1000
-                },
-                {
-                  "allowed": {
-                    "constant": true
-                  },
-                  "terminal": {
-                    "id": 2
-                  },
-                  "weight": 2,
-                  "priority": 1000
-                }
-              ]
-            }
-          }
-    }}}},
-    {"insert": {"object": {"routing_rules": {
-        "ref": {"id": 10},
-        "data": {
-            "name": "Роутинг по мерчанту",
-            "decisions": {
-              "candidates": [
-                {
-                  "allowed": {
-                    "condition": {
-                      "party": {
-                        "id": "someparty",
-                        "definition": {
-                          "shop_is": "someshop"
-                        }
-                      }
-                    }
-                  },
-                  "terminal": {
-                    "id": 1
-                  },
-                  "priority": 1000
-                }
-              ]
-            }
-          }
-    }}}},
-    {"insert": {"object": {"routing_rules": {
-        "ref": {"id": 11},
-        "data": {
-            "name": "Роутинг выплат по валюте",
-            "decisions": {
-              "candidates": [
-                {
-                  "allowed": {
-                    "condition": {
-                      "currency_is": {
-                        "symbolic_code": "RUB"
-                      }
-                    }
-                  },
-                  "terminal": {
-                    "id": 3
-                  },
-                  "priority": 1000
-                }
-              ]
-            }
-          }
-    }}}},
+
 		{
 			"insert": {
 				"object": {
@@ -1463,26 +939,6 @@ FIXTURE=$(cat <<END
 							"validation_rules": [
 								{"card_number": {"checksum": {"luhn": {}}}},
 								{"card_number": {"ranges": [{"lower": 16, "upper": 16}]}},
-								{"cvc": {"length": {"lower": 3, "upper": 3}}},
-								{"exp_date": {"exact_exp_date": {}}}
-							]
-						}
-					}
-				}
-			}
-		},
-		{
-			"insert": {
-				"object": {
-					"payment_system": {
-						"ref": {
-							"id": "NSPK MIR"
-						},
-						"data": {
-							"name": "NSPK MIR",
-							"validation_rules": [
-								{"card_number": {"checksum": {"luhn": {}}}},
-								{"card_number": {"ranges": [{"lower": 16, "upper": 16},{"lower": 19, "upper": 20}]}},
 								{"cvc": {"length": {"lower": 3, "upper": 3}}},
 								{"exp_date": {"exact_exp_date": {}}}
 							]
@@ -1512,6 +968,20 @@ FIXTURE=$(cat <<END
 			}
 		},
 
+    {"insert": {"object": {"inspector": {
+        "ref": {"id": 1},
+        "data": {
+            "name": "Mocket Inspector",
+            "description": "Inspector for test purposes",
+            "proxy": {
+                "ref": {"id": 3},
+                "additional": {
+                    "risk_score": "high"
+                }
+            }
+        }
+    }}}},
+
     {"insert": {"object": {"payment_institution": {
         "ref": {"id": 1},
         "data": {
@@ -1519,14 +989,13 @@ FIXTURE=$(cat <<END
             "system_account_set": {"value": {"id": 1}},
             "default_contract_template": {"value": {"id": 1}},
             "default_wallet_contract_template": {"value": {"id": 1}},
-            "providers": {"value": [{"id": 1}]},
             "inspector": {"value": {"id": 1}},
             "realm": "test",
             "wallet_system_account_set": {"value": {"id": 1}},
-            "residences": ["rus", "aus", "jpn"],
+            "residences": ["rus"],
             "identity" : "1",
-            "withdrawal_routing_rules" : {"policies": {"id":11},"prohibitions": {"id":8}},
-            "payment_routing_rules" : {"policies": {"id":1},"prohibitions": {"id":8}}
+            "payment_routing_rules" : {"policies": {"id":1},"prohibitions": {"id":3}},
+            "withdrawal_routing_rules" : {"policies": {"id":2},"prohibitions": {"id":3}}
         }
     }}}}
 ]}
