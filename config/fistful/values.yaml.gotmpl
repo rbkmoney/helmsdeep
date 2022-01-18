@@ -2,7 +2,7 @@
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/fistful-server
-  tag: b9f0cdf2e4954b47c366d0e7ea78d4690fc176af
+  tag: f6155acb0475987e47a4fbc911758c595e129c80
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}

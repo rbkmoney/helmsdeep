@@ -4,7 +4,7 @@ replicaCount: {{ .Values.services.global.statelessReplicas }}
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/capi-v2
-  tag: bc6446611ef7af7c6a60f6de9ca5f4b896d1c004
+  tag: 35edff0a8c9b6003787bdfaeadd7e9c5f883856a
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
