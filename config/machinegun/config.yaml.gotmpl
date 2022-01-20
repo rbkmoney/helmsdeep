@@ -50,6 +50,35 @@ logging:
 #   recv_timeout: 1s
 
 namespaces:
+  bender_generator:
+    timers: disabled
+    overseer: *default_overseer_config
+    processor:
+      url: http://bender:8022/v1/stateproc/bender_generator
+      pool_size: 300
+      http_keep_alive_timeout: 3000ms
+
+  bender_sequence:
+    timers: disabled
+    overseer: *default_overseer_config
+    processor:
+      url: http://bender:8022/v1/stateproc/bender_sequence
+      pool_size: 300
+      http_keep_alive_timeout: 3000ms
+
+  customer:
+    timers: *default_timers_config
+    overseer: *default_overseer_config
+    event_sinks:
+      kafka:
+        type: kafka
+        topic: mg-events-customer
+        client: default_kafka_client
+    processor:
+      url: http://hellgate:8022/v1/stateproc/customer
+      pool_size: 300
+      http_keep_alive_timeout: 3000ms
+
   domain-config:
     overseer:
       &default_overseer_config
@@ -64,20 +93,7 @@ namespaces:
     processor:
       url: http://dominant:8022/v1/stateproc
       http_keep_alive_timeout: 3000ms
-  bender_generator:
-    timers: disabled
-    overseer: *default_overseer_config
-    processor:
-      url: http://bender:8022/v1/stateproc/bender_generator
-      pool_size: 300
-      http_keep_alive_timeout: 3000ms
-  bender_sequence:
-    timers: disabled
-    overseer: *default_overseer_config
-    processor:
-      url: http://bender:8022/v1/stateproc/bender_sequence
-      pool_size: 300
-      http_keep_alive_timeout: 3000ms
+
   invoice:
     timers:
       &default_timers_config
@@ -95,6 +111,7 @@ namespaces:
       url: http://hellgate:8022/v1/stateproc/invoice
       pool_size: 2000
       http_keep_alive_timeout: 3000ms
+
   invoice_template:
     timers: disabled
     overseer: *default_overseer_config
@@ -107,18 +124,7 @@ namespaces:
       url: http://hellgate:8022/v1/stateproc/invoice_template
       pool_size: 2000
       http_keep_alive_timeout: 3000ms
-  customer:
-    timers: *default_timers_config
-    overseer: *default_overseer_config
-    event_sinks:
-      kafka:
-        type: kafka
-        topic: mg-events-customer
-        client: default_kafka_client
-    processor:
-      url: http://hellgate:8022/v1/stateproc/customer
-      pool_size: 300
-      http_keep_alive_timeout: 3000ms
+
   recurrent_paytools:
     timers: *default_timers_config
     overseer: *default_overseer_config
@@ -131,6 +137,7 @@ namespaces:
       url: http://hellgate:8022/v1/stateproc/recurrent_paytools
       pool_size: 300
       http_keep_alive_timeout: 3000ms
+
   party:
     timers: disabled
     overseer: *default_overseer_config
@@ -142,12 +149,14 @@ namespaces:
     processor:
       url: http://party-management:8022/v1/stateproc/party
       http_keep_alive_timeout: 3000ms
+
   url-shortener:
     timers: *default_timers_config
     overseer: *default_overseer_config
     processor:
       url: http://url-shortener:8022/v1/stateproc
       http_keep_alive_timeout: 3000ms
+
   ff/identity:
       timers: *default_timers_config
       overseer: *default_overseer_config
@@ -254,34 +263,6 @@ namespaces:
       processor:
           url: http://fistful:8022/v1/stateproc/ff/external_id
           http_keep_alive_timeout: 3000ms
-  ff/p2p_transfer_v1:
-      timers: *default_timers_config
-      overseer: *default_overseer_config
-      event_sinks:
-          machine:
-              type: machine
-              machine_id: ff/p2p_transfer_v1
-          kafka:
-              type: kafka
-              topic: mg-events-ff-p2p-transfer
-              client: default_kafka_client
-      processor:
-          url: http://fistful:8022/v1/stateproc/ff/p2p_transfer_v1
-          http_keep_alive_timeout: 3000ms
-  ff/p2p_transfer/session_v1:
-      timers: *default_timers_config
-      overseer: *default_overseer_config
-      event_sinks:
-          machine:
-              type: machine
-              machine_id: ff/p2p_transfer/session_v1
-          kafka:
-              type: kafka
-              topic: mg-events-ff-p2p-transfer-session
-              client: default_kafka_client
-      processor:
-          url: http://fistful:8022/v1/stateproc/ff/p2p_transfer/session_v1
-          http_keep_alive_timeout: 3000ms
   ff/w2w_transfer_v1:
       timers: *default_timers_config
       overseer: *default_overseer_config
@@ -295,20 +276,6 @@ namespaces:
               client: default_kafka_client
       processor:
           url: http://fistful:8022/v1/stateproc/ff/w2w_transfer_v1
-          http_keep_alive_timeout: 3000ms
-  ff/p2p_template_v1:
-      timers: *default_timers_config
-      overseer: *default_overseer_config
-      event_sinks:
-          machine:
-              type: machine
-              machine_id: ff/p2p_template_v1
-          kafka:
-              type: kafka
-              topic: mg-events-ff-p2p-template
-              client: default_kafka_client
-      processor:
-          url: http://fistful:8022/v1/stateproc/ff/p2p_template_v1
           http_keep_alive_timeout: 3000ms
 
 kafka:
