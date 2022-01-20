@@ -29,6 +29,7 @@ services:
   vault:
     enabled: true
     dev: true
+    issuer: https://kubernetes.default.svc.cluster.local
     injectorNamespaced: true
     transitUnseal:
       enabled: false
@@ -63,7 +64,17 @@ services:
     bucket: bucket-files
     accessKey: user_01
     secretKey: SomeSecretKeyFromS3AdminConsole
-  
+
+  mail:
+    smtp:
+      host: mail
+      port: 25
+      from: no-reply@test.ru
+    auth:
+      enabled: false
+      username: user
+      password: password
+
   ingress:
     class: "nginx"
     rootDomain: dev.rbk.mn

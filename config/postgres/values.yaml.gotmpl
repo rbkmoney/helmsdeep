@@ -5,6 +5,11 @@ postgresqlPassword: "H@ckM3"
 
 initdbScripts:
   rbk-dbs.sql: |
+     CREATE SCHEMA IF NOT EXISTS cm;
+     CREATE SCHEMA IF NOT EXISTS shm;
+     CREATE SCHEMA IF NOT EXISTS mst;
+     CREATE SCHEMA IF NOT EXISTS analytics;
+     CREATE SCHEMA IF NOT EXISTS org_manager;
      CREATE DATABASE keycloak;
      CREATE DATABASE shumway;
      CREATE DATABASE hooker;
