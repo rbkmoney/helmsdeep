@@ -14,12 +14,16 @@ imagePullSecrets:
 
 env:
   - name: LOGBACK_SERVICE_NAME
-    value: "proxy-mocket-inspectoer
+    value: "proxy-mocket-inspector"
 
 configMap:
   data:
     entrypoint.sh: |
       {{- readFile "entrypoint.sh" | nindent 6 }}
+    loggers.xml: |
+      {{- readFile "loggers.xml" | nindent 6 }}
+    logback.xml: |
+      {{- readFile "../logs/logback.xml" | nindent 6 }}
 
 volumes:
   - name: config-volume
@@ -31,6 +35,14 @@ volumeMounts:
   - name: config-volume
     mountPath: /opt/proxy-mocket-inspector/entrypoint.sh
     subPath: entrypoint.sh
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/proxy-mocket-inspector/logback.xml
+    subPath: logback.xml
+    readOnly: true
+  - name: config-volume
+    mountPath: /opt/proxy-mocket-inspector/loggers.xml
+    subPath: loggers.xml
     readOnly: true
 
 runopts:
