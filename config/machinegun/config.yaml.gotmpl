@@ -50,6 +50,21 @@ logging:
 #   recv_timeout: 1s
 
 namespaces:
+  domain-config:
+    overseer:
+      &default_overseer_config
+      scan_interval: 60m
+      min_scan_delay: 5s
+    timers:
+      &default_timers_config
+      scan_interval: 60s
+      scan_limit: 5000
+      capacity: 2000
+      min_scan_delay: 5s
+    processor:
+      url: http://dominant:8022/v1/stateproc
+      http_keep_alive_timeout: 3000ms
+
   bender_generator:
     timers: disabled
     overseer: *default_overseer_config
@@ -77,21 +92,6 @@ namespaces:
     processor:
       url: http://hellgate:8022/v1/stateproc/customer
       pool_size: 300
-      http_keep_alive_timeout: 3000ms
-
-  domain-config:
-    overseer:
-      &default_overseer_config
-      scan_interval: 60m
-      min_scan_delay: 5s
-    timers:
-      &default_timers_config
-      scan_interval: 60s
-      scan_limit: 5000
-      capacity: 2000
-      min_scan_delay: 5s
-    processor:
-      url: http://dominant:8022/v1/stateproc
       http_keep_alive_timeout: 3000ms
 
   invoice:
