@@ -119,10 +119,10 @@ releases:
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/proxy-mocketbank
-#- name: proxy-mocket-inspector
-#  <<: *generic_stateless_json
-#  needs:
-#    - {{ .Namespace | default "default" }}/hellgate
+- name: proxy-mocket-inspector
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/hellgate
 - name: hellgate
   <<: *generic_stateless_json
   needs:
