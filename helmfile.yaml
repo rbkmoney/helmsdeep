@@ -95,6 +95,7 @@ releases:
 - name: shumway
   <<: *generic_stateless_json
   needs:
+    - {{ .Namespace | default "default" }}/postgres
     - {{ .Namespace | default "default" }}/vault
   wait: true
 - name: hooker
@@ -107,7 +108,8 @@ releases:
 - name: dominant
   <<: *generic_stateless_json
   needs:
-  - {{ .Namespace | default "default" }}/shumway
+    - {{ .Namespace | default "default" }}/shumway
+    - {{ .Namespace | default "default" }}/machinegun
   wait: true
 - name: binbase
   <<: *generic_stateless
@@ -119,20 +121,22 @@ releases:
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/proxy-mocketbank
-#- name: proxy-mocket-inspector
-#  <<: *generic_stateless_json
-#  needs:
-#    - {{ .Namespace | default "default" }}/hellgate
+- name: proxy-mocket-inspector
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/hellgate
 - name: hellgate
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/dominant
+    - {{ .Namespace | default "default" }}/machinegun
 - name: limiter
   <<: *generic_stateless_json
 - name: party-management
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/dominant
+    - {{ .Namespace | default "default" }}/machinegun
 - name: token-keeper
   <<: *generic_stateless_json
   needs:
@@ -144,25 +148,28 @@ releases:
 - name: url-shortener
   <<: *generic_stateless
   needs:
-    - {{ .Namespace | default "default" }}/keycloak
-- name: capi-v1
-  <<: *generic_stateless_json
-  needs:
+    - {{ .Namespace | default "default" }}/machinegun
     - {{ .Namespace | default "default" }}/keycloak
 - name: capi-v2
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/keycloak
+    - {{ .Namespace | default "default" }}/dominant
 - name: wapi-pcidss-v0
   <<: *generic_stateless_json
   needs:
    - {{ .Namespace | default "default" }}/keycloak
+   - {{ .Namespace | default "default" }}/dominant
 - name: wapi-v0
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/keycloak
+    - {{ .Namespace | default "default" }}/dominant
 - name: fistful
   <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/dominant
+    - {{ .Namespace | default "default" }}/machinegun
 - name: fistful-magista
   <<: *generic_stateless
   needs:
@@ -199,10 +206,12 @@ releases:
 - name: analytics
   <<: *generic_stateless
   needs:
+    - {{ .Namespace | default "default" }}/postgres
     - {{ .Namespace | default "default" }}/vault
     - {{ .Namespace | default "default" }}/kafka
     - {{ .Namespace | default "default" }}/clickhouse
     - {{ .Namespace | default "default" }}/columbus
+    - {{ .Namespace | default "default" }}/dominant
 - name: questionary
   <<: *generic_stateless
   needs:
@@ -210,9 +219,11 @@ releases:
 - name: claim-management
   <<: *generic_stateless
   needs:
+    - {{ .Namespace | default "default" }}/postgres
     - {{ .Namespace | default "default" }}/vault
     - {{ .Namespace | default "default" }}/kafka
     - {{ .Namespace | default "default" }}/hellgate
+    - {{ .Namespace | default "default" }}/party-management
 - name: questionary-aggr-proxy
   <<: *generic_stateless
 - name: magista
@@ -308,6 +319,7 @@ releases:
 - name: org-manager
   <<: *generic_stateless_json
   needs:
+    - {{ .Namespace | default "default" }}/postgres
     - {{ .Namespace | default "default" }}/keycloak
 - name: claim-api
   <<: *generic_stateless_json
