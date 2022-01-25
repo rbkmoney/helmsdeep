@@ -150,22 +150,21 @@ releases:
   needs:
     - {{ .Namespace | default "default" }}/machinegun
     - {{ .Namespace | default "default" }}/keycloak
-- name: capi-v1
-  <<: *generic_stateless_json
-  needs:
-    - {{ .Namespace | default "default" }}/keycloak
 - name: capi-v2
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/keycloak
+    - {{ .Namespace | default "default" }}/dominant
 - name: wapi-pcidss-v0
   <<: *generic_stateless_json
   needs:
    - {{ .Namespace | default "default" }}/keycloak
+   - {{ .Namespace | default "default" }}/dominant
 - name: wapi-v0
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/keycloak
+    - {{ .Namespace | default "default" }}/dominant
 - name: fistful
   <<: *generic_stateless_json
   needs:
@@ -212,6 +211,7 @@ releases:
     - {{ .Namespace | default "default" }}/kafka
     - {{ .Namespace | default "default" }}/clickhouse
     - {{ .Namespace | default "default" }}/columbus
+    - {{ .Namespace | default "default" }}/dominant
 - name: questionary
   <<: *generic_stateless
   needs:
@@ -223,6 +223,7 @@ releases:
     - {{ .Namespace | default "default" }}/vault
     - {{ .Namespace | default "default" }}/kafka
     - {{ .Namespace | default "default" }}/hellgate
+    - {{ .Namespace | default "default" }}/party-management
 - name: questionary-aggr-proxy
   <<: *generic_stateless
 - name: magista
