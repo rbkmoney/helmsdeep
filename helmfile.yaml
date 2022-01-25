@@ -95,6 +95,7 @@ releases:
 - name: shumway
   <<: *generic_stateless_json
   needs:
+    - {{ .Namespace | default "default" }}/postgres
     - {{ .Namespace | default "default" }}/vault
   wait: true
 - name: hooker
@@ -107,7 +108,8 @@ releases:
 - name: dominant
   <<: *generic_stateless_json
   needs:
-  - {{ .Namespace | default "default" }}/shumway
+    - {{ .Namespace | default "default" }}/shumway
+    - {{ .Namespace | default "default" }}/machinegun
   wait: true
 - name: binbase
   <<: *generic_stateless
@@ -127,12 +129,14 @@ releases:
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/dominant
+    - {{ .Namespace | default "default" }}/machinegun
 - name: limiter
   <<: *generic_stateless_json
 - name: party-management
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/dominant
+    - {{ .Namespace | default "default" }}/machinegun
 - name: token-keeper
   <<: *generic_stateless_json
   needs:
@@ -144,6 +148,7 @@ releases:
 - name: url-shortener
   <<: *generic_stateless
   needs:
+    - {{ .Namespace | default "default" }}/machinegun
     - {{ .Namespace | default "default" }}/keycloak
 - name: capi-v1
   <<: *generic_stateless_json
@@ -163,6 +168,9 @@ releases:
     - {{ .Namespace | default "default" }}/keycloak
 - name: fistful
   <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/dominant
+    - {{ .Namespace | default "default" }}/machinegun
 - name: fistful-magista
   <<: *generic_stateless
   needs:
@@ -199,6 +207,7 @@ releases:
 - name: analytics
   <<: *generic_stateless
   needs:
+    - {{ .Namespace | default "default" }}/postgres
     - {{ .Namespace | default "default" }}/vault
     - {{ .Namespace | default "default" }}/kafka
     - {{ .Namespace | default "default" }}/clickhouse
@@ -210,6 +219,7 @@ releases:
 - name: claim-management
   <<: *generic_stateless
   needs:
+    - {{ .Namespace | default "default" }}/postgres
     - {{ .Namespace | default "default" }}/vault
     - {{ .Namespace | default "default" }}/kafka
     - {{ .Namespace | default "default" }}/hellgate
@@ -308,6 +318,7 @@ releases:
 - name: org-manager
   <<: *generic_stateless_json
   needs:
+    - {{ .Namespace | default "default" }}/postgres
     - {{ .Namespace | default "default" }}/keycloak
 - name: claim-api
   <<: *generic_stateless_json
