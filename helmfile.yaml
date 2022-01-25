@@ -105,6 +105,8 @@ releases:
     - {{ .Namespace | default "default" }}/kafka
     - {{ .Namespace | default "default" }}/hellgate
 #    - {{ .Namespace | default "default" }}/fault-detector
+- name: dominant-cache
+  <<: *generic_stateless
 - name: dominant
   <<: *generic_stateless_json
   needs:
