@@ -4,7 +4,7 @@ replicaCount: {{ .Values.services.global.pcidss.replicas }}
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/cds
-  tag: b1e03ab1669fc73cdade6507e9fe9b46c772cfa3
+  tag: e5024a06a65a3195f9a677fcbd5b383ffea8c1e4
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}

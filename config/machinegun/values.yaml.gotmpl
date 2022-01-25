@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/machinegun
-  tag: 9c3248a68fe530d23a8266057a40a1a339a161b8
+  tag: 830090fce88a58cc24a5999667ab0c97a601cf37
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}

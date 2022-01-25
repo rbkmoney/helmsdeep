@@ -4,7 +4,7 @@ replicaCount: {{ .Values.services.global.statelessReplicas }}
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/bouncer-policies
-  tag: 39ca136c5f0e4c89ab4253552759299fdbde360b
+  tag: 3381e542a2e15eb4a00f987ed3b9daa96be0bfd2
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
