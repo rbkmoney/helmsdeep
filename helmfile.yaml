@@ -234,6 +234,12 @@ releases:
 #    - {{ .Namespace | default "default" }}/columbus
     - {{ .Namespace | default "default" }}/hellgate
 #    - {{ .Namespace | default "default" }}/payouter-
+- name: auto-approve
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/kafka
+    - {{ .Namespace | default "default" }}/claim-management
+    - {{ .Namespace | default "default" }}/dominant
 - name: xrates
   <<: *generic_stateless
   installed: false
