@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/auto-approve
-  tag: 84f2ad8875317497db97ee6902bb624e47906164
+  tag: 5302587872a5f79c3f66925c4fd85a7f45df249f
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
