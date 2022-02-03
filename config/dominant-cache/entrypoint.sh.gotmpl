@@ -1,0 +1,21 @@
+#!/bin/sh
+set -ue
+
+java \
+    "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
+    -jar \
+    /opt/dominant-cache/dominant-cache.jar \
+    --logging.config=/opt/dominant-cache/logback.xml \
+    --management.metrics.export.statsd.enabled=true \
+    --dominant.client.url=http://dominant:8022/v1/domain/repository_client \
+    --dominant.client.networkTimeout=30000 \
+    --spring.application.name=dominant-cache \
+    --scheduling.fixed.rate=900000 \
+    --cache.maxSize=1 \
+    -Dwoody.node_id=dominant-cache123 \
+    ${@} \
+    --spring.config.additional-location=/vault/secrets/application.properties
+
+
+
+
