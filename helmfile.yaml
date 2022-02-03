@@ -111,6 +111,10 @@ releases:
     - {{ .Namespace | default "default" }}/shumway
     - {{ .Namespace | default "default" }}/machinegun
   wait: true
+- name: dominant-cache
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/dominant
 - name: binbase
   <<: *generic_stateless
 - name: proxy-mocketbank
