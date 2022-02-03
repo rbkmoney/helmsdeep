@@ -1,0 +1,29 @@
+#!/bin/sh
+set -ue
+
+java \
+    "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
+    -jar \
+    /opt/fault-detector/fault-detector.jar \
+    --logging.config=/opt/fault-detector/logback.xml \
+    --logging.level.com.rbkmoney.woody=WARN \
+    -Dwoody.node_id=fault-detector-123 \
+    --management.metrics.export.statsd.enabled=true \
+    --dominant.client.networkTimeout=30000 \
+    --operations.aggregation-delay=5000 \
+    --operations.pre-aggregation-period=5000 \
+    --operations.revision=60000 \
+    --spring.application.name=fault-detector \
+    --kafka.bootstrap-servers={{ .Values.services.kafka.endpoint | default "kafka" }}:{{ .Values.services.kafka.port | default "9092" }} \
+    --kafka.ssl.enable={{ .Values.services.kafka.ssl.enable }} \
+    --kafka.topics=fault-detector \
+    --kafka.client-id=fault-detector \
+    --kafka.poll.timeout=5000 \
+    --kafka.max-pool-records=300 \
+    --kafka.fetch-min-bytes=1024 \
+    --kafka.fetch-max-wait-ms=1000 \
+    --kafka.consumer.group-id=fault-detector-123 \
+    --kafka.consumer.concurrency=1 \
+    --kafka.consumer.auto-offset-reset=latest \
+    ${@} \
+    --spring.config.additional-location=/vault/secrets/application.properties
