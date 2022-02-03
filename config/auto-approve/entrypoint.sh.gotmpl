@@ -1,0 +1,22 @@
+#!/bin/sh
+set -ue
+
+java \
+    "-XX:OnOutOfMemoryError=kill %p" -XX:+HeapDumpOnOutOfMemoryError \
+    -jar \
+    /opt/auto-approve/auto-approve.jar \
+    --logging.config=/opt/auto-approve/logback.xml \
+    --management.metrics.export.statsd.enabled=true \
+    --claim.management.client.url=http://claim-management:8022/v1/cm \
+    --claim.management.client.networkTimeout=30000 \
+    --dominant.client.url=http://dominant:8022/v1/domain/repository_client \
+    --dominant.client.networkTimeout=30000 \
+    --spring.application.name=auto-approve \
+    --kafka.bootstrap-servers={{ .Values.services.kafka.endpoint | default "kafka" }}:{{ .Values.services.kafka.port | default "9092" }} \
+    --kafka.topics=claim-event-sink \
+    --kafka.client-id=autoapprove \
+    --kafka.consumer.group-id=AutoApproveListener \
+    --kafka.consumer.concurrency=5 \
+    --kafka.consumer.auto-offset-reset=latest \
+    ${@} \
+    --spring.config.additional-location=/vault/secrets/application.properties
