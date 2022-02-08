@@ -116,7 +116,7 @@ ingress:
   hosts:
     - host: shrt.{{ $ingressDomain | default "rbk.dev" }}
       paths:
-        - /v1/token-keeper
+        - /v2/authenticator
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
   {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}

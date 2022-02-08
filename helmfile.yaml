@@ -148,6 +148,10 @@ releases:
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/dominant
+- name: token-keeper-v2
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/dominant
 - name: capi-pcidss-v2
   <<: *generic_stateless_json
   needs:

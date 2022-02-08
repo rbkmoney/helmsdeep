@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/token-keeper
-  tag: 72c889ebd6c018141da3249013bf6c8a22d98982
+  tag: 197b0f786f31c4fb73283b07a21a884a3bf64558
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
@@ -33,6 +33,12 @@ secret:
       {{- readFile "../api-common/keys/wapi.pubkey.pem" | nindent 6 }}
     apikeymgmt.privkey.pem: |
       {{- readFile "../api-common/keys/apikeymgmt.privkey.pem" | nindent 6 }}
+    capi.access.customer.pubkey.pem: |
+      {{- readFile "../api-common/keys/capi.access.customer.pubkey.pem" | nindent 6 }}
+    capi.access.invoice.pubkey.pem: |
+      {{- readFile "../api-common/keys/capi.access.invoice.pubkey.pem" | nindent 6 }}
+    capi.access.invoicetpl.pubkey.pem: |
+      {{- readFile "../api-common/keys/capi.access.invoicetpl.pubkey.pem" | nindent 6 }}
 
 apiInitContainers:
   enabled: true
