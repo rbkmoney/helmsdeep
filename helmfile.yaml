@@ -22,6 +22,9 @@ repositories:
 - name: es
   url: https://helm.elastic.co
 
+helmDefaults:
+  createNamespace: {{ .Values.namespace.create | default false }}
+
 # Path to the helmfile state file being processed BEFORE releases in this state file
 helmfiles:
   - path: helmfile-infra.yaml
@@ -283,7 +286,7 @@ releases:
   - {{ .Namespace | default "default" }}/fraudbusters
   - {{ .Namespace | default "default" }}/fraudbusters-notificator
 - name: fraudbusters
-  installed: false  
+  installed: false
   <<: *generic_stateless_json
   needs:
   - {{ .Namespace | default "default" }}/wb-list-manager
