@@ -349,3 +349,7 @@ releases:
   <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/keycloak
+- name: fault-detector
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/kafka
