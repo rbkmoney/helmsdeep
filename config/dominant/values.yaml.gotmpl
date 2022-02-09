@@ -4,7 +4,7 @@ replicaCount: {{ .Values.services.global.statelessReplicas }}
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/dominant
-  tag: 5d719817065cf5c8c88db3d86588debb73dee2be
+  tag: 0aa1b292788e26ccebadd952c19fe7960e528e9a
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}

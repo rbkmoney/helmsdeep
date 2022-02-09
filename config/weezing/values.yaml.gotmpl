@@ -3,7 +3,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/weezing
-  tag: b86005374c339a604c5f6b6aaad3d77b4e3cdf5e
+  tag: 7d73f3a9d7af1afe9a3df77b12dc89c8bc2b1ba1
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}

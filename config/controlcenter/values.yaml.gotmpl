@@ -3,7 +3,7 @@ replicaCount: {{ .Values.services.global.statelessReplicas }}
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/control-center
-  tag: 14fe9434f618508f5389923c5143af221e9af7e0
+  tag: fc6dab6c0a1e40bc31ebc98bcd90e2899431251c
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}

@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/reporter
-  tag: 6872c8d1bdce6b4e1d9d5e8eabc462bb2c6daa71
+  tag: 314c19a46560a3fc1cf0a4a7e338068ba147efa6
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
@@ -18,6 +18,14 @@ runopts:
 env:
   - name: LOGBACK_SERVICE_NAME
     value: "reporter"
+  - name: SERVICE_8022_NAME
+    value: "reporter"
+  - name: SERVICE_CHECK_HTTP
+    value: "/actuator/health"
+  - name: SERVICE_CHECK_INTERVAL
+    value: 3s
+  - name: SERVICE_CHECK_TIMEOUT
+    value: 1s
 
 configMap:
   data: 
@@ -113,11 +121,15 @@ livenessProbe:
   httpGet:
     path: /actuator/health
     port: management
+  initialDelaySeconds: 30
+  timeoutSeconds: 3
 
 readinessProbe:
   httpGet:
     path: /actuator/health
     port: management
+  initialDelaySeconds: 30
+  timeoutSeconds: 3
 
 {{- if .Values.services.vault.enabled }}
 podAnnotations:

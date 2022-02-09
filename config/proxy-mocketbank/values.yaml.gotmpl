@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/proxy-mocketbank
-  tag: 91953e1e9874a851816474b47ad0f123c7c936d1
+  tag: fd07cae251d732148662bf73a02f82624312fc15
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
@@ -23,6 +23,14 @@ tolerations:
 env:
   - name: LOGBACK_SERVICE_NAME
     value: "proxy-mocketbank"
+  - name: SERVICE_8022_NAME
+    value: "proxy-mocketbank"
+  - name: SERVICE_CHECK_HTTP
+    value: "/actuator/health"
+  - name: SERVICE_CHECK_INTERVAL
+    value: 3s
+  - name: SERVICE_CHECK_TIMEOUT
+    value: 1s
 
 configMap:
   data:
@@ -61,21 +69,19 @@ service:
   ports:
     - name: api
       port: 8022
+    - name: management
+      port: 8022
     - name: callback
       port: 8080
 
 livenessProbe:
   httpGet:
     path: /actuator/health
-    port: api
-  initialDelaySeconds: 30
-  timeoutSeconds: 3
+    port: management
 readinessProbe:
   httpGet:
     path: /actuator/health
-    port: api
-  initialDelaySeconds: 30
-  timeoutSeconds: 3
+    port: management
 
 ciliumPolicies:
   - filters:

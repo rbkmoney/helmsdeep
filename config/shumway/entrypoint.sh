@@ -8,9 +8,7 @@ java \
     --logging.config=/opt/shumway/logback.xml \
     --spring.flyway.table=schema_version \
     --management.security.flag=false \
-    --management.metrics.export.statsd.flavor=etsy \
-    --management.metrics.export.statsd.enabled=true \
-    --management.metrics.export.prometheus.enabled=true \
+    --management.metrics.export.statsd.enabled=false \
     --management.endpoint.health.show-details=always \
     --management.endpoint.metrics.enabled=true \
     --management.endpoint.prometheus.enabled=true \

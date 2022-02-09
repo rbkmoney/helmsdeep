@@ -8,9 +8,7 @@ java \
     --logging.config=/opt/fraudbusters-notificator/logback.xml \
     --management.security.enabled=false \
     --management.endpoint.metrics.enabled=true \
-    --management.metrics.export.statsd.flavor=etsy \
-    --management.metrics.export.statsd.enabled=true \
-    --management.metrics.export.prometheus.enabled=true \
+    --management.metrics.export.statsd.enabled=false \
     --management.endpoint.prometheus.enabled=true \
     --management.endpoint.health.show-details=always \
     --management.endpoints.web.exposure.include=health,info,prometheus \

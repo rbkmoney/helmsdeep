@@ -4,7 +4,7 @@ replicaCount: {{ .Values.services.global.statelessReplicas }}
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/file-storage
-  tag: d1d6c25f90d571a214eda243559cda5b8b78d9ec
+  tag: efde7f746f5694749845802c0f3f4d0578df74b8
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
@@ -18,6 +18,14 @@ runopts:
 env:
   - name: LOGBACK_SERVICE_NAME
     value: "file-storage"
+  - name: SERVICE_8022_NAME
+    value: "file-storage"
+  - name: SERVICE_CHECK_HTTP
+    value: "/actuator/health"
+  - name: SERVICE_CHECK_INTERVAL
+    value: 3s
+  - name: SERVICE_CHECK_TIMEOUT
+    value: 1s
 
 configMap:
   data: 

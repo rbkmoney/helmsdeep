@@ -8,9 +8,8 @@ java \
     --logging.config=/opt/xrates/logback.xml \
     --management.security.enabled=false \
     --management.security.flag=false \
-    --management.metrics.export.statsd.flavor=etsy \
-    --management.metrics.export.statsd.enabled=true \
-    --management.metrics.export.prometheus.enabled=true \
+    --management.metrics.export.statsd.enabled=false \
+    --management.metrics.export.prometheus.enabled=false \
     --management.endpoint.health.show-details=always \
     --management.endpoint.metrics.enabled=true \
     --management.endpoint.prometheus.enabled=true \

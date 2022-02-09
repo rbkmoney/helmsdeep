@@ -8,8 +8,6 @@ imagePullSecrets:
   - name: {{ .Values.services.global.registry.imagePullSecret }}
 {{ end }}
 
-imagePullSecrets: []
-
 replicaCount: 1
 
 nameOverride: ""
@@ -53,7 +51,7 @@ cronjob:
   enabled: true
   image:
     repository: {{ .Values.services.global.registry.repository | default "docker.io" }}/test_transaction_v2
-    tag: d00bb62cb1b685fc5227cdce224174bf21ef333f
+    tag: 31738a6f95652f46b70c7bd51a95d4c83954596d
     pullPolicy: IfNotPresent
   schedule: "*/1 * * * *"
   args:

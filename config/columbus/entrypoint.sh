@@ -7,9 +7,11 @@ java \
     /opt/columbus/columbus.jar \
     --logging.config=/opt/columbus/logback.xml \
     --management.security.enabled=false \
-    --management.metrics.export.statsd.flavor=etsy \
-    --management.metrics.export.statsd.enabled=true \
-    --management.metrics.export.prometheus.enabled=true \
+    --management.metrics.export.statsd.enabled=false \
+    --management.endpoint.health.show-details=always \
+    --management.endpoint.metrics.enabled=true \
+    --management.endpoint.prometheus.enabled=true \
+    --management.endpoints.web.exposure.include=health,info,prometheus \
     --spring.datasource.url=jdbc:postgresql://columbus-pg:5432/columbus?sslmode=disable \
     --spring.datasource.username=postgres \
     --spring.datasource.password=postgres \

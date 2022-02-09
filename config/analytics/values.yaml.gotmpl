@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/analytics
-  tag: dd401f0aae1cb73170dc5ca5ab654b86080addaa
+  tag: b29be9cb8ade3b06f02d565d9e7898bd90db3db5
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
@@ -56,6 +56,14 @@ secret:
 env:
   - name: LOGBACK_SERVICE_NAME
     value: "analytics"
+  - name: SERVICE_8022_NAME
+    value: "analytics"
+  - name: SERVICE_CHECK_HTTP
+    value: "/actuator/health"
+  - name: SERVICE_CHECK_INTERVAL
+    value: 3s
+  - name: SERVICE_CHECK_TIMEOUT
+    value: 1s
 
 volumes:
   - name: config-volume
