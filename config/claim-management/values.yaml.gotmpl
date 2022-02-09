@@ -18,6 +18,14 @@ runopts:
 env:
   - name: LOGBACK_SERVICE_NAME
     value: "claim-management"
+  - name: SERVICE_8022_NAME
+    value: "claim-management"
+  - name: SERVICE_CHECK_HTTP
+    value: "/actuator/health"
+  - name: SERVICE_CHECK_INTERVAL
+    value: 3s
+  - name: SERVICE_CHECK_TIMEOUT
+    value: 1s
 
 configMap:
   data:

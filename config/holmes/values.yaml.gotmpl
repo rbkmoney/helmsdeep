@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/holmes
-  tag: 99978815b561daaab33e6a35b9e300262186c78e
+  tag: c819da773cb18505168376c2e675aeeecbe6b0cb
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}

@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/fraudbusters-warehouse
-  tag: 69ddadd89f84ec2afddc59f1c6074524367faf3e
+  tag: f5f69905b53959a464cba9d69b40049d19a2f29e
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}

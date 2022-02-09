@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/dudoser
-  tag: 39c2a816501ccc2cc508e18a9e3d2577504f03db
+  tag: f27e5fa965417de4cf08e5bc0156a5ad6de6f43b
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
@@ -51,6 +51,14 @@ secret:
 env:
   - name: LOGBACK_SERVICE_NAME
     value: "dudoser"
+  - name: SERVICE_8022_NAME
+    value: "dudoser"
+  - name: SERVICE_CHECK_HTTP
+    value: "/actuator/health"
+  - name: SERVICE_CHECK_INTERVAL
+    value: 3s
+  - name: SERVICE_CHECK_TIMEOUT
+    value: 1s
 
 volumes:
   - name: config-volume

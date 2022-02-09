@@ -2,7 +2,7 @@
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/wapi
-  tag: 5909eba3e4ee8f0c27db5fa02e91f49f6a7dd74b
+  tag: ef079697042c8391d183efcfc03b7038f7db1f03
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}

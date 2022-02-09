@@ -3,8 +3,8 @@
 replicaCount: 1
 
 image:
-  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/url-shortener
-  tag: 22511f863c0e46e27757d4b77c34cf3095fb4389
+  repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/token-keeper
+  tag: a84483e8137bed20b5df3397136e26ee61548173
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
@@ -20,27 +20,51 @@ configMap:
       {{- tpl (readFile "../vm/erl_inetrc.gotmpl") . | nindent 6 }}
     vm.args: |
       {{- tpl (readFile "../vm/erl_vm_args.gotmpl") . | nindent 6 }}
+    token-blacklist.yaml: |
+      {{- readFile "token-blacklist.yaml" | nindent 6 }}
     fetchKeycloakPubkey: |
       {{- readFile "../api-common/fetch-keycloak-pubkey.sh" | nindent 6 }}
+
+secret:
+  data:
+    capi.pubkey.pem: |
+      {{- readFile "../api-common/keys/capi.pubkey.pem" | nindent 6 }}
+    wapi.pubkey.pem: |
+      {{- readFile "../api-common/keys/wapi.pubkey.pem" | nindent 6 }}
+    apikeymgmt.privkey.pem: |
+      {{- readFile "../api-common/keys/apikeymgmt.privkey.pem" | nindent 6 }}
+    capi.access.customer.privkey.pem: |
+      {{- readFile "../api-common/keys/capi.access.customer.privkey.pem" | nindent 6 }}
+    capi.access.invoice.privkey.pem: |
+      {{- readFile "../api-common/keys/capi.access.invoice.privkey.pem" | nindent 6 }}
+    capi.access.invoicetpl.privkey.pem: |
+      {{- readFile "../api-common/keys/capi.access.invoicetpl.privkey.pem" | nindent 6 }}
 
 apiInitContainers:
   enabled: true
 
 volumeMounts:
   - name: config-volume
-    mountPath: /opt/shortener/releases/0.1/sys.config
+    mountPath: /opt/token-keeper/releases/0.1.0/sys.config
     subPath: sys.config
     readOnly: true
   - name: config-volume
-    mountPath: /opt/shortener/releases/0.1/vm.args
+    mountPath: /opt/token-keeper/releases/0.1.0/vm.args
     subPath: vm.args
     readOnly: true
   - name: config-volume
-    mountPath: /opt/shortener/erl_inetrc
+    mountPath: /opt/token-keeper/erl_inetrc
     subPath: erl_inetrc
     readOnly: true
+  - name: config-volume
+    mountPath: /opt/token-keeper/token-blacklist.yaml
+    subPath: token-blacklist.yaml
+    readOnly: true
+  - name: secret
+    mountPath: /var/lib/token-keeper/keys
+    readOnly: true
   - name: keycloak-pubkey
-    mountPath: /var/lib/shortener/keys/keycloak
+    mountPath: /var/lib/token-keeper/keys/keycloak
     readOnly: true
 
 volumes:
@@ -48,6 +72,9 @@ volumes:
     configMap:
       name: {{ .Release.Name }}
       defaultMode: 0755
+  - name: secret
+    secret:
+      secretName: {{ .Release.Name }}
   - name: keycloak-pubkey
     emptyDir: {}
 
@@ -66,6 +93,14 @@ service:
     - name: internal
       port: 8022
 
+livenessProbe:
+  httpGet:
+    port: internal
+
+readinessProbe:
+  httpGet:
+    port: internal
+
 {{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
 {{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
 
@@ -81,7 +116,7 @@ ingress:
   hosts:
     - host: shrt.{{ $ingressDomain | default "rbk.dev" }}
       paths:
-        - /
+        - /v2/authenticator
 {{- if .Values.services.ingress.tls.enabled }}
   tls:
   {{ if .Values.services.ingress.tls.letsEncrypt.enabled }}
@@ -92,7 +127,7 @@ ingress:
       hosts:
         - shrt.{{ $ingressDomain | default "rbk.dev" }}
 {{- end }}
-  servicePort: 8080
+  servicePort: 8022
 
 ciliumPolicies:
   - filters:
@@ -103,4 +138,3 @@ ciliumPolicies:
     - port: 8080
       type: TCP
     name: keycloak
-    namespace: {{ .Release.Namespace }}

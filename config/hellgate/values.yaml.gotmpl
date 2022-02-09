@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/hellgate
-  tag: 6888cb483e57e76206b089d17c4a370a26083c36
+  tag: 7d411e7a0b1ee8ee85683e254e9bd8f040755b4e
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}

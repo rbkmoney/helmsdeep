@@ -842,6 +842,21 @@ FIXTURE=$(cat <<END
 			}
 		},
 
+    {
+      "insert": {
+        "object": {
+          "payment_system_legacy": {
+              "ref": {
+                  "id": "visa"
+              },
+            "data": {
+              "id": "VISA"
+            }
+          }
+        }
+      }
+    },
+
     {"insert": {"object": {"inspector": {
         "ref": {"id": 1},
         "data": {

@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/anapi
-  tag: 86990bcc3ee81b909240b64d03f2575d5677c6ae
+  tag: 814ea3efc4739a04ab8fdafd5a6304f91db1cf0f
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}

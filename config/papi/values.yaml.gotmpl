@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/papi
-  tag: cce1062e1eabf71810bd585856c37c63cca61df5
+  tag: 92d7f3dd7b77bc66f31d4417d8e54f1496e22934-epic
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}

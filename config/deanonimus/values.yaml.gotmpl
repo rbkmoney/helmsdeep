@@ -4,7 +4,7 @@ replicaCount: {{ .Values.services.global.statelessReplicas }}
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/deanonimus
-  tag: 23481a728081af23c47c49d8cc11c2d80b160ec4
+  tag: 2d0dd8325fde2c4a103cd21428f61cc03a4e3a8f
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
@@ -41,6 +41,14 @@ secret:
 env:
   - name: LOGBACK_SERVICE_NAME
     value: "deanonimus"
+  - name: SERVICE_8022_NAME
+    value: "deanonimus"
+  - name: SERVICE_CHECK_HTTP
+    value: "/actuator/health"
+  - name: SERVICE_CHECK_INTERVAL
+    value: 3s
+  - name: SERVICE_CHECK_TIMEOUT
+    value: 1s
 
 volumes:
   - name: config-volume
@@ -97,12 +105,12 @@ service:
 livenessProbe:
   httpGet:
     path: /actuator/health
-    port: api
+    port: management
 
 readinessProbe:
   httpGet:
     path: /actuator/health
-    port: api
+    port: management
 
 {{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
 {{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}

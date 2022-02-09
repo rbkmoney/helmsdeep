@@ -4,12 +4,12 @@ replicaCount: {{ .Values.services.global.statelessReplicas }}
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/claim-management-api
-  tag: 93fe35d83d5bcaf8ab1801684d1bb615d0c18a62
+  tag: 21fd51b809346765829862602e35b5ae3056ec2a
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
 imagePullSecrets:
-  - {{ .Values.services.global.registry.imagePullSecret }}
+  - name: {{ .Values.services.global.registry.imagePullSecret }}
 {{ end }}
 
 runopts:
@@ -21,6 +21,14 @@ apiInitContainers:
 env:
   - name: LOGBACK_SERVICE_NAME
     value: "claim-management-api"
+  - name: SERVICE_8022_NAME
+    value: "claim-management-api"
+  - name: SERVICE_CHECK_HTTP
+    value: "/actuator/health"
+  - name: SERVICE_CHECK_INTERVAL
+    value: 3s
+  - name: SERVICE_CHECK_TIMEOUT
+    value: 1s
 
 
 configMap:

@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/shumway
-  tag: d5b74714437b1a1b11689a38297fd2a6c08e0db2
+  tag: 44eb989065b27be619acd16b12ebdb2288b46c36
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
@@ -18,6 +18,14 @@ runopts:
 env:
   - name: LOGBACK_SERVICE_NAME
     value: "shumway"
+  - name: SERVICE_8022_NAME
+    value: "shumway"
+  - name: SERVICE_CHECK_HTTP
+    value: "/actuator/health"
+  - name: SERVICE_CHECK_INTERVAL
+    value: 3s
+  - name: SERVICE_CHECK_TIMEOUT
+    value: 1s
 
 configMap:
   data:

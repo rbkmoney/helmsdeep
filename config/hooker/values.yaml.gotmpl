@@ -4,13 +4,25 @@ replicaCount: {{ .Values.services.global.statelessReplicas }}
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/hooker
-  tag: aeffeedb13a8f5125962bfe3e0e734ba4104d876
+  tag: 0ca1582185c8705c630ee8f579cddb0fc92f261b
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
 imagePullSecrets:
   - name: {{ .Values.services.global.registry.imagePullSecret }}
 {{ end }}
+
+env:
+  - name: LOGBACK_SERVICE_NAME
+    value: "hooker"
+  - name: SERVICE_8022_NAME
+    value: "hooker"
+  - name: SERVICE_CHECK_HTTP
+    value: "/actuator/health"
+  - name: SERVICE_CHECK_INTERVAL
+    value: 3s
+  - name: SERVICE_CHECK_TIMEOUT
+    value: 1s
 
 runopts:
   command: ["/opt/hooker/entrypoint.sh"]

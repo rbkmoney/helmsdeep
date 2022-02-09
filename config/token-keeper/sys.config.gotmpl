@@ -63,17 +63,26 @@
                     source => {pem_file, "/var/lib/token-keeper/keys/keycloak/keycloak.pubkey.pem"},
                     authority => keycloak
                 },
-                capi => #{
-                    source => {pem_file, "/var/lib/token-keeper/keys/capi.pubkey.pem"},
-                    authority => capi
-                },
-                wapi => #{
-                    source => {pem_file, "/var/lib/token-keeper/keys/wapi.pubkey.pem"},
-                    authority => wapi
-                },
+                %% CAUTION: capi and wapi keys are historically the same
+%                wapi => #{
+%                    source => {pem_file, "/var/lib/token-keeper/keys/wapi.pubkey.pem"},
+%                    authority => legacy_api
+%                },
                 apikeymgmt => #{
                     source => {pem_file, "/var/lib/token-keeper/keys/apikeymgmt.privkey.pem"},
                     authority => apikeymgmt
+                },
+                new_access_customer => #{
+                    source => {pem_file, "/var/lib/token-keeper/keys/capi.access.customer.pubkey.pem"},
+                    authority => new_access_customer
+                },
+                new_access_invoice => #{
+                    source => {pem_file, "/var/lib/token-keeper/keys/capi.access.invoice.pubkey.pem"},
+                    authority => new_access_invoice
+                },
+                new_access_invoicetpl => #{
+                    source => {pem_file, "/var/lib/token-keeper/keys/capi.access.invoicetpl.pubkey.pem"},
+                    authority => new_access_invoicetpl
                 }
             }
         }},
@@ -116,32 +125,8 @@
                     }}
                 ]
             },
-            capi => #{
-                id => <<"com.rbkmoney.capi">>,
-                authdata_sources => [
-                    {claim, #{
-                        compatibility => {true, #{
-                            metadata_mappings => #{
-                                party_id => <<"com.rbkmoney.party.id">>,
-                                consumer => <<"com.rbkmoney.consumer">>
-                            }
-                        }}
-                    }},
-                    {extract, #{
-                        methods => [
-                            {invoice_template_access_token, #{
-                                domain => <<"common-api">>,
-                                metadata_mappings => #{
-                                    party_id => <<"com.rbkmoney.party.id">>
-                                }
-                            }}
-                        ]
-                    }}
-                ]
-            },
-            %% CAUTION: For whatever reason, capi keys are getting wapi authority encoded into them
-            wapi => #{
-                id => <<"com.rbkmoney.wapi">>,
+            legacy_api => #{
+                id => <<"com.rbkmoney.legacyapi">>,
                 authdata_sources => [
                     {claim, #{
                         compatibility => {true, #{
@@ -167,7 +152,28 @@
                 id => <<"com.rbkmoney.apikeymgmt">>,
                 signer => apikeymgmt,
                 authdata_sources => [
-                    {storage, {claim, #{}}}
+                    {claim, #{}}
+                ]
+            },
+            %% New customer access tokens (for backwards compatibility)
+            new_access_customer => #{
+                id => <<"com.rbkmoney.capi.access.customer">>,
+                authdata_sources => [
+                    {claim, #{}}
+                ]
+            },
+            %% New invoice access tokens (for backwards compatibility)
+            new_access_invoice => #{
+                id => <<"com.rbkmoney.capi.access.invoice">>,
+                authdata_sources => [
+                    {claim, #{}}
+                ]
+            },
+            %% New invoice template access tokens  (for backwards compatibility)
+            new_access_invoicetpl => #{
+                id => <<"com.rbkmoney.capi.access.invoicetpl">>,
+                authdata_sources => [
+                    {claim, #{}}
                 ]
             }
         }}

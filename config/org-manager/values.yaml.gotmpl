@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: {{ .Values.services.global.registry.repository | default "docker.io/rbkmoney" }}/org-manager
-  tag: de838229b670586a511962876cb06cfbb2c93c6f
+  tag: 5cab4a9150247443e254b8512a20cfcd84ef3759
   pullPolicy: IfNotPresent
 
 {{ if .Values.services.global.registry.imagePullSecret }}
@@ -21,6 +21,14 @@ apiInitContainers:
 env:
   - name: LOGBACK_SERVICE_NAME
     value: "org-manager"
+  - name: SERVICE_8022_NAME
+    value: "org-manager"
+  - name: SERVICE_CHECK_HTTP
+    value: "/actuator/health"
+  - name: SERVICE_CHECK_INTERVAL
+    value: 3s
+  - name: SERVICE_CHECK_TIMEOUT
+    value: 1s
 
 
 configMap:

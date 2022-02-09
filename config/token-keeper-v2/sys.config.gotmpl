@@ -1,0 +1,271 @@
+{{ $domainWithNamespace := printf "%s.%s" .Release.Namespace .Values.services.ingress.rootDomain }}
+{{ $ingressDomain := .Values.services.ingress.namespacedDomain | ternary $domainWithNamespace .Values.services.ingress.rootDomain }}
+[
+
+    {token_keeper, [
+
+        {ip, "::"},
+        {port, 8022},
+        {services, #{
+            token_keeper => #{
+                path => <<"/v1/token-keeper">>
+            }
+        }},
+        {protocol_opts, #{
+            % How much to wait for another request before closing a keepalive connection? (ms)
+            request_timeout => 3000
+        }},
+        {transport_opts, #{
+            % Maximum number of simultaneous connections. (default = 1024)
+            max_connections => 8000,
+            % Size of the acceptor pool. (default = 10)
+            num_acceptors => 100
+        }},
+        % How much to wait for outstanding requests completion when asked to shut down? (ms)
+        {shutdown_timeout, 1000},
+
+        {audit, #{
+            % Audit logging.
+            log => #{
+                % Audit log level, ideally should be higher that `kernel.level`.
+                level => notice,
+                backend => #{
+                    type => standard_io
+                },
+                formatter => {logger_logstash_formatter, #{
+                    chars_limit => 4096,
+                    depth => unlimited
+                }}
+            }
+        }},
+
+        {woody_event_handlers, [
+            hay_woody_event_handler,
+            {scoper_woody_event_handler, #{
+                event_handler_opts => #{
+                    formatter_opts => #{
+                        max_length => 1000,
+                        max_printable_string_length => 80
+                    }
+                }
+            }}
+        ]},
+
+        {health_check, #{
+            disk    => {erl_health, disk     , ["/", 99]},
+            memory  => {erl_health, cg_memory, [70]},
+            service => {erl_health, service  , [<<"token-keeper">>]}
+        }},
+
+        {blacklist, #{
+            path => "/opt/token-keeper/token-blacklist.yaml"
+        }},
+
+        {authorities, #{
+
+            %% Customer access tokens
+            <<"com.rbkmoney.capi.access.customer">> => #{
+                service => #{
+                    path => <<"/v2/authority/com.rbkmoney.capi.access.customer">>
+                },
+                type =>
+                    {ephemeral, #{
+                        token => #{
+                            type => jwt
+                        }
+                    }}
+            },
+
+            %% Invoice access tokens
+            <<"com.rbkmoney.capi.access.invoice">> => #{
+                service => #{
+                    path => <<"/v2/authority/com.rbkmoney.capi.access.invoice">>
+                },
+                type =>
+                    {ephemeral, #{
+                        token => #{
+                            type => jwt
+                        }
+                    }}
+            },
+
+            %% Invoice template access tokens
+            <<"com.rbkmoney.capi.access.invoicetpl">> => #{
+                service => #{
+                    path => <<"/v2/authority/com.rbkmoney.capi.access.invoicetpl">>
+                },
+                type =>
+                    {ephemeral, #{
+                        token => #{
+                            type => jwt
+                        }
+                    }}
+            }
+
+        }},
+        {authenticator, #{
+            service => #{
+                path => <<"/v2/authenticator">>
+            },
+            authorities => #{
+
+                %% Keycloak-issued tokens
+                <<"com.rbkmoney.keycloak">> => #{
+                    sources => [
+                        {extract_context, #{
+                            methods => [
+                                {detect_token, #{
+                                    phony_api_key_opts => #{
+                                        metadata_mappings => #{
+                                            party_id => <<"com.rbkmoney.party.id">>
+                                        }
+                                    },
+                                    user_session_token_opts => #{
+                                        user_realm => <<"external">>,
+                                        metadata_mappings => #{
+                                            user_id => <<"com.rbkmoney.user.id">>,
+                                            user_email => <<"com.rbkmoney.user.email">>,
+                                            user_realm => <<"com.rbkmoney.user.realm">>
+                                        }
+                                    },
+                                    %% TODO Adjust names according configuration
+                                    user_session_token_origins => [
+                                        <<"https://dashboard.{{ $ingressDomain | default "rbk.dev" }}">>,
+                                        <<"https://beta.dashboard.{{ $ingressDomain | default "rbk.dev" }}">>,
+                                        <<"https://old.dashboard.{{ $ingressDomain | default "rbk.dev" }}">>
+                                    ]
+                                }}
+                            ]
+                        }}
+                    ]
+                },
+
+                %% Customer access tokens
+                <<"com.rbkmoney.capi.access.customer">> => #{
+                    sources => [
+                        {claim, #{}}
+                    ]
+                },
+
+                %% Invoice access tokens
+                <<"com.rbkmoney.capi.access.invoice">> => #{
+                    sources => [
+                        {claim, #{}}
+                    ]
+                },
+
+                %% Invoice template access tokens
+                <<"com.rbkmoney.capi.access.invoicetpl">> => #{
+                    sources => [
+                        {claim, #{}}
+                    ]
+                },
+
+                %% Legacy "apikeymgmt"-issued access tokens
+                <<"com.rbkmoney.legacy.apikeymgmt">> => #{
+                    sources => [
+                        {claim, #{}}
+                    ]
+                },
+
+                %% Legacy capi/wapi-issued access tokens
+                <<"com.rbkmoney.legacy.access.wapi">> => #{
+                    sources => [
+                        {legacy_claim, #{
+                            metadata_mappings => #{
+                                party_id => <<"com.rbkmoney.party.id">>,
+                                consumer => <<"com.rbkmoney.token.consumer">>
+                            }
+                        }},
+                        {extract_context, #{
+                            methods => [
+                                {invoice_template_access_token, #{
+                                    domain => <<"common-api">>,
+                                    metadata_mappings => #{
+                                        party_id => <<"com.rbkmoney.party.id">>
+                                    }
+                                }}
+                            ]
+                        }}
+                    ]
+                }
+
+            }
+        }},
+        {tokens, #{
+            jwt => #{
+                authority_bindings => #{
+                    <<"keycloak">> => <<"com.rbkmoney.keycloak">>,
+                    <<"capi.access.customer">> => <<"com.rbkmoney.capi.access.customer">>,
+                    <<"capi.access.invoice">> => <<"com.rbkmoney.capi.access.invoice">>,
+                    <<"capi.access.invoicetpl">> => <<"com.rbkmoney.capi.access.invoicetpl">>,
+                    <<"legacy.apikeymgmt">> => <<"com.rbkmoney.legacy.apikeymgmt">>,
+                    <<"legacy.wapi.access">> => <<"com.rbkmoney.legacy.access.wapi">>
+                },
+                keyset => #{
+                    <<"keycloak">> => #{
+                        source => {pem_file, "/var/lib/token-keeper/keys/keycloak/keycloak.pubkey.pem"}
+                    },
+                    <<"capi.access.customer">> => #{
+                        source => {pem_file, "/var/lib/token-keeper/keys/capi.access.customer.privkey.pem"}
+                    },
+                    <<"capi.access.invoice">> => #{
+                        source => {pem_file, "/var/lib/token-keeper/keys/capi.access.invoice.privkey.pem"}
+                    },
+                    <<"capi.access.invoicetpl">> => #{
+                        source => {pem_file, "/var/lib/token-keeper/keys/capi.access.invoicetpl.privkey.pem"}
+                    },
+                    <<"legacy.apikeymgmt">> => #{
+                        source => {pem_file, "/var/lib/token-keeper/keys/apikeymgmt.privkey.pem"}
+                    }
+                }
+            }
+        }},
+        {storages, #{
+            <<"com.rbkmoney.apikeymgmt">> =>
+                {machinegun, #{
+                    namespace => apikeymgmt,
+                    automaton => #{
+                        url => <<"http://machinegun:8022/v1/automaton">>,
+                        event_handler => [scoper_woody_event_handler],
+                        transport_opts => #{
+                            pool => woody_apikeymgmt_automaton,
+                            timeout => 30000,
+                            max_connections => 300
+                        }
+                    }
+                }}
+        }},
+        {machinegun, #{
+            processor => #{
+                path => <<"/v2/stateproc">>
+            }
+        }}
+    ]},
+
+    {how_are_you, [
+        {metrics_publishers, []}
+    ]},
+
+    {os_mon, [
+        {disksup_posix_only, true}
+    ]},
+
+    {scoper, [
+        {storage, scoper_storage_logger}
+    ]},
+
+    {kernel, [
+        {logger_level, info},
+        {logger, [
+            {handler, default, logger_std_h, #{
+                level => debug,
+                config => #{
+                    type => standard_io
+                },
+                formatter => {logger_logstash_formatter, #{}}
+            }}
+        ]}
+    ]}
+
+].

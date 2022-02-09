@@ -9,6 +9,8 @@ ingress:
   ip: 'someip'
 certmanager:
   enabled: false
+namespace:
+  create: true
 
 services:
   global:
