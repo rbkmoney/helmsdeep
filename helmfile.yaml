@@ -182,7 +182,7 @@ releases:
     - {{ .Namespace | default "default" }}/dominant
     - {{ .Namespace | default "default" }}/machinegun
 - name: fistful-magista
-  <<: *generic_stateless
+  <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/vault
 - name: payform
@@ -228,7 +228,7 @@ releases:
   needs:
     - {{ .Namespace | default "default" }}/vault
 - name: claim-management
-  <<: *generic_stateless
+  <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/postgres
     - {{ .Namespace | default "default" }}/vault
@@ -238,7 +238,7 @@ releases:
 - name: questionary-aggr-proxy
   <<: *generic_stateless
 - name: magista
-  <<: *generic_stateless
+  <<: *generic_stateless_json
   needs:
     - {{ .Namespace | default "default" }}/vault
     - {{ .Namespace | default "default" }}/kafka
